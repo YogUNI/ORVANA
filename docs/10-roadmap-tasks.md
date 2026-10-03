@@ -26,7 +26,7 @@ Jangan mengerjakan P2 atau modul AI kecuali diminta.
 - [x] **T1.3** `[A3]` `AuditService` + pemanggilan standar; `SettingsService` + `GET/PUT /settings` dengan validasi bobot; seed pengaturan default. *(1 sesi)*
 - [x] **T1.4** `[A1]` Modul `users` untuk admin: daftar, buat (ADMIN/INSPECTOR/AUDITOR), ubah status (naikkan `tokenVersion`). *(1 sesi)*
 - [x] **T1.5** `[A2]` Frontend: halaman `/login`, `/register` (pilih peran, form profil, pin peta), `/pending`, `RequireAuth/RequireRole`, `RoleLayout` (sidebar desktop, bottom nav mobile), pengalihan sesuai peran, `/admin/users`. *(2 sesi)*
-- [ ] **T1.6** `[A3]` Skrip seed dasar: wilayah, akun demo, dapur, pemasok, koordinator (`09` bagian 1 sampai 4). *(1 sesi)*
+- [x] **T1.6** `[A3]` Skrip seed dasar: wilayah, akun demo, dapur, pemasok, koordinator (`09` bagian 1 sampai 4). *(1 sesi)*
 
 **Gate 1:** login tiap peran menuju dashboard kosong yang benar; peran lain tidak bisa membuka rute yang bukan haknya (UI dan API); admin dapat mengaktifkan akun PENDING.
 
