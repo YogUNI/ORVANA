@@ -10,6 +10,7 @@ import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { SettingsModule } from './modules/settings/settings.module';
+import { MasterDataModule } from './modules/master-data/master-data.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { SettingsModule } from './modules/settings/settings.module';
     AuthModule,
     UsersModule,
     SettingsModule,
+    MasterDataModule,
   ],
   controllers: [AppController],
   providers: [
