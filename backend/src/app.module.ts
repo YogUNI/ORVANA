@@ -6,9 +6,9 @@ import { AppService } from './app.service';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { PrismaModule } from './modules/prisma/prisma.module';
-import { AuthModule } from './modules/auth/auth.module';
-
 import { AuditModule } from './modules/audit/audit.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
 import { SettingsModule } from './modules/settings/settings.module';
 
 @Module({
@@ -26,6 +26,7 @@ import { SettingsModule } from './modules/settings/settings.module';
     PrismaModule,
     AuditModule,
     AuthModule,
+    UsersModule,
     SettingsModule,
   ],
   controllers: [AppController],
