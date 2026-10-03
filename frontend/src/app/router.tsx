@@ -1,32 +1,23 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LandingPage } from '../pages/LandingPage';
+import { LoginPage } from '../pages/LoginPage';
+import { RegisterPage } from '../pages/RegisterPage';
+import { PendingPage } from '../pages/PendingPage';
 import { RolePlaceholderPage } from '../pages/RolePlaceholderPage';
+import { AdminUsersPage } from '../pages/admin/AdminUsersPage';
+import { RoleLayout } from './layouts/RoleLayout';
+import { RequireAuth } from '../features/auth/RequireAuth';
+import { RequireRole } from '../features/auth/RequireRole';
 
 export const AppRouter: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public Routes */}
+        {/* Rute Publik */}
         <Route path="/" element={<LandingPage />} />
-        <Route
-          path="/login"
-          element={
-            <RolePlaceholderPage
-              title="Masuk ke Akun ORVANA"
-              roleDescription="Halaman login peran pengguna (Tahap 1)."
-            />
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <RolePlaceholderPage
-              title="Pendaftaran Akun Baru"
-              roleDescription="Pendaftaran pengelola dapur, pemasok, dan koordinator (Tahap 1)."
-            />
-          }
-        />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/trace/:batchCode"
           element={
@@ -37,61 +28,110 @@ export const AppRouter: React.FC = () => {
           }
         />
 
-        {/* Role Dashboards Placeholders */}
+        {/* Halaman Akun Pending */}
         <Route
-          path="/kitchen/*"
+          path="/pending"
           element={
-            <RolePlaceholderPage
-              title="Dashboard Pengelola Dapur"
-              roleDescription="Perencanaan menu, kebutuhan bahan, dan pemantauan pesanan."
-            />
+            <RequireAuth>
+              <PendingPage />
+            </RequireAuth>
           }
         />
+
+        {/* Rute Terlindungi dengan RoleLayout */}
         <Route
-          path="/supplier/*"
           element={
-            <RolePlaceholderPage
-              title="Dashboard Pemasok"
-              roleDescription="Manajemen stok, rencana panen, dan persetujuan pesanan."
-            />
+            <RequireAuth>
+              <RoleLayout />
+            </RequireAuth>
           }
-        />
-        <Route
-          path="/coordinator/*"
-          element={
-            <RolePlaceholderPage
-              title="Dashboard Koordinator"
-              roleDescription="Konsolidasi pesanan dan armada pengiriman logistik."
-            />
-          }
-        />
-        <Route
-          path="/inspector/*"
-          element={
-            <RolePlaceholderPage
-              title="Dashboard Pengawas Mutu"
-              roleDescription="Antrean pemeriksaan dan checklist uji mutu bahan makanan."
-            />
-          }
-        />
-        <Route
-          path="/admin/*"
-          element={
-            <RolePlaceholderPage
-              title="Dashboard Admin Wilayah"
-              roleDescription="Manajemen pengguna, harga acuan komoditas, dan audit."
-            />
-          }
-        />
-        <Route
-          path="/auditor/*"
-          element={
-            <RolePlaceholderPage
-              title="Dashboard Auditor Publik"
-              roleDescription="Transparansi pembukuan dan analisis dampak lokal."
-            />
-          }
-        />
+        >
+          {/* Admin Routes */}
+          <Route
+            path="/admin/users"
+            element={
+              <RequireRole roles={['ADMIN']}>
+                <AdminUsersPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/admin/*"
+            element={
+              <RequireRole roles={['ADMIN']}>
+                <RolePlaceholderPage
+                  title="Dashboard Admin Wilayah"
+                  roleDescription="Fitur pengaturan sistem, harga acuan, dan audit (Tahap 2)."
+                />
+              </RequireRole>
+            }
+          />
+
+          {/* Kitchen Manager Routes */}
+          <Route
+            path="/kitchen/*"
+            element={
+              <RequireRole roles={['KITCHEN_MANAGER']}>
+                <RolePlaceholderPage
+                  title="Dashboard Pengelola Dapur"
+                  roleDescription="Perencanaan menu mingguan, kebutuhan bahan, dan pemantauan order (Tahap 2)."
+                />
+              </RequireRole>
+            }
+          />
+
+          {/* Supplier Routes */}
+          <Route
+            path="/supplier/*"
+            element={
+              <RequireRole roles={['SUPPLIER']}>
+                <RolePlaceholderPage
+                  title="Dashboard Pemasok Pangan"
+                  roleDescription="Manajemen penawaran stok dan respon tawaran pesanan (Tahap 3)."
+                />
+              </RequireRole>
+            }
+          />
+
+          {/* Coordinator Routes */}
+          <Route
+            path="/coordinator/*"
+            element={
+              <RequireRole roles={['COORDINATOR']}>
+                <RolePlaceholderPage
+                  title="Dashboard Koordinator Wilayah"
+                  roleDescription="Konsolidasi pesanan dan pengaturan armada pengiriman (Tahap 4)."
+                />
+              </RequireRole>
+            }
+          />
+
+          {/* Inspector Routes */}
+          <Route
+            path="/inspector/*"
+            element={
+              <RequireRole roles={['QUALITY_INSPECTOR']}>
+                <RolePlaceholderPage
+                  title="Dashboard Pengawas Mutu"
+                  roleDescription="Antrean pemeriksaan dan checklist hasil uji mutu bahan makanan (Tahap 5)."
+                />
+              </RequireRole>
+            }
+          />
+
+          {/* Auditor Routes */}
+          <Route
+            path="/auditor/*"
+            element={
+              <RequireRole roles={['AUDITOR']}>
+                <RolePlaceholderPage
+                  title="Dashboard Auditor Publik"
+                  roleDescription="Transparansi pembukuan ledger dan analisis indikator dampak lokal (Tahap 6)."
+                />
+              </RequireRole>
+            }
+          />
+        </Route>
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

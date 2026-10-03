@@ -11,10 +11,14 @@ const queryClient = new QueryClient({
   },
 });
 
+import { AuthProvider } from '../features/auth/authContext';
+
 export const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
-      {children}
+      <AuthProvider>
+        {children}
+      </AuthProvider>
     </QueryClientProvider>
   );
 };
