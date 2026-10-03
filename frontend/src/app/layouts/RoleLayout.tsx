@@ -17,6 +17,8 @@ import {
   Tag,
   Sliders,
   ShieldCheck,
+  CalendarDays,
+  ShoppingBag,
 } from 'lucide-react';
 
 export const RoleLayout: React.FC = () => {
@@ -44,7 +46,8 @@ export const RoleLayout: React.FC = () => {
         ];
       case 'KITCHEN_MANAGER':
         return [
-          { to: '/kitchen', label: 'Beranda Dapur', icon: Home },
+          { to: '/kitchen/menu', label: 'Menu Mingguan', icon: CalendarDays },
+          { to: '/kitchen/demand', label: 'Kebutuhan Bahan', icon: ShoppingBag },
         ];
       case 'SUPPLIER':
         return [

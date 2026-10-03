@@ -11,6 +11,9 @@ import { AdminRecipesPage } from '../pages/admin/AdminRecipesPage';
 import { AdminPricesPage } from '../pages/admin/AdminPricesPage';
 import { AdminSettingsPage } from '../pages/admin/AdminSettingsPage';
 import { QualityStandardsPage } from '../pages/inspector/QualityStandardsPage';
+import { KitchenMenuPage } from '../pages/kitchen/KitchenMenuPage';
+import { KitchenDemandPage } from '../pages/kitchen/KitchenDemandPage';
+import { KitchenDemandDetailPage } from '../pages/kitchen/KitchenDemandDetailPage';
 import { RoleLayout } from './layouts/RoleLayout';
 import { RequireAuth } from '../features/auth/RequireAuth';
 import { RequireRole } from '../features/auth/RequireRole';
@@ -106,12 +109,40 @@ export const AppRouter: React.FC = () => {
 
           {/* Kitchen Manager Routes */}
           <Route
+            path="/kitchen/menu"
+            element={
+              <RequireRole roles={['KITCHEN_MANAGER', 'ADMIN']}>
+                <KitchenMenuPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/kitchen/demand"
+            element={
+              <RequireRole roles={['KITCHEN_MANAGER', 'ADMIN']}>
+                <KitchenDemandPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/kitchen/demand/:id"
+            element={
+              <RequireRole roles={['KITCHEN_MANAGER', 'ADMIN']}>
+                <KitchenDemandDetailPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/kitchen"
+            element={<Navigate to="/kitchen/menu" replace />}
+          />
+          <Route
             path="/kitchen/*"
             element={
               <RequireRole roles={['KITCHEN_MANAGER']}>
                 <RolePlaceholderPage
                   title="Dashboard Pengelola Dapur"
-                  roleDescription="Perencanaan menu mingguan, kebutuhan bahan, dan pemantauan order (Tahap 2)."
+                  roleDescription="Fitur penerimaan pesanan dan pembayaran dapur (Tahap 5)."
                 />
               </RequireRole>
             }
