@@ -11,7 +11,6 @@ import {
   Truck,
   CheckCircle,
   FileText,
-  Home,
   Apple,
   Utensils,
   Tag,
@@ -19,6 +18,7 @@ import {
   ShieldCheck,
   CalendarDays,
   ShoppingBag,
+  Sprout,
 } from 'lucide-react';
 
 export const RoleLayout: React.FC = () => {
@@ -51,7 +51,7 @@ export const RoleLayout: React.FC = () => {
         ];
       case 'SUPPLIER':
         return [
-          { to: '/supplier', label: 'Beranda Pemasok', icon: Home },
+          { to: '/supplier/stock', label: 'Stok Pasokan', icon: Sprout },
         ];
       case 'COORDINATOR':
         return [

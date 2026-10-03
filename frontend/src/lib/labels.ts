@@ -23,6 +23,13 @@ export const ORDER_STATUS_LABELS: Record<string, StatusMeta> = {
   CANCELLED: { label: 'Dibatalkan', color: 'neutral' },
 };
 
+// Label Status Penawaran Stok (docs/05)
+export const OFFER_STATUS_LABELS: Record<string, StatusMeta> = {
+  ACTIVE: { label: 'Stok Aktif', color: 'success' },
+  DEPLETED: { label: 'Habis Teralokasi', color: 'neutral' },
+  CANCELLED: { label: 'Dibatalkan', color: 'neutral' },
+};
+
 // Label Status Permintaan (docs/03 bagian 3)
 export const DEMAND_STATUS_LABELS: Record<string, StatusMeta> = {
   DRAFT: { label: 'Draf', color: 'neutral' },
