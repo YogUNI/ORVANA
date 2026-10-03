@@ -8,6 +8,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 
+import { AuditModule } from './modules/audit/audit.module';
+import { SettingsModule } from './modules/settings/settings.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -21,7 +24,9 @@ import { AuthModule } from './modules/auth/auth.module';
       },
     ]),
     PrismaModule,
+    AuditModule,
     AuthModule,
+    SettingsModule,
   ],
   controllers: [AppController],
   providers: [

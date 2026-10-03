@@ -23,7 +23,7 @@ Jangan mengerjakan P2 atau modul AI kecuali diminta.
 
 - [x] **T1.1** `[A1]` Modul `auth`: register (3 peran + profil), login, refresh (rotasi), logout, `me`; bcrypt; JWT; rate limit login (M0). *(2 sesi)*
 - [x] **T1.2** `[A1]` `RolesGuard`, decorator `@Roles`, `@CurrentUser`, helper `scopeWhere`, tolak akun `PENDING/SUSPENDED` (`ACCOUNT_NOT_ACTIVE`). *(1 sesi)*
-- [ ] **T1.3** `[A3]` `AuditService` + pemanggilan standar; `SettingsService` + `GET/PUT /settings` dengan validasi bobot; seed pengaturan default. *(1 sesi)*
+- [x] **T1.3** `[A3]` `AuditService` + pemanggilan standar; `SettingsService` + `GET/PUT /settings` dengan validasi bobot; seed pengaturan default. *(1 sesi)*
 - [ ] **T1.4** `[A1]` Modul `users` untuk admin: daftar, buat (ADMIN/INSPECTOR/AUDITOR), ubah status (naikkan `tokenVersion`). *(1 sesi)*
 - [ ] **T1.5** `[A2]` Frontend: halaman `/login`, `/register` (pilih peran, form profil, pin peta), `/pending`, `RequireAuth/RequireRole`, `RoleLayout` (sidebar desktop, bottom nav mobile), pengalihan sesuai peran, `/admin/users`. *(2 sesi)*
 - [ ] **T1.6** `[A3]` Skrip seed dasar: wilayah, akun demo, dapur, pemasok, koordinator (`09` bagian 1 sampai 4). *(1 sesi)*
