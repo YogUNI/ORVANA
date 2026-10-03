@@ -21,7 +21,7 @@ Jangan mengerjakan P2 atau modul AI kecuali diminta.
 
 ## Tahap 1: Auth, peran, dan sistem dasar (P0)
 
-- [ ] **T1.1** `[A1]` Modul `auth`: register (3 peran + profil), login, refresh (rotasi), logout, `me`; bcrypt; JWT; rate limit login (M0). *(2 sesi)*
+- [x] **T1.1** `[A1]` Modul `auth`: register (3 peran + profil), login, refresh (rotasi), logout, `me`; bcrypt; JWT; rate limit login (M0). *(2 sesi)*
 - [ ] **T1.2** `[A1]` `RolesGuard`, decorator `@Roles`, `@CurrentUser`, helper `scopeWhere`, tolak akun `PENDING/SUSPENDED` (`ACCOUNT_NOT_ACTIVE`). *(1 sesi)*
 - [ ] **T1.3** `[A3]` `AuditService` + pemanggilan standar; `SettingsService` + `GET/PUT /settings` dengan validasi bobot; seed pengaturan default. *(1 sesi)*
 - [ ] **T1.4** `[A1]` Modul `users` untuk admin: daftar, buat (ADMIN/INSPECTOR/AUDITOR), ubah status (naikkan `tokenVersion`). *(1 sesi)*
