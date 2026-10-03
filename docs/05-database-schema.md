@@ -1,0 +1,630 @@
+# 05. Skema Basis Data (PostgreSQL + Prisma)
+
+Skema di bawah adalah **acuan resmi**. Jika agent perlu mengubah (menambah kolom, indeks, enum), perbarui file ini di commit yang sama.
+Sintaks Prisma boleh disesuaikan agar valid pada versi yang dipakai, tetapi **nama model, kolom, dan enum tidak diubah** tanpa memperbarui dokumen.
+
+## 1. Konvensi
+
+- Primary key: `String @id @default(uuid())` (kecuali disebut lain).
+- Nama model PascalCase tunggal; tabel dipetakan snake_case plural dengan `@@map`.
+- Tanggal tanpa jam: `DateTime @db.Date`. Waktu kejadian: `DateTime` (UTC), tampil di `Asia/Jakarta`.
+- Uang: `Decimal @db.Decimal(14, 0)`. Kuantitas: `Decimal @db.Decimal(12, 3)`.
+- Semua tabel transaksi memiliki `createdAt`; yang dapat diubah memiliki `updatedAt @updatedAt`.
+- Tabel ledger dan audit **append only** (tidak ada update/delete di kode aplikasi).
+
+## 2. Skema Prisma
+
+> **Versi Prisma:** skema ini ditulis untuk **Prisma 6.x** (`datasource.url = env("DATABASE_URL")`) dan sudah divalidasi sintaksnya selain baris `url`.
+> Prisma 7 tidak lagi menerima `url` di file skema (dipindah ke `prisma.config.ts`). Pin ke 6.x kecuali tim sengaja bermigrasi.
+
+```prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- ENUM ----------
+enum Role {
+  ADMIN
+  KITCHEN_MANAGER
+  SUPPLIER
+  COORDINATOR
+  QUALITY_INSPECTOR
+  AUDITOR
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+}
+
+enum SupplierType {
+  FARMER
+  FISHER
+  LIVESTOCK
+  PROCESSOR
+}
+
+enum CommodityCategory {
+  VEGETABLE
+  FRUIT
+  FISH
+  POULTRY_EGG
+  STAPLE
+  PROTEIN_PROCESSED
+  SPICE
+}
+
+enum DemandStatus {
+  DRAFT
+  OPEN
+  MATCHING
+  PARTIALLY_FULFILLED
+  FULFILLED
+  CANCELLED
+}
+
+enum OfferStatus {
+  ACTIVE
+  DEPLETED
+  EXPIRED
+  CANCELLED
+}
+
+enum OrderStatus {
+  PROPOSED
+  ACCEPTED
+  REJECTED
+  EXPIRED
+  CONSOLIDATED
+  IN_TRANSIT
+  RECEIVED
+  QC_PASSED
+  QC_PARTIAL
+  QC_FAILED
+  DISPUTED
+  PAID
+  COMPLETED
+  CANCELLED
+}
+
+enum ShipmentStatus {
+  PLANNED
+  PICKING_UP
+  IN_TRANSIT
+  ARRIVED
+  CANCELLED
+}
+
+enum QcResult {
+  PASS
+  PARTIAL
+  FAIL
+}
+
+enum LedgerStage {
+  HOLD
+  RELEASE
+  VOID
+  ADJUSTMENT
+}
+
+enum DisputeStatus {
+  OPEN
+  UNDER_REVIEW
+  RESOLVED
+}
+
+enum DisputeOutcome {
+  FAVOR_SUPPLIER
+  FAVOR_KITCHEN
+  SPLIT
+}
+
+// ---------- WILAYAH DAN PENGGUNA ----------
+model Region {
+  id        String @id @default(uuid())
+  name      String
+  province  String
+
+  users               User[]
+  kitchens            Kitchen[]
+  supplierProfiles    SupplierProfile[]
+  coordinatorProfiles CoordinatorProfile[]
+  priceReferences     PriceReference[]
+
+  @@unique([name, province])
+  @@map("regions")
+}
+
+model User {
+  id           String     @id @default(uuid())
+  name         String
+  email        String     @unique
+  passwordHash String
+  phone        String?
+  role         Role
+  status       UserStatus @default(PENDING)
+  regionId     String?
+  tokenVersion Int        @default(0) // naikkan untuk mencabut semua refresh token
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  region             Region?              @relation(fields: [regionId], references: [id])
+  kitchens           Kitchen[]
+  supplierProfile    SupplierProfile?
+  coordinatorProfile CoordinatorProfile?
+  qualityChecks      QualityCheck[]
+  disputesRaised     Dispute[]            @relation("DisputeRaisedBy")
+  disputesResolved   Dispute[]            @relation("DisputeResolvedBy")
+  reviewsWritten     SupplierReview[]
+  priceRefsSet       PriceReference[]
+  notifications      Notification[]
+  auditLogs          AuditLog[]
+
+  @@index([role, status])
+  @@map("users")
+}
+
+model Kitchen {
+  id              String   @id @default(uuid())
+  code            String   @unique // contoh: DPR01 (dipakai pada kode batch)
+  name            String
+  address         String
+  latitude        Float
+  longitude       Float
+  regionId        String
+  portionCapacity Int
+  managerId       String
+  createdAt       DateTime @default(now())
+
+  region          Region          @relation(fields: [regionId], references: [id])
+  manager         User            @relation(fields: [managerId], references: [id])
+  menuPlans       MenuPlan[]
+  demandRequests  DemandRequest[]
+  orders          Order[]
+  shipments       Shipment[]
+
+  @@map("kitchens")
+}
+
+model SupplierProfile {
+  id              String       @id @default(uuid())
+  userId          String       @unique
+  displayName     String       // nama usaha/kelompok
+  publicName      Boolean      @default(false) // izinkan nama tampil di halaman publik
+  type            SupplierType
+  address         String
+  village         String?      // nama desa/kelurahan (untuk tampilan publik)
+  latitude        Float
+  longitude       Float
+  regionId        String
+  qualityScore    Decimal      @default(70) @db.Decimal(5, 2)
+  reliabilityRate Decimal      @default(0.8) @db.Decimal(4, 3)
+  totalOrders     Int          @default(0)
+  createdAt       DateTime     @default(now())
+
+  user         User          @relation(fields: [userId], references: [id])
+  region       Region        @relation(fields: [regionId], references: [id])
+  offers       SupplyOffer[]
+  harvestPlans HarvestPlan[]
+  orders       Order[]
+
+  @@map("supplier_profiles")
+}
+
+model CoordinatorProfile {
+  id                  String   @id @default(uuid())
+  userId              String   @unique
+  organizationName    String
+  collectionPointName String
+  address             String
+  latitude            Float
+  longitude           Float
+  regionId            String
+  createdAt           DateTime @default(now())
+
+  user      User       @relation(fields: [userId], references: [id])
+  region    Region     @relation(fields: [regionId], references: [id])
+  shipments Shipment[]
+
+  @@map("coordinator_profiles")
+}
+
+// ---------- DATA MASTER ----------
+model Commodity {
+  id             String            @id @default(uuid())
+  name           String            @unique
+  category       CommodityCategory
+  unit           String            @default("kg")
+  shelfLifeDays  Int
+  wastePercent   Decimal           @default(0) @db.Decimal(4, 2)
+  isActive       Boolean           @default(true)
+
+  qualityStandard QualityStandard?
+  recipeItems     RecipeItem[]
+  demandRequests  DemandRequest[]
+  supplyOffers    SupplyOffer[]
+  harvestPlans    HarvestPlan[]
+  priceReferences PriceReference[]
+  orders          Order[]
+
+  @@map("commodities")
+}
+
+model QualityStandard {
+  id          String @id @default(uuid())
+  commodityId String @unique
+  passScore   Int    @default(70)
+  // [{ "key": "freshness", "label": "Kesegaran", "weight": 40 }, ...] jumlah weight = 100
+  checklist   Json
+
+  commodity Commodity @relation(fields: [commodityId], references: [id])
+
+  @@map("quality_standards")
+}
+
+model PriceReference {
+  id             String    @id @default(uuid())
+  commodityId    String
+  regionId       String
+  referencePrice Decimal   @db.Decimal(14, 0)
+  floorPrice     Decimal   @db.Decimal(14, 0)
+  ceilingPrice   Decimal   @db.Decimal(14, 0)
+  validFrom      DateTime  @db.Date
+  validTo        DateTime? @db.Date
+  setById        String
+  createdAt      DateTime  @default(now())
+
+  commodity Commodity @relation(fields: [commodityId], references: [id])
+  region    Region    @relation(fields: [regionId], references: [id])
+  setBy     User      @relation(fields: [setById], references: [id])
+
+  @@index([commodityId, regionId, validFrom])
+  @@map("price_references")
+}
+
+model Recipe {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+
+  items     RecipeItem[]
+  menuPlans MenuPlan[]
+
+  @@map("recipes")
+}
+
+model RecipeItem {
+  id                 String  @id @default(uuid())
+  recipeId           String
+  commodityId        String
+  quantityPerPortion Decimal @db.Decimal(8, 4) // kg per porsi
+
+  recipe    Recipe    @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  commodity Commodity @relation(fields: [commodityId], references: [id])
+
+  @@unique([recipeId, commodityId])
+  @@map("recipe_items")
+}
+
+// ---------- PERENCANAAN DAN PERMINTAAN ----------
+model MenuPlan {
+  id          String   @id @default(uuid())
+  kitchenId   String
+  recipeId    String
+  serviceDate DateTime @db.Date
+  portions    Int
+  createdAt   DateTime @default(now())
+
+  kitchen Kitchen @relation(fields: [kitchenId], references: [id])
+  recipe  Recipe  @relation(fields: [recipeId], references: [id])
+
+  @@unique([kitchenId, serviceDate, recipeId])
+  @@map("menu_plans")
+}
+
+model DemandRequest {
+  id              String       @id @default(uuid())
+  kitchenId       String
+  commodityId     String
+  quantity        Decimal      @db.Decimal(12, 3)
+  neededDate      DateTime     @db.Date
+  maxPricePerUnit Decimal      @db.Decimal(14, 0)
+  minQualityScore Int          @default(60)
+  status          DemandStatus @default(DRAFT)
+  note            String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  kitchen   Kitchen   @relation(fields: [kitchenId], references: [id])
+  commodity Commodity @relation(fields: [commodityId], references: [id])
+  orders    Order[]
+
+  @@unique([kitchenId, commodityId, neededDate]) // satu permintaan per dapur-komoditas-tanggal
+  @@index([status, neededDate])
+  @@map("demand_requests")
+}
+
+// ---------- PASOKAN ----------
+model SupplyOffer {
+  id                String      @id @default(uuid())
+  supplierId        String
+  commodityId       String
+  quantityAvailable Decimal     @db.Decimal(12, 3)
+  quantityReserved  Decimal     @default(0) @db.Decimal(12, 3)
+  harvestDate       DateTime    @db.Date
+  askingPrice       Decimal     @db.Decimal(14, 0)
+  status            OfferStatus @default(ACTIVE)
+  sourceText        String?     // dicadangkan untuk NLP (tahap lanjutan)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  supplier  SupplierProfile @relation(fields: [supplierId], references: [id])
+  commodity Commodity       @relation(fields: [commodityId], references: [id])
+  orders    Order[]
+
+  @@index([commodityId, status, harvestDate])
+  @@map("supply_offers")
+}
+
+model HarvestPlan {
+  id                  String   @id @default(uuid())
+  supplierId          String
+  commodityId         String
+  expectedQuantity    Decimal  @db.Decimal(12, 3)
+  expectedHarvestDate DateTime @db.Date
+  notes               String?
+  createdAt           DateTime @default(now())
+
+  supplier  SupplierProfile @relation(fields: [supplierId], references: [id])
+  commodity Commodity       @relation(fields: [commodityId], references: [id])
+
+  @@index([commodityId, expectedHarvestDate])
+  @@map("harvest_plans")
+}
+
+// ---------- ORDER, PENGIRIMAN, BATCH ----------
+model Order {
+  id             String      @id @default(uuid())
+  orderNo        String      @unique
+  demandId       String
+  offerId        String
+  supplierId     String
+  kitchenId      String
+  commodityId    String
+  quantity       Decimal     @db.Decimal(12, 3)
+  pricePerUnit   Decimal     @db.Decimal(14, 0)
+  matchScore     Decimal     @db.Decimal(5, 2)
+  status         OrderStatus @default(PROPOSED)
+  offerExpiresAt DateTime
+  respondedAt    DateTime?
+  rejectionReason String?
+  shipmentId     String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  demand    DemandRequest   @relation(fields: [demandId], references: [id])
+  offer     SupplyOffer     @relation(fields: [offerId], references: [id])
+  supplier  SupplierProfile @relation(fields: [supplierId], references: [id])
+  kitchen   Kitchen         @relation(fields: [kitchenId], references: [id])
+  commodity Commodity       @relation(fields: [commodityId], references: [id])
+  shipment  Shipment?       @relation(fields: [shipmentId], references: [id])
+  batch     Batch?
+  ledger    LedgerEntry[]
+  disputes  Dispute[]
+  review    SupplierReview?
+
+  @@index([status, offerExpiresAt])
+  @@index([kitchenId, status])
+  @@index([supplierId, status])
+  @@map("orders")
+}
+
+model Shipment {
+  id            String         @id @default(uuid())
+  shipmentNo    String         @unique
+  coordinatorId String
+  kitchenId     String
+  scheduledAt   DateTime
+  status        ShipmentStatus @default(PLANNED)
+  transportCost Decimal        @default(0) @db.Decimal(14, 0)
+  routeNotes    String?
+  lossKg        Decimal        @default(0) @db.Decimal(12, 3)
+  lossReason    String?
+  departedAt    DateTime?
+  arrivedAt     DateTime?
+  createdAt     DateTime       @default(now())
+
+  coordinator CoordinatorProfile @relation(fields: [coordinatorId], references: [id])
+  kitchen     Kitchen            @relation(fields: [kitchenId], references: [id])
+  orders      Order[]
+
+  @@map("shipments")
+}
+
+model Batch {
+  id               String    @id @default(uuid())
+  batchCode        String    @unique
+  orderId          String    @unique
+  originVillage    String?
+  harvestDate      DateTime  @db.Date
+  shippedQuantity  Decimal   @db.Decimal(12, 3)
+  receivedQuantity Decimal?  @db.Decimal(12, 3)
+  receivedAt       DateTime?
+  receiveNote      String?
+  receivePhotoUrls String[]
+  createdAt        DateTime  @default(now())
+
+  order         Order          @relation(fields: [orderId], references: [id])
+  qualityChecks QualityCheck[]
+
+  @@map("batches")
+}
+
+model QualityCheck {
+  id               String   @id @default(uuid())
+  batchId          String
+  inspectorId      String
+  score            Int
+  checklistScores  Json     // { "freshness": 85, ... }
+  receivedQuantity Decimal  @db.Decimal(12, 3)
+  acceptedQuantity Decimal  @db.Decimal(12, 3)
+  rejectedQuantity Decimal  @db.Decimal(12, 3)
+  result           QcResult
+  notes            String?
+  photoUrls        String[]
+  aiSuggestedScore Int?     // dicadangkan untuk modul AI (tahap lanjutan)
+  checkedAt        DateTime @default(now())
+
+  batch     Batch @relation(fields: [batchId], references: [id])
+  inspector User  @relation(fields: [inspectorId], references: [id])
+
+  @@index([batchId])
+  @@map("quality_checks")
+}
+
+// ---------- KEUANGAN DAN SENGKETA ----------
+model LedgerEntry {
+  id        String      @id @default(uuid())
+  orderId   String
+  stage     LedgerStage
+  amount    Decimal     @db.Decimal(14, 0) // ADJUSTMENT boleh negatif
+  note      String?
+  prevHash  String?
+  hash      String?
+  createdAt DateTime    @default(now())
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@index([orderId, createdAt])
+  @@map("ledger_entries")
+}
+
+model Dispute {
+  id                       String          @id @default(uuid())
+  orderId                  String
+  raisedById               String
+  reason                   String
+  evidenceUrls             String[]
+  status                   DisputeStatus   @default(OPEN)
+  outcome                  DisputeOutcome?
+  adjustedAcceptedQuantity Decimal?        @db.Decimal(12, 3)
+  resolutionNote           String?
+  resolvedById             String?
+  createdAt                DateTime        @default(now())
+  resolvedAt               DateTime?
+
+  order      Order @relation(fields: [orderId], references: [id])
+  raisedBy   User  @relation("DisputeRaisedBy", fields: [raisedById], references: [id])
+  resolvedBy User? @relation("DisputeResolvedBy", fields: [resolvedById], references: [id])
+
+  @@index([status])
+  @@map("disputes")
+}
+
+model SupplierReview {
+  id               String   @id @default(uuid())
+  orderId          String   @unique
+  kitchenManagerId String
+  rating           Int      // 1..5
+  comment          String?
+  createdAt        DateTime @default(now())
+
+  order          Order @relation(fields: [orderId], references: [id])
+  kitchenManager User  @relation(fields: [kitchenManagerId], references: [id])
+
+  @@map("supplier_reviews")
+}
+
+// ---------- SISTEM ----------
+model Notification {
+  id        String    @id @default(uuid())
+  userId    String
+  type      String
+  title     String
+  body      String
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, readAt, createdAt])
+  @@map("notifications")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String   // contoh: ORDER_TRANSITION, QC_SUBMITTED, SETTING_UPDATED
+  entity    String   // contoh: Order
+  entityId  String?
+  meta      Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model SystemSetting {
+  key         String   @id
+  value       Json
+  updatedAt   DateTime @updatedAt
+  updatedById String?
+
+  @@map("system_settings")
+}
+
+model SequenceCounter {
+  key   String @id // contoh: ORD-20261012, SHP-20261012, BATCH-20261012-DPR01
+  value Int    @default(0)
+
+  @@map("sequence_counters")
+}
+```
+
+## 3. Aturan integritas yang harus ditegakkan di aplikasi
+
+| Aturan | Cara |
+|---|---|
+| `quantityReserved <= quantityAvailable` pada `SupplyOffer` | Pembaruan bersyarat dalam transaksi |
+| `accepted + rejected = received` pada `QualityCheck` | Validasi service (toleransi 0) |
+| Satu QC final per `Batch` | Cek di service (tolak jika sudah ada) |
+| Invarian ledger per order (lihat `04-business-rules.md` bagian 7) | Uji unit dan pemeriksaan di service saat menulis entri |
+| Bobot `matching.weights` berjumlah 1.0 | Validasi saat `PUT /settings` |
+| Bobot `QualityStandard.checklist` berjumlah 100 | Validasi saat simpan |
+| `floorPrice <= referencePrice <= ceilingPrice` | Validasi saat simpan harga acuan |
+| Penomoran unik (order/shipment/batch) | `SequenceCounter` dengan `UPDATE ... RETURNING` dalam transaksi |
+| Ledger dan audit append only | Tidak ada fungsi update/delete di repository; opsional trigger DB yang menolak UPDATE/DELETE |
+
+## 4. Indeks dan performa
+
+Indeks utama sudah tercantum di model. Untuk dashboard, agregasi memakai `GROUP BY` pada `orders`, `ledger_entries`, dan `quality_checks`;
+jika lambat pada data demo besar, tambahkan indeks komposit `(status, createdAt)` pada `orders` dan `(stage, createdAt)` pada `ledger_entries`.
+Jarak memakai haversine di aplikasi (PostGIS tidak diwajibkan pada MVP).
+
+## 5. Migrasi dan seed
+
+- Satu migrasi per perubahan bermakna (`npx prisma migrate dev --name <deskripsi>`), jangan edit migrasi yang sudah dipakai anggota lain.
+- Urutan seed (lihat `09-seed-data.md`): Region → Commodity + QualityStandard → PriceReference → Recipe + RecipeItem → User + profil → Kitchen →
+  MenuPlan → SupplyOffer + HarvestPlan → SystemSetting → (opsional) skenario siap demo.
+- Seed harus **idempoten** (pakai `upsert` dengan kunci alami seperti `email`, `code`, `name`).
+
+## 6. Pemetaan peran ke data profil
+
+| Role | Profil terkait |
+|---|---|
+| KITCHEN_MANAGER | `Kitchen` (via `managerId`) |
+| SUPPLIER | `SupplierProfile` |
+| COORDINATOR | `CoordinatorProfile` |
+| QUALITY_INSPECTOR, ADMIN, AUDITOR | hanya `User` (+ `regionId`) |
