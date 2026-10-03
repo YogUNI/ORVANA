@@ -42,7 +42,7 @@ export class SettingsService implements OnModuleInit {
   /**
    * Mengambil satu nilai pengaturan dengan fallback default
    */
-  async getSetting<T = any>(key: string): Promise<T> {
+  async getSetting<T = any>(key: string, defaultValue?: T): Promise<T> {
     try {
       const setting = await this.prisma.systemSetting.findUnique({
         where: { key },
@@ -55,7 +55,33 @@ export class SettingsService implements OnModuleInit {
       this.logger.warn(`Gagal mengambil setting ${key}, menggunakan fallback.`);
     }
 
+    if (defaultValue !== undefined) {
+      return defaultValue;
+    }
+
     return DEFAULT_SYSTEM_SETTINGS[key] as T;
+  }
+
+  /**
+   * Mengambil bobot pencocokan resmi
+   */
+  async getMatchingWeights(): Promise<{
+    distance: number;
+    quality: number;
+    price: number;
+    freshness: number;
+    reliability: number;
+  }> {
+    const weights = await this.getSetting('matching.weights');
+    return (
+      weights ?? {
+        distance: 0.3,
+        quality: 0.3,
+        price: 0.2,
+        freshness: 0.1,
+        reliability: 0.1,
+      }
+    );
   }
 
   /**

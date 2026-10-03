@@ -14,6 +14,7 @@ import { MasterDataModule } from './modules/master-data/master-data.module';
 import { MenuModule } from './modules/menu/menu.module';
 import { DemandModule } from './modules/demand/demand.module';
 import { SupplyModule } from './modules/supply/supply.module';
+import { MatchingModule } from './modules/matching/matching.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { SupplyModule } from './modules/supply/supply.module';
     MenuModule,
     DemandModule,
     SupplyModule,
+    MatchingModule,
   ],
   controllers: [AppController],
   providers: [
