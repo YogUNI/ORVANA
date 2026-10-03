@@ -15,6 +15,8 @@ import { MenuModule } from './modules/menu/menu.module';
 import { DemandModule } from './modules/demand/demand.module';
 import { SupplyModule } from './modules/supply/supply.module';
 import { MatchingModule } from './modules/matching/matching.module';
+import { LedgerModule } from './modules/ledger/ledger.module';
+import { OrdersModule } from './modules/orders/orders.module';
 
 @Module({
   imports: [
@@ -38,6 +40,8 @@ import { MatchingModule } from './modules/matching/matching.module';
     DemandModule,
     SupplyModule,
     MatchingModule,
+    LedgerModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [
