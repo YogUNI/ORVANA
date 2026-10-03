@@ -14,7 +14,7 @@ Jangan mengerjakan P2 atau modul AI kecuali diminta.
 - [x] **T0.1** `[All]` Buat repo monorepo (`backend/`, `frontend/`, `docs/`), `.gitignore`, `.editorconfig`, `.env.example`, Prettier + ESLint. *(1 sesi)*
 - [x] **T0.2** `[All]` `docker-compose.yml` dengan PostgreSQL 16 (volume, port 5432). *(0,5 sesi)*
 - [x] **T0.3** `[A1]` Scaffold NestJS (TypeScript strict), konfigurasi env (`@nestjs/config`), Swagger di `/api/docs`, filter galat global dengan format `error`, interceptor respons `data/meta`, validasi global (`ValidationPipe`, whitelist). *(1 sesi)*
-- [ ] **T0.4** `[A3]` Pasang Prisma 6, salin skema dari `05-database-schema.md`, jalankan migrasi awal, `PrismaService`. *(1 sesi)*
+- [x] **T0.4** `[A3]` Pasang Prisma 6, salin skema dari `05-database-schema.md`, jalankan migrasi awal, `PrismaService`. *(1 sesi)*
 - [ ] **T0.5** `[A2]` Scaffold React + Vite + TS + Tailwind (token warna di `07`), React Router, TanStack Query, `apiClient`, `labels.ts`, komponen UI dasar (`Button`, `Input`, `Card`, `Badge`, `Modal`, `Toast`, `Skeleton`, `EmptyState`). *(1,5 sesi)*
 
 **Gate 0:** `docker compose up -d db`, backend dan frontend berjalan, Swagger terbuka, halaman placeholder tampil, migrasi terpasang.
