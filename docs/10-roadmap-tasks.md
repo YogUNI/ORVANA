@@ -33,7 +33,7 @@ Jangan mengerjakan P2 atau modul AI kecuali diminta.
 ## Tahap 2: Data master, menu, dan permintaan (P0)
 
 - [x] **T2.1** `[A3]` Backend master: commodities, quality standard, recipes + items, price references (validasi floor ≤ ref ≤ ceiling), regions (M1). *(2 sesi)*
-- [ ] **T2.2** `[A3]` Seed komoditas, harga acuan, standar mutu, resep (`09` bagian 5). *(1 sesi)*
+- [x] **T2.2** `[A3]` Seed komoditas, harga acuan, standar mutu, resep (`09` bagian 5). *(1 sesi)*
 - [ ] **T2.3** `[A2]` Frontend admin master: komoditas, resep, harga acuan, pengaturan; standar mutu untuk inspektur. *(2 sesi)*
 - [ ] **T2.4** `[A1]` Backend menu + `DemandPlanner` (rumus `04` bagian 2) + endpoint generate, dengan **uji unit memakai tabel `09` bagian 5.4**. *(2 sesi)*
 - [ ] **T2.5** `[A1]` Backend demand: CRUD, publish (validasi `PRICE_BELOW_FLOOR`, tanggal), cancel (M2). *(1,5 sesi)*

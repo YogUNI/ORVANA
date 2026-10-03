@@ -1,6 +1,11 @@
 import { PrismaClient, Role, UserStatus, SupplierType } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { DEFAULT_SYSTEM_SETTINGS } from '../src/modules/settings/settings.constants';
+import {
+  COMMODITIES_SEED_DATA,
+  DEFAULT_QUALITY_CHECKLIST,
+  RECIPES_SEED_DATA,
+} from './seed-master.data';
 
 const prisma = new PrismaClient();
 
@@ -373,7 +378,125 @@ async function main() {
   }
   console.log(`✓ 15 Konfigurasi Sistem Default tersimpan`);
 
-  console.log('🎉 Penyemaian data dasar berhasil tuntas!');
+  // 4. Komoditas, Standar Mutu, & Harga Acuan (T2.2 / docs/09 Bagian 5.1)
+  console.log('🌾 Menyemai data master komoditas, standar mutu, & harga acuan...');
+  const validFromYearStart = new Date(new Date().getFullYear(), 0, 1);
+  const commodityMap = new Map<string, string>();
+
+  for (const item of COMMODITIES_SEED_DATA) {
+    const commodity = await prisma.commodity.upsert({
+      where: { name: item.name },
+      update: {
+        category: item.category,
+        unit: item.unit,
+        shelfLifeDays: item.shelfLifeDays,
+        wastePercent: item.wastePercent,
+        isActive: true,
+      },
+      create: {
+        name: item.name,
+        category: item.category,
+        unit: item.unit,
+        shelfLifeDays: item.shelfLifeDays,
+        wastePercent: item.wastePercent,
+        isActive: true,
+      },
+    });
+
+    commodityMap.set(item.name, commodity.id);
+
+    // Standar Mutu (passScore 70, bobot checklist 100)
+    await prisma.qualityStandard.upsert({
+      where: { commodityId: commodity.id },
+      update: {
+        passScore: 70,
+        checklist: DEFAULT_QUALITY_CHECKLIST,
+      },
+      create: {
+        commodityId: commodity.id,
+        passScore: 70,
+        checklist: DEFAULT_QUALITY_CHECKLIST,
+      },
+    });
+
+    // Harga Acuan (wilayah Kabupaten Demo, diset oleh Admin)
+    const existingPriceRef = await prisma.priceReference.findFirst({
+      where: {
+        commodityId: commodity.id,
+        regionId: region.id,
+        validTo: null,
+      },
+    });
+
+    if (existingPriceRef) {
+      await prisma.priceReference.update({
+        where: { id: existingPriceRef.id },
+        data: {
+          referencePrice: item.referencePrice,
+          floorPrice: item.floorPrice,
+          ceilingPrice: item.ceilingPrice,
+          validFrom: validFromYearStart,
+          setById: admin.id,
+        },
+      });
+    } else {
+      await prisma.priceReference.create({
+        data: {
+          commodityId: commodity.id,
+          regionId: region.id,
+          referencePrice: item.referencePrice,
+          floorPrice: item.floorPrice,
+          ceilingPrice: item.ceilingPrice,
+          validFrom: validFromYearStart,
+          validTo: null,
+          setById: admin.id,
+        },
+      });
+    }
+  }
+  console.log(`✓ 13 Komoditas, Standar Mutu, dan Harga Acuan terdaftar`);
+
+  // 5. Resep Baku (R1 s.d. R5) (T2.2 / docs/09 Bagian 5.2)
+  console.log('🍳 Menyemai data resep baku (R1 s.d. R5)...');
+  for (const r of RECIPES_SEED_DATA) {
+    const recipe = await prisma.recipe.upsert({
+      where: { name: r.name },
+      update: {
+        description: r.description,
+      },
+      create: {
+        name: r.name,
+        description: r.description,
+      },
+    });
+
+    for (const ri of r.items) {
+      const commodityId = commodityMap.get(ri.commodityName);
+      if (!commodityId) {
+        throw new Error(`Komoditas ${ri.commodityName} tidak ditemukan untuk resep ${r.name}`);
+      }
+
+      await prisma.recipeItem.upsert({
+        where: {
+          recipeId_commodityId: {
+            recipeId: recipe.id,
+            commodityId,
+          },
+        },
+        update: {
+          quantityPerPortion: ri.quantityPerPortion,
+        },
+        create: {
+          recipeId: recipe.id,
+          commodityId,
+          quantityPerPortion: ri.quantityPerPortion,
+        },
+      });
+    }
+  }
+  console.log(`✓ 5 Resep Baku (R1 s.d. R5) beserta item bahan tersimpan`);
+
+  console.log('🎉 Seluruh data dasar dan master data berhasil disemai!');
 }
 
 main()
