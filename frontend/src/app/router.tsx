@@ -6,6 +6,11 @@ import { RegisterPage } from '../pages/RegisterPage';
 import { PendingPage } from '../pages/PendingPage';
 import { RolePlaceholderPage } from '../pages/RolePlaceholderPage';
 import { AdminUsersPage } from '../pages/admin/AdminUsersPage';
+import { AdminCommoditiesPage } from '../pages/admin/AdminCommoditiesPage';
+import { AdminRecipesPage } from '../pages/admin/AdminRecipesPage';
+import { AdminPricesPage } from '../pages/admin/AdminPricesPage';
+import { AdminSettingsPage } from '../pages/admin/AdminSettingsPage';
+import { QualityStandardsPage } from '../pages/inspector/QualityStandardsPage';
 import { RoleLayout } from './layouts/RoleLayout';
 import { RequireAuth } from '../features/auth/RequireAuth';
 import { RequireRole } from '../features/auth/RequireRole';
@@ -52,6 +57,38 @@ export const AppRouter: React.FC = () => {
             element={
               <RequireRole roles={['ADMIN']}>
                 <AdminUsersPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/admin/master/commodities"
+            element={
+              <RequireRole roles={['ADMIN']}>
+                <AdminCommoditiesPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/admin/master/recipes"
+            element={
+              <RequireRole roles={['ADMIN']}>
+                <AdminRecipesPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/admin/master/prices"
+            element={
+              <RequireRole roles={['ADMIN']}>
+                <AdminPricesPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/admin/settings"
+            element={
+              <RequireRole roles={['ADMIN']}>
+                <AdminSettingsPage />
               </RequireRole>
             }
           />
@@ -107,6 +144,14 @@ export const AppRouter: React.FC = () => {
           />
 
           {/* Inspector Routes */}
+          <Route
+            path="/inspector/standards"
+            element={
+              <RequireRole roles={['QUALITY_INSPECTOR', 'ADMIN']}>
+                <QualityStandardsPage />
+              </RequireRole>
+            }
+          />
           <Route
             path="/inspector/*"
             element={

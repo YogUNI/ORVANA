@@ -12,6 +12,11 @@ import {
   CheckCircle,
   FileText,
   Home,
+  Apple,
+  Utensils,
+  Tag,
+  Sliders,
+  ShieldCheck,
 } from 'lucide-react';
 
 export const RoleLayout: React.FC = () => {
@@ -32,6 +37,10 @@ export const RoleLayout: React.FC = () => {
       case 'ADMIN':
         return [
           { to: '/admin/users', label: 'Pengguna & Verifikasi', icon: Users },
+          { to: '/admin/master/commodities', label: 'Katalog Komoditas', icon: Apple },
+          { to: '/admin/master/recipes', label: 'Resep Baku Gizi', icon: Utensils },
+          { to: '/admin/master/prices', label: 'Standar Harga Acuan', icon: Tag },
+          { to: '/admin/settings', label: 'Konfigurasi Sistem', icon: Sliders },
         ];
       case 'KITCHEN_MANAGER':
         return [
@@ -48,6 +57,7 @@ export const RoleLayout: React.FC = () => {
       case 'QUALITY_INSPECTOR':
         return [
           { to: '/inspector', label: 'Antrean Mutu', icon: CheckCircle },
+          { to: '/inspector/standards', label: 'Standar Mutu', icon: ShieldCheck },
         ];
       case 'AUDITOR':
         return [
