@@ -11,6 +11,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { MasterDataModule } from './modules/master-data/master-data.module';
+import { MenuModule } from './modules/menu/menu.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { MasterDataModule } from './modules/master-data/master-data.module';
     UsersModule,
     SettingsModule,
     MasterDataModule,
+    MenuModule,
   ],
   controllers: [AppController],
   providers: [
