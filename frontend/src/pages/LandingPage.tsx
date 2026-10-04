@@ -132,16 +132,14 @@ export const LandingPage: React.FC = () => {
         </div>
 
         {/* Ticker / Live Impact Summary Card (Data Nyata Buku Besar) */}
-        <div className="bg-white rounded-card border-2 border-surface-border p-6 shadow-card mb-16 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-harvest-gold/5 rounded-full blur-2xl pointer-events-none" />
-          
+        <div className="bg-white rounded-card border border-surface-border p-6 shadow-soft mb-16 relative overflow-hidden">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5 border-b border-surface-border pb-3">
             <div>
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-900 flex items-center gap-1.5">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-pine-900 flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-harvest-gold" />
                 Dampak Nyata Rantai Pasok Terbuka
               </span>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-xs text-stone-500 mt-0.5">
                 Agregasi langsung dari transaksi buku besar digital yang telah dituntaskan
               </p>
             </div>

@@ -34,20 +34,20 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-surface flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link to="/" className="inline-flex items-center gap-2 mb-4">
-          <span className="w-10 h-10 rounded-xl bg-brand flex items-center justify-center text-white font-heading font-black text-2xl shadow-sm">
+        <Link to="/" className="inline-flex items-center gap-2.5 mb-4">
+          <span className="w-10 h-10 rounded-xl bg-pine-900 flex items-center justify-center text-white font-serif font-black text-2xl shadow-sm border border-pine-700">
             O
           </span>
-          <span className="font-heading font-bold text-2xl text-gray-900 tracking-tight">
+          <span className="font-serif font-bold text-2xl text-pine-950 tracking-tight">
             ORVANA
           </span>
         </Link>
-        <h2 className="font-heading font-bold text-xl text-gray-900">
+        <h2 className="font-serif font-bold text-2xl text-pine-950">
           Masuk ke Akun Anda
         </h2>
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-xs sm:text-sm text-stone-500 font-sans">
           Platform Rantai Pasok Pangan Lokal Dapur Gizi Massal
         </p>
       </div>

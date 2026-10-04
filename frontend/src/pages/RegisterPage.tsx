@@ -84,20 +84,20 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] py-10 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-surface py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-xl mx-auto">
         <div className="text-center mb-6">
-          <Link to="/" className="inline-flex items-center gap-2 mb-2">
-            <span className="w-9 h-9 rounded-xl bg-brand flex items-center justify-center text-white font-heading font-black text-xl">
+          <Link to="/" className="inline-flex items-center gap-2.5 mb-2">
+            <span className="w-9 h-9 rounded-xl bg-pine-900 flex items-center justify-center text-white font-serif font-black text-xl shadow-sm border border-pine-700">
               O
             </span>
-            <span className="font-heading font-bold text-xl text-gray-900">ORVANA</span>
+            <span className="font-serif font-bold text-2xl text-pine-950">ORVANA</span>
           </Link>
-          <h2 className="font-heading font-bold text-2xl text-gray-900">
+          <h2 className="font-serif font-bold text-2xl text-pine-950">
             Daftar Akun Baru
           </h2>
-          <p className="text-xs sm:text-sm text-gray-500 mt-1">
-            Pilih peran Anda untuk terhubung ke ekosistem pangan lokal
+          <p className="text-xs sm:text-sm text-stone-500 mt-1 font-sans">
+            Pilih peran Anda untuk terhubung ke ekosistem rantai pasok pangan gizi massal
           </p>
         </div>
 
