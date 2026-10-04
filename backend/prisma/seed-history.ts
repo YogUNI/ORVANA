@@ -179,10 +179,10 @@ export async function seedHistoricalOrders(prisma: PrismaClient) {
         id: `off-hist-${item.code}`,
         supplierId: supId,
         commodityId: comId,
-        availableQuantity: item.qty,
-        pricePerUnit: item.price,
+        quantityAvailable: item.qty,
+        askingPrice: item.price,
         harvestDate: twoWeeksAgo,
-        status: 'ACCEPTED',
+        status: 'DEPLETED',
       },
     });
 
