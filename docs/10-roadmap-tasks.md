@@ -113,7 +113,7 @@ Acuan: `07-ui-ux-guidelines.md`, tema Artisan Agritech, lebar 375 px, kontras da
 - [x] **T8.U4** Koordinator: dasbor, konsolidasi, pengiriman, detail pengiriman.
 - [x] **T8.U5** Pengawas mutu: antrean, form QC, standar mutu.
 - [x] **T8.U6** Admin: dasbor, pengguna, master data, pengaturan, sengketa, ledger, audit, laporan.
-- [ ] **T8.U7** Auditor dan notifikasi.
+- [x] **T8.U7** Auditor dan notifikasi.
 
 Setiap tugas U selesai bila: build frontend dan `npm test` hijau, state loading/kosong/error ada, tampilan dicek di 375 px.
 

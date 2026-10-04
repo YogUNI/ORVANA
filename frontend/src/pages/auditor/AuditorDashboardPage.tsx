@@ -5,6 +5,8 @@ import { formatRupiah, formatDate } from '../../lib/format';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { StatCard } from '../../components/ui/StatCard';
 import {
   ShieldCheck,
   CheckCircle2,
@@ -89,83 +91,42 @@ export const AuditorDashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header Auditor */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-heading font-bold text-gray-900">
-            Audit Publik Buku Besar & Akuntabilitas Anggaran
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Transparansi pembukuan bertahap tanpa rekonsiliasi manual; nama dan data pribadi produsen lokal disamarkan sesuai regulasi privasi (docs/02 bagian 6).
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Badge color="info">Akses Auditor Publik (Read-Only)</Badge>
-        </div>
-      </div>
+      <PageHeader
+        title="Audit Publik Buku Besar & Akuntabilitas Anggaran"
+        subtitle="Transparansi pembukuan bertahap tanpa rekonsiliasi manual; nama dan data pribadi produsen lokal disamarkan sesuai regulasi privasi (docs/02 bagian 6)."
+        icon={<ShieldCheck className="w-6 h-6 text-pine-800" />}
+        badge={<Badge color="info">Akses Auditor Publik (Read-Only)</Badge>}
+      />
 
       {/* Ringkasan Saldo Buku Besar Auditor */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-4 border-l-4 border-amber-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Total Dana Dicadangkan (HOLD)
-            </p>
-            <p className="text-xl font-heading font-bold text-gray-900 mt-1">
-              {isLoadingSummary ? <Skeleton className="h-6 w-24" /> : formatRupiah(summary?.totalHold || 0)}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">Komitmen pesanan awal</p>
-          </div>
-          <div className="p-3 bg-amber-50 text-amber-600 rounded-lg">
-            <Clock className="w-5 h-5" />
-          </div>
-        </Card>
+        <StatCard
+          label="Total Dana Dicadangkan (HOLD)"
+          value={isLoadingSummary ? '...' : formatRupiah(summary?.totalHold || 0)}
+          subtext="Komitmen pesanan awal"
+          icon={<Clock className="w-5 h-5 text-amber-600" />}
+        />
 
-        <Card className="p-4 border-l-4 border-emerald-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Total Dana Dicairkan (RELEASE)
-            </p>
-            <p className="text-xl font-heading font-bold text-emerald-600 mt-1">
-              {isLoadingSummary ? <Skeleton className="h-6 w-24" /> : formatRupiah(summary?.effectiveReleased || 0)}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">Lolos uji mutu gizi massal</p>
-          </div>
-          <div className="p-3 bg-emerald-50 text-emerald-600 rounded-lg">
-            <CheckCircle2 className="w-5 h-5" />
-          </div>
-        </Card>
+        <StatCard
+          label="Total Dana Dicairkan (RELEASE)"
+          value={isLoadingSummary ? '...' : formatRupiah(summary?.effectiveReleased || 0)}
+          subtext="Lolos uji mutu gizi massal"
+          icon={<CheckCircle2 className="w-5 h-5 text-emerald-600" />}
+        />
 
-        <Card className="p-4 border-l-4 border-red-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Total Dana Dibatalkan (VOID)
-            </p>
-            <p className="text-xl font-heading font-bold text-red-600 mt-1">
-              {isLoadingSummary ? <Skeleton className="h-6 w-24" /> : formatRupiah(summary?.totalVoid || 0)}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">Pengembalian gagal mutu / afkir</p>
-          </div>
-          <div className="p-3 bg-red-50 text-red-600 rounded-lg">
-            <XCircle className="w-5 h-5" />
-          </div>
-        </Card>
+        <StatCard
+          label="Total Dana Dibatalkan (VOID)"
+          value={isLoadingSummary ? '...' : formatRupiah(summary?.totalVoid || 0)}
+          subtext="Pengembalian gagal mutu / afkir"
+          icon={<XCircle className="w-5 h-5 text-rose-600" />}
+        />
 
-        <Card className="p-4 border-l-4 border-brand flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Verifikasi Keseimbangan Invarian
-            </p>
-            <div className="mt-1 flex items-center gap-1.5 text-emerald-700 font-semibold text-sm">
-              <ShieldCheck className="w-4 h-4" />
-              <span>HOLD = RELEASE + VOID</span>
-            </div>
-            <p className="text-xs text-gray-400 mt-0.5">Buku besar seimbang 100%</p>
-          </div>
-          <div className="p-3 bg-brand-soft text-brand rounded-lg">
-            <Scale className="w-5 h-5" />
-          </div>
-        </Card>
+        <StatCard
+          label="Keseimbangan Invarian"
+          value="HOLD = RELEASE + VOID"
+          subtext="Buku besar seimbang 100%"
+          icon={<Scale className="w-5 h-5 text-pine-700" />}
+        />
       </div>
 
       {/* Banner Perlindungan Privasi Auditor */}

@@ -7,6 +7,7 @@ import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Skeleton } from '../components/ui/Skeleton';
+import { PageHeader } from '../components/ui/PageHeader';
 import {
   Bell,
   CheckCheck,
@@ -90,44 +91,38 @@ export const NotificationsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-surface-border pb-4">
-        <div>
-          <h1 className="text-2xl font-serif font-bold text-pine-900 tracking-tight flex items-center gap-2">
-            <Bell className="w-6 h-6 text-pine-700" />
-            Pusat Notifikasi & Informasi Sistem
-          </h1>
-          <p className="text-sm text-stone-500 mt-1">
-            Riwayat lengkap pemberitahuan alokasi kebutuhan bahan, hasil inspeksi mutu, pencairan dana, dan mediasi.
-          </p>
-        </div>
+      <PageHeader
+        title="Pusat Notifikasi & Informasi Sistem"
+        subtitle="Riwayat lengkap pemberitahuan alokasi kebutuhan bahan, hasil inspeksi mutu, pencairan dana, dan mediasi."
+        icon={<Bell className="w-6 h-6 text-pine-800" />}
+        actions={
+          <div className="flex items-center gap-2">
+            {meta && meta.unreadCount > 0 && (
+              <Button
+                variant="outline"
+                onClick={() => markAllReadMutation.mutate()}
+                isLoading={markAllReadMutation.isPending}
+                className="text-xs border-stone-300 text-stone-700 hover:bg-stone-50"
+              >
+                <CheckCheck className="w-4 h-4 mr-1.5" />
+                Tandai Semua Dibaca
+              </Button>
+            )}
 
-        <div className="flex items-center gap-2">
-          {meta && meta.unreadCount > 0 && (
-            <Button
-              variant="outline"
-              onClick={() => markAllReadMutation.mutate()}
-              isLoading={markAllReadMutation.isPending}
-              className="text-xs border-stone-300 text-stone-700 hover:bg-stone-50"
+            <button
+              onClick={() => setUnreadOnly(!unreadOnly)}
+              className={`px-3 py-2 rounded-lg border text-xs font-sans font-semibold transition-colors flex items-center gap-1.5 ${
+                unreadOnly
+                  ? 'bg-pine-800 text-white border-pine-800'
+                  : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
+              }`}
             >
-              <CheckCheck className="w-4 h-4 mr-1.5" />
-              Tandai Semua Dibaca
-            </Button>
-          )}
-
-          <button
-            onClick={() => setUnreadOnly(!unreadOnly)}
-            className={`px-3 py-2 rounded-lg border text-xs font-sans font-semibold transition-colors flex items-center gap-1.5 ${
-              unreadOnly
-                ? 'bg-pine-800 text-white border-pine-800'
-                : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
-            }`}
-          >
-            <Filter className="w-3.5 h-3.5" />
-            {unreadOnly ? 'Hanya Belum Dibaca' : 'Semua Notifikasi'}
-          </button>
-        </div>
-      </div>
+              <Filter className="w-3.5 h-3.5" />
+              {unreadOnly ? 'Hanya Belum Dibaca' : 'Semua Notifikasi'}
+            </button>
+          </div>
+        }
+      />
 
       {/* Konten Notifikasi */}
       {isLoading ? (
