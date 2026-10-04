@@ -6,9 +6,10 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { AuditModule } from '../audit/audit.module';
 import { LedgerModule } from '../ledger/ledger.module';
 import { MatchingModule } from '../matching/matching.module';
+import { SettingsModule } from '../settings/settings.module';
 
 @Module({
-  imports: [PrismaModule, AuditModule, LedgerModule, MatchingModule],
+  imports: [PrismaModule, AuditModule, LedgerModule, MatchingModule, SettingsModule],
   controllers: [OrdersController],
   providers: [OrdersService, OrderSchedulerService],
   exports: [OrdersService, OrderSchedulerService],

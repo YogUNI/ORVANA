@@ -62,11 +62,11 @@ Jangan mengerjakan P2 atau modul AI kecuali diminta.
 
 ## Tahap 5: Penerimaan, mutu, dan pembayaran (P0)
 
-- [ ] **T5.1** `[A3]` Upload (multer, validasi tipe/ukuran, folder terproteksi). *(1 sesi)*
-- [ ] **T5.2** `[A3]` Backend receive + QC: skor dari checklist, hasil PASS/PARTIAL/FAIL, efek ledger, pembaruan skor pemasok, satu QC final, semuanya dalam satu transaksi + **uji dengan vektor `09` bagian 6** (RELEASE 320.000; 187.500 + VOID 30.000; mutu 88,40 dan 78,40). *(3 sesi)*
+- [x] **T5.1** `[A3]` Upload (multer, validasi tipe/ukuran, folder terproteksi). *(1 sesi)*
+- [x] **T5.2** `[A3]` Backend receive + QC: skor dari checklist, hasil PASS/PARTIAL/FAIL, efek ledger, pembaruan skor pemasok, satu QC final, semuanya dalam satu transaksi + **uji dengan vektor `09` bagian 6** (RELEASE 320.000; 187.500 + VOID 30.000; mutu 88,40 dan 78,40). *(3 sesi)*
 - [ ] **T5.3** `[A3]` Frontend `/kitchen/receiving`, `/inspector/queue`, `/inspector/check/:batchId` (pratinjau hasil), `/inspector/history`. *(3 sesi)*
 - [ ] **T5.4** `[A3]` Frontend pembayaran: `/supplier/payments`, `/kitchen/payments`, `/admin/ledger`; `GET /ledger`, `/ledger/summary`. *(2 sesi)*
-- [ ] **T5.5** `[A1]` Tugas terjadwal penyelesaian order (`PAID/QC_FAILED` → `COMPLETED` setelah jendela). *(0,5 sesi)*
+- [x] **T5.5** `[A1]` Tugas terjadwal penyelesaian order (`PAID/QC_FAILED` → `COMPLETED` setelah jendela). *(0,5 sesi)*
 
 **Gate 5:** skenario bayam selesai sampai pembayaran tercatat sesuai angka vektor uji; invarian ledger terjaga; QC ganda ditolak.
 

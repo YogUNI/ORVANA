@@ -3,6 +3,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { MatchingService } from '../matching/matching.service';
+import { SettingsService } from '../settings/settings.service';
 import { OrderStatus, Role } from '@prisma/client';
 
 @Injectable()
@@ -13,7 +14,76 @@ export class OrderSchedulerService {
     private readonly prisma: PrismaService,
     private readonly auditService: AuditService,
     private readonly matchingService: MatchingService,
+    private readonly settingsService: SettingsService,
   ) {}
+
+  /**
+   * Tugas Terjadwal: Penyelesaian Otomatis Order (T5.5 - docs/04 bagian 9 & docs/06 M5.5)
+   * Berjalan tiap jam: Order berstatus PAID atau QC_FAILED yang melewati disputeWindowHours
+   * tanpa adanya sengketa (Dispute) aktif akan diubah statusnya menjadi COMPLETED.
+   * Bersifat IDEMPOTEN.
+   */
+  @Cron(CronExpression.EVERY_HOUR)
+  async handleOrderCompletion() {
+    this.logger.log('Menjalankan tugas terjadwal: penyelesaian order otomatis...');
+
+    const disputeWindowHours = await this.settingsService.getSetting<number>(
+      'order.disputeWindowHours',
+      48,
+    );
+
+    const cutoffTime = new Date(Date.now() - disputeWindowHours * 60 * 60 * 1000);
+
+    // Ambil order PAID atau QC_FAILED yang updatedAt <= cutoffTime dan tidak punya sengketa aktif
+    const candidateOrders = await this.prisma.order.findMany({
+      where: {
+        status: {
+          in: [OrderStatus.PAID, OrderStatus.QC_FAILED],
+        },
+        updatedAt: {
+          lte: cutoffTime,
+        },
+        disputes: {
+          none: {
+            status: { in: ['OPEN', 'UNDER_REVIEW'] },
+          },
+        },
+      },
+    });
+
+    if (candidateOrders.length === 0) {
+      return { completedCount: 0 };
+    }
+
+    let completedCount = 0;
+    for (const order of candidateOrders) {
+      try {
+        await this.prisma.order.update({
+          where: { id: order.id },
+          data: { status: OrderStatus.COMPLETED },
+        });
+
+        await this.auditService.log({
+          action: 'ORDER_COMPLETED',
+          entity: 'Order',
+          entityId: order.id,
+          meta: {
+            orderNo: order.orderNo,
+            previousStatus: order.status,
+            newStatus: OrderStatus.COMPLETED,
+            disputeWindowHours,
+          },
+        });
+
+        completedCount++;
+      } catch (err: any) {
+        this.logger.error(`Gagal menyelesaikan order ${order.orderNo}: ${err.message}`);
+      }
+    }
+
+    this.logger.log(`Berhasil menyelesaikan otomatis ${completedCount} pesanan.`);
+    return { completedCount };
+  }
 
   /**
    * Tugas Terjadwal: Pemeriksaan tawaran pesanan kedaluwarsa

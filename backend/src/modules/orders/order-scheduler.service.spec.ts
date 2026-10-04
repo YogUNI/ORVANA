@@ -3,13 +3,15 @@ import { OrderSchedulerService } from './order-scheduler.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { MatchingService } from '../matching/matching.service';
+import { SettingsService } from '../settings/settings.service';
 import { OrderStatus, Role } from '@prisma/client';
 
-describe('OrderSchedulerService (T3.6 - docs/04 Bagian 9)', () => {
+describe('OrderSchedulerService (T3.6 & T5.5 - docs/04 Bagian 9)', () => {
   let service: OrderSchedulerService;
   let prisma: any;
   let audit: any;
   let matching: any;
+  let settings: any;
 
   const mockExpiredOrders = [
     {
@@ -45,12 +47,17 @@ describe('OrderSchedulerService (T3.6 - docs/04 Bagian 9)', () => {
       matchAndAllocate: jest.fn().mockResolvedValue({ message: 'Alokasi ulang berhasil' }),
     };
 
+    settings = {
+      getSetting: jest.fn().mockResolvedValue(48),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         OrderSchedulerService,
         { provide: PrismaService, useValue: prisma },
         { provide: AuditService, useValue: audit },
         { provide: MatchingService, useValue: matching },
+        { provide: SettingsService, useValue: settings },
       ],
     }).compile();
 
@@ -110,5 +117,38 @@ describe('OrderSchedulerService (T3.6 - docs/04 Bagian 9)', () => {
     expect(result.reallocatedDemands).toHaveLength(0);
     expect(prisma.order.update).not.toHaveBeenCalled();
     expect(matching.matchAndAllocate).not.toHaveBeenCalled();
+  });
+
+  describe('handleOrderCompletion (T5.5)', () => {
+    it('harus menyelesaikan order PAID yang melewati disputeWindowHours tanpa sengketa menjadi COMPLETED', async () => {
+      const mockPaidOrder = {
+        id: 'ord-paid-1',
+        orderNo: 'ORD-20261014-0001',
+        status: OrderStatus.PAID,
+        updatedAt: new Date(Date.now() - 50 * 3600 * 1000), // 50 jam lalu (> 48 jam)
+      };
+
+      prisma.order.findMany.mockResolvedValue([mockPaidOrder]);
+      prisma.order.update.mockResolvedValue({
+        ...mockPaidOrder,
+        status: OrderStatus.COMPLETED,
+      });
+
+      const result = await service.handleOrderCompletion();
+
+      expect(result.completedCount).toBe(1);
+      expect(prisma.order.update).toHaveBeenCalledWith({
+        where: { id: 'ord-paid-1' },
+        data: { status: OrderStatus.COMPLETED },
+      });
+
+      expect(audit.log).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: 'ORDER_COMPLETED',
+          entity: 'Order',
+          entityId: 'ord-paid-1',
+        }),
+      );
+    });
   });
 });
