@@ -15,8 +15,9 @@ import {
   Building,
   Sprout,
   Receipt,
-  Search,
   Scale,
+  QrCode,
+  Award,
 } from 'lucide-react';
 
 interface PublicTraceData {
@@ -78,274 +79,295 @@ export const BatchTracePage: React.FC = () => {
       case 'PASS':
         return <Badge color="success">Lolos Mutu Prima (PASS)</Badge>;
       case 'PARTIAL':
-        return <Badge color="warning">Lolos Sebagian (PARTIAL)</Badge>;
+        return <Badge color="warning">Lolos Parsial (PARTIAL)</Badge>;
       case 'FAIL':
-        return <Badge color="danger">Tidak Lolos Mutu (FAIL)</Badge>;
+        return <Badge color="danger">Tidak Lolos (FAIL)</Badge>;
       default:
-        return <Badge color="neutral">Menunggu Pemeriksaan Mutu</Badge>;
+        return <Badge color="neutral">Menunggu Uji Mutu</Badge>;
     }
   };
 
   const getPaymentBadge = (status: string) => {
     switch (status) {
       case 'SETTLED_TO_FARMER':
-        return <Badge color="success">Hak Petani/Nelayan Dituntaskan</Badge>;
+        return <Badge color="success">Pencairan Hak Petani Tuntas</Badge>;
       case 'ESCROW_HOLD':
-        return <Badge color="warning">Dana Diamankan di Rekening Penampung</Badge>;
+        return <Badge color="warning">Dana Tertahan Escrow</Badge>;
       case 'CANCELLED':
-        return <Badge color="danger">Dibatalkan</Badge>;
+        return <Badge color="danger">Batal Karena Mutu</Badge>;
       default:
-        return <Badge color="neutral">Menunggu Verifikasi</Badge>;
+        return <Badge color="neutral">Menunggu Penyelesaian</Badge>;
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] pb-16">
+    <div className="min-h-screen bg-surface pb-20">
       {/* Header Publik */}
-      <header className="bg-white border-b border-gray-200">
+      <header className="bg-white/80 backdrop-blur-md border-b border-surface-border sticky top-0 z-30 shadow-xs">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <span className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center text-white font-heading font-black text-lg">
+          <Link to="/" className="flex items-center gap-3">
+            <span className="w-9 h-9 rounded-card bg-brand flex items-center justify-center text-white font-serif font-black text-xl shadow-sm border border-brand-light">
               O
             </span>
-            <span className="font-heading font-bold text-lg text-gray-900">
-              ORVANA <span className="text-xs font-normal text-gray-500 ml-1">Transparansi Rantai Pasok</span>
-            </span>
+            <div>
+              <span className="font-heading font-extrabold text-base text-gray-950 tracking-tight block leading-tight">
+                ORVANA
+              </span>
+              <span className="text-[10px] uppercase font-mono tracking-wider text-emerald-800 font-semibold">
+                Passport Pangan Digital
+              </span>
+            </div>
           </Link>
           <div className="flex items-center gap-3">
-            <Link to="/login">
+            <Link to="/">
               <Button variant="outline" size="sm">
-                Masuk Sistem
+                Beranda
               </Button>
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Hero & Bar Pencarian Cepat */}
-      <div className="bg-white border-b border-gray-200 py-8 px-4">
-        <div className="max-w-3xl mx-auto text-center space-y-3">
-          <Badge color="info">Penelusuran Asal Usul Bahan Pangan (Batch Traceability)</Badge>
-          <h1 className="text-2xl sm:text-3xl font-heading font-bold text-gray-900">
-            Jejak Transparansi Pangan Dapur Gizi
-          </h1>
-          <p className="text-sm text-gray-600 max-w-xl mx-auto">
-            Lacak perjalanan bahan baku pangan bergizi anak sekolah & balita: dari ladang petani lokal, armada distribusi, uji mutu ahli gizi, hingga kepastian pembayaran petani.
-          </p>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (searchInput.trim()) {
-                window.location.href = `/trace/${encodeURIComponent(searchInput.trim())}`;
-              }
-            }}
-            className="flex items-center justify-center gap-2 pt-2 max-w-md mx-auto"
-          >
-            <input
-              type="text"
-              placeholder="Masukkan kode batch, misal: ORV-20261012-DPR01-0001"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="flex-1 px-3.5 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand font-mono"
-            />
-            <Button type="submit" size="sm" className="flex items-center gap-1.5 shrink-0">
-              <Search className="w-4 h-4" />
-              <span>Lacak</span>
-            </Button>
-          </form>
-        </div>
-      </div>
-
       {/* Konten Utama */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 pt-8">
         {isLoading ? (
           <div className="space-y-4">
-            <Skeleton className="h-28 w-full" />
-            <Skeleton className="h-64 w-full" />
+            <Skeleton className="h-32 w-full" />
+            <Skeleton className="h-80 w-full" />
           </div>
         ) : isError || !trace ? (
-          <Card className="p-12 text-center space-y-4">
-            <div className="w-16 h-16 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center mx-auto">
+          <Card className="p-12 text-center space-y-4 border-dashed border-2 border-surface-border bg-white">
+            <div className="w-16 h-16 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto border border-rose-200">
               <XCircle className="w-8 h-8" />
             </div>
             <div>
               <h2 className="text-xl font-heading font-bold text-gray-900">
-                Batch Tidak Ditemukan
+                Data Batch Tidak Ditemukan
               </h2>
-              <p className="text-sm text-gray-500 max-w-md mx-auto mt-1">
-                Kode batch <span className="font-mono font-semibold text-gray-800">{batchCode}</span> tidak terdaftar dalam catatan buku besar sistem ORVANA. Pastikan kode diketik dengan benar atau hubungi koordinator wilayah.
+              <p className="text-sm text-gray-500 max-w-md mx-auto mt-1 font-mono">
+                Kode "{batchCode}" belum terdaftar pada buku besar digital ORVANA.
               </p>
             </div>
-            <Link to="/">
-              <Button variant="outline" size="sm">
-                Kembali ke Beranda
-              </Button>
-            </Link>
+            <div className="pt-2">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (searchInput.trim()) {
+                    window.location.href = `/trace/${encodeURIComponent(searchInput.trim())}`;
+                  }
+                }}
+                className="flex items-center justify-center gap-2 max-w-sm mx-auto"
+              >
+                <input
+                  type="text"
+                  placeholder="Ketik kode batch lain..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="px-3 py-2 text-xs border border-surface-border rounded-DEFAULT flex-1 font-mono focus:outline-none focus:ring-1 focus:ring-brand"
+                />
+                <Button type="submit" size="sm">
+                  Cari
+                </Button>
+              </form>
+            </div>
           </Card>
         ) : (
           <div className="space-y-6">
-            {/* Banner Kartu Batch */}
-            <Card className="p-6 border-l-4 border-brand bg-white shadow-sm">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-gray-100 text-gray-800">
-                      {trace.batchCode}
+            {/* Passport Certificate Card (Sertifikat Penelusuran Resmi) */}
+            <div className="bg-white rounded-card border-2 border-brand/20 shadow-card p-6 sm:p-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-36 h-36 bg-emerald-50 rounded-full blur-2xl pointer-events-none" />
+
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 pb-6 border-b border-surface-border">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-mono font-bold text-xs bg-brand-soft text-brand px-2.5 py-1 rounded border border-brand/20">
+                      BATCH: {trace.batchCode}
                     </span>
                     {getQcBadge(trace.quality?.result)}
                   </div>
-                  <h2 className="text-2xl font-heading font-bold text-gray-900 mt-2">
-                    Komoditas: {trace.commodity.name}
-                  </h2>
-                  <p className="text-sm text-gray-500 flex items-center gap-1.5 mt-0.5">
-                    <Building className="w-4 h-4 text-gray-400" />
-                    Tujuan Dapur: <span className="font-semibold text-gray-700">{trace.logistics.kitchenName}</span> ({trace.logistics.kitchenCode})
+                  <h1 className="font-serif text-3xl sm:text-4xl font-bold text-gray-950">
+                    {trace.commodity.name}
+                  </h1>
+                  <p className="text-xs text-gray-500 flex items-center gap-1.5 font-mono">
+                    <Building className="w-3.5 h-3.5 text-gray-400" />
+                    Destinasi: {trace.logistics.kitchenName} ({trace.logistics.kitchenCode})
                   </p>
                 </div>
 
-                <div className="text-left sm:text-right bg-brand-soft/50 sm:bg-transparent p-3 sm:p-0 rounded-lg">
-                  <p className="text-xs text-gray-500">Status Pembayaran Produsen</p>
+                {/* Stempel Sertifikasi / QR Mockup */}
+                <div className="p-4 rounded-card bg-surface-muted/60 border border-surface-border text-center shrink-0 w-full sm:w-auto">
+                  <div className="w-16 h-16 mx-auto bg-white p-2 rounded border border-surface-border shadow-2xs flex items-center justify-center">
+                    <QrCode className="w-12 h-12 text-brand" />
+                  </div>
+                  <span className="text-[10px] font-mono font-semibold text-gray-500 uppercase tracking-wider block mt-2">
+                    Sertifikat Asal Bahan
+                  </span>
                   <div className="mt-1">{getPaymentBadge(trace.paymentStatus)}</div>
                 </div>
               </div>
-            </Card>
 
-            {/* Linimasa Vertikal Perjalanan Bahan Pangan (5 Tahap) */}
+              {/* Rangkuman Fakta Kunci (Passport Key Facts) */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6">
+                <div>
+                  <span className="text-[11px] uppercase tracking-wider text-gray-400 font-semibold block">
+                    Produsen Asli
+                  </span>
+                  <p className="font-heading font-bold text-sm text-gray-900 mt-0.5">
+                    {trace.origin.supplierName}
+                  </p>
+                  <span className="text-xs text-gray-500 block">Desa {trace.origin.village || 'Lokal'}</span>
+                </div>
+
+                <div>
+                  <span className="text-[11px] uppercase tracking-wider text-gray-400 font-semibold block">
+                    Kuantitas Panen
+                  </span>
+                  <p className="font-mono font-bold text-sm text-gray-900 mt-0.5">
+                    {formatKg(trace.quantities.shipped)}
+                  </p>
+                  <span className="text-xs text-gray-500 block">Kategori {trace.origin.supplierType}</span>
+                </div>
+
+                <div>
+                  <span className="text-[11px] uppercase tracking-wider text-gray-400 font-semibold block">
+                    Jarak Distribusi
+                  </span>
+                  <p className="font-mono font-bold text-sm text-brand mt-0.5">
+                    {trace.logistics.distanceKm} km
+                  </p>
+                  <span className="text-xs text-gray-500 block">Rantai pasok pendek</span>
+                </div>
+
+                <div>
+                  <span className="text-[11px] uppercase tracking-wider text-gray-400 font-semibold block">
+                    Skor Uji Mutu Gizi
+                  </span>
+                  <p className="font-mono font-bold text-sm text-emerald-800 mt-0.5">
+                    {trace.quality?.score ? `${trace.quality.score} / 100` : 'Menunggu'}
+                  </p>
+                  <span className="text-xs text-gray-500 block">Inspektur independen</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Linimasa Perjalanan Pangan 5 Tahap (Tactical Timeline) */}
             <div className="space-y-4">
-              <h3 className="font-heading font-semibold text-gray-900 text-base">
-                Linimasa Penelusuran Asal Pangan (Traceability Timeline)
+              <h3 className="font-serif font-bold text-xl text-gray-950">
+                Linimasa Perjalanan Pangan
               </h3>
 
-              <div className="space-y-4 relative before:absolute before:inset-0 before:left-5 before:w-0.5 before:bg-gray-200">
-                {/* 1. Asal Usul & Panen */}
+              <div className="space-y-4 relative before:absolute before:inset-0 before:left-5 before:w-0.5 before:bg-surface-border">
+                {/* 1. Panen */}
                 <div className="relative flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 z-10 border-2 border-white">
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 z-10 border-2 border-white shadow-xs">
                     <Sprout className="w-5 h-5" />
                   </div>
-                  <Card className="flex-1 p-4">
+                  <Card className="flex-1 p-4 bg-white border border-surface-border">
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-heading font-bold text-sm text-gray-900">
-                        1. Panen & Produsen Pangan Lokal
+                        1. Panen dari Lahan Petani Lokal
                       </span>
-                      <span className="text-xs font-medium text-gray-500 flex items-center gap-1">
+                      <span className="text-xs font-mono text-gray-500 flex items-center gap-1">
                         <Calendar className="w-3.5 h-3.5" />
                         {trace.timeline.harvestDate}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-600">
-                      Diproduksi oleh: <span className="font-semibold text-gray-800">{trace.origin.supplierName}</span>
+                    <p className="text-xs text-gray-700">
+                      Dipetik langsung oleh mitra <span className="font-semibold">{trace.origin.supplierName}</span> di Desa {trace.origin.village || 'Binaan'}.
                     </p>
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      Lokasi: Desa {trace.origin.village || 'Binaan Lokal'} • Kategori: {trace.origin.supplierType}
-                    </p>
-                    <div className="mt-2 text-xs text-gray-500 bg-gray-50 p-2 rounded">
-                      Kuantitas Awal Panen: <span className="font-mono font-semibold text-gray-800">{formatKg(trace.quantities.shipped)}</span>
-                    </div>
                   </Card>
                 </div>
 
-                {/* 2. Distribusi & Koridor Logistik */}
+                {/* 2. Pengiriman */}
                 <div className="relative flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 z-10 border-2 border-white">
+                  <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center shrink-0 z-10 border-2 border-white shadow-xs">
                     <Truck className="w-5 h-5" />
                   </div>
-                  <Card className="flex-1 p-4">
+                  <Card className="flex-1 p-4 bg-white border border-surface-border">
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-heading font-bold text-sm text-gray-900">
-                        2. Konsolidasi & Pengiriman Armada
+                        2. Konsolidasi & Pengiriman Armada Wilayah
                       </span>
-                      <span className="text-xs font-medium text-gray-500">
-                        {trace.timeline.shippedAt ? formatDate(trace.timeline.shippedAt) : 'Menunggu Keberangkatan'}
+                      <span className="text-xs font-mono text-gray-500">
+                        {trace.timeline.shippedAt ? formatDate(trace.timeline.shippedAt) : 'Menunggu Jadwal'}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-600">
-                      Rantai Pasok Pendek: Jarak tempuh produsen ke dapur sejauh <span className="font-semibold text-gray-800">{trace.logistics.distanceKm} km</span>.
-                    </p>
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      Susut dalam perjalanan: <span className="font-mono text-gray-700">{formatKg(trace.logistics.lossKg)}</span>
+                    <p className="text-xs text-gray-700">
+                      Diangkut armada koordinator berpendingin sejauh <span className="font-mono font-semibold">{trace.logistics.distanceKm} km</span>. Susut transit tercatat: <span className="font-mono">{formatKg(trace.logistics.lossKg)}</span>.
                     </p>
                   </Card>
                 </div>
 
-                {/* 3. Penerimaan di Dapur Gizi */}
+                {/* 3. Penerimaan */}
                 <div className="relative flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 z-10 border-2 border-white">
+                  <div className="w-10 h-10 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center shrink-0 z-10 border-2 border-white shadow-xs">
                     <Scale className="w-5 h-5" />
                   </div>
-                  <Card className="flex-1 p-4">
+                  <Card className="flex-1 p-4 bg-white border border-surface-border">
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-heading font-bold text-sm text-gray-900">
-                        3. Serah Terima Fisik di Dapur Gizi
+                        3. Serah Terima Fisik di Dapur Gizi Massal
                       </span>
-                      <span className="text-xs font-medium text-gray-500">
-                        {trace.timeline.receivedAt ? formatDate(trace.timeline.receivedAt) : 'Belum Diterima'}
+                      <span className="text-xs font-mono text-gray-500">
+                        {trace.timeline.receivedAt ? formatDate(trace.timeline.receivedAt) : 'Dalam Perjalanan'}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-600">
-                      Diterima langsung di timbangan dapur gizi: <span className="font-mono font-semibold text-gray-800">{trace.quantities.received ? formatKg(trace.quantities.received) : '-'}</span>
+                    <p className="text-xs text-gray-700">
+                      Timbangan riil serah terima dapur: <span className="font-mono font-bold text-gray-900">{trace.quantities.received ? formatKg(trace.quantities.received) : '-'}</span>.
                     </p>
                   </Card>
                 </div>
 
-                {/* 4. Pemeriksaan Mutu Ahli Gizi */}
+                {/* 4. Pemeriksaan Mutu */}
                 <div className="relative flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 z-10 border-2 border-white">
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 z-10 border-2 border-white shadow-xs">
                     <ShieldCheck className="w-5 h-5" />
                   </div>
-                  <Card className="flex-1 p-4">
+                  <Card className="flex-1 p-4 bg-white border border-surface-border">
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-heading font-bold text-sm text-gray-900">
-                        4. Uji Mutu & Standar Higienitas Gizi
+                        4. Uji Mutu & Standar Higienitas Gizi Anak
                       </span>
-                      <span className="text-xs font-medium text-gray-500">
-                        {trace.timeline.checkedAt ? formatDate(trace.timeline.checkedAt) : 'Belum Diperiksa'}
+                      <span className="text-xs font-mono text-gray-500">
+                        {trace.timeline.checkedAt ? formatDate(trace.timeline.checkedAt) : 'Menunggu Antrean'}
                       </span>
                     </div>
 
                     {trace.quality ? (
                       <div className="space-y-3 mt-2">
-                        <div className="flex items-center gap-3">
-                          <div className="p-3 bg-emerald-50 rounded-lg text-emerald-700 text-center">
-                            <span className="text-xs uppercase font-semibold block">Skor Mutu</span>
-                            <span className="text-2xl font-bold font-mono">{trace.quality.score}</span>
-                            <span className="text-[10px] text-gray-500 block">dari 100</span>
-                          </div>
-                          <div className="space-y-1 text-xs text-gray-600">
-                            <div>
-                              Diterima Lolos Konsumsi: <span className="font-mono font-semibold text-emerald-600">{formatKg(trace.quantities.accepted || 0)}</span>
-                            </div>
+                        <div className="p-3 bg-surface-muted/70 rounded-DEFAULT border border-surface-border flex items-center justify-between">
+                          <div>
+                            <span className="text-xs text-gray-500 block">Hasil Kelayakan Konsumsi:</span>
+                            <span className="font-mono font-bold text-sm text-emerald-800">
+                              Diterima: {formatKg(trace.quantities.accepted || 0)}
+                            </span>
                             {Number(trace.quantities.rejected || 0) > 0 && (
-                              <div>
-                                Ditolak / Tidak Memenuhi Standar: <span className="font-mono font-semibold text-red-600">{formatKg(trace.quantities.rejected || 0)}</span>
-                              </div>
+                              <span className="font-mono text-xs text-rose-700 ml-2">
+                                Ditolak: {formatKg(trace.quantities.rejected || 0)}
+                              </span>
                             )}
-                            <div className="text-gray-500 italic">
-                              "{trace.quality.notes || 'Bahan segar, bersih, dan layak olah sesuai standar gizi massal.'}"
-                            </div>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-[10px] uppercase font-semibold text-gray-400 block">Skor Ahli Gizi</span>
+                            <span className="text-2xl font-mono font-bold text-emerald-900">{trace.quality.score}</span>
                           </div>
                         </div>
 
-                        {/* Breakdown Checklist */}
+                        {/* Parameter checklist */}
                         {trace.quality.checklistScores && (
-                          <div className="pt-2 border-t border-gray-100">
-                            <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
-                              Rincian Parameter Mutu
-                            </p>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-                              {Object.entries(trace.quality.checklistScores).map(([key, val]) => (
-                                <div key={key} className="bg-gray-50 p-2 rounded flex justify-between">
-                                  <span className="capitalize text-gray-600">{key}</span>
-                                  <span className="font-mono font-semibold text-gray-900">{val} / 100</span>
-                                </div>
-                              ))}
-                            </div>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1 text-xs">
+                            {Object.entries(trace.quality.checklistScores).map(([k, v]) => (
+                              <div key={k} className="p-2 rounded bg-white border border-surface-border flex justify-between">
+                                <span className="capitalize text-gray-600">{k}</span>
+                                <span className="font-mono font-bold text-gray-900">{v}/100</span>
+                              </div>
+                            ))}
                           </div>
                         )}
                       </div>
                     ) : (
                       <p className="text-xs text-gray-500 mt-1 italic">
-                        Batch sedang menunggu giliran inspeksi oleh Quality Inspector independen.
+                        Batch sedang dalam antrean pengujian parameter kesegaran dan higienitas.
                       </p>
                     )}
                   </Card>
@@ -353,10 +375,10 @@ export const BatchTracePage: React.FC = () => {
 
                 {/* 5. Kepastian Pembayaran Petani */}
                 <div className="relative flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 z-10 border-2 border-white">
+                  <div className="w-10 h-10 rounded-full bg-harvest-soft text-harvest-amber flex items-center justify-center shrink-0 z-10 border-2 border-white shadow-xs">
                     <Receipt className="w-5 h-5" />
                   </div>
-                  <Card className="flex-1 p-4">
+                  <Card className="flex-1 p-4 bg-white border border-surface-border">
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-heading font-bold text-sm text-gray-900">
                         5. Hak Produsen & Pencatatan Buku Besar
@@ -364,18 +386,18 @@ export const BatchTracePage: React.FC = () => {
                       {getPaymentBadge(trace.paymentStatus)}
                     </div>
                     <p className="text-xs text-gray-600 mt-1">
-                      Dana transaksi dicatat secara transparan dalam buku besar (append-only ledger). Petani lokal menerima pembayaran atas bahan yang lolos standar mutu gizi secara tepat waktu.
+                      Setiap kilogram bahan pangan yang lulus uji mutu secara otomatis dicairkan pembayarannya kepada produsen lokal melalui buku besar append-only ORVANA.
                     </p>
                   </Card>
                 </div>
               </div>
             </div>
 
-            {/* Catatan Integritas Data */}
-            <div className="p-4 bg-brand-soft/40 border border-brand/20 rounded-xl flex items-center gap-3 text-xs text-brand">
-              <ShieldCheck className="w-5 h-5 shrink-0" />
+            {/* Verifikasi Kriptografis */}
+            <div className="p-4 bg-emerald-50/60 border border-emerald-200/80 rounded-card flex items-center gap-3 text-xs text-emerald-900">
+              <Award className="w-5 h-5 shrink-0 text-emerald-700" />
               <span>
-                Data penelusuran ini terverifikasi secara kriptografis oleh sistem rantai pasok ORVANA dan dilindungi oleh privasi data produsen lokal sesuai regulasi yang berlaku.
+                Data rantai pasok ini dijamin oleh standar audit publik digital ORVANA. Identitas produsen dilindungi privasinya sesuai ketentuan perizinan sistem.
               </span>
             </div>
           </div>

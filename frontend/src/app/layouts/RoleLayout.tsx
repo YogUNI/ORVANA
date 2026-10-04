@@ -84,20 +84,20 @@ export const RoleLayout: React.FC = () => {
   const navLinks = getNavLinks();
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-[#F9FAFB]">
+    <div className="min-h-screen flex flex-col md:flex-row bg-surface">
       {/* Sidebar Desktop */}
-      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-gray-200 p-5 shrink-0 justify-between">
+      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-surface-border p-5 shrink-0 justify-between shadow-soft">
         <div className="space-y-6">
-          {/* Logo & Info Peran */}
-          <div className="flex items-center gap-3">
-            <span className="w-9 h-9 rounded-lg bg-brand flex items-center justify-center text-white font-heading font-black text-xl">
+          {/* Logo & Header Peran */}
+          <div className="flex items-center gap-3 pb-4 border-b border-surface-border">
+            <span className="w-10 h-10 rounded-card bg-brand flex items-center justify-center text-white font-serif font-black text-2xl shadow-sm border border-brand-light">
               O
             </span>
             <div>
-              <span className="font-heading font-bold text-lg text-gray-900 block leading-tight">
+              <span className="font-heading font-extrabold text-lg text-gray-950 block leading-tight tracking-tight">
                 ORVANA
               </span>
-              <span className="text-xs text-gray-500 font-medium">
+              <span className="text-[11px] font-mono text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 inline-block mt-0.5">
                 {ROLE_LABELS[user.role] || user.role}
               </span>
             </div>
@@ -112,14 +112,14 @@ export const RoleLayout: React.FC = () => {
                   key={item.to}
                   to={item.to}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3.5 py-2.5 rounded text-sm font-medium transition-colors ${
+                    `flex items-center gap-3 px-3.5 py-2.5 rounded-DEFAULT text-sm font-medium transition-all ${
                       isActive
-                        ? 'bg-brand-soft text-brand font-semibold'
-                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                        ? 'bg-brand text-white font-semibold shadow-sm'
+                        : 'text-gray-700 hover:bg-surface-muted hover:text-gray-950'
                     }`
                   }
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-4 h-4 shrink-0" />
                   <span>{item.label}</span>
                 </NavLink>
               );
@@ -128,111 +128,93 @@ export const RoleLayout: React.FC = () => {
         </div>
 
         {/* User Card & Logout */}
-        <div className="pt-4 border-t border-gray-100">
-          <div className="mb-3 px-1">
-            <p className="text-sm font-semibold text-gray-900 truncate">{user.name}</p>
-            <p className="text-xs text-gray-500 truncate">{user.email}</p>
+        <div className="pt-4 border-t border-surface-border space-y-3">
+          <div className="p-3 bg-surface-muted/70 rounded-DEFAULT border border-surface-border">
+            <p className="text-xs font-heading font-bold text-gray-900 truncate">{user.name}</p>
+            <p className="text-[11px] text-gray-500 truncate mt-0.5 font-mono">{user.email}</p>
           </div>
           <Button
             variant="outline"
             size="sm"
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 text-status-danger border-gray-200 hover:bg-red-50 hover:border-red-200"
+            className="w-full flex items-center justify-center gap-2 text-rose-700 border-rose-200 hover:bg-rose-50 hover:border-rose-300"
           >
             <LogOut className="w-4 h-4" />
-            <span>Keluar</span>
+            <span>Keluar Akun</span>
           </Button>
         </div>
       </aside>
 
       {/* Header Mobile */}
-      <header className="md:hidden bg-white border-b border-gray-200 px-4 h-14 flex items-center justify-between sticky top-0 z-30">
-        <div className="flex items-center gap-2">
-          <span className="w-7 h-7 rounded-lg bg-brand flex items-center justify-center text-white font-heading font-bold text-sm">
+      <header className="md:hidden bg-white border-b border-surface-border px-4 h-14 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+        <div className="flex items-center gap-2.5">
+          <span className="w-8 h-8 rounded-DEFAULT bg-brand flex items-center justify-center text-white font-serif font-bold text-lg">
             O
           </span>
-          <span className="font-heading font-bold text-base text-gray-900">ORVANA</span>
+          <span className="font-heading font-extrabold text-base text-gray-950 tracking-tight">ORVANA</span>
+          <span className="text-[10px] font-mono text-emerald-800 bg-emerald-50 px-1 rounded">
+            {ROLE_LABELS[user.role]}
+          </span>
         </div>
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 rounded text-gray-600 hover:bg-gray-100"
+          className="p-2 rounded text-gray-700 hover:bg-surface-muted"
         >
           {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </header>
 
-      {/* Drawer Menu Mobile */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-40 bg-black/40 flex justify-end">
-          <div className="w-64 bg-white h-full p-5 flex flex-col justify-between shadow-xl">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-                <span className="font-heading font-bold text-gray-900">{user.name}</span>
-                <button onClick={() => setMobileMenuOpen(false)}>
-                  <X className="w-5 h-5 text-gray-500" />
-                </button>
-              </div>
-              <nav className="space-y-1">
-                {navLinks.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <NavLink
-                      key={item.to}
-                      to={item.to}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={({ isActive }) =>
-                        `flex items-center gap-3 px-3.5 py-2.5 rounded text-sm font-medium ${
-                          isActive
-                            ? 'bg-brand-soft text-brand font-semibold'
-                            : 'text-gray-600 hover:bg-gray-100'
-                        }`
-                      }
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span>{item.label}</span>
-                    </NavLink>
-                  );
-                })}
-              </nav>
+        <div className="md:hidden fixed inset-0 z-40 bg-gray-900/50 backdrop-blur-xs flex flex-col justify-end">
+          <div className="bg-white rounded-t-2xl p-5 space-y-4 max-h-[80vh] overflow-y-auto border-t border-surface-border">
+            <div className="flex items-center justify-between pb-3 border-b border-surface-border">
+              <span className="font-heading font-bold text-gray-900">Menu Navigasi</span>
+              <button onClick={() => setMobileMenuOpen(false)}>
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleLogout}
-              className="w-full flex items-center justify-center gap-2 text-status-danger"
-            >
-              <LogOut className="w-4 h-4" />
-              <span>Keluar</span>
-            </Button>
+            <nav className="space-y-1">
+              {navLinks.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3 py-2.5 rounded-DEFAULT text-sm font-medium ${
+                        isActive
+                          ? 'bg-brand text-white font-semibold'
+                          : 'text-gray-700 hover:bg-surface-muted'
+                      }`
+                    }
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                  </NavLink>
+                );
+              })}
+            </nav>
+            <div className="pt-3 border-t border-surface-border">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="w-full text-rose-700 border-rose-200"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                <span>Keluar</span>
+              </Button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Konten Utama */}
-      <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full pb-20 md:pb-8">
+      {/* Konten Halaman */}
+      <main className="flex-1 p-4 sm:p-6 md:p-8 max-w-7xl mx-auto w-full">
         <Outlet />
       </main>
-
-      {/* Mobile Bottom Navigation untuk peran lapangan (docs/07 bagian 3) */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-gray-200 h-16 flex items-center justify-around px-2">
-        {navLinks.map((item) => {
-          const Icon = item.icon;
-          return (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) =>
-                `flex flex-col items-center justify-center min-w-[64px] min-h-[44px] text-[11px] font-medium transition-colors ${
-                  isActive ? 'text-brand font-bold' : 'text-gray-500'
-                }`
-              }
-            >
-              <Icon className="w-5 h-5 mb-0.5" />
-              <span>{item.label.split(' ')[0]}</span>
-            </NavLink>
-          );
-        })}
-      </nav>
     </div>
   );
 };

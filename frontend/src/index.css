@@ -4,6 +4,30 @@
 
 @layer base {
   body {
-    @apply bg-[#F9FAFB] text-[#1F2937];
+    @apply bg-surface text-[#1A2621] font-sans antialiased min-h-screen;
+    background-image: radial-gradient(#E8E2D5 0.75px, transparent 0.75px);
+    background-size: 24px 24px;
+  }
+
+  /* Custom subtle scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #FAF8F5;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #D8D1C2;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #B8B0A0;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
   }
 }
