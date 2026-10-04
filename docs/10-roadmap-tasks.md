@@ -48,7 +48,7 @@ Jangan mengerjakan P2 atau modul AI kecuali diminta.
 - [x] **T3.3** `[A1]` `MatchingService`: filter kandidat, fungsi skor murni, alokasi greedy dengan cap, transaksi dan penguncian, **uji unit memakai vektor `09` bagian 6** (skor 88,97 / 83,60 / 68,23; alokasi 40 dan 29). *(3 sesi)*
 - [x] **T3.4** `[A1]` Order: endpoint list/detail, accept (HOLD ledger via `LedgerService`), reject (alokasi ulang), cancel; mesin transisi `OrdersService.transition` (`03` bagian 2). *(2,5 sesi)*
 - [x] **T3.5** `[A3]` `LedgerService.record()` dengan pemeriksaan invarian + uji unit (`04` bagian 7). *(1,5 sesi)*
-- [ ] **T3.6** `[A1]` Tugas terjadwal: kedaluwarsa tawaran + alokasi ulang (idempoten). *(1 sesi)*
+- [x] **T3.6** `[A1]` Tugas terjadwal: kedaluwarsa tawaran + alokasi ulang (idempoten). *(1 sesi)*
 - [ ] **T3.7** `[A2]` Frontend `/supplier/orders` (kartu tawaran + hitung mundur + terima/tolak) dan tab Kandidat/Order di `/kitchen/demand/:id`. *(2,5 sesi)*
 
 **Gate 3:** skenario bayam `09` bagian 6 berjalan dari UI: dua order terbentuk dengan skor dan kuantitas yang benar, pemasok menerima, HOLD tercatat; tolak dan kedaluwarsa memicu alokasi ulang; uji konkurensi lulus.
