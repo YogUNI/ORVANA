@@ -10,7 +10,10 @@ import {
   XCircle,
   Clock,
   Receipt,
+  Scale,
 } from 'lucide-react';
+import { Button } from '../../components/ui/Button';
+import { DisputeModal } from '../../features/disputes/DisputeModal';
 
 interface LedgerEntryItem {
   id: string;
@@ -43,6 +46,7 @@ interface LedgerEntryItem {
 
 export const KitchenPaymentsPage: React.FC = () => {
   const [filterStage, setFilterStage] = useState<string>('ALL');
+  const [disputeEntry, setDisputeEntry] = useState<LedgerEntryItem | null>(null);
 
   const { data: ledgerResponse, isLoading } = useQuery<{ data: LedgerEntryItem[] }>({
     queryKey: ['ledger-kitchen', filterStage],
@@ -191,6 +195,7 @@ export const KitchenPaymentsPage: React.FC = () => {
                   <th className="px-4 py-3">Tahapan</th>
                   <th className="px-4 py-3 text-right">Nominal</th>
                   <th className="px-4 py-3">Keterangan</th>
+                  <th className="px-4 py-3 text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-gray-700">
@@ -217,6 +222,18 @@ export const KitchenPaymentsPage: React.FC = () => {
                     <td className="px-4 py-3 text-xs text-gray-500 max-w-xs truncate">
                       {entry.note || '-'}
                     </td>
+                    <td className="px-4 py-3 text-center">
+                      {(entry.stage === 'RELEASE' || entry.stage === 'VOID') && (
+                        <Button
+                          variant="outline"
+                          onClick={() => setDisputeEntry(entry)}
+                          className="text-xs py-1 px-2.5 border-amber-300 text-amber-800 hover:bg-amber-50"
+                        >
+                          <Scale className="w-3.5 h-3.5 mr-1" />
+                          Sengketa
+                        </Button>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -224,6 +241,19 @@ export const KitchenPaymentsPage: React.FC = () => {
           </div>
         )}
       </Card>
+
+      {/* Modal Sengketa Dapur */}
+      {disputeEntry && (
+        <DisputeModal
+          orderId={disputeEntry.orderId}
+          orderNo={disputeEntry.order?.orderNo || disputeEntry.orderNo || ''}
+          commodityName={disputeEntry.order?.commodity?.name || disputeEntry.commodityName || ''}
+          onClose={() => setDisputeEntry(null)}
+          onSuccess={() => {
+            // refresh data
+          }}
+        />
+      )}
     </div>
   );
 };

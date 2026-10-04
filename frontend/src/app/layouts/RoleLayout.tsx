@@ -22,6 +22,7 @@ import {
   PackageOpen,
   CreditCard,
   LayoutDashboard,
+  Scale,
 } from 'lucide-react';
 
 export const RoleLayout: React.FC = () => {
@@ -47,6 +48,7 @@ export const RoleLayout: React.FC = () => {
           { to: '/admin/master/recipes', label: 'Resep Baku Gizi', icon: Utensils },
           { to: '/admin/master/prices', label: 'Standar Harga Acuan', icon: Tag },
           { to: '/admin/settings', label: 'Konfigurasi Sistem', icon: Sliders },
+          { to: '/admin/disputes', label: 'Adjudikasi Sengketa', icon: Scale },
           { to: '/admin/ledger', label: 'Buku Besar & Keuangan', icon: CreditCard },
         ];
       case 'KITCHEN_MANAGER':

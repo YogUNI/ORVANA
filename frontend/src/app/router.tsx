@@ -10,6 +10,7 @@ import { AdminRecipesPage } from '../pages/admin/AdminRecipesPage';
 import { AdminPricesPage } from '../pages/admin/AdminPricesPage';
 import { AdminSettingsPage } from '../pages/admin/AdminSettingsPage';
 import { AdminLedgerPage } from '../pages/admin/AdminLedgerPage';
+import { AdminDisputesPage } from '../pages/admin/AdminDisputesPage';
 import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage';
 import { AuditorDashboardPage } from '../pages/auditor/AuditorDashboardPage';
 import { QualityStandardsPage } from '../pages/inspector/QualityStandardsPage';
@@ -113,6 +114,14 @@ export const AppRouter: React.FC = () => {
             element={
               <RequireRole roles={['ADMIN']}>
                 <AdminLedgerPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/admin/disputes"
+            element={
+              <RequireRole roles={['ADMIN']}>
+                <AdminDisputesPage />
               </RequireRole>
             }
           />

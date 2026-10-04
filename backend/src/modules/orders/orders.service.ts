@@ -55,6 +55,7 @@ export const VALID_ORDER_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   ],
   [OrderStatus.DISPUTED]: [
     OrderStatus.PAID,
+    OrderStatus.QC_FAILED,
     OrderStatus.COMPLETED,
   ],
   [OrderStatus.REJECTED]: [],

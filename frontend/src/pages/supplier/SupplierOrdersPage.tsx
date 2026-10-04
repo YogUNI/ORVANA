@@ -15,7 +15,9 @@ import {
   Truck,
   MapPin,
   Sparkles,
+  Scale,
 } from 'lucide-react';
+import { DisputeModal } from '../../features/disputes/DisputeModal';
 
 interface OrderItem {
   id: string;
@@ -97,6 +99,7 @@ export const SupplierOrdersPage: React.FC = () => {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<'PROPOSED' | 'ACTIVE' | 'HISTORY'>('PROPOSED');
   const [selectedOrderForReject, setSelectedOrderForReject] = useState<OrderItem | null>(null);
+  const [disputeOrder, setDisputeOrder] = useState<OrderItem | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
   const [rejectError, setRejectError] = useState('');
 
@@ -397,6 +400,7 @@ export const SupplierOrdersPage: React.FC = () => {
                   <th className="px-4 py-3 text-right">Kuantitas</th>
                   <th className="px-4 py-3 text-right">Total Komitmen</th>
                   <th className="px-4 py-3 text-center">Status Akhir</th>
+                  <th className="px-4 py-3 text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -424,6 +428,23 @@ export const SupplierOrdersPage: React.FC = () => {
                       </td>
                       <td className="px-4 py-3 text-center">
                         <Badge color={statusMeta.color}>{statusMeta.label}</Badge>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {(ord.status === 'PAID' || ord.status === 'QC_FAILED') && (
+                          <Button
+                            variant="outline"
+                            onClick={() => setDisputeOrder(ord)}
+                            className="text-xs py-1 px-2.5 border-amber-300 text-amber-800 hover:bg-amber-50"
+                          >
+                            <Scale className="w-3.5 h-3.5 mr-1" />
+                            Sengketa
+                          </Button>
+                        )}
+                        {ord.status === 'DISPUTED' && (
+                          <span className="text-xs font-semibold text-amber-700">
+                            Dalam Mediasi
+                          </span>
+                        )}
                       </td>
                     </tr>
                   );
@@ -489,6 +510,19 @@ export const SupplierOrdersPage: React.FC = () => {
             </div>
           </Card>
         </div>
+      )}
+
+      {/* Modal Pengajuan Sengketa */}
+      {disputeOrder && (
+        <DisputeModal
+          orderId={disputeOrder.id}
+          orderNo={disputeOrder.orderNo}
+          commodityName={disputeOrder.commodity.name}
+          onClose={() => setDisputeOrder(null)}
+          onSuccess={() => {
+            queryClient.invalidateQueries({ queryKey: ['supplier-orders'] });
+          }}
+        />
       )}
     </div>
   );

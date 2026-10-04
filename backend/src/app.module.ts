@@ -23,6 +23,7 @@ import { UploadsModule } from './modules/uploads/uploads.module';
 import { QcModule } from './modules/qc/qc.module';
 import { TraceModule } from './modules/trace/trace.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { DisputesModule } from './modules/disputes/disputes.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
     QcModule,
     TraceModule,
     DashboardModule,
+    DisputesModule,
   ],
   controllers: [AppController],
   providers: [
