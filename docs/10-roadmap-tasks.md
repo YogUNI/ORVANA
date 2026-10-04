@@ -72,13 +72,13 @@ Jangan mengerjakan P2 atau modul AI kecuali diminta.
 
 ## Tahap 6: Transparansi dan dashboard (P0)
 
-- [ ] **T6.1** `[A3]` `GET /public/trace/:batchCode` + halaman `/trace/:batchCode` (linimasa, penyamaran privasi) (M9). *(2 sesi)*
-- [ ] **T6.2** `[A3]` Query metrik dampak (`04` bagian 10) + `GET /dashboard/impact` + uji terhadap tabel `09` bagian 7. *(2,5 sesi)*
-- [ ] **T6.3** `[A3]` Seed skenario historis (`09` bagian 7). *(1 sesi)*
-- [ ] **T6.4** `[A2]` Frontend `/admin/dashboard` dan `/auditor/dashboard` (kartu, grafik Recharts, peta Leaflet), `/auditor/ledger`. *(3 sesi)*
-- [ ] **T6.5** `[A2]` Landing publik `/` (masalah, cara kerja, angka dampak dari `/public/impact-summary`, pencarian batch). *(1,5 sesi)*
+- [x] **T6.1** `[A3]` `GET /public/trace/:batchCode` + halaman `/trace/:batchCode` (linimasa, penyamaran privasi) (M9). *(2 sesi)*
+- [x] **T6.2** `[A3]` Query metrik dampak (`04` bagian 10) + `GET /dashboard/impact` + uji terhadap tabel `09` bagian 7. *(2,5 sesi)*
+- [x] **T6.3** `[A3]` Seed skenario historis (`09` bagian 7). *(1 sesi)*
+- [x] **T6.4** `[A2]` Frontend `/admin/dashboard` dan `/auditor/dashboard` (kartu, grafik Recharts, peta Leaflet), `/auditor/ledger`. *(3 sesi)*
+- [x] **T6.5** `[A2]` Landing publik `/` (masalah, cara kerja, angka dampak dari `/public/impact-summary`, pencarian batch). *(1,5 sesi)*
 
-**Gate 6 (MVP P0 lengkap):** seluruh skenario demo (`11` bagian 4) dapat dijalankan dari awal sampai akhir tanpa intervensi basis data manual; angka dashboard sama dengan `09` bagian 7.
+**Gate 6 (MVP P0 lengkap):** seluruh skenario demo (`11` bagian 4) dapat dijalankan dari awal sampai akhir tanpa intervensi basis data manual; angka dashboard sama dengan `09` bagian 7. *(LOLOS)*
 
 ## Tahap 7: Fitur P1
 

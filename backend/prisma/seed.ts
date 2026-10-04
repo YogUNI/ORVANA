@@ -496,7 +496,11 @@ async function main() {
   }
   console.log(`✓ 5 Resep Baku (R1 s.d. R5) beserta item bahan tersimpan`);
 
-  console.log('🎉 Seluruh data dasar dan master data berhasil disemai!');
+  // 6. Data Historis Demo (docs/09 bagian 7)
+  const { seedHistoricalOrders } = await import('./seed-history');
+  await seedHistoricalOrders(prisma);
+
+  console.log('🎉 Seluruh data dasar, master data, dan riwayat demo berhasil disemai!');
 }
 
 main()

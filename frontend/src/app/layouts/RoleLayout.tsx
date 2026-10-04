@@ -21,6 +21,7 @@ import {
   Sprout,
   PackageOpen,
   CreditCard,
+  LayoutDashboard,
 } from 'lucide-react';
 
 export const RoleLayout: React.FC = () => {
@@ -40,6 +41,7 @@ export const RoleLayout: React.FC = () => {
     switch (user.role) {
       case 'ADMIN':
         return [
+          { to: '/admin/dashboard', label: 'Dashboard Dampak', icon: LayoutDashboard },
           { to: '/admin/users', label: 'Pengguna & Verifikasi', icon: Users },
           { to: '/admin/master/commodities', label: 'Katalog Komoditas', icon: Apple },
           { to: '/admin/master/recipes', label: 'Resep Baku Gizi', icon: Utensils },
@@ -72,7 +74,7 @@ export const RoleLayout: React.FC = () => {
         ];
       case 'AUDITOR':
         return [
-          { to: '/auditor', label: 'Audit & Dampak', icon: FileText },
+          { to: '/auditor/dashboard', label: 'Audit Buku Besar', icon: FileText },
         ];
       default:
         return [];

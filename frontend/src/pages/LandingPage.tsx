@@ -1,10 +1,53 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { apiClient } from '../lib/apiClient';
+import { formatRupiah, formatKg } from '../lib/format';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
-import { Sprout, ShieldCheck, Truck, Scale } from 'lucide-react';
+import { Skeleton } from '../components/ui/Skeleton';
+import {
+  Sprout,
+  ShieldCheck,
+  Truck,
+  Scale,
+  Search,
+  Users,
+  CheckCircle2,
+  DollarSign,
+  ArrowRight,
+  MapPin,
+} from 'lucide-react';
+
+interface PublicImpactSummary {
+  localSpendingRupiah: number;
+  producersInvolved: number;
+  totalDeliveredKg: number;
+  qualityPassRatePct: number;
+  avgDistanceKm: number;
+}
 
 export const LandingPage: React.FC = () => {
+  const [batchCodeInput, setBatchCodeInput] = useState('');
+
+  // Ambil ringkasan dampak langsung dari backend API publik (M9)
+  const { data: summaryResponse, isLoading } = useQuery<{ data: PublicImpactSummary }>({
+    queryKey: ['public-impact-summary'],
+    queryFn: async () => {
+      const res = await apiClient.get<{ data: PublicImpactSummary }>('/public/impact-summary');
+      return res.data;
+    },
+  });
+
+  const impact = summaryResponse?.data;
+
+  const handleTraceSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (batchCodeInput.trim()) {
+      window.location.href = `/trace/${encodeURIComponent(batchCodeInput.trim())}`;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F9FAFB]">
       {/* Header */}
@@ -35,7 +78,7 @@ export const LandingPage: React.FC = () => {
 
       {/* Hero Section */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
-        <div className="text-center max-w-3xl mx-auto mb-12">
+        <div className="text-center max-w-3xl mx-auto mb-10">
           <Badge color="accent" className="mb-4">
             Rantai Pasok Pangan Lokal Dapur Gizi Massal
           </Badge>
@@ -45,87 +88,167 @@ export const LandingPage: React.FC = () => {
           <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
             Mencocokkan kebutuhan terjadwal dapur gizi massal dengan rencana panen petani & nelayan lokal secara transparan, adil dengan harga dasar, berstandar mutu terverifikasi, dan tertelusur.
           </p>
+
+          {/* Kotak Pencarian Batch Publik Cepat */}
+          <div className="mt-8 p-3 bg-white rounded-2xl shadow-sm border border-gray-200 max-w-xl mx-auto">
+            <form onSubmit={handleTraceSubmit} className="flex flex-col sm:flex-row items-center gap-2">
+              <div className="flex items-center gap-2 px-3 py-1.5 flex-1 w-full">
+                <Search className="w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Ketik kode batch: misal ORV-20260920-DPR01-0001"
+                  value={batchCodeInput}
+                  onChange={(e) => setBatchCodeInput(e.target.value)}
+                  className="w-full text-sm text-gray-800 placeholder-gray-400 focus:outline-none font-mono"
+                />
+              </div>
+              <Button type="submit" size="sm" className="w-full sm:w-auto flex items-center justify-center gap-1.5 shrink-0">
+                <span>Lacak Pangan</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
+            </form>
+          </div>
         </div>
 
-        {/* Feature Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        {/* Ticker / Live Impact Summary Bar */}
+        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm mb-14">
+          <div className="flex items-center justify-between mb-4 border-b border-gray-100 pb-3">
+            <div>
+              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Indikator Dampak Sosial & Ekonomi Nyata
+              </span>
+              <p className="text-xs text-gray-400">Diperbarui otomatis dari buku besar digital ORVANA</p>
+            </div>
+            <Badge color="success">Transparansi Publik</Badge>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div className="p-3 bg-emerald-50/50 rounded-xl">
+              <span className="text-xs text-gray-500 flex items-center gap-1">
+                <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
+                Belanja Lokal
+              </span>
+              <p className="text-lg sm:text-xl font-heading font-bold text-emerald-700 mt-1">
+                {isLoading ? <Skeleton className="h-6 w-20" /> : formatRupiah(impact?.localSpendingRupiah || 0)}
+              </p>
+            </div>
+
+            <div className="p-3 bg-blue-50/50 rounded-xl">
+              <span className="text-xs text-gray-500 flex items-center gap-1">
+                <Users className="w-3.5 h-3.5 text-blue-600" />
+                Produsen Terlibat
+              </span>
+              <p className="text-lg sm:text-xl font-heading font-bold text-blue-700 mt-1">
+                {isLoading ? <Skeleton className="h-6 w-12" /> : `${impact?.producersInvolved || 0} Mitra`}
+              </p>
+            </div>
+
+            <div className="p-3 bg-brand-soft/50 rounded-xl">
+              <span className="text-xs text-gray-500 flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5 text-brand" />
+                Pangan Terserap
+              </span>
+              <p className="text-lg sm:text-xl font-heading font-bold text-brand mt-1">
+                {isLoading ? <Skeleton className="h-6 w-16" /> : formatKg(impact?.totalDeliveredKg || 0)}
+              </p>
+            </div>
+
+            <div className="p-3 bg-teal-50/50 rounded-xl">
+              <span className="text-xs text-gray-500 flex items-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
+                Lolos Standar Mutu
+              </span>
+              <p className="text-lg sm:text-xl font-heading font-bold text-teal-700 mt-1">
+                {isLoading ? <Skeleton className="h-6 w-14" /> : `${impact?.qualityPassRatePct || 0}%`}
+              </p>
+            </div>
+
+            <div className="p-3 bg-purple-50/50 rounded-xl col-span-2 md:col-span-1">
+              <span className="text-xs text-gray-500 flex items-center gap-1">
+                <MapPin className="w-3.5 h-3.5 text-purple-600" />
+                Jarak Tempuh Rata-rata
+              </span>
+              <p className="text-lg sm:text-xl font-heading font-bold text-purple-700 mt-1">
+                {isLoading ? <Skeleton className="h-6 w-16" /> : `${impact?.avgDistanceKm || 0} km`}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* 4 Pilar Fitur Utama ORVANA */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           <Card>
             <CardHeader>
               <div className="w-10 h-10 rounded-lg bg-brand-soft text-brand flex items-center justify-center mb-2">
                 <Sprout className="w-5 h-5" />
               </div>
-              <CardTitle className="text-base">Kepastian Pasar</CardTitle>
+              <CardTitle className="text-base">Kepastian Pasar Petani</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-xs sm:text-sm text-gray-500">
-                Pemasok mendapatkan kepastian permintaan terencana dengan harga terlindungi dari ambang batas dasar.
+                Pencocokan kebutuhan dapur terjadwal 1-2 minggu di muka dengan rencana panen, memastikan penyerapan hasil bumi tanpa tengkulak.
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <div className="w-10 h-10 rounded-lg bg-amber-100 text-accent flex items-center justify-center mb-2">
+              <div className="w-10 h-10 rounded-lg bg-brand-soft text-brand flex items-center justify-center mb-2">
                 <Scale className="w-5 h-5" />
               </div>
-              <CardTitle className="text-base">Pencocokan Cerdas</CardTitle>
+              <CardTitle className="text-base">Perlindungan Harga Dasar</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-xs sm:text-sm text-gray-500">
-                Algoritma alokasi berkeadilan menghitung jarak, mutu, kesegaran, keandalan, dan batasan porsi pemasok.
+                Batas harga dasar dinas mencegah predatory pricing. Pembayaran bertahap escrow menjamin hak produsen tersalurkan tepat waktu.
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <div className="w-10 h-10 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center mb-2">
+              <div className="w-10 h-10 rounded-lg bg-brand-soft text-brand flex items-center justify-center mb-2">
                 <Truck className="w-5 h-5" />
               </div>
-              <CardTitle className="text-base">Konsolidasi Logistik</CardTitle>
+              <CardTitle className="text-base">Konsolidasi Rantai Pendek</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-xs sm:text-sm text-gray-500">
-                Koordinator lokal mengumpulkan pasokan ke titik kumpul dan mengantarkannya tepat waktu dalam satu pengiriman.
+                Koordinator wilayah mengonsolidasikan muatan dari banyak petani kecil dalam satu armada, menekan biaya logistik dan emisi karbon.
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <div className="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center mb-2">
+              <div className="w-10 h-10 rounded-lg bg-brand-soft text-brand flex items-center justify-center mb-2">
                 <ShieldCheck className="w-5 h-5" />
               </div>
-              <CardTitle className="text-base">Mutu & Penelusuran</CardTitle>
+              <CardTitle className="text-base">Kontrol Mutu & Ketertelusuran</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-xs sm:text-sm text-gray-500">
-                Kontrol mutu checklist di dapur gizi, jejak asal bahan berbasis kode batch publik, dan pencatatan dana amanah.
+                Inspeksi checklist berbobot oleh ahli gizi independen. Setiap batch pangan memiliki kode unik yang dapat dilacak publik.
               </p>
             </CardContent>
           </Card>
         </div>
+      </main>
 
-        {/* Demo Trace Search Placeholder */}
-        <div className="bg-white rounded-card border border-gray-200 p-6 sm:p-8 max-w-xl mx-auto shadow-sm text-center">
-          <h3 className="font-heading font-bold text-lg text-gray-900 mb-2">
-            Lacak Asal Bahan Makanan
-          </h3>
-          <p className="text-xs sm:text-sm text-gray-500 mb-4">
-            Masukkan kode batch untuk melihat riwayat panen, pengiriman, dan hasil uji mutu.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-2">
-            <input
-              type="text"
-              placeholder="Contoh: ORV-20261012-DPR01-0001"
-              className="flex-1 px-3.5 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-brand focus:outline-none"
-            />
-            <Button variant="primary" size="md">
-              Telusuri
-            </Button>
+      {/* Footer */}
+      <footer className="border-t border-gray-200 bg-white py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+          <p>&copy; 2026 ORVANA. Rantai Pasok Pangan Lokal Dapur Gizi Massal.</p>
+          <div className="flex gap-4">
+            <a href="/trace/ORV-20260920-DPR01-0001" className="hover:text-brand">
+              Contoh Batch Demo
+            </a>
+            <a href="/login" className="hover:text-brand">
+              Portal Petugas
+            </a>
           </div>
         </div>
-      </main>
+      </footer>
     </div>
   );
 };

@@ -4,13 +4,14 @@ import { LandingPage } from '../pages/LandingPage';
 import { LoginPage } from '../pages/LoginPage';
 import { RegisterPage } from '../pages/RegisterPage';
 import { PendingPage } from '../pages/PendingPage';
-import { RolePlaceholderPage } from '../pages/RolePlaceholderPage';
 import { AdminUsersPage } from '../pages/admin/AdminUsersPage';
 import { AdminCommoditiesPage } from '../pages/admin/AdminCommoditiesPage';
 import { AdminRecipesPage } from '../pages/admin/AdminRecipesPage';
 import { AdminPricesPage } from '../pages/admin/AdminPricesPage';
 import { AdminSettingsPage } from '../pages/admin/AdminSettingsPage';
 import { AdminLedgerPage } from '../pages/admin/AdminLedgerPage';
+import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage';
+import { AuditorDashboardPage } from '../pages/auditor/AuditorDashboardPage';
 import { QualityStandardsPage } from '../pages/inspector/QualityStandardsPage';
 import { KitchenMenuPage } from '../pages/kitchen/KitchenMenuPage';
 import { KitchenDemandPage } from '../pages/kitchen/KitchenDemandPage';
@@ -25,6 +26,7 @@ import { CoordinatorShipmentsPage } from '../pages/coordinator/CoordinatorShipme
 import { CoordinatorShipmentDetailPage } from '../pages/coordinator/CoordinatorShipmentDetailPage';
 import { QualityQueuePage } from '../pages/inspector/QualityQueuePage';
 import { QualityCheckDetailPage } from '../pages/inspector/QualityCheckDetailPage';
+import { BatchTracePage } from '../pages/BatchTracePage';
 import { RoleLayout } from './layouts/RoleLayout';
 import { RequireAuth } from '../features/auth/RequireAuth';
 import { RequireRole } from '../features/auth/RequireRole';
@@ -37,15 +39,7 @@ export const AppRouter: React.FC = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route
-          path="/trace/:batchCode"
-          element={
-            <RolePlaceholderPage
-              title="Penelusuran Batch Publik"
-              roleDescription="Halaman informasi asal bahan, panen, dan uji mutu publik."
-            />
-          }
-        />
+        <Route path="/trace/:batchCode" element={<BatchTracePage />} />
 
         {/* Halaman Akun Pending */}
         <Route
@@ -107,6 +101,14 @@ export const AppRouter: React.FC = () => {
             }
           />
           <Route
+            path="/admin/dashboard"
+            element={
+              <RequireRole roles={['ADMIN']}>
+                <AdminDashboardPage />
+              </RequireRole>
+            }
+          />
+          <Route
             path="/admin/ledger"
             element={
               <RequireRole roles={['ADMIN']}>
@@ -115,15 +117,8 @@ export const AppRouter: React.FC = () => {
             }
           />
           <Route
-            path="/admin/*"
-            element={
-              <RequireRole roles={['ADMIN']}>
-                <RolePlaceholderPage
-                  title="Dashboard Admin Wilayah"
-                  roleDescription="Fitur pengaturan sistem, harga acuan, dan audit (Tahap 2)."
-                />
-              </RequireRole>
-            }
+            path="/admin"
+            element={<Navigate to="/admin/dashboard" replace />}
           />
 
           {/* Kitchen Manager Routes */}
@@ -264,15 +259,24 @@ export const AppRouter: React.FC = () => {
 
           {/* Auditor Routes */}
           <Route
-            path="/auditor/*"
+            path="/auditor/dashboard"
             element={
-              <RequireRole roles={['AUDITOR']}>
-                <RolePlaceholderPage
-                  title="Dashboard Auditor Publik"
-                  roleDescription="Transparansi pembukuan ledger dan analisis indikator dampak lokal (Tahap 6)."
-                />
+              <RequireRole roles={['AUDITOR', 'ADMIN']}>
+                <AuditorDashboardPage />
               </RequireRole>
             }
+          />
+          <Route
+            path="/auditor/ledger"
+            element={
+              <RequireRole roles={['AUDITOR', 'ADMIN']}>
+                <AuditorDashboardPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/auditor"
+            element={<Navigate to="/auditor/dashboard" replace />}
           />
         </Route>
 

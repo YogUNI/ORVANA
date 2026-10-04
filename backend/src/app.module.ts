@@ -18,9 +18,10 @@ import { SupplyModule } from './modules/supply/supply.module';
 import { MatchingModule } from './modules/matching/matching.module';
 import { LedgerModule } from './modules/ledger/ledger.module';
 import { OrdersModule } from './modules/orders/orders.module';
-import { ShipmentsModule } from './modules/shipments/shipments.module';
 import { UploadsModule } from './modules/uploads/uploads.module';
 import { QcModule } from './modules/qc/qc.module';
+import { TraceModule } from './modules/trace/trace.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -50,6 +51,8 @@ import { QcModule } from './modules/qc/qc.module';
     ShipmentsModule,
     UploadsModule,
     QcModule,
+    TraceModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [
