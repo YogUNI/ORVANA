@@ -17,6 +17,7 @@ import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.de
 import { OrdersService } from './orders.service';
 import { OrderStatus, Role } from '@prisma/client';
 import { RejectOrderDto, CancelOrderDto } from './dto/order-action.dto';
+import { CreateSupplierReviewDto } from './dto/supplier-review.dto';
 import { Request, Response } from 'express';
 
 @ApiTags('Orders')
@@ -106,6 +107,19 @@ export class OrdersController {
     @Req() req: Request,
   ) {
     const result = await this.ordersService.cancel(id, dto, user, req.ip);
+    return { data: result };
+  }
+
+  @Post(':id/reviews')
+  @Roles(Role.KITCHEN_MANAGER, Role.ADMIN)
+  @ApiOperation({ summary: 'Memberikan rating dan ulasan performa pemasok (docs/06 M10 / T7.7)' })
+  async createReview(
+    @Param('id') id: string,
+    @Body() dto: CreateSupplierReviewDto,
+    @CurrentUser() user: JwtPayload,
+    @Req() req: Request,
+  ) {
+    const result = await this.ordersService.createReview(id, dto, user, req.ip);
     return { data: result };
   }
 }

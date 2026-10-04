@@ -235,4 +235,69 @@ describe('OrdersService (docs/06 M4 & docs/03 Bagian 2)', () => {
       expect(csv).toContain('"160000"');
     });
   });
+
+  describe('createReview (docs/06 M10 / T7.7)', () => {
+    it('berhasil mencatat review untuk order yang telah COMPLETED / PAID', async () => {
+      const mockKmUser = {
+        sub: 'user-km-1',
+        email: 'dapur@orvana.test',
+        role: Role.KITCHEN_MANAGER,
+        status: 'ACTIVE' as const,
+        regionId: 'reg-bogor',
+        tokenVersion: 1,
+      };
+
+      prisma.order.findUnique.mockResolvedValue({
+        id: 'ord-1',
+        orderNo: 'ORD-001',
+        status: OrderStatus.COMPLETED,
+        supplierId: 'sup-1',
+        kitchen: { managerId: 'user-km-1' },
+        review: null,
+      });
+
+      prisma.$transaction.mockImplementation(async (cb: any) => {
+        return cb({
+          supplierReview: {
+            create: jest.fn().mockResolvedValue({ id: 'rev-1', rating: 5 }),
+            findMany: jest.fn().mockResolvedValue([{ rating: 5 }]),
+          },
+          supplierProfile: { update: jest.fn().mockResolvedValue({}) },
+        });
+      });
+
+      const res = await service.createReview(
+        'ord-1',
+        { rating: 5, comment: 'Bayam segar dan mantap' },
+        mockKmUser,
+      );
+
+      expect(res.id).toBe('rev-1');
+      expect(res.rating).toBe(5);
+    });
+
+    it('menolak (400) jika pesanan belum diselesaikan', async () => {
+      const mockKmUser = {
+        sub: 'user-km-1',
+        email: 'dapur@orvana.test',
+        role: Role.KITCHEN_MANAGER,
+        status: 'ACTIVE' as const,
+        regionId: 'reg-bogor',
+        tokenVersion: 1,
+      };
+
+      prisma.order.findUnique.mockResolvedValue({
+        id: 'ord-1',
+        orderNo: 'ORD-001',
+        status: OrderStatus.ACCEPTED,
+        supplierId: 'sup-1',
+        kitchen: { managerId: 'user-km-1' },
+        review: null,
+      });
+
+      await expect(
+        service.createReview('ord-1', { rating: 5 }, mockKmUser),
+      ).rejects.toThrow(BadRequestException);
+    });
+  });
 });

@@ -12,6 +12,7 @@ import { OrderStatus, LedgerStage, Role, DemandStatus } from '@prisma/client';
 import { JwtPayload } from '../../common/decorators/current-user.decorator';
 import { scopeWhere } from '../../common/utils/scope-where.util';
 import { RejectOrderDto, CancelOrderDto } from './dto/order-action.dto';
+import { CreateSupplierReviewDto } from './dto/supplier-review.dto';
 
 // Siklus status order yang valid sesuai docs/03 bagian 2
 export const VALID_ORDER_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
@@ -133,6 +134,7 @@ export class OrdersService {
           demand: true,
           shipment: true,
           batch: true,
+          review: true,
         },
         orderBy: { createdAt: 'desc' },
         skip,
@@ -677,5 +679,101 @@ export class OrdersService {
     const csvLines = [headers.join(','), ...rows.map((r) => r.join(','))];
     return '\uFEFF' + csvLines.join('\r\n'); // Prefix UTF-8 BOM untuk Excel Indonesia
   }
+
+  /**
+   * Menambahkan ulasan dan rating pemasok oleh pengelola dapur (docs/06 M10 / T7.7)
+   */
+  async createReview(
+    orderId: string,
+    dto: CreateSupplierReviewDto,
+    user: JwtPayload,
+    ipAddress?: string,
+  ) {
+    const order = await this.prisma.order.findUnique({
+      where: { id: orderId },
+      include: {
+        kitchen: true,
+        supplier: true,
+        review: true,
+      },
+    });
+
+    if (!order) {
+      throw new NotFoundException({
+        code: 'ORDER_NOT_FOUND',
+        message: 'Pesanan tidak ditemukan',
+      });
+    }
+
+    // Hanya pengelola dapur terkait atau ADMIN
+    if (user.role === Role.KITCHEN_MANAGER && order.kitchen.managerId !== user.sub) {
+      throw new ForbiddenException({
+        code: 'FORBIDDEN',
+        message: 'Anda tidak memiliki hak untuk mengulas pesanan dapur lain',
+      });
+    }
+
+    // Order harus telah selesai atau dibayar
+    if (!['COMPLETED', 'PAID'].includes(order.status)) {
+      throw new BadRequestException({
+        code: 'ORDER_NOT_COMPLETED',
+        message: 'Ulasan hanya dapat diberikan setelah pesanan selesai diproses (PAID / COMPLETED)',
+      });
+    }
+
+    if (order.review) {
+      throw new BadRequestException({
+        code: 'REVIEW_ALREADY_EXISTS',
+        message: 'Pesanan ini sudah pernah diberikan ulasan',
+      });
+    }
+
+    const review = await this.prisma.$transaction(async (tx) => {
+      const createdReview = await tx.supplierReview.create({
+        data: {
+          orderId: order.id,
+          kitchenManagerId: user.sub,
+          rating: dto.rating,
+          comment: dto.comment,
+        },
+      });
+
+      // Update rata-rata skor mutu dan reputasi supplier jika relevan
+      const allReviews = await tx.supplierReview.findMany({
+        where: { order: { supplierId: order.supplierId } },
+        select: { rating: true },
+      });
+
+      const avgRating =
+        allReviews.reduce((sum, r) => sum + r.rating, 0) / (allReviews.length || 1);
+
+      await tx.supplierProfile.update({
+        where: { id: order.supplierId },
+        data: {
+          totalOrders: { increment: 0 }, // jaga integritas
+        },
+      });
+
+      await this.auditService.log({
+        action: 'SUPPLIER_REVIEW_CREATED',
+        entity: 'Order',
+        entityId: order.id,
+        userId: user.sub,
+        ipAddress,
+        meta: {
+          orderNo: order.orderNo,
+          supplierId: order.supplierId,
+          rating: dto.rating,
+          comment: dto.comment,
+          supplierAvgRating: Math.round(avgRating * 10) / 10,
+        },
+      });
+
+      return createdReview;
+    });
+
+    return review;
+  }
 }
+
 

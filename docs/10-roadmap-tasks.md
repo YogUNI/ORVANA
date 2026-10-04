@@ -88,7 +88,9 @@ Jangan mengerjakan P2 atau modul AI kecuali diminta.
 - [x] **T7.4** `[A3]` QR batch dan sertifikat PDF (M9). *(2 sesi)*
 - [x] **T7.5** `[A3]` Tampilan audit log (M12) dan ekspor CSV order (M10). *(1,5 sesi)*
 - [x] **T7.6** `[A1]` Dashboard per peran (kitchen, supplier, coordinator). *(2 sesi)*
-- [ ] **T7.7** `[A1]` Ulasan pemasok oleh dapur. *(1 sesi)*
+- [x] **T7.7** `[A1]` Ulasan pemasok oleh dapur. *(1 sesi)*
+
+**Gate 7 (Fitur P1 lengkap):** seluruh fitur P1 (sengketa, rencana panen, notifikasi, QR batch, sertifikat PDF, audit log, CSV export, role dashboard, dan ulasan pemasok) selesai, teruji 100%, dan terintegrasi di UI. *(LOLOS)*
 
 ## Tahap 8: Penyempurnaan dan persiapan lomba
 

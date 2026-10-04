@@ -11,9 +11,11 @@ import {
   Clock,
   Receipt,
   Scale,
+  Star,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { DisputeModal } from '../../features/disputes/DisputeModal';
+import { SupplierReviewModal } from '../../features/reviews/SupplierReviewModal';
 
 interface LedgerEntryItem {
   id: string;
@@ -47,6 +49,7 @@ interface LedgerEntryItem {
 export const KitchenPaymentsPage: React.FC = () => {
   const [filterStage, setFilterStage] = useState<string>('ALL');
   const [disputeEntry, setDisputeEntry] = useState<LedgerEntryItem | null>(null);
+  const [reviewEntry, setReviewEntry] = useState<LedgerEntryItem | null>(null);
 
   const { data: ledgerResponse, isLoading } = useQuery<{ data: LedgerEntryItem[] }>({
     queryKey: ['ledger-kitchen', filterStage],
@@ -223,16 +226,28 @@ export const KitchenPaymentsPage: React.FC = () => {
                       {entry.note || '-'}
                     </td>
                     <td className="px-4 py-3 text-center">
-                      {(entry.stage === 'RELEASE' || entry.stage === 'VOID') && (
-                        <Button
-                          variant="outline"
-                          onClick={() => setDisputeEntry(entry)}
-                          className="text-xs py-1 px-2.5 border-amber-300 text-amber-800 hover:bg-amber-50"
-                        >
-                          <Scale className="w-3.5 h-3.5 mr-1" />
-                          Sengketa
-                        </Button>
-                      )}
+                      <div className="flex items-center justify-center gap-1.5 flex-wrap">
+                        {entry.stage === 'RELEASE' && (
+                          <Button
+                            size="sm"
+                            onClick={() => setReviewEntry(entry)}
+                            className="text-xs py-1 px-2.5 bg-pine-800 hover:bg-pine-900 text-white font-sans"
+                          >
+                            <Star className="w-3.5 h-3.5 mr-1 text-amber-300 fill-amber-300" />
+                            Ulas
+                          </Button>
+                        )}
+                        {(entry.stage === 'RELEASE' || entry.stage === 'VOID') && (
+                          <Button
+                            variant="outline"
+                            onClick={() => setDisputeEntry(entry)}
+                            className="text-xs py-1 px-2.5 border-amber-300 text-amber-800 hover:bg-amber-50"
+                          >
+                            <Scale className="w-3.5 h-3.5 mr-1" />
+                            Sengketa
+                          </Button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -241,6 +256,17 @@ export const KitchenPaymentsPage: React.FC = () => {
           </div>
         )}
       </Card>
+
+      {/* Modal Ulas Pemasok */}
+      {reviewEntry && (
+        <SupplierReviewModal
+          orderId={reviewEntry.orderId}
+          orderNo={reviewEntry.order?.orderNo || reviewEntry.orderNo || ''}
+          supplierName={reviewEntry.order?.supplier?.displayName || reviewEntry.supplierName || 'Pemasok'}
+          commodityName={reviewEntry.order?.commodity?.name || reviewEntry.commodityName || 'Komoditas'}
+          onClose={() => setReviewEntry(null)}
+        />
+      )}
 
       {/* Modal Sengketa Dapur */}
       {disputeEntry && (
