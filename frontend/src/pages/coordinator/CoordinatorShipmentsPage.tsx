@@ -8,6 +8,7 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { PageHeader } from '../../components/ui/PageHeader';
 import {
   Truck,
   Building,
@@ -56,24 +57,19 @@ export const CoordinatorShipmentsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold font-heading text-gray-900">
-            Daftar Pengiriman Logistik
-          </h1>
-          <p className="text-sm text-gray-500 mt-0.5">
-            Pantau pergerakan armada penjemputan dari kelompok tani menuju dapur gizi penerima.
-          </p>
-        </div>
-
-        <Link to="/coordinator/orders">
-          <Button className="bg-brand text-white hover:bg-brand-hover flex items-center gap-1.5 text-xs font-semibold">
-            <Plus className="w-4 h-4" />
-            Konsolidasi Pesanan Baru
-          </Button>
-        </Link>
-      </div>
+      <PageHeader
+        title="Daftar Pengiriman Logistik"
+        subtitle="Pantau pergerakan armada penjemputan dari kelompok tani menuju dapur gizi penerima."
+        icon={<Truck className="w-6 h-6 text-pine-800" />}
+        actions={
+          <Link to="/coordinator/orders">
+            <Button className="bg-pine-800 hover:bg-pine-900 text-white flex items-center gap-1.5 text-xs font-semibold">
+              <Plus className="w-4 h-4" />
+              Konsolidasi Pesanan Baru
+            </Button>
+          </Link>
+        }
+      />
 
       {/* Filter Status */}
       <div className="flex flex-wrap gap-1.5 bg-gray-100 p-1 rounded-lg border border-gray-200 w-fit text-xs font-semibold">

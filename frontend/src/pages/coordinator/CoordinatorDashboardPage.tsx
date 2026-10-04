@@ -7,6 +7,8 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { StatCard } from '../../components/ui/StatCard';
 import {
   LayoutDashboard,
   Truck,
@@ -74,102 +76,64 @@ export const CoordinatorDashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-surface-border pb-4">
-        <div>
+      <PageHeader
+        title="Dasbor Logistik & Armada Koordinator"
+        subtitle="Pantau pesanan siap jemput dari produsen desa dan status perjalanan armada ke dapur gizi."
+        icon={<LayoutDashboard className="w-6 h-6 text-pine-800" />}
+        badge={
+          dashboard?.profile ? (
+            <span className="font-mono text-xs font-bold text-pine-800 bg-pine-100 px-2.5 py-0.5 rounded border border-pine-300">
+              {dashboard.profile.organizationName}
+            </span>
+          ) : undefined
+        }
+        actions={
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-serif font-bold text-pine-900 tracking-tight flex items-center gap-2">
-              <LayoutDashboard className="w-6 h-6 text-pine-700" />
-              Dasbor Logistik & Armada Koordinator
-            </h1>
-            {dashboard?.profile && (
-              <span className="font-mono text-xs font-bold text-pine-800 bg-pine-100 px-2.5 py-0.5 rounded border border-pine-300">
-                {dashboard.profile.organizationName}
-              </span>
-            )}
+            <Link to="/coordinator/orders">
+              <Button size="sm" className="bg-pine-800 hover:bg-pine-900 text-white font-sans text-xs">
+                <PackageCheck className="w-3.5 h-3.5 mr-1.5" />
+                Konsolidasi Order
+              </Button>
+            </Link>
+            <Link to="/coordinator/shipments">
+              <Button size="sm" variant="outline" className="border-pine-700 text-pine-800 hover:bg-pine-50 font-sans text-xs">
+                <Truck className="w-3.5 h-3.5 mr-1.5" />
+                Armada Pengiriman
+              </Button>
+            </Link>
           </div>
-          <p className="text-sm text-stone-500 mt-1">
-            Pantau pesanan siap jemput dari produsen desa dan status perjalanan armada ke dapur gizi.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Link to="/coordinator/orders">
-            <Button size="sm" className="bg-pine-800 hover:bg-pine-900 text-white font-sans text-xs">
-              <PackageCheck className="w-3.5 h-3.5 mr-1.5" />
-              Konsolidasi Order
-            </Button>
-          </Link>
-          <Link to="/coordinator/shipments">
-            <Button size="sm" variant="outline" className="border-pine-700 text-pine-800 hover:bg-pine-50 font-sans text-xs">
-              <Truck className="w-3.5 h-3.5 mr-1.5" />
-              Armada Pengiriman
-            </Button>
-          </Link>
-        </div>
-      </div>
+        }
+      />
 
       {/* Kartu Ringkasan Logistik */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-5 bg-white border border-stone-200 shadow-soft">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-sans font-bold text-stone-500 uppercase tracking-wider">
-              Order Siap Jemput
-            </span>
-            <PackageCheck className="w-4 h-4 text-emerald-600" />
-          </div>
-          <p className="text-2xl font-mono font-bold text-pine-950 mt-2">
-            {dashboard?.totalOrdersReady ?? 0}
-          </p>
-          <span className="text-[11px] text-stone-400 mt-1 block">
-            Disanggupi petani (status ACCEPTED)
-          </span>
-        </Card>
+        <StatCard
+          label="Order Siap Jemput"
+          value={dashboard?.totalOrdersReady ?? 0}
+          subtext="Disanggupi petani (status ACCEPTED)"
+          icon={<PackageCheck className="w-5 h-5 text-emerald-600" />}
+        />
 
-        <Card className="p-5 bg-white border border-stone-200 shadow-soft">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-sans font-bold text-stone-500 uppercase tracking-wider">
-              Tonase Siap Angkut
-            </span>
-            <Scale className="w-4 h-4 text-pine-700" />
-          </div>
-          <p className="text-2xl font-mono font-bold text-pine-950 mt-2">
-            {formatKg(dashboard?.totalReadyKg ?? 0)}
-          </p>
-          <span className="text-[11px] text-stone-400 mt-1 block">
-            Total bobot bahan pangan terkumpul
-          </span>
-        </Card>
+        <StatCard
+          label="Tonase Siap Angkut"
+          value={formatKg(dashboard?.totalReadyKg ?? 0)}
+          subtext="Total bobot bahan pangan terkumpul"
+          icon={<Scale className="w-5 h-5 text-pine-700" />}
+        />
 
-        <Card className="p-5 bg-white border border-stone-200 shadow-soft">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-sans font-bold text-stone-500 uppercase tracking-wider">
-              Armada Berjalan
-            </span>
-            <Truck className="w-4 h-4 text-amber-600" />
-          </div>
-          <p className="text-2xl font-mono font-bold text-amber-700 mt-2">
-            {dashboard?.activeShipmentsCount ?? 0} Armada
-          </p>
-          <span className="text-[11px] text-stone-400 mt-1 block">
-            Sedang penjemputan atau transit
-          </span>
-        </Card>
+        <StatCard
+          label="Armada Berjalan"
+          value={`${dashboard?.activeShipmentsCount ?? 0} Armada`}
+          subtext="Sedang penjemputan atau transit"
+          icon={<Truck className="w-5 h-5 text-amber-600" />}
+        />
 
-        <Card className="p-5 bg-white border border-stone-200 shadow-soft">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-sans font-bold text-stone-500 uppercase tracking-wider">
-              Total Pengiriman
-            </span>
-            <CalendarDays className="w-4 h-4 text-stone-400" />
-          </div>
-          <p className="text-2xl font-mono font-bold text-stone-800 mt-2">
-            {dashboard?.totalShipmentsCount ?? 0}
-          </p>
-          <span className="text-[11px] text-stone-400 mt-1 block">
-            Riwayat logistik terdata di sistem
-          </span>
-        </Card>
+        <StatCard
+          label="Total Pengiriman"
+          value={dashboard?.totalShipmentsCount ?? 0}
+          subtext="Riwayat logistik terdata di sistem"
+          icon={<CalendarDays className="w-5 h-5 text-stone-500" />}
+        />
       </div>
 
       {/* Rincian Operasional Siap Kirim */}

@@ -8,6 +8,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { PageHeader } from '../../components/ui/PageHeader';
 import {
   Truck,
   Calendar,
@@ -139,15 +140,11 @@ export const CoordinatorOrdersPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold font-heading text-gray-900">
-          Konsolidasi Pesanan Siap Kirim
-        </h1>
-        <p className="text-sm text-gray-500 mt-0.5">
-          Pilih dan gabungkan pesanan pangan lokal yang telah disanggupi pemasok menuju dapur gizi penerima.
-        </p>
-      </div>
+      <PageHeader
+        title="Konsolidasi Pesanan Siap Kirim"
+        subtitle="Pilih dan gabungkan pesanan pangan lokal yang telah disanggupi pemasok menuju dapur gizi penerima."
+        icon={<PackageCheck className="w-6 h-6 text-pine-800" />}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Kolom Kiri: Daftar Pesanan Siap Kirim Per Dapur (2 kolom) */}
