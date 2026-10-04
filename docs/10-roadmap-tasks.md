@@ -119,13 +119,13 @@ Setiap tugas U selesai bila: build frontend dan `npm test` hijau, state loading/
 
 ### 8C. Persiapan lomba
 
-- [ ] **T8.1** `[All]` Uji responsif 375 px untuk semua halaman peran lapangan; perbaiki.
-- [ ] **T8.2** `[All]` Audit state kosong/loading/galat di setiap halaman data.
+- [x] **T8.1** `[All]` Uji responsif 375 px untuk semua halaman peran lapangan; perbaiki.
+- [x] **T8.2** `[All]` Audit state kosong/loading/galat di setiap halaman data.
 - [ ] **T8.3** `[All]` Latihan skenario demo 3 kali dengan `seed:reset` di antaranya; catat dan perbaiki hambatan.
-- [ ] **T8.4** `[All]` Uji keamanan dasar: akses lintas peran, IDOR (membuka `/orders/:id` milik orang lain), unggah berkas berbahaya, rate limit.
+- [x] **T8.4** `[All]` Uji keamanan dasar: akses lintas peran, IDOR (membuka `/orders/:id` milik orang lain), unggah berkas berbahaya, rate limit.
 - [ ] **T8.5** `[All]` Perbarui dokumen Word (naskah dan perancangan) agar cocok dengan hasil akhir; kumpulkan tangkapan layar untuk naskah lomba.
 - [ ] **T8.6** `[All]` Siapkan data validasi lapangan (wawancara, pilot) bila mitra tersedia.
-- [ ] **T8.7** `[All]` Dockerisasi penuh (`docker compose up` menjalankan db + backend + frontend) dan README cara jalan.
+- [x] **T8.7** `[All]` Dockerisasi penuh (`docker compose up` menjalankan db + backend + frontend) dan README cara jalan.
 
 ## Tahap 9: Modul AI (DITUNDA, hanya jika diminta)
 
