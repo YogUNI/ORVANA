@@ -14,6 +14,8 @@ import {
   Star,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { StatCard } from '../../components/ui/StatCard';
 import { DisputeModal } from '../../features/disputes/DisputeModal';
 import { SupplierReviewModal } from '../../features/reviews/SupplierReviewModal';
 
@@ -90,58 +92,35 @@ export const KitchenPaymentsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-heading font-bold text-gray-900">
-          Pembukuan & Pembayaran Dapur
-        </h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Pantau status pencadangan dana pesanan dapur, pencairan pasokan lulus mutu, dan pembatalan dana.
-        </p>
-      </div>
+      <PageHeader
+        title="Pembukuan & Transaksi Dapur"
+        subtitle="Pantau status pencadangan dana pesanan dapur, pencairan pasokan lulus mutu, dan penyesuaian saldo buku besar."
+        icon={<Receipt className="w-6 h-6 text-pine-800" />}
+      />
 
       {/* Ringkasan Saldo Transaksi Dapur */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="p-4 border-l-4 border-amber-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Total Dana Dicadangkan (HOLD)
-            </p>
-            <p className="text-xl font-heading font-bold text-gray-900 mt-1">
-              {formatRupiah(totalHold)}
-            </p>
-          </div>
-          <div className="p-3 bg-amber-50 text-amber-600 rounded-lg">
-            <Clock className="w-5 h-5" />
-          </div>
-        </Card>
+        <StatCard
+          label="Total Dana Dicadangkan (HOLD)"
+          value={formatRupiah(totalHold)}
+          subtext="Dana aman dalam escrow"
+          icon={<Clock className="w-5 h-5" />}
+        />
 
-        <Card className="p-4 border-l-4 border-emerald-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Total Dana Dicairkan (RELEASE)
-            </p>
-            <p className="text-xl font-heading font-bold text-emerald-600 mt-1">
-              {formatRupiah(totalReleased)}
-            </p>
-          </div>
-          <div className="p-3 bg-emerald-50 text-emerald-600 rounded-lg">
-            <CheckCircle2 className="w-5 h-5" />
-          </div>
-        </Card>
+        <StatCard
+          label="Total Dana Dicairkan (RELEASE)"
+          value={formatRupiah(totalReleased)}
+          subtext="Telah dicairkan ke produsen"
+          icon={<CheckCircle2 className="w-5 h-5" />}
+          highlight={true}
+        />
 
-        <Card className="p-4 border-l-4 border-red-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Total Dana Batal/Kembali (VOID)
-            </p>
-            <p className="text-xl font-heading font-bold text-red-600 mt-1">
-              {formatRupiah(totalVoid)}
-            </p>
-          </div>
-          <div className="p-3 bg-red-50 text-red-600 rounded-lg">
-            <XCircle className="w-5 h-5" />
-          </div>
-        </Card>
+        <StatCard
+          label="Total Dana Batal/Kembali (VOID)"
+          value={formatRupiah(totalVoid)}
+          subtext="Akibat afkir / pesanan batal"
+          icon={<XCircle className="w-5 h-5" />}
+        />
       </div>
 
       {/* Filter Tabs */}

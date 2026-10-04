@@ -8,6 +8,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { PageHeader } from '../../components/ui/PageHeader';
 import {
   CheckCircle2,
   AlertTriangle,
@@ -46,6 +47,8 @@ export const KitchenReceivingPage: React.FC = () => {
 
   const incomingOrders: InTransitOrder[] = response?.data || [];
 
+  const [successToast, setSuccessToast] = useState<string | null>(null);
+
   const receiveMutation = useMutation({
     mutationFn: async ({ orderId, payload }: { orderId: string; payload: any }) => {
       return apiClient.post(`/orders/${orderId}/receive`, payload);
@@ -55,11 +58,13 @@ export const KitchenReceivingPage: React.FC = () => {
       setSelectedOrder(null);
       setReceiveNote('');
       setReceivePhotoUrls([]);
-      alert(res?.data?.message || 'Penerimaan pesanan berhasil dicatat!');
+      setSuccessToast(res?.data?.message || 'Penerimaan pesanan berhasil dicatat!');
+      setTimeout(() => setSuccessToast(null), 5000);
     },
     onError: (err: any) => {
       setErrorMsg(
         err?.response?.data?.error?.message ||
+          err?.message ||
           'Gagal mencatat penerimaan barang. Periksa toleransi selisih dan catatan.'
       );
     },
@@ -81,7 +86,7 @@ export const KitchenReceivingPage: React.FC = () => {
         setReceivePhotoUrls((prev) => [...prev, res.data.url]);
       }
     } catch (err: any) {
-      alert(err?.response?.data?.error?.message || 'Gagal mengunggah foto bukti');
+      setErrorMsg(err?.response?.data?.error?.message || err?.message || 'Gagal mengunggah foto bukti');
     } finally {
       setUploading(false);
     }
@@ -103,14 +108,18 @@ export const KitchenReceivingPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold font-heading text-gray-900">
-          Penerimaan Pasokan Bahan Makanan
-        </h1>
-        <p className="text-sm text-gray-500 mt-0.5">
-          Periksa fisik armada yang tiba dan catat serah terima kuantitas riil sebelum dialihkan ke inspeksi mutu.
-        </p>
-      </div>
+      <PageHeader
+        title="Penerimaan Pasokan Bahan Pangan"
+        subtitle="Periksa fisik armada yang tiba dan catat serah terima kuantitas riil sebelum dialihkan ke pengawas mutu gizi."
+        icon={<PackageOpen className="w-5 h-5 text-pine-800" />}
+      />
+
+      {successToast && (
+        <div className="p-4 rounded-card bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2 shadow-soft">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+          <span>{successToast}</span>
+        </div>
+      )}
 
       {isLoading ? (
         <div className="space-y-3">

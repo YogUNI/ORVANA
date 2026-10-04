@@ -8,6 +8,8 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { StatCard } from '../../components/ui/StatCard';
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -68,101 +70,65 @@ export const KitchenDashboardPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-surface-border pb-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-serif font-bold text-pine-900 tracking-tight flex items-center gap-2">
-              <LayoutDashboard className="w-6 h-6 text-pine-700" />
-              Dasbor Operasional Dapur Gizi
-            </h1>
-            {dashboard?.kitchen && (
-              <span className="font-mono text-xs font-bold text-pine-800 bg-pine-100 px-2.5 py-0.5 rounded border border-pine-300">
-                {dashboard.kitchen.name} ({dashboard.kitchen.code})
-              </span>
-            )}
-          </div>
-          <p className="text-sm text-stone-500 mt-1">
-            Pantau tingkat keterpenuhan kuantitas gizi, realisasi belanja lokal, dan arus pengiriman bahan baku.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Link to="/kitchen/demand">
-            <Button size="sm" className="bg-pine-800 hover:bg-pine-900 text-white font-sans text-xs">
-              <ShoppingBag className="w-3.5 h-3.5 mr-1.5" />
-              Kelola Kebutuhan
-            </Button>
-          </Link>
-          <Link to="/kitchen/receiving">
-            <Button size="sm" variant="outline" className="border-pine-700 text-pine-800 hover:bg-pine-50 font-sans text-xs">
-              <PackageOpen className="w-3.5 h-3.5 mr-1.5" />
-              Penerimaan
-            </Button>
-          </Link>
-        </div>
-      </div>
+      <PageHeader
+        title="Dasbor Operasional Dapur Gizi"
+        subtitle="Pantau tingkat keterpenuhan kuantitas gizi, realisasi belanja lokal, dan arus pengiriman bahan pangan."
+        icon={<LayoutDashboard className="w-6 h-6 text-pine-800" />}
+        badge={
+          dashboard?.kitchen ? (
+            <span className="font-mono text-xs font-bold text-pine-800 bg-pine-100 px-2.5 py-0.5 rounded border border-pine-300">
+              {dashboard.kitchen.name} ({dashboard.kitchen.code})
+            </span>
+          ) : undefined
+        }
+        actions={
+          <>
+            <Link to="/kitchen/demand">
+              <Button size="sm" className="bg-pine-800 hover:bg-pine-900 text-white font-sans text-xs">
+                <ShoppingBag className="w-3.5 h-3.5 mr-1.5" />
+                Kelola Kebutuhan
+              </Button>
+            </Link>
+            <Link to="/kitchen/receiving">
+              <Button size="sm" variant="outline" className="border-pine-700 text-pine-800 hover:bg-pine-50 font-sans text-xs">
+                <PackageOpen className="w-3.5 h-3.5 mr-1.5" />
+                Penerimaan
+              </Button>
+            </Link>
+          </>
+        }
+      />
 
       {/* Kartu Ringkasan Metrik */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-5 bg-white border border-stone-200 shadow-soft">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-sans font-bold text-stone-500 uppercase tracking-wider">
-              Tingkat Pemenuhan
-            </span>
-            <TrendingUp className="w-4 h-4 text-emerald-600" />
-          </div>
-          <p className="text-2xl font-mono font-bold text-pine-950 mt-2">
-            {dashboard?.fulfillmentRatePct ?? 0}%
-          </p>
-          <span className="text-[11px] text-stone-400 mt-1 block">
-            {formatKg(dashboard?.fulfilledKg ?? 0)} dari {formatKg(dashboard?.totalDemandKg ?? 0)}
-          </span>
-        </Card>
+        <StatCard
+          label="Tingkat Pemenuhan"
+          value={`${dashboard?.fulfillmentRatePct ?? 0}%`}
+          subtext={`${formatKg(dashboard?.fulfilledKg ?? 0)} dari ${formatKg(dashboard?.totalDemandKg ?? 0)}`}
+          icon={<TrendingUp className="w-5 h-5" />}
+        />
 
-        <Card className="p-5 bg-white border border-stone-200 shadow-soft">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-sans font-bold text-stone-500 uppercase tracking-wider">
-              Realisasi Belanja
-            </span>
-            <Receipt className="w-4 h-4 text-pine-700" />
-          </div>
-          <p className="text-2xl font-mono font-bold text-pine-950 mt-2">
-            {formatRupiah(dashboard?.totalSpendingRupiah ?? 0)}
-          </p>
-          <span className="text-[11px] text-stone-400 mt-1 block">
-            Telah dicairkan ke petani lokal
-          </span>
-        </Card>
+        <StatCard
+          label="Realisasi Belanja"
+          value={formatRupiah(dashboard?.totalSpendingRupiah ?? 0)}
+          subtext="Telah dicairkan ke petani lokal"
+          icon={<Receipt className="w-5 h-5" />}
+          highlight={true}
+        />
 
-        <Card className="p-5 bg-white border border-stone-200 shadow-soft">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-sans font-bold text-stone-500 uppercase tracking-wider">
-              Pesanan Aktif
-            </span>
-            <ShoppingBag className="w-4 h-4 text-amber-600" />
-          </div>
-          <p className="text-2xl font-mono font-bold text-pine-950 mt-2">
-            {dashboard?.activeOrdersCount ?? 0}
-          </p>
-          <span className="text-[11px] text-stone-400 mt-1 block">
-            Dalam alokasi, penjemputan & transit
-          </span>
-        </Card>
+        <StatCard
+          label="Pesanan Aktif"
+          value={dashboard?.activeOrdersCount ?? 0}
+          subtext="Dalam alokasi, penjemputan & transit"
+          icon={<ShoppingBag className="w-5 h-5" />}
+        />
 
-        <Card className="p-5 bg-white border border-stone-200 shadow-soft">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-sans font-bold text-stone-500 uppercase tracking-wider">
-              Siap Diterima
-            </span>
-            <Truck className="w-4 h-4 text-terracotta-600" />
-          </div>
-          <p className="text-2xl font-mono font-bold text-pine-950 mt-2">
-            {dashboard?.pendingReceivingCount ?? 0}
-          </p>
-          <span className="text-[11px] text-stone-400 mt-1 block">
-            Armada sedang meluncur ke dapur
-          </span>
-        </Card>
+        <StatCard
+          label="Siap Diterima"
+          value={dashboard?.pendingReceivingCount ?? 0}
+          subtext="Armada sedang meluncur ke dapur"
+          icon={<Truck className="w-5 h-5" />}
+        />
       </div>
 
       {/* Pesanan Terbaru & Aksi Cepat */}

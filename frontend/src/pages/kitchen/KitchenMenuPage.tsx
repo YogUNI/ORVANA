@@ -8,6 +8,7 @@ import { Button } from '../../components/ui/Button';
 import { Skeleton } from '../../components/ui/Skeleton';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
+import { PageHeader } from '../../components/ui/PageHeader';
 import {
   CalendarDays,
   Plus,
@@ -211,32 +212,28 @@ export const KitchenMenuPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header Info */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold font-heading text-gray-900">
-              Perencanaan Menu Mingguan
-            </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-brand-soft text-brand">
-              {kitchen?.name || 'Dapur Gizi'}
+      <PageHeader
+        title="Perencanaan Menu Mingguan"
+        subtitle="Susun jadwal resep sajian gizi harian massal dan hitung kebutuhan bahan lokal secara otomatis."
+        icon={<CalendarDays className="w-6 h-6 text-pine-800" />}
+        badge={
+          kitchen?.name ? (
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-pine-100 text-pine-900 border border-pine-200">
+              {kitchen.name}
             </span>
-          </div>
-          <p className="text-sm text-gray-600 mt-1">
-            Susun jadwal resep sajian gizi harian massal dan hitung kebutuhan bahan lokal secara otomatis.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3 w-full sm:w-auto">
+          ) : undefined
+        }
+        actions={
           <Button
             variant="outline"
             onClick={openGenerateModal}
-            className="flex-1 sm:flex-none border-brand text-brand hover:bg-brand-soft"
+            className="w-full sm:w-auto border-pine-700 text-pine-800 hover:bg-pine-50 flex items-center gap-2"
           >
-            <Calculator className="w-4 h-4 mr-2 text-brand" />
+            <Calculator className="w-4 h-4 text-pine-700" />
             Hitung Kebutuhan Bahan
           </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Navigasi Kalender Pekan */}
       <Card className="p-4">

@@ -8,6 +8,8 @@ import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Skeleton } from '../../components/ui/Skeleton';
 import { EmptyState } from '../../components/ui/EmptyState';
+import { ErrorState } from '../../components/ui/ErrorState';
+import { PageHeader } from '../../components/ui/PageHeader';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
 import {
@@ -168,23 +170,19 @@ export const KitchenDemandPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold font-heading text-gray-900">
-            Daftar Kebutuhan Bahan Dapur
-          </h1>
-          <p className="text-sm text-gray-600 mt-1">
-            Pantau status pemenuhan pasokan lokal, kelola draf kebutuhan, dan terbitkan pesanan ke produsen terdekat.
-          </p>
-        </div>
-
-        <Link to="/kitchen/menu">
-          <Button variant="outline" className="border-brand text-brand hover:bg-brand-soft">
-            <Sparkles className="w-4 h-4 mr-2" />
-            Kalender Menu Mingguan
-          </Button>
-        </Link>
-      </div>
+      <PageHeader
+        title="Daftar Kebutuhan Bahan Dapur"
+        subtitle="Pantau status pemenuhan pasokan lokal, kelola draf kebutuhan, dan terbitkan pesanan ke produsen terdekat."
+        icon={<Sparkles className="w-6 h-6 text-pine-800" />}
+        actions={
+          <Link to="/kitchen/menu">
+            <Button variant="outline" className="border-pine-700 text-pine-800 hover:bg-pine-50 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-pine-700" />
+              Kalender Menu Mingguan
+            </Button>
+          </Link>
+        }
+      />
 
       {notification && (
         <div
@@ -231,9 +229,11 @@ export const KitchenDemandPage: React.FC = () => {
           <Skeleton className="h-16 w-full" />
         </div>
       ) : error ? (
-        <Card className="p-8 text-center text-status-danger">
-          <p>Terjadi kendala saat memuat permintaan bahan.</p>
-        </Card>
+        <ErrorState
+          title="Gagal Memuat Kebutuhan Bahan"
+          message="Terjadi kendala saat memuat permintaan bahan dapur dari peladen."
+          onRetry={() => queryClient.invalidateQueries({ queryKey: ['demand-requests'] })}
+        />
       ) : !data || data.length === 0 ? (
         <EmptyState
           title="Belum Ada Kebutuhan Bahan"
