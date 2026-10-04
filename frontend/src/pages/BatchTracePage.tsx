@@ -16,8 +16,8 @@ import {
   Sprout,
   Receipt,
   Scale,
-  QrCode,
   Award,
+  FileDown,
 } from 'lucide-react';
 
 interface PublicTraceData {
@@ -194,15 +194,29 @@ export const BatchTracePage: React.FC = () => {
                   </p>
                 </div>
 
-                {/* Stempel Sertifikasi / QR Mockup */}
+                {/* Stempel Sertifikasi & QR Resmi (M9 P1) */}
                 <div className="p-4 rounded-card bg-surface-muted/60 border border-surface-border text-center shrink-0 w-full sm:w-auto">
-                  <div className="w-16 h-16 mx-auto bg-white p-2 rounded border border-surface-border shadow-2xs flex items-center justify-center">
-                    <QrCode className="w-12 h-12 text-brand" />
+                  <div className="w-24 h-24 mx-auto bg-white p-1 rounded-lg border border-surface-border shadow-xs flex items-center justify-center overflow-hidden">
+                    <img
+                      src={`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/public/trace/${trace.batchCode}/qr.png`}
+                      alt={`QR Code ${trace.batchCode}`}
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                   <span className="text-[10px] font-mono font-semibold text-gray-500 uppercase tracking-wider block mt-2">
                     Sertifikat Asal Bahan
                   </span>
                   <div className="mt-1">{getPaymentBadge(trace.paymentStatus)}</div>
+
+                  <a
+                    href={`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/public/trace/${trace.batchCode}/certificate.pdf`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-3 inline-flex items-center justify-center gap-1.5 w-full py-1.5 px-2.5 rounded text-xs font-semibold text-pine-900 bg-pine-100 hover:bg-pine-200 border border-pine-300 transition-colors"
+                  >
+                    <FileDown className="w-3.5 h-3.5" />
+                    Unduh Sertifikat PDF
+                  </a>
                 </div>
               </div>
 

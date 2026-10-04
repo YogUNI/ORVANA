@@ -85,7 +85,7 @@ Jangan mengerjakan P2 atau modul AI kecuali diminta.
 - [x] **T7.1** `[A1]` Sengketa (M8) + efek ADJUSTMENT + UI. *(3 sesi)*
 - [x] **T7.2** `[A2]` Rencana panen dan kalender kolektif (M3) + UI heatmap. *(3 sesi)*
 - [x] **T7.3** `[A2]` Notifikasi dalam aplikasi (M11) + polling + UI lonceng. *(2 sesi)*
-- [ ] **T7.4** `[A3]` QR batch dan sertifikat PDF (M9). *(2 sesi)*
+- [x] **T7.4** `[A3]` QR batch dan sertifikat PDF (M9). *(2 sesi)*
 - [ ] **T7.5** `[A3]` Tampilan audit log (M12) dan ekspor CSV order (M10). *(1,5 sesi)*
 - [ ] **T7.6** `[A1]` Dashboard per peran (kitchen, supplier, coordinator). *(2 sesi)*
 - [ ] **T7.7** `[A1]` Ulasan pemasok oleh dapur. *(1 sesi)*

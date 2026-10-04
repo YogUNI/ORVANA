@@ -16,6 +16,8 @@ import {
   MapPin,
   Sparkles,
   Scale,
+  QrCode,
+  FileDown,
 } from 'lucide-react';
 import { DisputeModal } from '../../features/disputes/DisputeModal';
 
@@ -38,6 +40,10 @@ interface OrderItem {
     code: string;
     address?: string;
     regionId: string;
+  };
+  batch?: {
+    id: string;
+    batchCode: string;
   };
 }
 
@@ -376,6 +382,19 @@ export const SupplierOrdersPage: React.FC = () => {
                           ? 'Sedang Dalam Perjalanan'
                           : 'Telah Diterima di Dapur'}
                       </span>
+                      {ord.batch && (
+                        <div className="mt-2 flex items-center sm:justify-end gap-2">
+                          <a
+                            href={`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/public/trace/${ord.batch.batchCode}/qr.png`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 text-xs text-pine-700 hover:text-pine-900 font-semibold"
+                          >
+                            <QrCode className="w-3.5 h-3.5" />
+                            QR Batch
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </Card>
@@ -430,21 +449,45 @@ export const SupplierOrdersPage: React.FC = () => {
                         <Badge color={statusMeta.color}>{statusMeta.label}</Badge>
                       </td>
                       <td className="px-4 py-3 text-center">
-                        {(ord.status === 'PAID' || ord.status === 'QC_FAILED') && (
-                          <Button
-                            variant="outline"
-                            onClick={() => setDisputeOrder(ord)}
-                            className="text-xs py-1 px-2.5 border-amber-300 text-amber-800 hover:bg-amber-50"
-                          >
-                            <Scale className="w-3.5 h-3.5 mr-1" />
-                            Sengketa
-                          </Button>
-                        )}
-                        {ord.status === 'DISPUTED' && (
-                          <span className="text-xs font-semibold text-amber-700">
-                            Dalam Mediasi
-                          </span>
-                        )}
+                        <div className="flex items-center justify-center gap-1.5 flex-wrap">
+                          {ord.batch && (
+                            <>
+                              <a
+                                href={`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/public/trace/${ord.batch.batchCode}/qr.png`}
+                                target="_blank"
+                                rel="noreferrer"
+                                title="Unduh QR Code Batch"
+                                className="p-1.5 rounded border border-stone-200 text-stone-600 hover:bg-stone-50 transition-colors"
+                              >
+                                <QrCode className="w-3.5 h-3.5" />
+                              </a>
+                              <a
+                                href={`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/public/trace/${ord.batch.batchCode}/certificate.pdf`}
+                                target="_blank"
+                                rel="noreferrer"
+                                title="Unduh Sertifikat PDF"
+                                className="p-1.5 rounded border border-pine-300 text-pine-800 bg-pine-50 hover:bg-pine-100 transition-colors"
+                              >
+                                <FileDown className="w-3.5 h-3.5" />
+                              </a>
+                            </>
+                          )}
+                          {(ord.status === 'PAID' || ord.status === 'QC_FAILED') && (
+                            <Button
+                              variant="outline"
+                              onClick={() => setDisputeOrder(ord)}
+                              className="text-xs py-1 px-2.5 border-amber-300 text-amber-800 hover:bg-amber-50"
+                            >
+                              <Scale className="w-3.5 h-3.5 mr-1" />
+                              Sengketa
+                            </Button>
+                          )}
+                          {ord.status === 'DISPUTED' && (
+                            <span className="text-xs font-semibold text-amber-700">
+                              Dalam Mediasi
+                            </span>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );

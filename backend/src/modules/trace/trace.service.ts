@@ -1,5 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { JwtPayload } from '../../common/decorators/current-user.decorator';
+import { scopeWhere } from '../../common/utils/scope-where.util';
+import * as QRCode from 'qrcode';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const PDFDocument = require('pdfkit');
 
 export interface PublicTraceDto {
   batchCode: string;
@@ -163,4 +168,253 @@ export class TraceService {
       paymentStatus,
     };
   }
+
+  /**
+   * Menghasilkan gambar QR code (PNG Buffer) mengarah ke URL penelusuran batch publik (docs/06 M9)
+   */
+  async generateQrCode(batchIdOrCode: string, user: JwtPayload): Promise<{ buffer: Buffer; batchCode: string }> {
+    const batch = await this.prisma.batch.findFirst({
+      where: {
+        OR: [{ id: batchIdOrCode }, { batchCode: batchIdOrCode }],
+        ...scopeWhere(user, 'batch'),
+      },
+      select: { id: true, batchCode: true },
+    });
+
+    if (!batch) {
+      throw new NotFoundException({
+        code: 'BATCH_NOT_FOUND',
+        message: 'Batch tidak ditemukan atau Anda tidak memiliki akses.',
+      });
+    }
+
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const traceUrl = `${frontendUrl}/trace/${batch.batchCode}`;
+
+    const qrBuffer = await QRCode.toBuffer(traceUrl, {
+      type: 'png',
+      width: 400,
+      margin: 2,
+      color: {
+        dark: '#1E3A2F', // Forest pine signature color
+        light: '#FFFFFF',
+      },
+    });
+
+    return { buffer: qrBuffer, batchCode: batch.batchCode };
+  }
+
+  /**
+   * Menghasilkan dokumen PDF Sertifikat Mutu & Asal Bahan (docs/06 M9)
+   */
+  async generateCertificatePdf(batchIdOrCode: string, user: JwtPayload): Promise<{ buffer: Buffer; filename: string }> {
+    const batch = await this.prisma.batch.findFirst({
+      where: {
+        OR: [{ id: batchIdOrCode }, { batchCode: batchIdOrCode }],
+        ...scopeWhere(user, 'batch'),
+      },
+      include: {
+        order: {
+          include: {
+            commodity: true,
+            kitchen: true,
+            supplier: {
+              include: {
+                user: { select: { name: true, phone: true } },
+                region: true,
+              },
+            },
+            shipment: {
+              include: {
+                coordinator: {
+                  include: { user: { select: { name: true } } },
+                },
+              },
+            },
+            ledger: true,
+          },
+        },
+        qualityChecks: {
+          include: {
+            inspector: { select: { name: true } },
+          },
+          orderBy: { checkedAt: 'desc' },
+          take: 1,
+        },
+      },
+    });
+
+    if (!batch) {
+      throw new NotFoundException({
+        code: 'BATCH_NOT_FOUND',
+        message: 'Batch tidak ditemukan atau Anda tidak memiliki akses.',
+      });
+    }
+
+    const latestQc = batch.qualityChecks[0] || null;
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const traceUrl = `${frontendUrl}/trace/${batch.batchCode}`;
+
+    const qrDataUrl = await QRCode.toDataURL(traceUrl, {
+      margin: 1,
+      color: { dark: '#1E3A2F', light: '#FFFFFF' },
+    });
+    const qrImageBuffer = Buffer.from(qrDataUrl.split(',')[1], 'base64');
+
+    return new Promise((resolve, reject) => {
+      const doc = new PDFDocument({ size: 'A4', margin: 40 });
+      const chunks: Buffer[] = [];
+
+      doc.on('data', (chunk: Buffer) => chunks.push(chunk));
+      doc.on('end', () => {
+        resolve({
+          buffer: Buffer.concat(chunks),
+          filename: `Sertifikat-Batch-${batch.batchCode}.pdf`,
+        });
+      });
+      doc.on('error', (err: Error) => reject(err));
+
+      // --- Header Dekoratif ---
+      doc.rect(40, 40, 515, 6).fill('#1E3A2F'); // Garis aksen atas
+
+      doc.moveDown(1);
+      doc
+        .font('Helvetica-Bold')
+        .fontSize(22)
+        .fillColor('#1E3A2F')
+        .text('ORVANA FOOD TRACEABILITY', { align: 'center' });
+
+      doc
+        .font('Helvetica')
+        .fontSize(11)
+        .fillColor('#64748B')
+        .text('Sertifikat Integritas Mutu & Penelusuran Asal Pangan Lokal', { align: 'center' });
+
+      doc.moveDown(0.5);
+      doc.moveTo(40, doc.y).lineTo(555, doc.y).strokeColor('#E2E8F0').lineWidth(1).stroke();
+      doc.moveDown(1);
+
+      // --- Metadata Batch (2 Kolom) ---
+      const metaY = doc.y;
+
+      // Kolom Kiri: Info Bahan & Asal
+      doc
+        .font('Helvetica-Bold')
+        .fontSize(10)
+        .fillColor('#0F172A')
+        .text('INFORMASI KOMODITAS & PRODUSEN', 40, metaY);
+
+      doc.moveDown(0.5);
+      doc.font('Helvetica-Bold').fontSize(9).text('Nomor Batch: ', { continued: true });
+      doc.font('Helvetica').text(batch.batchCode);
+
+      doc.font('Helvetica-Bold').fontSize(9).text('Komoditas: ', { continued: true });
+      doc.font('Helvetica').text(`${batch.order.commodity.name} (${batch.order.commodity.category})`);
+
+      doc.font('Helvetica-Bold').fontSize(9).text('Produsen Pemasok: ', { continued: true });
+      doc.font('Helvetica').text(`${batch.order.supplier.displayName} (${batch.order.supplier.type})`);
+
+      doc.font('Helvetica-Bold').fontSize(9).text('Wilayah Asal: ', { continued: true });
+      doc.font('Helvetica').text(`Desa ${batch.originVillage || batch.order.supplier.village || '-'}, ${batch.order.supplier.region.name}`);
+
+      doc.font('Helvetica-Bold').fontSize(9).text('Tanggal Panen: ', { continued: true });
+      doc.font('Helvetica').text(batch.harvestDate.toISOString().split('T')[0]);
+
+      doc.font('Helvetica-Bold').fontSize(9).text('Dapur Penerima: ', { continued: true });
+      doc.font('Helvetica').text(`${batch.order.kitchen.name} (${batch.order.kitchen.code})`);
+
+      // Kolom Kanan: QR Code Resmi
+      doc.image(qrImageBuffer, 430, metaY, { width: 110, height: 110 });
+      doc.fontSize(7.5).fillColor('#64748B').text('Scan untuk verifikasi publik', 425, metaY + 115, { width: 120, align: 'center' });
+
+      // Reset Y ke bawah kolom metadata
+      doc.y = Math.max(doc.y, metaY + 130);
+      doc.moveDown(1);
+
+      // --- Hasil Inspeksi Mutu & Kuantitas ---
+      doc
+        .font('Helvetica-Bold')
+        .fontSize(10)
+        .fillColor('#0F172A')
+        .text('HASIL INSPEKSI MUTU & VERIFIKASI TIMBANGAN', 40, doc.y);
+
+      doc.moveDown(0.5);
+
+      // Kotak Ringkasan Mutu
+      const boxY = doc.y;
+      const isPassed = latestQc?.result === 'PASS';
+      const isPartial = latestQc?.result === 'PARTIAL';
+      const boxColor = isPassed ? '#F0FDF4' : isPartial ? '#FFFBEB' : '#FEF2F2';
+      const borderColor = isPassed ? '#86EFAC' : isPartial ? '#FDE68A' : '#FECACA';
+      const badgeTextColor = isPassed ? '#166534' : isPartial ? '#92400E' : '#991B1B';
+
+      doc.rect(40, boxY, 515, 60).fillAndStroke(boxColor, borderColor);
+
+      doc.font('Helvetica-Bold').fontSize(14).fillColor(badgeTextColor).text(
+        `STATUS QC: ${latestQc ? latestQc.result : 'BELUM DIINSPEKSI'} (Skor Mutu: ${latestQc ? latestQc.score : '-'}/100)`,
+        55,
+        boxY + 12,
+      );
+
+      doc.font('Helvetica').fontSize(9).fillColor('#334155').text(
+        `Diinspeksi oleh: ${latestQc?.inspector.name || '-'} | Tanggal Uji: ${
+          latestQc?.checkedAt ? latestQc.checkedAt.toISOString().split('T')[0] : '-'
+        }`,
+        55,
+        boxY + 35,
+      );
+
+      doc.y = boxY + 75;
+
+      // Tabel Detail Kuantitas
+      doc.font('Helvetica-Bold').fontSize(9).fillColor('#0F172A');
+      doc.text('Kuantitas Dikirim: ', 40, doc.y, { continued: true });
+      doc.font('Helvetica').text(`${Number(batch.shippedQuantity)} ${batch.order.commodity.unit}`);
+
+      doc.font('Helvetica-Bold').text('Kuantitas Diterima Dapur: ', { continued: true });
+      doc.font('Helvetica').text(`${batch.receivedQuantity ? Number(batch.receivedQuantity) : '-'} ${batch.order.commodity.unit}`);
+
+      doc.font('Helvetica-Bold').text('Kuantitas Lolos Mutu (Diterima): ', { continued: true });
+      doc.font('Helvetica').text(`${latestQc ? Number(latestQc.acceptedQuantity) : '-'} ${batch.order.commodity.unit}`);
+
+      if (latestQc && Number(latestQc.rejectedQuantity) > 0) {
+        doc.font('Helvetica-Bold').fillColor('#DC2626').text('Kuantitas Afkir (Ditolak): ', { continued: true });
+        doc.font('Helvetica').text(`${Number(latestQc.rejectedQuantity)} ${batch.order.commodity.unit}`);
+      }
+
+      if (latestQc?.notes) {
+        doc.moveDown(0.5);
+        doc.font('Helvetica-Bold').fillColor('#0F172A').text('Catatan Pengawas Mutu: ', { continued: true });
+        doc.font('Helvetica-Oblique').text(`"${latestQc.notes}"`);
+      }
+
+      // --- Rincian Parameter Mutu ---
+      if (latestQc?.checklistScores && typeof latestQc.checklistScores === 'object') {
+        doc.moveDown(1);
+        doc.font('Helvetica-Bold').fontSize(10).fillColor('#0F172A').text('SKOR PARAMETER DETAIL:');
+        doc.moveDown(0.3);
+        const scores = latestQc.checklistScores as Record<string, any>;
+        for (const [key, val] of Object.entries(scores)) {
+          doc.font('Helvetica').fontSize(8.5).fillColor('#475569').text(`• ${key}: ${val} poin`);
+        }
+      }
+
+      // --- Footer Sertifikat ---
+      doc.moveDown(2);
+      doc.moveTo(40, doc.y).lineTo(555, doc.y).strokeColor('#E2E8F0').lineWidth(1).stroke();
+      doc.moveDown(0.8);
+
+      doc
+        .font('Helvetica')
+        .fontSize(8)
+        .fillColor('#94A3B8')
+        .text(
+          `Dokumen ini diterbitkan secara otomatis oleh Sistem ORVANA pada ${new Date().toISOString()}. Sah tanpa tanda tangan basah. URL: ${traceUrl}`,
+          { align: 'center' },
+        );
+
+      doc.end();
+    });
+  }
 }
+
