@@ -16,16 +16,19 @@ import { AdminAuditPage } from '../pages/admin/AdminAuditPage';
 import { AdminReportsPage } from '../pages/admin/AdminReportsPage';
 import { AuditorDashboardPage } from '../pages/auditor/AuditorDashboardPage';
 import { QualityStandardsPage } from '../pages/inspector/QualityStandardsPage';
+import { KitchenDashboardPage } from '../pages/kitchen/KitchenDashboardPage';
 import { KitchenMenuPage } from '../pages/kitchen/KitchenMenuPage';
 import { KitchenDemandPage } from '../pages/kitchen/KitchenDemandPage';
 import { KitchenDemandDetailPage } from '../pages/kitchen/KitchenDemandDetailPage';
 import { KitchenReceivingPage } from '../pages/kitchen/KitchenReceivingPage';
 import { KitchenPaymentsPage } from '../pages/kitchen/KitchenPaymentsPage';
+import { SupplierDashboardPage } from '../pages/supplier/SupplierDashboardPage';
 import { SupplierStockPage } from '../pages/supplier/SupplierStockPage';
 import { SupplierHarvestPlanPage } from '../pages/supplier/SupplierHarvestPlanPage';
 import { HarvestCalendarPage } from '../pages/supplier/HarvestCalendarPage';
 import { SupplierOrdersPage } from '../pages/supplier/SupplierOrdersPage';
 import { SupplierPaymentsPage } from '../pages/supplier/SupplierPaymentsPage';
+import { CoordinatorDashboardPage } from '../pages/coordinator/CoordinatorDashboardPage';
 import { CoordinatorOrdersPage } from '../pages/coordinator/CoordinatorOrdersPage';
 import { CoordinatorShipmentsPage } from '../pages/coordinator/CoordinatorShipmentsPage';
 import { CoordinatorShipmentDetailPage } from '../pages/coordinator/CoordinatorShipmentDetailPage';
@@ -153,6 +156,14 @@ export const AppRouter: React.FC = () => {
 
           {/* Kitchen Manager Routes */}
           <Route
+            path="/kitchen/dashboard"
+            element={
+              <RequireRole roles={['KITCHEN_MANAGER', 'ADMIN']}>
+                <KitchenDashboardPage />
+              </RequireRole>
+            }
+          />
+          <Route
             path="/kitchen/menu"
             element={
               <RequireRole roles={['KITCHEN_MANAGER', 'ADMIN']}>
@@ -194,10 +205,18 @@ export const AppRouter: React.FC = () => {
           />
           <Route
             path="/kitchen"
-            element={<Navigate to="/kitchen/menu" replace />}
+            element={<Navigate to="/kitchen/dashboard" replace />}
           />
 
           {/* Supplier Routes */}
+          <Route
+            path="/supplier/dashboard"
+            element={
+              <RequireRole roles={['SUPPLIER', 'ADMIN']}>
+                <SupplierDashboardPage />
+              </RequireRole>
+            }
+          />
           <Route
             path="/supplier/stock"
             element={
@@ -240,10 +259,18 @@ export const AppRouter: React.FC = () => {
           />
           <Route
             path="/supplier"
-            element={<Navigate to="/supplier/stock" replace />}
+            element={<Navigate to="/supplier/dashboard" replace />}
           />
 
           {/* Coordinator Routes */}
+          <Route
+            path="/coordinator/dashboard"
+            element={
+              <RequireRole roles={['COORDINATOR', 'ADMIN']}>
+                <CoordinatorDashboardPage />
+              </RequireRole>
+            }
+          />
           <Route
             path="/coordinator/orders"
             element={
@@ -270,7 +297,7 @@ export const AppRouter: React.FC = () => {
           />
           <Route
             path="/coordinator"
-            element={<Navigate to="/coordinator/shipments" replace />}
+            element={<Navigate to="/coordinator/dashboard" replace />}
           />
 
           {/* Inspector Routes */}

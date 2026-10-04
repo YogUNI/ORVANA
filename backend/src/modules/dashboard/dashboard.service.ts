@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { calculateHaversineDistance } from '../../common/utils/haversine';
-import { LedgerStage, QcResult } from '@prisma/client';
+import { LedgerStage, QcResult, OrderStatus } from '@prisma/client';
+import { JwtPayload } from '../../common/decorators/current-user.decorator';
+import { scopeWhere } from '../../common/utils/scope-where.util';
 
 export interface ImpactMetricsResult {
   localSpendingRupiah: number; // Nilai belanja lokal (Rp)
@@ -268,4 +270,252 @@ export class DashboardService {
       avgDistanceKm: metrics.avgDistanceKm,
     };
   }
+
+  /**
+   * Dashboard Pengelola Dapur (KITCHEN_MANAGER) - docs/06 M10 P1
+   * Kebutuhan vs terpenuhi, biaya, order aktif
+   */
+  async getKitchenDashboard(user: JwtPayload) {
+    const kitchen = await this.prisma.kitchen.findFirst({
+      where: { managerId: user.sub },
+    });
+
+    if (!kitchen) {
+      return {
+        totalDemandKg: 0,
+        fulfilledKg: 0,
+        fulfillmentRatePct: 0,
+        totalSpendingRupiah: 0,
+        activeOrdersCount: 0,
+        pendingReceivingCount: 0,
+        recentOrders: [],
+      };
+    }
+
+    const [demands, orders] = await Promise.all([
+      this.prisma.demandRequest.findMany({
+        where: { kitchenId: kitchen.id },
+      }),
+      this.prisma.order.findMany({
+        where: { kitchenId: kitchen.id },
+        include: {
+          commodity: true,
+          supplier: true,
+          batch: {
+            include: { qualityChecks: true },
+          },
+          ledger: true,
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+    ]);
+
+    const totalDemandKg = demands.reduce((acc, d) => acc + Number(d.quantity), 0);
+
+    let fulfilledKg = 0;
+    let totalSpendingRupiah = 0;
+    let activeOrdersCount = 0;
+    let pendingReceivingCount = 0;
+
+    for (const o of orders) {
+      // Order aktif
+      if (['PROPOSED', 'ACCEPTED', 'CONSOLIDATED', 'IN_TRANSIT', 'RECEIVED'].includes(o.status)) {
+        activeOrdersCount++;
+      }
+      if (o.status === 'IN_TRANSIT') {
+        pendingReceivingCount++;
+      }
+
+      // Kuantitas diterima lolos QC
+      const qc = o.batch?.qualityChecks[0];
+      if (qc) {
+        fulfilledKg += Number(qc.acceptedQuantity);
+      }
+
+      // Belanja riil dari ledger RELEASE
+      const releases = o.ledger.filter((l) => l.stage === LedgerStage.RELEASE);
+      for (const r of releases) {
+        totalSpendingRupiah += Number(r.amount);
+      }
+    }
+
+    const fulfillmentRatePct = totalDemandKg > 0 ? Math.round((fulfilledKg / totalDemandKg) * 10000) / 100 : 0;
+
+    return {
+      kitchen: { id: kitchen.id, name: kitchen.name, code: kitchen.code },
+      totalDemandKg: Math.round(totalDemandKg * 100) / 100,
+      fulfilledKg: Math.round(fulfilledKg * 100) / 100,
+      fulfillmentRatePct,
+      totalSpendingRupiah: Math.round(totalSpendingRupiah),
+      activeOrdersCount,
+      pendingReceivingCount,
+      recentOrders: orders.slice(0, 5).map((o) => ({
+        id: o.id,
+        orderNo: o.orderNo,
+        commodityName: o.commodity?.name || '-',
+        supplierName: o.supplier?.displayName || '-',
+        quantityKg: Number(o.quantity),
+        status: o.status,
+        createdAt: o.createdAt,
+      })),
+    };
+  }
+
+  /**
+   * Dashboard Produsen Pemasok (SUPPLIER) - docs/06 M10 P1
+   * Pendapatan tercatat, skor mutu, order aktif, ringkasan panen
+   */
+  async getSupplierDashboard(user: JwtPayload) {
+    const profile = await this.prisma.supplierProfile.findUnique({
+      where: { userId: user.sub },
+    });
+
+    if (!profile) {
+      return {
+        earnedRupiah: 0,
+        escrowRupiah: 0,
+        qualityScore: 70,
+        activeOrdersCount: 0,
+        proposedOrdersCount: 0,
+        activeOffersCount: 0,
+        harvestPlansCount: 0,
+        recentOrders: [],
+      };
+    }
+
+    const [orders, offers, harvestPlans] = await Promise.all([
+      this.prisma.order.findMany({
+        where: { supplierId: profile.id },
+        include: {
+          commodity: true,
+          kitchen: true,
+          ledger: true,
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.supplyOffer.count({
+        where: { supplierId: profile.id, status: 'ACTIVE' },
+      }),
+      this.prisma.harvestPlan.count({
+        where: { supplierId: profile.id },
+      }),
+    ]);
+
+    let earnedRupiah = 0;
+    let escrowRupiah = 0;
+    let activeOrdersCount = 0;
+    let proposedOrdersCount = 0;
+
+    for (const o of orders) {
+      if (o.status === 'PROPOSED') proposedOrdersCount++;
+      if (['ACCEPTED', 'CONSOLIDATED', 'IN_TRANSIT', 'RECEIVED'].includes(o.status)) {
+        activeOrdersCount++;
+      }
+
+      for (const l of o.ledger) {
+        if (l.stage === LedgerStage.RELEASE) {
+          earnedRupiah += Number(l.amount);
+        } else if (l.stage === LedgerStage.HOLD) {
+          escrowRupiah += Number(l.amount);
+        } else if (l.stage === LedgerStage.VOID) {
+          escrowRupiah -= Number(l.amount);
+        }
+      }
+    }
+
+    return {
+      profile: {
+        id: profile.id,
+        displayName: profile.displayName,
+        type: profile.type,
+      },
+      earnedRupiah: Math.round(earnedRupiah),
+      escrowRupiah: Math.max(0, Math.round(escrowRupiah)),
+      qualityScore: Number(profile.qualityScore),
+      activeOrdersCount,
+      proposedOrdersCount,
+      activeOffersCount: offers,
+      harvestPlansCount: harvestPlans,
+      recentOrders: orders.slice(0, 5).map((o) => ({
+        id: o.id,
+        orderNo: o.orderNo,
+        commodityName: o.commodity?.name || '-',
+        kitchenName: o.kitchen?.name || '-',
+        quantityKg: Number(o.quantity),
+        pricePerUnit: Number(o.pricePerUnit),
+        totalPrice: Math.round(Number(o.quantity) * Number(o.pricePerUnit)),
+        status: o.status,
+        createdAt: o.createdAt,
+      })),
+    };
+  }
+
+  /**
+   * Dashboard Koordinator Pengumpulan (COORDINATOR) - docs/06 M10 P1
+   * Order siap kirim, armada pengiriman aktif, total tonase
+   */
+  async getCoordinatorDashboard(user: JwtPayload) {
+    const profile = await this.prisma.coordinatorProfile.findUnique({
+      where: { userId: user.sub },
+    });
+
+    const coordinatorId = profile?.id;
+    const regionId = user.regionId;
+
+    const [readyOrders, shipments] = await Promise.all([
+      this.prisma.order.findMany({
+        where: {
+          status: 'ACCEPTED',
+          ...(regionId ? { kitchen: { regionId } } : {}),
+        },
+        include: {
+          commodity: true,
+          supplier: true,
+          kitchen: true,
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.shipment.findMany({
+        where: coordinatorId ? { coordinatorId } : {},
+        include: {
+          kitchen: true,
+          orders: true,
+        },
+        orderBy: { scheduledAt: 'desc' },
+      }),
+    ]);
+
+    const activeShipmentsCount = shipments.filter((s) =>
+      ['PLANNED', 'PICKING_UP', 'IN_TRANSIT'].includes(s.status),
+    ).length;
+
+    const totalOrdersReady = readyOrders.length;
+    const totalReadyKg = readyOrders.reduce((acc, o) => acc + Number(o.quantity), 0);
+
+    return {
+      profile: profile ? { id: profile.id, organizationName: profile.organizationName } : null,
+      totalOrdersReady,
+      totalReadyKg: Math.round(totalReadyKg * 100) / 100,
+      activeShipmentsCount,
+      totalShipmentsCount: shipments.length,
+      readyOrders: readyOrders.slice(0, 6).map((o) => ({
+        id: o.id,
+        orderNo: o.orderNo,
+        commodityName: o.commodity?.name || '-',
+        supplierName: o.supplier?.displayName || '-',
+        kitchenName: o.kitchen?.name || '-',
+        quantityKg: Number(o.quantity),
+        createdAt: o.createdAt,
+      })),
+      recentShipments: shipments.slice(0, 5).map((s) => ({
+        id: s.id,
+        shipmentNo: s.shipmentNo,
+        kitchenName: s.kitchen.name,
+        scheduledAt: s.scheduledAt,
+        status: s.status,
+        orderCount: s.orders.length,
+      })),
+    };
+  }
 }
+

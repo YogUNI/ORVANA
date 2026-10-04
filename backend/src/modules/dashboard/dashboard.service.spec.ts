@@ -176,4 +176,53 @@ describe('DashboardService - Impact Metrics Test Vectors (docs/09 section 7)', (
     expect(summary.totalDeliveredKg).toBe(295);
     expect(summary.qualityPassRatePct).toBe(66.67);
   });
+
+  it('getKitchenDashboard mengembalikan metrik pemenuhan dan belanja dapur', async () => {
+    (prisma as any).kitchen = { findFirst: jest.fn().mockResolvedValue(mockKitchen) };
+
+    const mockUser: any = { sub: 'km-1', role: 'KITCHEN_MANAGER' };
+    const res = await service.getKitchenDashboard(mockUser);
+
+    expect(res.kitchen?.id).toBe('k-1');
+    expect(res.totalDemandKg).toBe(350);
+    expect(res.fulfilledKg).toBe(295);
+    expect(res.totalSpendingRupiah).toBe(5730000);
+  });
+
+  it('getSupplierDashboard mengembalikan pendapatan dan skor mutu produsen', async () => {
+    (prisma as any).supplierProfile = {
+      findUnique: jest.fn().mockResolvedValue({
+        id: 'S1',
+        displayName: 'Kelompok Tani Subur',
+        type: 'INDIVIDUAL_FARMER',
+        qualityScore: 88,
+      }),
+    };
+    (prisma as any).supplyOffer = { count: jest.fn().mockResolvedValue(2) };
+    (prisma as any).harvestPlan = { count: jest.fn().mockResolvedValue(1) };
+
+    const mockUser: any = { sub: 'sup-user-1', role: 'SUPPLIER' };
+    const res = await service.getSupplierDashboard(mockUser);
+
+    expect(res.profile?.id).toBe('S1');
+    expect(res.qualityScore).toBe(88);
+    expect(res.activeOffersCount).toBe(2);
+    expect(res.harvestPlansCount).toBe(1);
+  });
+
+  it('getCoordinatorDashboard mengembalikan total armada dan order siap kirim', async () => {
+    (prisma as any).coordinatorProfile = {
+      findUnique: jest.fn().mockResolvedValue({
+        id: 'coord-1',
+        organizationName: 'Koperasi Tani Sleman',
+      }),
+    };
+    (prisma as any).shipment = { findMany: jest.fn().mockResolvedValue([]) };
+
+    const mockUser: any = { sub: 'coord-user-1', role: 'COORDINATOR', regionId: 'reg-1' };
+    const res = await service.getCoordinatorDashboard(mockUser);
+
+    expect(res.profile?.organizationName).toBe('Koperasi Tani Sleman');
+    expect(res.activeShipmentsCount).toBe(0);
+  });
 });

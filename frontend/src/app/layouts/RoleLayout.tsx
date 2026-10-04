@@ -58,6 +58,7 @@ export const RoleLayout: React.FC = () => {
         ];
       case 'KITCHEN_MANAGER':
         return [
+          { to: '/kitchen/dashboard', label: 'Dasbor Dapur', icon: LayoutDashboard },
           { to: '/kitchen/menu', label: 'Menu Mingguan', icon: CalendarDays },
           { to: '/kitchen/demand', label: 'Kebutuhan Bahan', icon: ShoppingBag },
           { to: '/kitchen/receiving', label: 'Penerimaan Pasokan', icon: PackageOpen },
@@ -65,14 +66,16 @@ export const RoleLayout: React.FC = () => {
         ];
       case 'SUPPLIER':
         return [
+          { to: '/supplier/dashboard', label: 'Dasbor Produsen', icon: LayoutDashboard },
           { to: '/supplier/stock', label: 'Stok Pasokan', icon: Sprout },
           { to: '/supplier/harvest-plan', label: 'Rencana Panen', icon: CalendarDays },
-          { to: '/supplier/calendar', label: 'Kalender Kolektif', icon: LayoutDashboard },
+          { to: '/supplier/calendar', label: 'Kalender Kolektif', icon: CalendarDays },
           { to: '/supplier/orders', label: 'Tawaran Pesanan', icon: ShoppingBag },
           { to: '/supplier/payments', label: 'Riwayat Pembayaran', icon: CreditCard },
         ];
       case 'COORDINATOR':
         return [
+          { to: '/coordinator/dashboard', label: 'Dasbor Logistik', icon: LayoutDashboard },
           { to: '/coordinator/shipments', label: 'Pengiriman Armada', icon: Truck },
           { to: '/coordinator/orders', label: 'Konsolidasi Pesanan', icon: ShoppingBag },
         ];
