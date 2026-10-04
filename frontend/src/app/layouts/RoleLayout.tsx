@@ -61,6 +61,8 @@ export const RoleLayout: React.FC = () => {
       case 'SUPPLIER':
         return [
           { to: '/supplier/stock', label: 'Stok Pasokan', icon: Sprout },
+          { to: '/supplier/harvest-plan', label: 'Rencana Panen', icon: CalendarDays },
+          { to: '/supplier/calendar', label: 'Kalender Kolektif', icon: LayoutDashboard },
           { to: '/supplier/orders', label: 'Tawaran Pesanan', icon: ShoppingBag },
           { to: '/supplier/payments', label: 'Riwayat Pembayaran', icon: CreditCard },
         ];

@@ -19,6 +19,10 @@ import {
   UpdateSupplyOfferDto,
   FilterSupplyOfferDto,
 } from './dto/supply-offer.dto';
+import {
+  CreateHarvestPlanDto,
+  UpdateHarvestPlanDto,
+} from './dto/harvest-plan.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -96,5 +100,75 @@ export class SupplyController {
   ) {
     const ipAddress = req.ip || req.socket.remoteAddress;
     return this.supplyService.cancelOffer(id, userId, ipAddress);
+  }
+
+  // =========================================================================
+  // ENDPOINT RENCANA PANEN (HARVEST PLANS) - docs/06 M3
+  // =========================================================================
+
+  @Get('../harvest-plans')
+  @Roles(Role.SUPPLIER)
+  @ApiOperation({ summary: 'Daftar rencana panen milik pemasok yang login' })
+  async getMyHarvestPlans(@CurrentUser('sub') userId: string) {
+    const data = await this.supplyService.getMyHarvestPlans(userId);
+    return { data };
+  }
+
+  @Post('../harvest-plans')
+  @Roles(Role.SUPPLIER)
+  @ApiOperation({ summary: 'Membuat rencana panen baru untuk pemasok' })
+  async createHarvestPlan(
+    @Body() dto: CreateHarvestPlanDto,
+    @CurrentUser('sub') userId: string,
+    @Req() req: Request,
+  ) {
+    const ipAddress = req.ip || req.socket.remoteAddress;
+    const data = await this.supplyService.createHarvestPlan(dto, userId, ipAddress);
+    return { data };
+  }
+
+  @Patch('../harvest-plans/:id')
+  @Roles(Role.SUPPLIER)
+  @ApiOperation({ summary: 'Memperbarui rencana panen milik pemasok' })
+  async updateHarvestPlan(
+    @Param('id') id: string,
+    @Body() dto: UpdateHarvestPlanDto,
+    @CurrentUser('sub') userId: string,
+    @Req() req: Request,
+  ) {
+    const ipAddress = req.ip || req.socket.remoteAddress;
+    const data = await this.supplyService.updateHarvestPlan(id, dto, userId, ipAddress);
+    return { data };
+  }
+
+  @Delete('../harvest-plans/:id')
+  @Roles(Role.SUPPLIER)
+  @ApiOperation({ summary: 'Menghapus rencana panen milik pemasok' })
+  async deleteHarvestPlan(
+    @Param('id') id: string,
+    @CurrentUser('sub') userId: string,
+    @Req() req: Request,
+  ) {
+    const ipAddress = req.ip || req.socket.remoteAddress;
+    const data = await this.supplyService.deleteHarvestPlan(id, userId, ipAddress);
+    return { data };
+  }
+
+  // =========================================================================
+  // ENDPOINT KALENDER PANEN KOLEKTIF & HEATMAP (docs/06 M3)
+  // =========================================================================
+
+  @Get('../harvest-calendar')
+  @Roles(Role.SUPPLIER, Role.ADMIN, Role.KITCHEN_MANAGER, Role.COORDINATOR, Role.AUDITOR)
+  @ApiOperation({
+    summary:
+      'Agregat kalender panen kolektif per komoditas per minggu (demand, supply, ratio, status) untuk heatmap',
+  })
+  async getHarvestCalendar(
+    @Query('regionId') regionId?: string,
+    @Query('weeks') weeks?: number,
+  ) {
+    const data = await this.supplyService.getHarvestCalendar({ regionId, weeks });
+    return { data };
   }
 }

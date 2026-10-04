@@ -3,6 +3,7 @@ import { SupplyService } from './supply.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { OfferStatus, SupplierType } from '@prisma/client';
+import { SettingsService } from '../settings/settings.service';
 import {
   ForbiddenException,
   UnprocessableEntityException,
@@ -35,6 +36,7 @@ describe('SupplyService Unit Tests (T3.1)', () => {
       },
       commodity: {
         findUnique: jest.fn(),
+        findMany: jest.fn(),
       },
       priceReference: {
         findFirst: jest.fn(),
@@ -46,10 +48,28 @@ describe('SupplyService Unit Tests (T3.1)', () => {
         create: jest.fn(),
         update: jest.fn(),
       },
+      harvestPlan: {
+        findUnique: jest.fn(),
+        findMany: jest.fn(),
+        create: jest.fn(),
+        update: jest.fn(),
+        delete: jest.fn(),
+      },
+      demandRequest: {
+        findMany: jest.fn(),
+      },
     };
 
     auditService = {
       log: jest.fn().mockResolvedValue(true),
+    };
+
+    const mockSettingsService = {
+      getSetting: jest.fn().mockImplementation((key: string, def: any) => {
+        if (key === 'harvest.gapLowRatio') return 0.8;
+        if (key === 'harvest.gapHighRatio') return 1.3;
+        return def;
+      }),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -57,6 +77,7 @@ describe('SupplyService Unit Tests (T3.1)', () => {
         SupplyService,
         { provide: PrismaService, useValue: prisma },
         { provide: AuditService, useValue: auditService },
+        { provide: SettingsService, useValue: mockSettingsService },
       ],
     }).compile();
 
@@ -217,6 +238,81 @@ describe('SupplyService Unit Tests (T3.1)', () => {
         where: { id: 'off-1' },
         data: { status: OfferStatus.CANCELLED },
       });
+    });
+  });
+
+  describe('Rencana Panen (HarvestPlan) & Kalender Kolektif (T7.2 & docs/06 M3)', () => {
+    it('berhasil membuat rencana panen untuk pemasok', async () => {
+      prisma.supplierProfile.findUnique.mockResolvedValue(mockSupplierProfile);
+      prisma.commodity.findUnique.mockResolvedValue(mockCommodityBayam);
+      prisma.harvestPlan.create.mockImplementation(({ data }: any) => ({
+        id: 'plan-1',
+        ...data,
+        commodity: mockCommodityBayam,
+      }));
+
+      const plan = await service.createHarvestPlan(
+        {
+          commodityId: 'comm-bayam',
+          expectedQuantity: 150.0,
+          expectedHarvestDate: '2026-10-25',
+          notes: 'Varietas bayam hijau cabut',
+        },
+        'user-supp-1',
+      );
+
+      expect(plan.id).toBe('plan-1');
+      expect(plan.expectedQuantity).toBe(150.0);
+      expect(prisma.harvestPlan.create).toHaveBeenCalled();
+    });
+
+    it('menghitung kalender panen dan melabeli status Kurang (ratio < 0.8) sesuai kriteria docs/06 M3', async () => {
+      // Kriteria penerimaan docs/06 M3:
+      // Demand 100 kg dan supply 70 kg -> ratio 0.70 < 0.80 -> status "DEFICIT" / "Kurang"
+      const now = new Date();
+      prisma.commodity.findMany.mockResolvedValue([mockCommodityBayam]);
+
+      // Demand 100 kg
+      prisma.demandRequest.findMany.mockResolvedValue([
+        {
+          id: 'dem-1',
+          commodityId: 'comm-bayam',
+          neededDate: now,
+          quantity: 100.0,
+        },
+      ]);
+
+      // Supply 70 kg (Offer 50 kg + Plan 20 kg)
+      prisma.supplyOffer.findMany.mockResolvedValue([
+        {
+          id: 'off-1',
+          commodityId: 'comm-bayam',
+          harvestDate: now,
+          quantityAvailable: 50.0,
+          quantityReserved: 0,
+        },
+      ]);
+
+      prisma.harvestPlan.findMany.mockResolvedValue([
+        {
+          id: 'plan-1',
+          commodityId: 'comm-bayam',
+          expectedHarvestDate: now,
+          expectedQuantity: 20.0,
+        },
+      ]);
+
+      const calendar = await service.getHarvestCalendar({ weeks: 4 });
+
+      expect(calendar.commodities).toHaveLength(1);
+      const bayamWeeks = calendar.commodities[0].weeks;
+      // Minggu pertama (berisi hari ini)
+      const currentWeek = bayamWeeks[0];
+      expect(currentWeek.demandKg).toBe(100.0);
+      expect(currentWeek.supplyKg).toBe(70.0);
+      expect(currentWeek.ratio).toBe(0.7);
+      expect(currentWeek.status).toBe('DEFICIT');
+      expect(currentWeek.statusLabel).toBe('Kurang');
     });
   });
 });

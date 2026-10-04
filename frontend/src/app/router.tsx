@@ -20,6 +20,8 @@ import { KitchenDemandDetailPage } from '../pages/kitchen/KitchenDemandDetailPag
 import { KitchenReceivingPage } from '../pages/kitchen/KitchenReceivingPage';
 import { KitchenPaymentsPage } from '../pages/kitchen/KitchenPaymentsPage';
 import { SupplierStockPage } from '../pages/supplier/SupplierStockPage';
+import { SupplierHarvestPlanPage } from '../pages/supplier/SupplierHarvestPlanPage';
+import { HarvestCalendarPage } from '../pages/supplier/HarvestCalendarPage';
 import { SupplierOrdersPage } from '../pages/supplier/SupplierOrdersPage';
 import { SupplierPaymentsPage } from '../pages/supplier/SupplierPaymentsPage';
 import { CoordinatorOrdersPage } from '../pages/coordinator/CoordinatorOrdersPage';
@@ -182,6 +184,22 @@ export const AppRouter: React.FC = () => {
             element={
               <RequireRole roles={['SUPPLIER', 'ADMIN']}>
                 <SupplierStockPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/supplier/harvest-plan"
+            element={
+              <RequireRole roles={['SUPPLIER', 'ADMIN']}>
+                <SupplierHarvestPlanPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/supplier/calendar"
+            element={
+              <RequireRole roles={['SUPPLIER', 'ADMIN', 'KITCHEN_MANAGER', 'COORDINATOR', 'AUDITOR']}>
+                <HarvestCalendarPage />
               </RequireRole>
             }
           />
