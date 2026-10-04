@@ -17,6 +17,7 @@ import {
   XCircle,
   Truck,
   Users,
+  Sparkles,
 } from 'lucide-react';
 
 interface OrderItem {
@@ -61,6 +62,7 @@ export const KitchenDemandDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = React.useState<'CANDIDATES' | 'ORDERS'>('ORDERS');
 
   const { data: demand, isLoading, error } = useQuery({
     queryKey: ['demand-detail', id],
@@ -69,6 +71,30 @@ export const KitchenDemandDetailPage: React.FC = () => {
       return (res.data || res) as DemandDetail;
     },
     enabled: !!id,
+  });
+
+  const { data: candidatesData, isLoading: isCandidatesLoading } = useQuery({
+    queryKey: ['demand-candidates', id],
+    queryFn: async () => {
+      const res: any = await apiClient.get(`/demand-requests/${id}/candidates`);
+      return res.data || res;
+    },
+    enabled: !!id,
+  });
+
+  const matchMutation = useMutation({
+    mutationFn: async () => {
+      return apiClient.post(`/demand-requests/${id}/match`);
+    },
+    onSuccess: (res: any) => {
+      queryClient.invalidateQueries({ queryKey: ['demand-detail', id] });
+      queryClient.invalidateQueries({ queryKey: ['demand-candidates', id] });
+      setActiveTab('ORDERS');
+      alert(res?.data?.message || 'Pencocokan dan alokasi pesanan berhasil dijalankan!');
+    },
+    onError: (err: any) => {
+      alert(err?.response?.data?.error?.message || 'Gagal menjalankan pencocokan pasokan.');
+    },
   });
 
   const publishMutation = useMutation({
@@ -274,16 +300,143 @@ export const KitchenDemandDetailPage: React.FC = () => {
         )}
       </Card>
 
-      {/* Bagian Daftar Pesanan Terbentuk (Orders) */}
-      <Card className="p-6">
-        <div className="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
-          <div className="flex items-center gap-2">
-            <Truck className="w-5 h-5 text-brand" />
-            <h3 className="font-heading font-bold text-gray-900 text-base">
-              Pesanan Pasokan Terkait ({demand.orders?.length || 0})
-            </h3>
+      {/* Tab Switcher: Kandidat Pemasok vs Pesanan Terbentuk */}
+      <div className="flex border-b border-gray-200 gap-4">
+        <button
+          onClick={() => setActiveTab('CANDIDATES')}
+          className={`pb-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+            activeTab === 'CANDIDATES'
+              ? 'border-brand text-brand'
+              : 'border-transparent text-gray-500 hover:text-gray-900'
+          }`}
+        >
+          <Sparkles className="w-4 h-4" />
+          Kandidat Pemasok & Penilaian ({candidatesData?.candidates?.length || 0})
+        </button>
+
+        <button
+          onClick={() => setActiveTab('ORDERS')}
+          className={`pb-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+            activeTab === 'ORDERS'
+              ? 'border-brand text-brand'
+              : 'border-transparent text-gray-500 hover:text-gray-900'
+          }`}
+        >
+          <Truck className="w-4 h-4" />
+          Pesanan Pasokan Terkait ({demand.orders?.length || 0})
+        </button>
+      </div>
+
+      {activeTab === 'CANDIDATES' ? (
+        /* Tab Kandidat Pemasok */
+        <Card className="p-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 pb-3 border-b border-gray-100">
+            <div>
+              <h3 className="font-heading font-bold text-gray-900 text-base">
+                Pratinjau Hasil Algoritma Pencocokan
+              </h3>
+              <p className="text-xs text-gray-500">
+                Peringkat pemasok lokal berdasarkan formula multi-kriteria: Jarak (30%), Mutu (30%), Harga Acuan (20%), Kesegaran (10%), Keandalan (10%).
+              </p>
+            </div>
+
+            {demand.status !== 'FULFILLED' && demand.status !== 'CANCELLED' && (
+              <Button
+                onClick={() => matchMutation.mutate()}
+                isLoading={matchMutation.isPending}
+                className="bg-brand text-white hover:bg-brand-hover text-xs font-semibold"
+              >
+                <Sparkles className="w-4 h-4 mr-1.5" />
+                Jalankan Alokasi Pesanan
+              </Button>
+            )}
           </div>
-        </div>
+
+          {isCandidatesLoading ? (
+            <div className="space-y-3">
+              <Skeleton className="h-16 w-full" />
+              <Skeleton className="h-16 w-full" />
+            </div>
+          ) : !candidatesData?.candidates || candidatesData.candidates.length === 0 ? (
+            <div className="py-8 text-center text-gray-400">
+              <p className="text-sm">
+                Belum ada kandidat pemasok aktif yang memenuhi kriteria (radius ≤ 100 km, mutu ≥ {demand.minQualityScore}, stok bebas &gt; 0).
+              </p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm text-gray-600">
+                <thead className="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-700 uppercase">
+                  <tr>
+                    <th className="px-4 py-3">Pemasok Lokal</th>
+                    <th className="px-4 py-3 text-right">Jarak (Km)</th>
+                    <th className="px-4 py-3 text-right">Stok Bebas</th>
+                    <th className="px-4 py-3 text-right">Batas Alokasi (Cap 60%)</th>
+                    <th className="px-4 py-3 text-right">Harga Ajuan</th>
+                    <th className="px-4 py-3 text-center">Komponen Skor</th>
+                    <th className="px-4 py-3 text-center">Skor Total</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {candidatesData.candidates.map((cand: any, idx: number) => (
+                    <tr key={cand.offerId} className="hover:bg-gray-50/75">
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <span className="w-5 h-5 rounded-full bg-brand-soft text-brand font-bold text-xs flex items-center justify-center shrink-0">
+                            {idx + 1}
+                          </span>
+                          <div>
+                            <span className="font-semibold text-gray-900 block">
+                              {cand.supplierName}
+                            </span>
+                            {cand.village && (
+                              <span className="text-xs text-gray-400">
+                                Desa {cand.village}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-right font-mono text-gray-700">
+                        {cand.distanceKm.toFixed(1)} km
+                      </td>
+                      <td className="px-4 py-3 text-right font-mono font-medium text-gray-900">
+                        {formatKg(cand.availableQuantity)}
+                      </td>
+                      <td className="px-4 py-3 text-right font-mono font-bold text-brand">
+                        {formatKg(cand.cappedQuantity)}
+                      </td>
+                      <td className="px-4 py-3 text-right font-mono text-gray-900">
+                        {formatRupiah(cand.askingPrice)}
+                      </td>
+                      <td className="px-4 py-3 text-center text-xs text-gray-500 font-mono">
+                        D:{(cand.scoreComponents.sDistance * 100).toFixed(0)} |
+                        Q:{(cand.scoreComponents.sQuality * 100).toFixed(0)} |
+                        P:{(cand.scoreComponents.sPrice * 100).toFixed(0)} |
+                        F:{(cand.scoreComponents.sFreshness * 100).toFixed(0)} |
+                        R:{(cand.scoreComponents.sReliability * 100).toFixed(0)}
+                      </td>
+                      <td className="px-4 py-3 text-center font-mono font-bold text-base text-emerald-700">
+                        {cand.scoreComponents.matchScore.toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </Card>
+      ) : (
+        /* Bagian Daftar Pesanan Terbentuk (Orders) */
+        <Card className="p-6">
+          <div className="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+            <div className="flex items-center gap-2">
+              <Truck className="w-5 h-5 text-brand" />
+              <h3 className="font-heading font-bold text-gray-900 text-base">
+                Pesanan Pasokan Terkait ({demand.orders?.length || 0})
+              </h3>
+            </div>
+          </div>
 
         {!demand.orders || demand.orders.length === 0 ? (
           <div className="py-8 text-center text-gray-400">
@@ -357,6 +510,7 @@ export const KitchenDemandDetailPage: React.FC = () => {
           </div>
         )}
       </Card>
+      )}
     </div>
   );
 };

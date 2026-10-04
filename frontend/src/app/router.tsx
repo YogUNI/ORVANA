@@ -15,6 +15,7 @@ import { KitchenMenuPage } from '../pages/kitchen/KitchenMenuPage';
 import { KitchenDemandPage } from '../pages/kitchen/KitchenDemandPage';
 import { KitchenDemandDetailPage } from '../pages/kitchen/KitchenDemandDetailPage';
 import { SupplierStockPage } from '../pages/supplier/SupplierStockPage';
+import { SupplierOrdersPage } from '../pages/supplier/SupplierOrdersPage';
 import { RoleLayout } from './layouts/RoleLayout';
 import { RequireAuth } from '../features/auth/RequireAuth';
 import { RequireRole } from '../features/auth/RequireRole';
@@ -155,6 +156,14 @@ export const AppRouter: React.FC = () => {
             element={
               <RequireRole roles={['SUPPLIER', 'ADMIN']}>
                 <SupplierStockPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/supplier/orders"
+            element={
+              <RequireRole roles={['SUPPLIER', 'ADMIN']}>
+                <SupplierOrdersPage />
               </RequireRole>
             }
           />
