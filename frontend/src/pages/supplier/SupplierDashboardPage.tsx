@@ -8,6 +8,8 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { StatCard } from '../../components/ui/StatCard';
 import {
   LayoutDashboard,
   Sprout,
@@ -18,6 +20,7 @@ import {
   ShoppingBag,
   ArrowRight,
   Sparkles,
+  Star,
 } from 'lucide-react';
 
 interface SupplierDashboardData {
@@ -29,6 +32,8 @@ interface SupplierDashboardData {
   earnedRupiah: number;
   escrowRupiah: number;
   qualityScore: number;
+  averageRating?: number | null;
+  reviewCount?: number;
   activeOrdersCount: number;
   proposedOrdersCount: number;
   activeOffersCount: number;
@@ -74,102 +79,68 @@ export const SupplierDashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-surface-border pb-4">
-        <div>
+      <PageHeader
+        title="Dasbor Produsen & Petani Lokal"
+        subtitle="Ringkasan pendapatan tuntas, dana aman di penjamin escrow, skor reputasi mutu, dan alokasi pesanan."
+        icon={<LayoutDashboard className="w-6 h-6 text-pine-800" />}
+        badge={
+          dashboard?.profile ? (
+            <span className="font-mono text-xs font-bold text-pine-800 bg-pine-100 px-2.5 py-0.5 rounded border border-pine-300">
+              {dashboard.profile.displayName}
+            </span>
+          ) : undefined
+        }
+        actions={
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-serif font-bold text-pine-900 tracking-tight flex items-center gap-2">
-              <LayoutDashboard className="w-6 h-6 text-pine-700" />
-              Dasbor Produsen & Petani Lokal
-            </h1>
-            {dashboard?.profile && (
-              <span className="font-mono text-xs font-bold text-pine-800 bg-pine-100 px-2.5 py-0.5 rounded border border-pine-300">
-                {dashboard.profile.displayName}
-              </span>
-            )}
+            <Link to="/supplier/stock">
+              <Button size="sm" className="bg-pine-800 hover:bg-pine-900 text-white font-sans text-xs">
+                <Sprout className="w-3.5 h-3.5 mr-1.5" />
+                Tambah Stok
+              </Button>
+            </Link>
+            <Link to="/supplier/harvest-plan">
+              <Button size="sm" variant="outline" className="border-pine-700 text-pine-800 hover:bg-pine-50 font-sans text-xs">
+                <CalendarDays className="w-3.5 h-3.5 mr-1.5" />
+                Rencana Panen
+              </Button>
+            </Link>
           </div>
-          <p className="text-sm text-stone-500 mt-1">
-            Ringkasan pendapatan tuntas, dana aman di escrow penjamin, skor reputasi mutu, dan alokasi pesanan.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Link to="/supplier/stock">
-            <Button size="sm" className="bg-pine-800 hover:bg-pine-900 text-white font-sans text-xs">
-              <Sprout className="w-3.5 h-3.5 mr-1.5" />
-              Tambah Stok
-            </Button>
-          </Link>
-          <Link to="/supplier/harvest-plan">
-            <Button size="sm" variant="outline" className="border-pine-700 text-pine-800 hover:bg-pine-50 font-sans text-xs">
-              <CalendarDays className="w-3.5 h-3.5 mr-1.5" />
-              Rencana Panen
-            </Button>
-          </Link>
-        </div>
-      </div>
+        }
+      />
 
       {/* Kartu Ringkasan Finansial & Operasional */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-5 bg-white border border-stone-200 shadow-soft">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-sans font-bold text-stone-500 uppercase tracking-wider">
-              Pendapatan Tuntas
-            </span>
-            <Wallet className="w-4 h-4 text-emerald-600" />
-          </div>
-          <p className="text-2xl font-mono font-bold text-emerald-800 mt-2">
-            {formatRupiah(dashboard?.earnedRupiah ?? 0)}
-          </p>
-          <span className="text-[11px] text-stone-400 mt-1 block">
-            Dicairkan via buku besar ORVANA
-          </span>
-        </Card>
+        <StatCard
+          label="Pendapatan Tuntas"
+          value={formatRupiah(dashboard?.earnedRupiah ?? 0)}
+          subtext="Dicairkan via buku besar ORVANA"
+          icon={<Wallet className="w-5 h-5 text-emerald-600" />}
+        />
 
-        <Card className="p-5 bg-white border border-stone-200 shadow-soft">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-sans font-bold text-stone-500 uppercase tracking-wider">
-              Dana Tertahan (Escrow)
-            </span>
-            <Clock className="w-4 h-4 text-amber-600" />
-          </div>
-          <p className="text-2xl font-mono font-bold text-amber-700 mt-2">
-            {formatRupiah(dashboard?.escrowRupiah ?? 0)}
-          </p>
-          <span className="text-[11px] text-stone-400 mt-1 block">
-            Aman dijamin sistem selama pengiriman
-          </span>
-        </Card>
+        <StatCard
+          label="Dana Tertahan (Escrow)"
+          value={formatRupiah(dashboard?.escrowRupiah ?? 0)}
+          subtext="Aman dijamin sistem selama pengiriman"
+          icon={<Clock className="w-5 h-5 text-amber-600" />}
+        />
 
-        <Card className="p-5 bg-white border border-stone-200 shadow-soft">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-sans font-bold text-stone-500 uppercase tracking-wider">
-              Skor Mutu Produsen
-            </span>
-            <ShieldCheck className="w-4 h-4 text-pine-700" />
-          </div>
-          <p className="text-2xl font-mono font-bold text-pine-950 mt-2">
-            {dashboard?.qualityScore ?? 70} / 100
-          </p>
-          <span className="text-[11px] text-stone-400 mt-1 block">
-            Berdasarkan riwayat inspeksi ahli gizi
-          </span>
-        </Card>
+        <StatCard
+          label="Skor Mutu & Ulasan"
+          value={`${dashboard?.qualityScore ?? 70} / 100`}
+          subtext={
+            dashboard?.averageRating
+              ? `⭐ ${dashboard.averageRating.toFixed(1)} (${dashboard.reviewCount ?? 0} ulasan dapur)`
+              : 'Belum ada ulasan dapur'
+          }
+          icon={dashboard?.averageRating ? <Star className="w-5 h-5 text-amber-500" /> : <ShieldCheck className="w-5 h-5 text-pine-700" />}
+        />
 
-        <Card className="p-5 bg-white border border-stone-200 shadow-soft">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-sans font-bold text-stone-500 uppercase tracking-wider">
-              Tawaran Menunggu
-            </span>
-            <ShoppingBag className="w-4 h-4 text-terracotta-600" />
-          </div>
-          <p className="text-2xl font-mono font-bold text-terracotta-700 mt-2">
-            {dashboard?.proposedOrdersCount ?? 0} Pesanan
-          </p>
-          <span className="text-[11px] text-stone-400 mt-1 block">
-            Maks 12 jam untuk menyanggupi
-          </span>
-        </Card>
+        <StatCard
+          label="Tawaran Menunggu"
+          value={`${dashboard?.proposedOrdersCount ?? 0} Pesanan`}
+          subtext="Maks 12 jam untuk menyanggupi"
+          icon={<ShoppingBag className="w-5 h-5 text-stone-600" />}
+        />
       </div>
 
       {/* Pesanan Terbaru & Ringkasan Pasokan */}

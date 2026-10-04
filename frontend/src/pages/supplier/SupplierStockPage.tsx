@@ -10,6 +10,8 @@ import { Skeleton } from '../../components/ui/Skeleton';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { StatCard } from '../../components/ui/StatCard';
 import {
   Sprout,
   Plus,
@@ -271,22 +273,17 @@ export const SupplierStockPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header Info */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold font-heading text-gray-900">
-            Manajemen Stok Panen Pemasok
-          </h1>
-          <p className="text-sm text-gray-600 mt-1">
-            Daftarkan hasil panen atau tangkapan lokal Anda untuk dicocokkan otomatis dengan kebutuhan dapur gizi.
-          </p>
-        </div>
-
-        <Button onClick={openAddModal} className="w-full sm:w-auto bg-brand text-white hover:bg-brand-hover">
-          <Plus className="w-4 h-4 mr-2" />
-          Tambah Penawaran Stok
-        </Button>
-      </div>
+      <PageHeader
+        title="Manajemen Stok Panen Pemasok"
+        subtitle="Daftarkan hasil panen atau tangkapan lokal Anda untuk dicocokkan otomatis dengan kebutuhan dapur gizi."
+        icon={<Sprout className="w-6 h-6 text-pine-800" />}
+        actions={
+          <Button onClick={openAddModal} className="w-full sm:w-auto bg-pine-800 hover:bg-pine-900 text-white font-sans text-xs">
+            <Plus className="w-4 h-4 mr-1.5" />
+            Tambah Penawaran Stok
+          </Button>
+        }
+      />
 
       {notification && (
         <div
@@ -307,41 +304,26 @@ export const SupplierStockPage: React.FC = () => {
 
       {/* Tiga Kartu Metrik Stok */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-5 bg-white border-l-4 border-l-brand">
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider block">
-            Total Stok Terdaftar
-          </span>
-          <div className="text-2xl font-bold font-mono text-gray-900 mt-1">
-            {formatKg(totalStockKg)}
-          </div>
-          <span className="text-xs text-gray-400 mt-1 block">
-            Seluruh pasokan panen aktif
-          </span>
-        </Card>
+        <StatCard
+          label="Total Stok Terdaftar"
+          value={formatKg(totalStockKg)}
+          subtext="Seluruh pasokan panen aktif"
+          icon={<Layers className="w-5 h-5 text-pine-700" />}
+        />
 
-        <Card className="p-5 bg-white border-l-4 border-l-amber-500">
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider block">
-            Tereservasi Pesanan
-          </span>
-          <div className="text-2xl font-bold font-mono text-amber-700 mt-1">
-            {formatKg(totalReservedKg)}
-          </div>
-          <span className="text-xs text-gray-400 mt-1 block">
-            Sedang disiapkan untuk order dapur
-          </span>
-        </Card>
+        <StatCard
+          label="Tereservasi Pesanan"
+          value={formatKg(totalReservedKg)}
+          subtext="Sedang disiapkan untuk order dapur"
+          icon={<Calendar className="w-5 h-5 text-amber-600" />}
+        />
 
-        <Card className="p-5 bg-white border-l-4 border-l-emerald-600">
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider block">
-            Stok Bebas Siap Alokasi
-          </span>
-          <div className="text-2xl font-bold font-mono text-emerald-700 mt-1">
-            {formatKg(totalFreeKg)}
-          </div>
-          <span className="text-xs text-gray-400 mt-1 block">
-            Tersedia untuk pesanan baru
-          </span>
-        </Card>
+        <StatCard
+          label="Stok Bebas Siap Alokasi"
+          value={formatKg(totalFreeKg)}
+          subtext="Tersedia untuk pesanan baru"
+          icon={<CheckCircle2 className="w-5 h-5 text-emerald-600" />}
+        />
       </div>
 
       {/* Filter Status */}

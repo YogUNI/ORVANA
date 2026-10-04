@@ -109,7 +109,7 @@ Acuan: `07-ui-ux-guidelines.md`, tema Artisan Agritech, lebar 375 px, kontras da
 - [x] **T8.U0** Komponen dasar bersama: `PageHeader`, `StatCard`, `EmptyState`, `ErrorState`, tabel yang berubah menjadi kartu di mobile. Pindahkan query halaman ke hook `features/`.
 - [x] **T8.U1** Publik: landing (hero, cara kerja, angka dampak, cari batch), `/trace/:batchCode`, login, register, pending.
 - [x] **T8.U2** Dapur: dasbor, menu, kebutuhan, detail kebutuhan, penerimaan, pembayaran.
-- [ ] **T8.U3** Pemasok: dasbor, stok, rencana panen, kalender kolektif, pesanan, pembayaran.
+- [x] **T8.U3** Pemasok: dasbor, stok, rencana panen, kalender kolektif, pesanan, pembayaran.
 - [ ] **T8.U4** Koordinator: dasbor, konsolidasi, pengiriman, detail pengiriman.
 - [ ] **T8.U5** Pengawas mutu: antrean, form QC, standar mutu.
 - [ ] **T8.U6** Admin: dasbor, pengguna, master data, pengaturan, sengketa, ledger, audit, laporan.

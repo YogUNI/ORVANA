@@ -5,6 +5,8 @@ import { formatRupiah, formatDate } from '../../lib/format';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { StatCard } from '../../components/ui/StatCard';
 import {
   CheckCircle2,
   XCircle,
@@ -56,61 +58,34 @@ export const SupplierPaymentsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold font-heading text-gray-900">
-          Riwayat Pembayaran & Pencadangan Dana
-        </h1>
-        <p className="text-sm text-gray-500 mt-0.5">
-          Transparansi buku besar bertahap dari pencadangan order, pencairan hasil QC, hingga pembatalan komoditas.
-        </p>
-      </div>
+      <PageHeader
+        title="Riwayat Pembayaran & Pencadangan Dana"
+        subtitle="Transparansi buku besar bertahap dari pencadangan order, pencairan hasil QC, hingga pembatalan komoditas."
+        icon={<Receipt className="w-6 h-6 text-pine-800" />}
+      />
 
       {/* 3 Kartu Ringkasan Metrik Finansial */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-5 bg-white border-l-4 border-l-blue-600 shadow-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Total Dana Dicadangkan (HOLD)
-            </span>
-            <Clock className="w-4 h-4 text-blue-600" />
-          </div>
-          <div className="text-2xl font-bold font-mono text-gray-900 mt-1">
-            {formatRupiah(totalHold)}
-          </div>
-          <span className="text-xs text-gray-400 mt-1 block">
-            Jaminan dana pesanan aktif yang disanggupi
-          </span>
-        </Card>
+        <StatCard
+          label="Total Dana Dicadangkan (HOLD)"
+          value={formatRupiah(totalHold)}
+          subtext="Jaminan dana pesanan aktif yang disanggupi"
+          icon={<Clock className="w-5 h-5 text-amber-600" />}
+        />
 
-        <Card className="p-5 bg-white border-l-4 border-l-emerald-600 shadow-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Total Dana Dicairkan (RELEASE)
-            </span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-          </div>
-          <div className="text-2xl font-bold font-mono text-emerald-700 mt-1">
-            {formatRupiah(totalReleased)}
-          </div>
-          <span className="text-xs text-gray-400 mt-1 block">
-            Pembayaran berhak diterima hasil lolos QC
-          </span>
-        </Card>
+        <StatCard
+          label="Total Dana Dicairkan (RELEASE)"
+          value={formatRupiah(totalReleased)}
+          subtext="Pembayaran berhak diterima hasil lolos QC"
+          icon={<CheckCircle2 className="w-5 h-5 text-emerald-600" />}
+        />
 
-        <Card className="p-5 bg-white border-l-4 border-l-gray-400 shadow-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Total Pembatalan / Cacat (VOID)
-            </span>
-            <XCircle className="w-4 h-4 text-gray-500" />
-          </div>
-          <div className="text-2xl font-bold font-mono text-gray-700 mt-1">
-            {formatRupiah(totalVoid)}
-          </div>
-          <span className="text-xs text-gray-400 mt-1 block">
-            Pengurangan akibat barang ditolak QC / batal
-          </span>
-        </Card>
+        <StatCard
+          label="Total Pembatalan / Cacat (VOID)"
+          value={formatRupiah(totalVoid)}
+          subtext="Pengurangan akibat barang ditolak QC / batal"
+          icon={<XCircle className="w-5 h-5 text-stone-500" />}
+        />
       </div>
 
       {/* Filter Tahapan Mutasi */}

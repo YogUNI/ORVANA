@@ -7,6 +7,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { PageHeader } from '../../components/ui/PageHeader';
 import {
   CalendarDays,
   Plus,
@@ -152,26 +153,20 @@ export const SupplierHarvestPlanPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-surface-border pb-4">
-        <div>
-          <h1 className="text-2xl font-serif font-bold text-pine-900 tracking-tight flex items-center gap-2">
-            <CalendarDays className="w-6 h-6 text-pine-700" />
-            Rencana Panen Pangan Lokal
-          </h1>
-          <p className="text-sm text-stone-500 mt-1">
-            Catat proyeksi panen masa depan agar masuk ke dalam kalender kolektif wilayah dan mempermudah estimasi dapur gizi.
-          </p>
-        </div>
-
-        <Button
-          onClick={handleOpenCreateModal}
-          className="bg-pine-800 hover:bg-pine-900 text-white font-sans text-xs px-4 py-2 flex items-center gap-1.5 shadow-soft"
-        >
-          <Plus className="w-4 h-4" />
-          Tambah Rencana Panen
-        </Button>
-      </div>
+      <PageHeader
+        title="Rencana Panen Pangan Lokal"
+        subtitle="Catat proyeksi panen masa depan agar masuk ke dalam kalender kolektif wilayah dan mempermudah estimasi dapur gizi."
+        icon={<CalendarDays className="w-6 h-6 text-pine-800" />}
+        actions={
+          <Button
+            onClick={handleOpenCreateModal}
+            className="bg-pine-800 hover:bg-pine-900 text-white font-sans text-xs px-4 py-2 flex items-center gap-1.5 shadow-soft"
+          >
+            <Plus className="w-4 h-4" />
+            Tambah Rencana Panen
+          </Button>
+        }
+      />
 
       {/* Info Card */}
       <Card className="p-4 bg-amber-50/60 border border-amber-200/70 text-xs text-amber-900 flex items-start gap-3">

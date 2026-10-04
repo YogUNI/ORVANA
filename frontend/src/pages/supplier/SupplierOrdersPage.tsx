@@ -7,6 +7,7 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { PageHeader } from '../../components/ui/PageHeader';
 import {
   Clock,
   CheckCircle2,
@@ -18,6 +19,7 @@ import {
   Scale,
   QrCode,
   FileDown,
+  ShoppingBag,
 } from 'lucide-react';
 import { DisputeModal } from '../../features/disputes/DisputeModal';
 
@@ -179,60 +181,54 @@ export const SupplierOrdersPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header Halaman */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <div>
-          <h1 className="text-2xl font-bold font-heading text-gray-900">
-            Tawaran & Pesanan Pangan
-          </h1>
-          <p className="text-sm text-gray-500 mt-0.5">
-            Kelola penawaran yang dicocokkan oleh dapur gizi dan pantau komitmen pengiriman lokal.
-          </p>
-        </div>
+      <PageHeader
+        title="Tawaran & Pesanan Pangan"
+        subtitle="Kelola penawaran yang dicocokkan oleh dapur gizi dan pantau komitmen pengiriman lokal."
+        icon={<ShoppingBag className="w-6 h-6 text-pine-800" />}
+        actions={
+          <div className="flex bg-stone-100 p-1 rounded-lg border border-stone-200">
+            <button
+              onClick={() => setActiveTab('PROPOSED')}
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors flex items-center gap-1.5 ${
+                activeTab === 'PROPOSED'
+                  ? 'bg-white text-pine-950 shadow-sm'
+                  : 'text-stone-600 hover:text-pine-900'
+              }`}
+            >
+              <Clock className="w-3.5 h-3.5 text-amber-600" />
+              Tawaran Baru
+              {proposedOrders.length > 0 && (
+                <span className="w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center text-[10px]">
+                  {proposedOrders.length}
+                </span>
+              )}
+            </button>
 
-        {/* Tab Filter */}
-        <div className="flex bg-gray-100 p-1 rounded-lg border border-gray-200">
-          <button
-            onClick={() => setActiveTab('PROPOSED')}
-            className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors flex items-center gap-1.5 ${
-              activeTab === 'PROPOSED'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            <Clock className="w-3.5 h-3.5 text-amber-600" />
-            Tawaran Baru
-            {proposedOrders.length > 0 && (
-              <span className="w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center text-[10px]">
-                {proposedOrders.length}
-              </span>
-            )}
-          </button>
+            <button
+              onClick={() => setActiveTab('ACTIVE')}
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors flex items-center gap-1.5 ${
+                activeTab === 'ACTIVE'
+                  ? 'bg-white text-pine-950 shadow-sm'
+                  : 'text-stone-600 hover:text-pine-900'
+              }`}
+            >
+              <Truck className="w-3.5 h-3.5 text-pine-700" />
+              Sedang Berjalan ({activeOrders.length})
+            </button>
 
-          <button
-            onClick={() => setActiveTab('ACTIVE')}
-            className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors flex items-center gap-1.5 ${
-              activeTab === 'ACTIVE'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            <Truck className="w-3.5 h-3.5 text-brand" />
-            Sedang Berjalan ({activeOrders.length})
-          </button>
-
-          <button
-            onClick={() => setActiveTab('HISTORY')}
-            className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
-              activeTab === 'HISTORY'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            Riwayat Selesai ({historyOrders.length})
-          </button>
-        </div>
-      </div>
+            <button
+              onClick={() => setActiveTab('HISTORY')}
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
+                activeTab === 'HISTORY'
+                  ? 'bg-white text-pine-950 shadow-sm'
+                  : 'text-stone-600 hover:text-pine-900'
+              }`}
+            >
+              Riwayat Selesai ({historyOrders.length})
+            </button>
+          </div>
+        }
+      />
 
       {/* Konten Tab */}
       {isLoading ? (

@@ -4,6 +4,7 @@ import { apiClient } from '../../lib/apiClient';
 import { formatKg } from '../../lib/format';
 import { Card } from '../../components/ui/Card';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { PageHeader } from '../../components/ui/PageHeader';
 import {
   Calendar,
   TrendingDown,
@@ -92,36 +93,29 @@ export const HarvestCalendarPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-surface-border pb-4">
-        <div>
-          <h1 className="text-2xl font-serif font-bold text-pine-900 tracking-tight flex items-center gap-2">
-            <Calendar className="w-6 h-6 text-pine-700" />
-            Kalender Panen Kolektif & Heatmap Pasokan
-          </h1>
-          <p className="text-sm text-stone-500 mt-1">
-            Matriks agregat kebutuhan dapur gizi vs rencana panen produsen lokal per minggu untuk pemerataan produksi pangan.
-          </p>
-        </div>
-
-        {/* Filter Rentang Minggu */}
-        <div className="flex items-center gap-1.5 bg-stone-100 p-1 rounded-lg border border-stone-200">
-          <span className="text-xs font-semibold text-stone-500 px-2 font-sans">Rentang:</span>
-          {[4, 6, 8].map((w) => (
-            <button
-              key={w}
-              onClick={() => setSelectedWeeks(w)}
-              className={`px-3 py-1.5 text-xs font-sans font-semibold rounded-md transition-colors ${
-                selectedWeeks === w
-                  ? 'bg-white text-pine-900 shadow-sm'
-                  : 'text-stone-600 hover:text-pine-900'
-              }`}
-            >
-              {w} Minggu
-            </button>
-          ))}
-        </div>
-      </div>
+      <PageHeader
+        title="Kalender Panen Kolektif & Heatmap Pasokan"
+        subtitle="Matriks agregat kebutuhan dapur gizi vs rencana panen produsen lokal per minggu untuk pemerataan produksi pangan."
+        icon={<Calendar className="w-6 h-6 text-pine-800" />}
+        actions={
+          <div className="flex items-center gap-1.5 bg-stone-100 p-1 rounded-lg border border-stone-200">
+            <span className="text-xs font-semibold text-stone-500 px-2 font-sans">Rentang:</span>
+            {[4, 6, 8].map((w) => (
+              <button
+                key={w}
+                onClick={() => setSelectedWeeks(w)}
+                className={`px-3 py-1.5 text-xs font-sans font-semibold rounded-md transition-colors ${
+                  selectedWeeks === w
+                    ? 'bg-white text-pine-900 shadow-sm'
+                    : 'text-stone-600 hover:text-pine-900'
+                }`}
+              >
+                {w} Minggu
+              </button>
+            ))}
+          </div>
+        }
+      />
 
       {/* Legend & Penjelasan Heatmap */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
