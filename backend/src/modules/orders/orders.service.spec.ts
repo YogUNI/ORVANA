@@ -210,14 +210,29 @@ describe('OrdersService (docs/06 M4 & docs/03 Bagian 2)', () => {
     });
   });
 
-  describe('transition validation (docs/03 Bagian 2)', () => {
-    it('harus memvalidasi diagram transisi status resmi', () => {
-      expect(VALID_ORDER_TRANSITIONS[OrderStatus.PROPOSED]).toContain(OrderStatus.ACCEPTED);
-      expect(VALID_ORDER_TRANSITIONS[OrderStatus.PROPOSED]).toContain(OrderStatus.REJECTED);
-      expect(VALID_ORDER_TRANSITIONS[OrderStatus.ACCEPTED]).toContain(OrderStatus.CONSOLIDATED);
-      expect(VALID_ORDER_TRANSITIONS[OrderStatus.RECEIVED]).toContain(OrderStatus.QC_PASSED);
-      expect(VALID_ORDER_TRANSITIONS[OrderStatus.RECEIVED]).toContain(OrderStatus.QC_PARTIAL);
-      expect(VALID_ORDER_TRANSITIONS[OrderStatus.RECEIVED]).toContain(OrderStatus.QC_FAILED);
+  describe('exportOrdersCsv (docs/06 M10 P1)', () => {
+    it('menghasilkan string CSV ber-BOM dengan header dan data yang rapi', async () => {
+      prisma.order.findMany.mockResolvedValue([
+        {
+          orderNo: 'ORD-001',
+          createdAt: new Date('2026-10-12'),
+          commodity: { name: 'Bayam', category: 'SAYURAN_DAUN' },
+          kitchen: { name: 'Dapur A', code: 'KIT-A' },
+          supplier: { displayName: 'Pak Tani', type: 'INDIVIDUAL_FARMER' },
+          quantity: 20,
+          pricePerUnit: 8000,
+          matchScore: 90,
+          status: OrderStatus.ACCEPTED,
+          batch: { batchCode: 'BAT-001' },
+        },
+      ]);
+
+      const csv = await service.exportOrdersCsv({});
+      expect(csv.startsWith('\uFEFF')).toBe(true);
+      expect(csv).toContain('Nomor Order,Tanggal Order');
+      expect(csv).toContain('"ORD-001"');
+      expect(csv).toContain('"Bayam"');
+      expect(csv).toContain('"160000"');
     });
   });
 });

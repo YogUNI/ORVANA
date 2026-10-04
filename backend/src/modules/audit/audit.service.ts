@@ -44,4 +44,76 @@ export class AuditService {
       this.logger.error(`Gagal menulis AuditLog (${params.action}): ${error.message}`);
     }
   }
+
+  /**
+   * Menampilkan daftar Audit Log dengan filter dan paginasi (docs/06 M12)
+   */
+  async findAll(query: {
+    entity?: string;
+    entityId?: string;
+    userId?: string;
+    action?: string;
+    from?: string;
+    to?: string;
+    page?: number;
+    limit?: number;
+  }) {
+    const page = Math.max(1, Number(query.page) || 1);
+    const limit = Math.min(100, Math.max(1, Number(query.limit) || 20));
+    const skip = (page - 1) * limit;
+
+    const where: any = {};
+
+    if (query.entity) {
+      where.entity = { contains: query.entity, mode: 'insensitive' };
+    }
+    if (query.entityId) {
+      where.entityId = query.entityId;
+    }
+    if (query.userId) {
+      where.userId = query.userId;
+    }
+    if (query.action) {
+      where.action = { contains: query.action, mode: 'insensitive' };
+    }
+    if (query.from || query.to) {
+      where.createdAt = {};
+      if (query.from) {
+        where.createdAt.gte = new Date(query.from);
+      }
+      if (query.to) {
+        where.createdAt.lte = new Date(query.to);
+      }
+    }
+
+    const [total, logs] = await Promise.all([
+      this.prisma.auditLog.count({ where }),
+      this.prisma.auditLog.findMany({
+        where,
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              role: true,
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+    ]);
+
+    return {
+      data: logs,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
 }

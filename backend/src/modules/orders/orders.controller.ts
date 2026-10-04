@@ -7,6 +7,7 @@ import {
   Query,
   UseGuards,
   Req,
+  Res,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -16,7 +17,7 @@ import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.de
 import { OrdersService } from './orders.service';
 import { OrderStatus, Role } from '@prisma/client';
 import { RejectOrderDto, CancelOrderDto } from './dto/order-action.dto';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 @ApiTags('Orders')
 @ApiBearerAuth()
@@ -45,6 +46,21 @@ export class OrdersController {
       page,
       limit,
     });
+  }
+
+  @Get('export/csv')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Ekspor daftar pesanan dalam format CSV (docs/06 M10 P1)' })
+  async exportOrdersCsv(
+    @Query('from') from: string | undefined,
+    @Query('to') to: string | undefined,
+    @Res() res: Response,
+  ) {
+    const csvData = await this.ordersService.exportOrdersCsv({ from, to });
+    const filename = `orvana-orders-${new Date().toISOString().split('T')[0]}.csv`;
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send(csvData);
   }
 
   @Get(':id')

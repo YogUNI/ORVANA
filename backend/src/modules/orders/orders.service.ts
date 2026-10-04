@@ -611,4 +611,71 @@ export class OrdersService {
       });
     }
   }
+
+  /**
+   * Menghasilkan string CSV dari daftar pesanan sesuai rentang tanggal (docs/06 M10 P1)
+   */
+  async exportOrdersCsv(query: { from?: string; to?: string }): Promise<string> {
+    const where: any = {};
+    if (query.from || query.to) {
+      where.createdAt = {};
+      if (query.from) where.createdAt.gte = new Date(query.from);
+      if (query.to) where.createdAt.lte = new Date(query.to);
+    }
+
+    const orders = await this.prisma.order.findMany({
+      where,
+      include: {
+        commodity: true,
+        kitchen: true,
+        supplier: true,
+        batch: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const headers = [
+      'Nomor Order',
+      'Tanggal Order',
+      'Komoditas',
+      'Kategori',
+      'Dapur Tujuan',
+      'Kode Dapur',
+      'Pemasok',
+      'Jenis Pemasok',
+      'Kuantitas (kg)',
+      'Harga Per Kg (Rp)',
+      'Total Komitmen (Rp)',
+      'Skor Kecocokan (%)',
+      'Status Order',
+      'Kode Batch',
+    ];
+
+    const escapeCsv = (val: any) => {
+      if (val === null || val === undefined) return '""';
+      const str = String(val).replace(/"/g, '""');
+      return `"${str}"`;
+    };
+
+    const rows = orders.map((o) => [
+      escapeCsv(o.orderNo),
+      escapeCsv(o.createdAt.toISOString().split('T')[0]),
+      escapeCsv(o.commodity.name),
+      escapeCsv(o.commodity.category),
+      escapeCsv(o.kitchen.name),
+      escapeCsv(o.kitchen.code),
+      escapeCsv(o.supplier.displayName),
+      escapeCsv(o.supplier.type),
+      escapeCsv(Number(o.quantity)),
+      escapeCsv(Number(o.pricePerUnit)),
+      escapeCsv(Math.round(Number(o.quantity) * Number(o.pricePerUnit))),
+      escapeCsv(Number(o.matchScore)),
+      escapeCsv(o.status),
+      escapeCsv(o.batch?.batchCode || '-'),
+    ]);
+
+    const csvLines = [headers.join(','), ...rows.map((r) => r.join(','))];
+    return '\uFEFF' + csvLines.join('\r\n'); // Prefix UTF-8 BOM untuk Excel Indonesia
+  }
 }
+
