@@ -111,7 +111,7 @@ Acuan: `07-ui-ux-guidelines.md`, tema Artisan Agritech, lebar 375 px, kontras da
 - [x] **T8.U2** Dapur: dasbor, menu, kebutuhan, detail kebutuhan, penerimaan, pembayaran.
 - [x] **T8.U3** Pemasok: dasbor, stok, rencana panen, kalender kolektif, pesanan, pembayaran.
 - [x] **T8.U4** Koordinator: dasbor, konsolidasi, pengiriman, detail pengiriman.
-- [ ] **T8.U5** Pengawas mutu: antrean, form QC, standar mutu.
+- [x] **T8.U5** Pengawas mutu: antrean, form QC, standar mutu.
 - [ ] **T8.U6** Admin: dasbor, pengguna, master data, pengaturan, sengketa, ledger, audit, laporan.
 - [ ] **T8.U7** Auditor dan notifikasi.
 

@@ -7,6 +7,7 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { PageHeader } from '../../components/ui/PageHeader';
 import {
   ShieldCheck,
   CheckCircle2,
@@ -47,23 +48,19 @@ export const QualityQueuePage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <div>
-          <h1 className="text-2xl font-bold font-heading text-gray-900">
-            Antrean Uji Kontrol Mutu
-          </h1>
-          <p className="text-sm text-gray-500 mt-0.5">
-            Daftar batch bahan pangan yang telah tiba di dapur gizi dan menunggu inspeksi mutu standar ahli gizi.
-          </p>
-        </div>
-
-        <Link to="/inspector/standards">
-          <Button variant="outline" size="sm" className="text-xs font-semibold flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-brand" />
-            Standar Mutu Komoditas
-          </Button>
-        </Link>
-      </div>
+      <PageHeader
+        title="Antrean Uji Kontrol Mutu"
+        subtitle="Daftar batch bahan pangan yang telah tiba di dapur gizi dan menunggu inspeksi mutu standar ahli gizi."
+        icon={<ShieldCheck className="w-6 h-6 text-pine-800" />}
+        actions={
+          <Link to="/inspector/standards">
+            <Button variant="outline" size="sm" className="border-pine-700 text-pine-800 hover:bg-pine-50 text-xs font-semibold flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-pine-700" />
+              Standar Mutu Komoditas
+            </Button>
+          </Link>
+        }
+      />
 
       {isLoading ? (
         <div className="space-y-3">

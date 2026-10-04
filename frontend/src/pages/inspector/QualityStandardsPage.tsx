@@ -7,6 +7,7 @@ import { Skeleton } from '../../components/ui/Skeleton';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
+import { PageHeader } from '../../components/ui/PageHeader';
 import { ShieldCheck, Edit, Search, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 interface ChecklistItem {
@@ -130,15 +131,11 @@ export const QualityStandardsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold font-heading text-gray-900">
-          Standar Mutu & Parameter Pengawasan
-        </h1>
-        <p className="text-sm text-gray-600 mt-1">
-          Daftar ambang batas kelulusan (passScore) dan pembobotan checklist uji mutu fisik oleh Ahli Gizi / Pengawas Mutu.
-        </p>
-      </div>
+      <PageHeader
+        title="Standar Mutu & Parameter Pengawasan"
+        subtitle="Daftar ambang batas kelulusan (passScore) dan pembobotan checklist uji mutu fisik oleh Ahli Gizi / Pengawas Mutu."
+        icon={<ShieldCheck className="w-6 h-6 text-pine-800" />}
+      />
 
       {/* Info Banner */}
       <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-3">
