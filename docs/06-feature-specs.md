@@ -128,6 +128,7 @@ Notasi kriteria penerimaan: *Given / When / Then* (G/W/T).
 | `POST /orders/:id/accept` | SUPPLIER (milik) | Hanya `PROPOSED` dan sebelum `offerExpiresAt`; membuat HOLD |
 | `POST /orders/:id/reject` | SUPPLIER (milik) | Body `{reason}` wajib; memicu alokasi ulang |
 | `POST /orders/:id/cancel` | ADMIN | Lepas reservasi, void HOLD, notifikasi |
+| `POST /orders/:id/reviews` | KITCHEN_MANAGER, ADMIN | Rating 1-5 dan ulasan performa pemasok untuk pesanan selesai/dibayar (P1) |
 
 **Halaman:** `/supplier/orders` (kartu tawaran dengan hitung mundur batas waktu, tombol Terima/Tolak), `/kitchen/demand/:id` (tab Kandidat dan Order), `/admin/orders`.
 
@@ -238,7 +239,9 @@ Notasi kriteria penerimaan: *Given / When / Then* (G/W/T).
 | Method dan path | Peran | Keterangan |
 |---|---|---|
 | `GET /public/trace/:batchCode` | publik | Data teranonimkan (lihat `02` bagian 6) |
-| `GET /batches/:id/certificate.pdf` | scoped | Sertifikat batch (P1) |
+| `GET /public/trace/:batchCode/qr.png` | publik | Gambar QR code batch publik (P1) |
+| `GET /public/trace/:batchCode/certificate.pdf` | publik | Unduh sertifikat PDF batch teranonimkan publik (P1) |
+| `GET /batches/:id/certificate.pdf` | scoped | Sertifikat batch internal (P1) |
 | `GET /batches/:id/qr.png` | scoped | QR menuju `${FRONTEND_URL}/trace/:batchCode` (P1) |
 | `GET /public/impact-summary` | publik | Angka dampak teragregasi untuk landing |
 

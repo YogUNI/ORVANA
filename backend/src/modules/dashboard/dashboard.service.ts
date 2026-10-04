@@ -379,11 +379,13 @@ export class DashboardService {
         proposedOrdersCount: 0,
         activeOffersCount: 0,
         harvestPlansCount: 0,
+        averageRating: null,
+        reviewCount: 0,
         recentOrders: [],
       };
     }
 
-    const [orders, offers, harvestPlans] = await Promise.all([
+    const [orders, offers, harvestPlans, reviews] = await Promise.all([
       this.prisma.order.findMany({
         where: { supplierId: profile.id },
         include: {
@@ -399,7 +401,17 @@ export class DashboardService {
       this.prisma.harvestPlan.count({
         where: { supplierId: profile.id },
       }),
+      this.prisma.supplierReview.findMany({
+        where: { order: { supplierId: profile.id } },
+        select: { rating: true },
+      }),
     ]);
+
+    const reviewCount = reviews.length;
+    const averageRating =
+      reviewCount > 0
+        ? Math.round((reviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount) * 10) / 10
+        : null;
 
     let earnedRupiah = 0;
     let escrowRupiah = 0;
@@ -432,6 +444,8 @@ export class DashboardService {
       earnedRupiah: Math.round(earnedRupiah),
       escrowRupiah: Math.max(0, Math.round(escrowRupiah)),
       qualityScore: Number(profile.qualityScore),
+      averageRating,
+      reviewCount,
       activeOrdersCount,
       proposedOrdersCount,
       activeOffersCount: offers,

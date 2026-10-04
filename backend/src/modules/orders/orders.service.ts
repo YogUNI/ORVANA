@@ -747,13 +747,6 @@ export class OrdersService {
       const avgRating =
         allReviews.reduce((sum, r) => sum + r.rating, 0) / (allReviews.length || 1);
 
-      await tx.supplierProfile.update({
-        where: { id: order.supplierId },
-        data: {
-          totalOrders: { increment: 0 }, // jaga integritas
-        },
-      });
-
       await this.auditService.log({
         action: 'SUPPLIER_REVIEW_CREATED',
         entity: 'Order',

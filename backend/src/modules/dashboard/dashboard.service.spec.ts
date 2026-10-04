@@ -200,12 +200,15 @@ describe('DashboardService - Impact Metrics Test Vectors (docs/09 section 7)', (
     };
     (prisma as any).supplyOffer = { count: jest.fn().mockResolvedValue(2) };
     (prisma as any).harvestPlan = { count: jest.fn().mockResolvedValue(1) };
+    (prisma as any).supplierReview = { findMany: jest.fn().mockResolvedValue([{ rating: 5 }, { rating: 4 }]) };
 
     const mockUser: any = { sub: 'sup-user-1', role: 'SUPPLIER' };
     const res = await service.getSupplierDashboard(mockUser);
 
     expect(res.profile?.id).toBe('S1');
     expect(res.qualityScore).toBe(88);
+    expect(res.averageRating).toBe(4.5);
+    expect(res.reviewCount).toBe(2);
     expect(res.activeOffersCount).toBe(2);
     expect(res.harvestPlansCount).toBe(1);
   });

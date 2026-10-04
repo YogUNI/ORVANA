@@ -31,10 +31,11 @@ describe('TraceService - M9 QR & Certificate', () => {
       kitchen: { name: 'Dapur Gizi Pusat', code: 'KIT-01' },
       supplier: {
         displayName: 'Kelompok Tani Berkah',
+        publicName: true,
         type: 'INDIVIDUAL_FARMER',
         village: 'Sukamaju',
         region: { name: 'Kabupaten Sleman' },
-        user: { name: 'Pak Tani', phone: '08123456789' },
+        user: { name: 'Pak Tani' },
       },
       shipment: {
         coordinator: { user: { name: 'Koordinator Sleman' } },

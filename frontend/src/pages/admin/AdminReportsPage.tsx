@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import {
@@ -13,19 +14,36 @@ export const AdminReportsPage: React.FC = () => {
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [isExporting, setIsExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
 
-  const handleExportOrdersCsv = () => {
+  const handleExportOrdersCsv = async () => {
     setIsExporting(true);
+    setExportError(null);
     try {
       const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
+      const token = localStorage.getItem('orvana_access_token');
       const params = new URLSearchParams();
       if (fromDate) params.append('from', fromDate);
       if (toDate) params.append('to', toDate);
 
-      const downloadUrl = `${baseUrl}/orders/export/csv?${params.toString()}`;
-      window.open(downloadUrl, '_blank');
+      const response = await axios.get(`${baseUrl}/reports/orders.csv?${params.toString()}`, {
+        responseType: 'blob',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+
+      const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8;' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `orvana-orders-${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err: any) {
+      setExportError(err.message || 'Gagal mengekspor laporan CSV pesanan.');
     } finally {
-      setTimeout(() => setIsExporting(false), 1000);
+      setIsExporting(false);
     }
   };
 
@@ -94,6 +112,12 @@ export const AdminReportsPage: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {exportError && (
+            <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-xs text-red-700">
+              {exportError}
+            </div>
+          )}
 
           <Button
             onClick={handleExportOrdersCsv}

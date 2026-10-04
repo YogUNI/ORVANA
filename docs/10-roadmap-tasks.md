@@ -94,6 +94,31 @@ Jangan mengerjakan P2 atau modul AI kecuali diminta.
 
 ## Tahap 8: Penyempurnaan dan persiapan lomba
 
+### 8A. Perbaikan logika hasil review Tahap 7 (dikerjakan pertama)
+
+- [x] **T8.0a** Sertifikat PDF publik wajib menyamarkan nama pemasok bila `publicName = false` dan tidak mengambil `phone` (`02` bagian 6). Tambah uji.
+- [x] **T8.0b** Ekspor CSV: samakan rute dengan `06` M10 (`GET /reports/orders.csv`) dan unduh lewat `apiClient` (blob + Bearer token), bukan `window.open`.
+- [x] **T8.0c** Ulasan pemasok: hapus update `SupplierProfile` yang tidak berefek; rating hanya dicatat dan ditampilkan (rata-rata di dasbor pemasok). Tidak memengaruhi `qualityScore` karena `04` tidak mendefinisikan rumusnya.
+- [x] **T8.0d** Daftarkan endpoint baru di `06` (QR/PDF publik per `batchCode`, `POST /orders/:id/reviews`).
+- [x] **T8.0e** Periksa nilai bawaan dasbor per peran terhadap `04`/`05` (mis. `qualityScore` default) dan state kosong saat profil belum ada.
+
+### 8B. Peningkatan UI semua halaman (per peran, satu commit per peran)
+
+Acuan: `07-ui-ux-guidelines.md`, tema Artisan Agritech, lebar 375 px, kontras dan fokus keyboard.
+
+- [ ] **T8.U0** Komponen dasar bersama: `PageHeader`, `StatCard`, `EmptyState`, `ErrorState`, tabel yang berubah menjadi kartu di mobile. Pindahkan query halaman ke hook `features/`.
+- [ ] **T8.U1** Publik: landing (hero, cara kerja, angka dampak, cari batch), `/trace/:batchCode`, login, register, pending.
+- [ ] **T8.U2** Dapur: dasbor, menu, kebutuhan, detail kebutuhan, penerimaan, pembayaran.
+- [ ] **T8.U3** Pemasok: dasbor, stok, rencana panen, kalender kolektif, pesanan, pembayaran.
+- [ ] **T8.U4** Koordinator: dasbor, konsolidasi, pengiriman, detail pengiriman.
+- [ ] **T8.U5** Pengawas mutu: antrean, form QC, standar mutu.
+- [ ] **T8.U6** Admin: dasbor, pengguna, master data, pengaturan, sengketa, ledger, audit, laporan.
+- [ ] **T8.U7** Auditor dan notifikasi.
+
+Setiap tugas U selesai bila: build frontend dan `npm test` hijau, state loading/kosong/error ada, tampilan dicek di 375 px.
+
+### 8C. Persiapan lomba
+
 - [ ] **T8.1** `[All]` Uji responsif 375 px untuk semua halaman peran lapangan; perbaiki.
 - [ ] **T8.2** `[All]` Audit state kosong/loading/galat di setiap halaman data.
 - [ ] **T8.3** `[All]` Latihan skenario demo 3 kali dengan `seed:reset` di antaranya; catat dan perbaiki hambatan.

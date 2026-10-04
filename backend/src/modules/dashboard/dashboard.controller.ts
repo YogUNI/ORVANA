@@ -1,16 +1,38 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { DashboardService } from './dashboard.service';
+import { OrdersService } from '../orders/orders.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
 import { Role } from '@prisma/client';
+import { Response } from 'express';
 
 @ApiTags('Dashboard & Impact')
 @Controller()
 export class DashboardController {
-  constructor(private readonly dashboardService: DashboardService) {}
+  constructor(
+    private readonly dashboardService: DashboardService,
+    private readonly ordersService: OrdersService,
+  ) {}
+
+  @Get('reports/orders.csv')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Ekspor daftar pesanan dalam format CSV resmi (docs/06 M10 P1)' })
+  async exportOrdersCsvReport(
+    @Query('from') from: string | undefined,
+    @Query('to') to: string | undefined,
+    @Res() res: Response,
+  ) {
+    const csvData = await this.ordersService.exportOrdersCsv({ from, to });
+    const filename = `orvana-orders-${new Date().toISOString().split('T')[0]}.csv`;
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send(csvData);
+  }
 
   @Get('public/impact-summary')
   @ApiOperation({ summary: 'Ringkasan dampak agregat publik untuk landing page (M9)' })

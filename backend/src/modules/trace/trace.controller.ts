@@ -6,7 +6,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
-import { Role } from '@prisma/client';
+import { Role, UserStatus } from '@prisma/client';
 
 @ApiTags('Trace & Batches (M9)')
 @Controller()
@@ -69,9 +69,9 @@ export class TraceController {
     const publicUser: JwtPayload = {
       sub: 'public',
       email: 'public@orvana.test',
-      role: Role.AUDITOR, // Auditor memiliki akses melihat semua batch terdaftar
-      status: 'ACTIVE' as any,
-      regionId: '',
+      role: Role.AUDITOR, // Auditor memiliki akses membaca ringkasan batch terdaftar
+      status: UserStatus.ACTIVE,
+      regionId: null,
       tokenVersion: 0,
     };
     const { buffer } = await this.traceService.generateQrCode(batchCode, publicUser);
@@ -91,8 +91,8 @@ export class TraceController {
       sub: 'public',
       email: 'public@orvana.test',
       role: Role.AUDITOR,
-      status: 'ACTIVE' as any,
-      regionId: '',
+      status: UserStatus.ACTIVE,
+      regionId: null,
       tokenVersion: 0,
     };
     const { buffer, filename } = await this.traceService.generateCertificatePdf(batchCode, publicUser);

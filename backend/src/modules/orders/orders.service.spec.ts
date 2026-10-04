@@ -262,7 +262,6 @@ describe('OrdersService (docs/06 M4 & docs/03 Bagian 2)', () => {
             create: jest.fn().mockResolvedValue({ id: 'rev-1', rating: 5 }),
             findMany: jest.fn().mockResolvedValue([{ rating: 5 }]),
           },
-          supplierProfile: { update: jest.fn().mockResolvedValue({}) },
         });
       });
 

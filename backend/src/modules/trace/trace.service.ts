@@ -220,7 +220,7 @@ export class TraceService {
             kitchen: true,
             supplier: {
               include: {
-                user: { select: { name: true, phone: true } },
+                user: { select: { name: true } },
                 region: true,
               },
             },
@@ -311,8 +311,13 @@ export class TraceService {
       doc.font('Helvetica-Bold').fontSize(9).text('Komoditas: ', { continued: true });
       doc.font('Helvetica').text(`${batch.order.commodity.name} (${batch.order.commodity.category})`);
 
+      // Privasi nama produsen bila publicName = false (docs/02 Bagian 6)
+      const supplierDisplayName = batch.order.supplier.publicName
+        ? `${batch.order.supplier.displayName} (${batch.order.supplier.type})`
+        : `Kelompok Tani Terdaftar (Desa ${batch.originVillage || batch.order.supplier.village || 'Lokal'})`;
+
       doc.font('Helvetica-Bold').fontSize(9).text('Produsen Pemasok: ', { continued: true });
-      doc.font('Helvetica').text(`${batch.order.supplier.displayName} (${batch.order.supplier.type})`);
+      doc.font('Helvetica').text(supplierDisplayName);
 
       doc.font('Helvetica-Bold').fontSize(9).text('Wilayah Asal: ', { continued: true });
       doc.font('Helvetica').text(`Desa ${batch.originVillage || batch.order.supplier.village || '-'}, ${batch.order.supplier.region.name}`);
