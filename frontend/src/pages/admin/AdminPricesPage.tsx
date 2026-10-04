@@ -9,6 +9,7 @@ import { Skeleton } from '../../components/ui/Skeleton';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
+import { PageHeader } from '../../components/ui/PageHeader';
 import { Plus, Tag, Search, AlertCircle } from 'lucide-react';
 
 interface Commodity {
@@ -149,21 +150,20 @@ export const AdminPricesPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold font-heading text-gray-900">
-            Standar Harga Acuan Wilayah
-          </h1>
-          <p className="text-sm text-gray-600 mt-1">
-            Koridor harga wajar pangan lokal: perlindungan harga dasar produsen dan batas atas belanja dapur gizi.
-          </p>
-        </div>
-        <Button onClick={openCreateModal} className="w-full sm:w-auto">
-          <Plus className="w-4 h-4 mr-2" />
-          Tetapkan Harga Acuan
-        </Button>
-      </div>
+      <PageHeader
+        title="Standar Harga Acuan Wilayah"
+        subtitle="Koridor harga wajar pangan lokal: perlindungan harga dasar produsen dan batas atas belanja dapur gizi."
+        icon={<Tag className="w-6 h-6 text-pine-800" />}
+        actions={
+          <Button
+            onClick={openCreateModal}
+            className="w-full sm:w-auto bg-pine-800 hover:bg-pine-900 text-white flex items-center gap-1.5 text-xs font-semibold"
+          >
+            <Plus className="w-4 h-4" />
+            Tetapkan Harga Acuan
+          </Button>
+        }
+      />
 
       {/* Info Banner */}
       <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg flex items-start gap-3">

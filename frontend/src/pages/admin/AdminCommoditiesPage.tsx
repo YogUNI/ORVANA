@@ -9,7 +9,8 @@ import { Skeleton } from '../../components/ui/Skeleton';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
-import { Plus, Edit2, ShieldCheck, Search, Filter } from 'lucide-react';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { Plus, Edit2, ShieldCheck, Search, Filter, Apple } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface Commodity {
@@ -135,21 +136,20 @@ export const AdminCommoditiesPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold font-heading text-gray-900">
-            Katalog Komoditas Pangan
-          </h1>
-          <p className="text-sm text-gray-600 mt-1">
-            Kelola daftar komoditas baku, estimasi masa simpan, dan toleransi susut pengolahan.
-          </p>
-        </div>
-        <Button onClick={openCreateModal} className="w-full sm:w-auto">
-          <Plus className="w-4 h-4 mr-2" />
-          Tambah Komoditas
-        </Button>
-      </div>
+      <PageHeader
+        title="Katalog Komoditas Pangan"
+        subtitle="Kelola daftar komoditas baku, estimasi masa simpan, dan toleransi susut pengolahan."
+        icon={<Apple className="w-6 h-6 text-pine-800" />}
+        actions={
+          <Button
+            onClick={openCreateModal}
+            className="w-full sm:w-auto bg-pine-800 hover:bg-pine-900 text-white flex items-center gap-1.5 text-xs font-semibold"
+          >
+            <Plus className="w-4 h-4" />
+            Tambah Komoditas
+          </Button>
+        }
+      />
 
       {/* Filter Bar */}
       <Card className="p-4">

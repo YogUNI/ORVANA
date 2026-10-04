@@ -6,6 +6,7 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { PageHeader } from '../../components/ui/PageHeader';
 import {
   AlertTriangle,
   Scale,
@@ -158,42 +159,35 @@ export const AdminDisputesPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-surface-border pb-4">
-        <div>
-          <h1 className="text-2xl font-serif font-bold text-pine-900 tracking-tight flex items-center gap-2">
-            <Scale className="w-6 h-6 text-terracotta-600" />
-            Adjudikasi Sengketa Pasokan
-          </h1>
-          <p className="text-sm text-stone-500 mt-1">
-            Peninjauan dan penetapan keputusan resmi atas selisih mutu, kuantitas, atau komitmen pembayaran antara Dapur dan Pemasok.
-          </p>
-        </div>
-
-        {/* Filter Tab */}
-        <div className="flex items-center gap-1.5 bg-stone-100 p-1 rounded-lg border border-stone-200">
-          <Filter className="w-3.5 h-3.5 text-stone-400 ml-2" />
-          {['ALL', 'OPEN', 'UNDER_REVIEW', 'RESOLVED'].map((st) => (
-            <button
-              key={st}
-              onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1.5 text-xs font-sans font-semibold rounded-md transition-colors ${
-                statusFilter === st
-                  ? 'bg-white text-pine-900 shadow-sm'
-                  : 'text-stone-600 hover:text-pine-900'
-              }`}
-            >
-              {st === 'ALL'
-                ? 'Semua'
-                : st === 'OPEN'
-                ? 'Terbuka'
-                : st === 'UNDER_REVIEW'
-                ? 'Ditinjau'
-                : 'Selesai'}
-            </button>
-          ))}
-        </div>
-      </div>
+      <PageHeader
+        title="Adjudikasi Sengketa Pasokan"
+        subtitle="Peninjauan dan penetapan keputusan resmi atas selisih mutu, kuantitas, atau komitmen pembayaran antara Dapur dan Pemasok."
+        icon={<Scale className="w-6 h-6 text-pine-800" />}
+        actions={
+          <div className="flex items-center gap-1.5 bg-stone-100 p-1 rounded-lg border border-stone-200">
+            <Filter className="w-3.5 h-3.5 text-stone-400 ml-2" />
+            {['ALL', 'OPEN', 'UNDER_REVIEW', 'RESOLVED'].map((st) => (
+              <button
+                key={st}
+                onClick={() => setStatusFilter(st)}
+                className={`px-3 py-1.5 text-xs font-sans font-semibold rounded-md transition-colors ${
+                  statusFilter === st
+                    ? 'bg-white text-pine-900 shadow-sm'
+                    : 'text-stone-600 hover:text-pine-900'
+                }`}
+              >
+                {st === 'ALL'
+                  ? 'Semua'
+                  : st === 'OPEN'
+                  ? 'Terbuka'
+                  : st === 'UNDER_REVIEW'
+                  ? 'Ditinjau'
+                  : 'Selesai'}
+              </button>
+            ))}
+          </div>
+        }
+      />
 
       {/* Konten Daftar Sengketa */}
       {isLoading ? (

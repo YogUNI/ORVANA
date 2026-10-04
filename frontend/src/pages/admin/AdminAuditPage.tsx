@@ -6,6 +6,7 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { PageHeader } from '../../components/ui/PageHeader';
 import {
   History,
   Search,
@@ -84,18 +85,11 @@ export const AdminAuditPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-surface-border pb-4">
-        <div>
-          <h1 className="text-2xl font-serif font-bold text-pine-900 tracking-tight flex items-center gap-2">
-            <History className="w-6 h-6 text-pine-700" />
-            Jejak Rekam Log Audit Sistem
-          </h1>
-          <p className="text-sm text-stone-500 mt-1">
-            Pencatatan append-only yang tidak dapat diubah (immutable) untuk setiap operasi status, QC, ledger, dan sengketa.
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        title="Jejak Rekam Log Audit Sistem"
+        subtitle="Pencatatan append-only yang tidak dapat diubah (immutable) untuk setiap operasi status, QC, ledger, dan sengketa."
+        icon={<History className="w-6 h-6 text-pine-800" />}
+      />
 
       {/* Filter Bar */}
       <Card className="p-4 bg-white shadow-soft">

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
+import { PageHeader } from '../../components/ui/PageHeader';
 import {
   FileSpreadsheet,
   Download,
@@ -49,16 +50,11 @@ export const AdminReportsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="border-b border-surface-border pb-4">
-        <h1 className="text-2xl font-serif font-bold text-pine-900 tracking-tight flex items-center gap-2">
-          <FileSpreadsheet className="w-6 h-6 text-pine-700" />
-          Pusat Laporan & Ekspor Data Operasional
-        </h1>
-        <p className="text-sm text-stone-500 mt-1">
-          Unduh data terstruktur untuk integrasi dengan sistem dinas, spreadsheet Excel, dan keperluan audit independen.
-        </p>
-      </div>
+      <PageHeader
+        title="Pusat Laporan & Ekspor Data Operasional"
+        subtitle="Unduh data terstruktur untuk integrasi dengan sistem dinas, spreadsheet Excel, dan keperluan audit independen."
+        icon={<FileSpreadsheet className="w-6 h-6 text-pine-800" />}
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Kartu Ekspor Order CSV */}

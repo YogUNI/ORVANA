@@ -7,6 +7,7 @@ import { Skeleton } from '../../components/ui/Skeleton';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
+import { PageHeader } from '../../components/ui/PageHeader';
 import { Plus, Edit3, Trash2, Utensils, Search } from 'lucide-react';
 
 interface CommodityOption {
@@ -160,21 +161,20 @@ export const AdminRecipesPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold font-heading text-gray-900">
-            Resep Baku Dapur Gizi
-          </h1>
-          <p className="text-sm text-gray-600 mt-1">
-            Standar menu gizi dan takaran bahan baku per porsi (kg) untuk kalkulasi otomatis kebutuhan dapur.
-          </p>
-        </div>
-        <Button onClick={openCreateModal} className="w-full sm:w-auto">
-          <Plus className="w-4 h-4 mr-2" />
-          Tambah Resep Baku
-        </Button>
-      </div>
+      <PageHeader
+        title="Resep Baku Dapur Gizi"
+        subtitle="Standar menu gizi dan takaran bahan baku per porsi (kg) untuk kalkulasi otomatis kebutuhan dapur."
+        icon={<Utensils className="w-6 h-6 text-pine-800" />}
+        actions={
+          <Button
+            onClick={openCreateModal}
+            className="w-full sm:w-auto bg-pine-800 hover:bg-pine-900 text-white flex items-center gap-1.5 text-xs font-semibold"
+          >
+            <Plus className="w-4 h-4" />
+            Tambah Resep Baku
+          </Button>
+        }
+      />
 
       {/* Search Bar */}
       <Card className="p-4">

@@ -9,7 +9,8 @@ import { Skeleton } from '../../components/ui/Skeleton';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
-import { UserPlus, Search } from 'lucide-react';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { UserPlus, Search, Users } from 'lucide-react';
 
 export const AdminUsersPage: React.FC = () => {
   const queryClient = useQueryClient();
@@ -83,26 +84,21 @@ export const AdminUsersPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header Halaman */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="font-heading font-bold text-2xl text-gray-900">
-            Manajemen Pengguna & Verifikasi
-          </h1>
-          <p className="text-sm text-gray-500">
-            Verifikasi pendaftaran akun lapangan atau kelola staf dinas dan auditor
-          </p>
-        </div>
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={() => setIsCreateModalOpen(true)}
-          className="flex items-center gap-2"
-        >
-          <UserPlus className="w-4 h-4" />
-          <span>Tambah Akun Internal</span>
-        </Button>
-      </div>
+      <PageHeader
+        title="Manajemen Pengguna & Verifikasi"
+        subtitle="Verifikasi pendaftaran akun lapangan atau kelola staf dinas dan auditor."
+        icon={<Users className="w-6 h-6 text-pine-800" />}
+        actions={
+          <Button
+            size="sm"
+            onClick={() => setIsCreateModalOpen(true)}
+            className="bg-pine-800 hover:bg-pine-900 text-white flex items-center gap-1.5 text-xs font-semibold"
+          >
+            <UserPlus className="w-4 h-4" />
+            <span>Tambah Akun Internal</span>
+          </Button>
+        }
+      />
 
       {/* Filter Bar */}
       <Card className="p-4">

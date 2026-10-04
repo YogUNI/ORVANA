@@ -4,7 +4,8 @@ import { apiClient } from '../../lib/apiClient';
 import { formatRupiah } from '../../lib/format';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
-import { Skeleton } from '../../components/ui/Skeleton';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { StatCard } from '../../components/ui/StatCard';
 import {
   TrendingUp,
   Users,
@@ -12,9 +13,9 @@ import {
   MapPin,
   Clock,
   ShieldCheck,
-  Building,
   Scale,
   DollarSign,
+  HeartHandshake,
 } from 'lucide-react';
 import {
   BarChart,
@@ -105,166 +106,77 @@ export const AdminDashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header Dashboard */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-heading font-bold text-gray-900">
-            Dashboard Dampak & Rantai Pasok Wilayah
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Indikator dampak ekonomi lokal, kepatuhan gizi massal, efisiensi logistik, dan akuntabilitas anggaran APBD.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Badge color="success">Data Terverifikasi Real-Time</Badge>
-        </div>
-      </div>
+      <PageHeader
+        title="Dashboard Dampak & Rantai Pasok Wilayah"
+        subtitle="Indikator dampak ekonomi lokal, kepatuhan gizi massal, efisiensi logistik, dan akuntabilitas anggaran APBD."
+        icon={<TrendingUp className="w-6 h-6 text-pine-800" />}
+        badge={<Badge color="success">Data Terverifikasi Real-Time</Badge>}
+      />
 
       {/* Grid 9 Kartu Indikator Dampak (docs/04 bagian 10) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* 1. Belanja Lokal */}
-        <Card className="p-4 border-l-4 border-emerald-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Nilai Belanja Lokal
-            </p>
-            <p className="text-2xl font-heading font-bold text-emerald-600 mt-1">
-              {isLoading ? <Skeleton className="h-7 w-28" /> : formatRupiah(metrics?.localSpendingRupiah || 0)}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">Tersalurkan ke produsen sewilayah</p>
-          </div>
-          <div className="p-3 bg-emerald-50 text-emerald-600 rounded-lg">
-            <DollarSign className="w-6 h-6" />
-          </div>
-        </Card>
+        <StatCard
+          label="Nilai Belanja Lokal"
+          value={isLoading ? '...' : formatRupiah(metrics?.localSpendingRupiah || 0)}
+          subtext="Tersalurkan ke produsen sewilayah"
+          icon={<DollarSign className="w-5 h-5 text-emerald-600" />}
+        />
 
-        {/* 2. Produsen Terlibat */}
-        <Card className="p-4 border-l-4 border-blue-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Produsen Lokal Terlibat
-            </p>
-            <p className="text-2xl font-heading font-bold text-gray-900 mt-1">
-              {isLoading ? <Skeleton className="h-7 w-16" /> : `${metrics?.producersInvolved || 0} Produsen`}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">Petani, nelayan & UMKM aktif</p>
-          </div>
-          <div className="p-3 bg-blue-50 text-blue-600 rounded-lg">
-            <Users className="w-6 h-6" />
-          </div>
-        </Card>
+        <StatCard
+          label="Produsen Lokal Terlibat"
+          value={isLoading ? '...' : `${metrics?.producersInvolved || 0} Produsen`}
+          subtext="Petani, nelayan & UMKM aktif"
+          icon={<Users className="w-5 h-5 text-pine-700" />}
+        />
 
-        {/* 3. Tingkat Pemenuhan */}
-        <Card className="p-4 border-l-4 border-brand flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Tingkat Pemenuhan Gizi
-            </p>
-            <p className="text-2xl font-heading font-bold text-brand mt-1">
-              {isLoading ? <Skeleton className="h-7 w-20" /> : `${metrics?.fulfillmentRatePct || 0}%`}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">Dari total kuantitas menu terjadwal</p>
-          </div>
-          <div className="p-3 bg-brand-soft text-brand rounded-lg">
-            <TrendingUp className="w-6 h-6" />
-          </div>
-        </Card>
+        <StatCard
+          label="Tingkat Pemenuhan Gizi"
+          value={isLoading ? '...' : `${metrics?.fulfillmentRatePct || 0}%`}
+          subtext="Dari total kuantitas menu terjadwal"
+          icon={<TrendingUp className="w-5 h-5 text-pine-800" />}
+        />
 
-        {/* 4. Tingkat Lolos Mutu */}
-        <Card className="p-4 border-l-4 border-teal-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Tingkat Kelulusan Mutu
-            </p>
-            <p className="text-2xl font-heading font-bold text-teal-600 mt-1">
-              {isLoading ? <Skeleton className="h-7 w-20" /> : `${metrics?.qualityPassRatePct || 0}%`}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">Batch berstatus PASS inspeksi</p>
-          </div>
-          <div className="p-3 bg-teal-50 text-teal-600 rounded-lg">
-            <ShieldCheck className="w-6 h-6" />
-          </div>
-        </Card>
+        <StatCard
+          label="Tingkat Kelulusan Mutu"
+          value={isLoading ? '...' : `${metrics?.qualityPassRatePct || 0}%`}
+          subtext="Batch berstatus PASS inspeksi"
+          icon={<ShieldCheck className="w-5 h-5 text-teal-600" />}
+        />
 
-        {/* 5. Tingkat Penolakan */}
-        <Card className="p-4 border-l-4 border-rose-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Tingkat Penolakan Bahan
-            </p>
-            <p className="text-2xl font-heading font-bold text-rose-600 mt-1">
-              {isLoading ? <Skeleton className="h-7 w-20" /> : `${metrics?.rejectionRatePct || 0}%`}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">Sortiran afkir / cacat mutu</p>
-          </div>
-          <div className="p-3 bg-rose-50 text-rose-600 rounded-lg">
-            <AlertTriangle className="w-6 h-6" />
-          </div>
-        </Card>
+        <StatCard
+          label="Tingkat Penolakan Bahan"
+          value={isLoading ? '...' : `${metrics?.rejectionRatePct || 0}%`}
+          subtext="Sortiran afkir / cacat mutu"
+          icon={<AlertTriangle className="w-5 h-5 text-rose-600" />}
+        />
 
-        {/* 6. Jarak Tempuh Rata-Rata */}
-        <Card className="p-4 border-l-4 border-indigo-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Jarak Tempuh Rata-rata
-            </p>
-            <p className="text-2xl font-heading font-bold text-indigo-600 mt-1">
-              {isLoading ? <Skeleton className="h-7 w-20" /> : `${metrics?.avgDistanceKm || 0} km`}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">Rantai pasok pangan pendek</p>
-          </div>
-          <div className="p-3 bg-indigo-50 text-indigo-600 rounded-lg">
-            <MapPin className="w-6 h-6" />
-          </div>
-        </Card>
+        <StatCard
+          label="Jarak Tempuh Rata-rata"
+          value={isLoading ? '...' : `${metrics?.avgDistanceKm || 0} km`}
+          subtext="Rantai pasok pangan pendek"
+          icon={<MapPin className="w-5 h-5 text-indigo-600" />}
+        />
 
-        {/* 7. Ketepatan Waktu */}
-        <Card className="p-4 border-l-4 border-amber-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Ketepatan Waktu Distribusi
-            </p>
-            <p className="text-2xl font-heading font-bold text-amber-600 mt-1">
-              {isLoading ? <Skeleton className="h-7 w-20" /> : `${metrics?.onTimeDeliveryPct || 0}%`}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">Armada tiba sesuai jadwal saji</p>
-          </div>
-          <div className="p-3 bg-amber-50 text-amber-600 rounded-lg">
-            <Clock className="w-6 h-6" />
-          </div>
-        </Card>
+        <StatCard
+          label="Ketepatan Waktu Distribusi"
+          value={isLoading ? '...' : `${metrics?.onTimeDeliveryPct || 0}%`}
+          subtext="Armada tiba sesuai jadwal saji"
+          icon={<Clock className="w-5 h-5 text-amber-600" />}
+        />
 
-        {/* 8. Premi Harga vs Acuan */}
-        <Card className="p-4 border-l-4 border-cyan-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Premi Harga vs Acuan
-            </p>
-            <p className="text-2xl font-heading font-bold text-cyan-600 mt-1">
-              {isLoading ? <Skeleton className="h-7 w-20" /> : `${(metrics?.pricePremiumPct || 0) > 0 ? '+' : ''}${metrics?.pricePremiumPct || 0}%`}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">Deviasi terhadap standar dinas</p>
-          </div>
-          <div className="p-3 bg-cyan-50 text-cyan-600 rounded-lg">
-            <Scale className="w-6 h-6" />
-          </div>
-        </Card>
+        <StatCard
+          label="Premi Harga vs Acuan"
+          value={isLoading ? '...' : `${(metrics?.pricePremiumPct || 0) > 0 ? '+' : ''}${metrics?.pricePremiumPct || 0}%`}
+          subtext="Deviasi terhadap standar dinas"
+          icon={<Scale className="w-5 h-5 text-cyan-600" />}
+        />
 
-        {/* 9. Dana Tertahan (Escrow HOLD) */}
-        <Card className="p-4 border-l-4 border-purple-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Nilai Dana Tertahan (HOLD)
-            </p>
-            <p className="text-2xl font-heading font-bold text-purple-600 mt-1">
-              {isLoading ? <Skeleton className="h-7 w-28" /> : formatRupiah(metrics?.escrowHoldRupiah || 0)}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">Dalam proses kirim / inspeksi</p>
-          </div>
-          <div className="p-3 bg-purple-50 text-purple-600 rounded-lg">
-            <Building className="w-6 h-6" />
-          </div>
-        </Card>
+        <StatCard
+          label="Nilai Dana Tertahan (HOLD)"
+          value={isLoading ? '...' : formatRupiah(metrics?.escrowHoldRupiah || 0)}
+          subtext="Dalam proses kirim / inspeksi"
+          icon={<HeartHandshake className="w-5 h-5 text-purple-600" />}
+        />
       </div>
 
       {/* Visualisasi Grafik Recharts: Pemenuhan & Mutu */}

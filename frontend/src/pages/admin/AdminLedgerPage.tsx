@@ -5,6 +5,8 @@ import { formatRupiah, formatDate } from '../../lib/format';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Skeleton } from '../../components/ui/Skeleton';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { StatCard } from '../../components/ui/StatCard';
 import {
   CheckCircle2,
   XCircle,
@@ -102,77 +104,41 @@ export const AdminLedgerPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-heading font-bold text-gray-900">
-          Buku Besar Transaksi & Pembayaran (Admin)
-        </h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Pengawasan menyeluruh alur dana bertahap (HOLD, RELEASE, VOID) untuk menjaga akuntabilitas anggaran APBD.
-        </p>
-      </div>
+      <PageHeader
+        title="Buku Besar Transaksi & Pembayaran"
+        subtitle="Pengawasan menyeluruh alur dana bertahap (HOLD, RELEASE, VOID) untuk menjaga akuntabilitas anggaran APBD."
+        icon={<Receipt className="w-6 h-6 text-pine-800" />}
+      />
 
       {/* Ringkasan Saldo Buku Besar Global */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-4 border-l-4 border-amber-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Total HOLD
-            </p>
-            <p className="text-xl font-heading font-bold text-gray-900 mt-1">
-              {isLoadingSummary ? <Skeleton className="h-6 w-24" /> : formatRupiah(summary?.totalHold || 0)}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">Dana komitmen dicadangkan</p>
-          </div>
-          <div className="p-3 bg-amber-50 text-amber-600 rounded-lg">
-            <Clock className="w-5 h-5" />
-          </div>
-        </Card>
+        <StatCard
+          label="Total HOLD"
+          value={isLoadingSummary ? '...' : formatRupiah(summary?.totalHold || 0)}
+          subtext="Dana komitmen dicadangkan"
+          icon={<Clock className="w-5 h-5 text-amber-600" />}
+        />
 
-        <Card className="p-4 border-l-4 border-emerald-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Total RELEASE
-            </p>
-            <p className="text-xl font-heading font-bold text-emerald-600 mt-1">
-              {isLoadingSummary ? <Skeleton className="h-6 w-24" /> : formatRupiah(summary?.effectiveReleased || 0)}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">Tercairkan ke petani/nelayan</p>
-          </div>
-          <div className="p-3 bg-emerald-50 text-emerald-600 rounded-lg">
-            <CheckCircle2 className="w-5 h-5" />
-          </div>
-        </Card>
+        <StatCard
+          label="Total RELEASE"
+          value={isLoadingSummary ? '...' : formatRupiah(summary?.effectiveReleased || 0)}
+          subtext="Tercairkan ke petani/nelayan"
+          icon={<CheckCircle2 className="w-5 h-5 text-emerald-600" />}
+        />
 
-        <Card className="p-4 border-l-4 border-red-500 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Total VOID
-            </p>
-            <p className="text-xl font-heading font-bold text-red-600 mt-1">
-              {isLoadingSummary ? <Skeleton className="h-6 w-24" /> : formatRupiah(summary?.totalVoid || 0)}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">Kembali karena tolak mutu/batal</p>
-          </div>
-          <div className="p-3 bg-red-50 text-red-600 rounded-lg">
-            <XCircle className="w-5 h-5" />
-          </div>
-        </Card>
+        <StatCard
+          label="Total VOID"
+          value={isLoadingSummary ? '...' : formatRupiah(summary?.totalVoid || 0)}
+          subtext="Kembali karena tolak mutu/batal"
+          icon={<XCircle className="w-5 h-5 text-rose-600" />}
+        />
 
-        <Card className="p-4 border-l-4 border-brand flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Sisa HOLD Tertahan
-            </p>
-            <p className="text-xl font-heading font-bold text-brand mt-1">
-              {isLoadingSummary ? <Skeleton className="h-6 w-24" /> : formatRupiah(summary?.remainingHold || 0)}
-            </p>
-            <p className="text-xs text-gray-400 mt-0.5">Menunggu pengiriman/inspeksi</p>
-          </div>
-          <div className="p-3 bg-brand-soft text-brand rounded-lg">
-            <Scale className="w-5 h-5" />
-          </div>
-        </Card>
+        <StatCard
+          label="Sisa HOLD Tertahan"
+          value={isLoadingSummary ? '...' : formatRupiah(summary?.remainingHold || 0)}
+          subtext="Menunggu pengiriman/inspeksi"
+          icon={<Scale className="w-5 h-5 text-pine-700" />}
+        />
       </div>
 
       {/* Rincian Realisasi per Pemasok */}

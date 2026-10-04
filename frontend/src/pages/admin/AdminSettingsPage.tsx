@@ -5,6 +5,7 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Skeleton } from '../../components/ui/Skeleton';
 import { Input } from '../../components/ui/Input';
+import { PageHeader } from '../../components/ui/PageHeader';
 import { Sliders, CheckCircle2, AlertCircle, Save } from 'lucide-react';
 
 interface SystemSetting {
@@ -172,15 +173,11 @@ export const AdminSettingsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold font-heading text-gray-900">
-          Konfigurasi Parameter Sistem
-        </h1>
-        <p className="text-sm text-gray-600 mt-1">
-          Atur parameter operasional rantai pasok: formula pencocokan cerdas, batas alokasi, toleransi susut, dan jendela sengketa.
-        </p>
-      </div>
+      <PageHeader
+        title="Konfigurasi Parameter Sistem"
+        subtitle="Atur parameter operasional rantai pasok: formula pencocokan cerdas, batas alokasi, toleransi susut, dan jendela sengketa."
+        icon={<Sliders className="w-6 h-6 text-pine-800" />}
+      />
 
       {statusMessage && (
         <div
