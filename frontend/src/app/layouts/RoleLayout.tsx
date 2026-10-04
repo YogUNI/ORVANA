@@ -24,6 +24,7 @@ import {
   LayoutDashboard,
   Scale,
 } from 'lucide-react';
+import { NotificationBell } from '../../features/notifications/NotificationBell';
 
 export const RoleLayout: React.FC = () => {
   const { user, logout } = useAuth();
@@ -160,12 +161,15 @@ export const RoleLayout: React.FC = () => {
             {ROLE_LABELS[user.role]}
           </span>
         </div>
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 rounded text-gray-700 hover:bg-surface-muted"
-        >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <NotificationBell />
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 rounded text-gray-700 hover:bg-surface-muted"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </header>
 
       {/* Mobile Drawer */}
@@ -215,10 +219,35 @@ export const RoleLayout: React.FC = () => {
         </div>
       )}
 
-      {/* Konten Halaman */}
-      <main className="flex-1 p-4 sm:p-6 md:p-8 max-w-7xl mx-auto w-full">
-        <Outlet />
-      </main>
+      {/* Main Content Area dengan Desktop Topbar */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Desktop Topbar */}
+        <header className="hidden md:flex h-16 bg-white/80 backdrop-blur-xs border-b border-surface-border px-8 items-center justify-between sticky top-0 z-20">
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-mono text-stone-500 bg-stone-100 px-2.5 py-1 rounded-md border border-stone-200">
+              Wilayah Operasional: <strong>{user.regionId || 'Provinsi DIY'}</strong>
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <NotificationBell />
+            <div className="h-6 w-px bg-stone-200 mx-1" />
+            <div className="text-right">
+              <span className="text-xs font-heading font-bold text-stone-900 block leading-tight">
+                {user.name}
+              </span>
+              <span className="text-[10px] text-stone-400 font-mono">
+                {ROLE_LABELS[user.role]}
+              </span>
+            </div>
+          </div>
+        </header>
+
+        {/* Konten Halaman */}
+        <main className="flex-1 p-4 sm:p-6 md:p-8 max-w-7xl mx-auto w-full">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 };

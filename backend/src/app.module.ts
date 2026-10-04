@@ -24,6 +24,7 @@ import { QcModule } from './modules/qc/qc.module';
 import { TraceModule } from './modules/trace/trace.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { DisputesModule } from './modules/disputes/disputes.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { DisputesModule } from './modules/disputes/disputes.module';
     TraceModule,
     DashboardModule,
     DisputesModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [

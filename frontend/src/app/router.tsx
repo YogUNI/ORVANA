@@ -30,6 +30,7 @@ import { CoordinatorShipmentDetailPage } from '../pages/coordinator/CoordinatorS
 import { QualityQueuePage } from '../pages/inspector/QualityQueuePage';
 import { QualityCheckDetailPage } from '../pages/inspector/QualityCheckDetailPage';
 import { BatchTracePage } from '../pages/BatchTracePage';
+import { NotificationsPage } from '../pages/NotificationsPage';
 import { RoleLayout } from './layouts/RoleLayout';
 import { RequireAuth } from '../features/auth/RequireAuth';
 import { RequireRole } from '../features/auth/RequireRole';
@@ -305,6 +306,9 @@ export const AppRouter: React.FC = () => {
             path="/auditor"
             element={<Navigate to="/auditor/dashboard" replace />}
           />
+
+          {/* Halaman Notifikasi Umum untuk Seluruh Pengguna Login */}
+          <Route path="/notifications" element={<NotificationsPage />} />
         </Route>
 
         {/* Fallback */}
