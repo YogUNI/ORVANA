@@ -56,7 +56,8 @@ export const RoleLayout: React.FC = () => {
         ];
       case 'COORDINATOR':
         return [
-          { to: '/coordinator', label: 'Beranda Koordinator', icon: Truck },
+          { to: '/coordinator/shipments', label: 'Pengiriman Armada', icon: Truck },
+          { to: '/coordinator/orders', label: 'Konsolidasi Pesanan', icon: ShoppingBag },
         ];
       case 'QUALITY_INSPECTOR':
         return [

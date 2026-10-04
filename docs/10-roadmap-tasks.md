@@ -56,9 +56,9 @@ Jangan mengerjakan P2 atau modul AI kecuali diminta.
 ## Tahap 4: Logistik (P0)
 
 - [x] **T4.1** `[A2]` Backend shipments: available-for-shipment, create (validasi satu dapur), status machine, pembuatan Batch + kode saat `IN_TRANSIT`, `ARRIVED` dengan susut dan pembaruan keandalan (M5). *(3 sesi)*
-- [ ] **T4.2** `[A2]` Frontend `/coordinator/orders`, `/coordinator/shipments`, `/coordinator/shipments/:id` (stepper). *(2,5 sesi)*
+- [x] **T4.2** `[A2]` Frontend `/coordinator/orders`, `/coordinator/shipments`, `/coordinator/shipments/:id` (stepper). *(2,5 sesi)*
 
-**Gate 4:** dua order disanggupi dapat digabung dalam satu pengiriman, melewati status sampai tiba; kode batch sesuai format; order dari dapur berbeda ditolak.
+**Gate 4:** dua order disanggupi dapat digabung dalam satu pengiriman, melewati status sampai tiba; kode batch sesuai format; order dari dapur berbeda ditolak. *(LOLOS)*
 
 ## Tahap 5: Penerimaan, mutu, dan pembayaran (P0)
 

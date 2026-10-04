@@ -16,6 +16,9 @@ import { KitchenDemandPage } from '../pages/kitchen/KitchenDemandPage';
 import { KitchenDemandDetailPage } from '../pages/kitchen/KitchenDemandDetailPage';
 import { SupplierStockPage } from '../pages/supplier/SupplierStockPage';
 import { SupplierOrdersPage } from '../pages/supplier/SupplierOrdersPage';
+import { CoordinatorOrdersPage } from '../pages/coordinator/CoordinatorOrdersPage';
+import { CoordinatorShipmentsPage } from '../pages/coordinator/CoordinatorShipmentsPage';
+import { CoordinatorShipmentDetailPage } from '../pages/coordinator/CoordinatorShipmentDetailPage';
 import { RoleLayout } from './layouts/RoleLayout';
 import { RequireAuth } from '../features/auth/RequireAuth';
 import { RequireRole } from '../features/auth/RequireRole';
@@ -185,15 +188,32 @@ export const AppRouter: React.FC = () => {
 
           {/* Coordinator Routes */}
           <Route
-            path="/coordinator/*"
+            path="/coordinator/orders"
             element={
-              <RequireRole roles={['COORDINATOR']}>
-                <RolePlaceholderPage
-                  title="Dashboard Koordinator Wilayah"
-                  roleDescription="Konsolidasi pesanan dan pengaturan armada pengiriman (Tahap 4)."
-                />
+              <RequireRole roles={['COORDINATOR', 'ADMIN']}>
+                <CoordinatorOrdersPage />
               </RequireRole>
             }
+          />
+          <Route
+            path="/coordinator/shipments"
+            element={
+              <RequireRole roles={['COORDINATOR', 'ADMIN']}>
+                <CoordinatorShipmentsPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/coordinator/shipments/:id"
+            element={
+              <RequireRole roles={['COORDINATOR', 'ADMIN']}>
+                <CoordinatorShipmentDetailPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/coordinator"
+            element={<Navigate to="/coordinator/shipments" replace />}
           />
 
           {/* Inspector Routes */}
