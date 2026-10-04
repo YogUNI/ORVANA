@@ -19,6 +19,8 @@ import {
   CalendarDays,
   ShoppingBag,
   Sprout,
+  PackageOpen,
+  CreditCard,
 } from 'lucide-react';
 
 export const RoleLayout: React.FC = () => {
@@ -43,16 +45,20 @@ export const RoleLayout: React.FC = () => {
           { to: '/admin/master/recipes', label: 'Resep Baku Gizi', icon: Utensils },
           { to: '/admin/master/prices', label: 'Standar Harga Acuan', icon: Tag },
           { to: '/admin/settings', label: 'Konfigurasi Sistem', icon: Sliders },
+          { to: '/admin/ledger', label: 'Buku Besar & Keuangan', icon: CreditCard },
         ];
       case 'KITCHEN_MANAGER':
         return [
           { to: '/kitchen/menu', label: 'Menu Mingguan', icon: CalendarDays },
           { to: '/kitchen/demand', label: 'Kebutuhan Bahan', icon: ShoppingBag },
+          { to: '/kitchen/receiving', label: 'Penerimaan Pasokan', icon: PackageOpen },
+          { to: '/kitchen/payments', label: 'Buku Besar Dapur', icon: CreditCard },
         ];
       case 'SUPPLIER':
         return [
           { to: '/supplier/stock', label: 'Stok Pasokan', icon: Sprout },
           { to: '/supplier/orders', label: 'Tawaran Pesanan', icon: ShoppingBag },
+          { to: '/supplier/payments', label: 'Riwayat Pembayaran', icon: CreditCard },
         ];
       case 'COORDINATOR':
         return [
@@ -61,7 +67,7 @@ export const RoleLayout: React.FC = () => {
         ];
       case 'QUALITY_INSPECTOR':
         return [
-          { to: '/inspector', label: 'Antrean Mutu', icon: CheckCircle },
+          { to: '/inspector/queue', label: 'Antrean Mutu', icon: CheckCircle },
           { to: '/inspector/standards', label: 'Standar Mutu', icon: ShieldCheck },
         ];
       case 'AUDITOR':

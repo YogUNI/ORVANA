@@ -39,6 +39,19 @@ export class LedgerController {
     return result;
   }
 
+  @Get('summary')
+  @Roles(Role.ADMIN, Role.AUDITOR)
+  @ApiOperation({ summary: 'Melihat ringkasan global mutasi ledger per rentang waktu (docs/06 M7)' })
+  async getGlobalSummary(
+    @CurrentUser() user: JwtPayload,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ) {
+    const isAuditor = user.role === Role.AUDITOR;
+    const summary = await this.ledgerService.getGlobalSummary({ from, to, isAuditor });
+    return { data: summary };
+  }
+
   @Get('summary/:orderId')
   @Roles(Role.ADMIN, Role.AUDITOR, Role.KITCHEN_MANAGER, Role.SUPPLIER)
   @ApiOperation({ summary: 'Melihat ringkasan saldo pencadangan, pelepasan, dan pembatalan pesanan' })

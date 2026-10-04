@@ -10,15 +10,21 @@ import { AdminCommoditiesPage } from '../pages/admin/AdminCommoditiesPage';
 import { AdminRecipesPage } from '../pages/admin/AdminRecipesPage';
 import { AdminPricesPage } from '../pages/admin/AdminPricesPage';
 import { AdminSettingsPage } from '../pages/admin/AdminSettingsPage';
+import { AdminLedgerPage } from '../pages/admin/AdminLedgerPage';
 import { QualityStandardsPage } from '../pages/inspector/QualityStandardsPage';
 import { KitchenMenuPage } from '../pages/kitchen/KitchenMenuPage';
 import { KitchenDemandPage } from '../pages/kitchen/KitchenDemandPage';
 import { KitchenDemandDetailPage } from '../pages/kitchen/KitchenDemandDetailPage';
+import { KitchenReceivingPage } from '../pages/kitchen/KitchenReceivingPage';
+import { KitchenPaymentsPage } from '../pages/kitchen/KitchenPaymentsPage';
 import { SupplierStockPage } from '../pages/supplier/SupplierStockPage';
 import { SupplierOrdersPage } from '../pages/supplier/SupplierOrdersPage';
+import { SupplierPaymentsPage } from '../pages/supplier/SupplierPaymentsPage';
 import { CoordinatorOrdersPage } from '../pages/coordinator/CoordinatorOrdersPage';
 import { CoordinatorShipmentsPage } from '../pages/coordinator/CoordinatorShipmentsPage';
 import { CoordinatorShipmentDetailPage } from '../pages/coordinator/CoordinatorShipmentDetailPage';
+import { QualityQueuePage } from '../pages/inspector/QualityQueuePage';
+import { QualityCheckDetailPage } from '../pages/inspector/QualityCheckDetailPage';
 import { RoleLayout } from './layouts/RoleLayout';
 import { RequireAuth } from '../features/auth/RequireAuth';
 import { RequireRole } from '../features/auth/RequireRole';
@@ -101,6 +107,14 @@ export const AppRouter: React.FC = () => {
             }
           />
           <Route
+            path="/admin/ledger"
+            element={
+              <RequireRole roles={['ADMIN']}>
+                <AdminLedgerPage />
+              </RequireRole>
+            }
+          />
+          <Route
             path="/admin/*"
             element={
               <RequireRole roles={['ADMIN']}>
@@ -138,19 +152,24 @@ export const AppRouter: React.FC = () => {
             }
           />
           <Route
-            path="/kitchen"
-            element={<Navigate to="/kitchen/menu" replace />}
-          />
-          <Route
-            path="/kitchen/*"
+            path="/kitchen/receiving"
             element={
-              <RequireRole roles={['KITCHEN_MANAGER']}>
-                <RolePlaceholderPage
-                  title="Dashboard Pengelola Dapur"
-                  roleDescription="Fitur penerimaan pesanan dan pembayaran dapur (Tahap 5)."
-                />
+              <RequireRole roles={['KITCHEN_MANAGER', 'ADMIN']}>
+                <KitchenReceivingPage />
               </RequireRole>
             }
+          />
+          <Route
+            path="/kitchen/payments"
+            element={
+              <RequireRole roles={['KITCHEN_MANAGER', 'ADMIN']}>
+                <KitchenPaymentsPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/kitchen"
+            element={<Navigate to="/kitchen/menu" replace />}
           />
 
           {/* Supplier Routes */}
@@ -171,19 +190,16 @@ export const AppRouter: React.FC = () => {
             }
           />
           <Route
-            path="/supplier"
-            element={<Navigate to="/supplier/stock" replace />}
-          />
-          <Route
-            path="/supplier/*"
+            path="/supplier/payments"
             element={
-              <RequireRole roles={['SUPPLIER']}>
-                <RolePlaceholderPage
-                  title="Dashboard Pemasok Pangan"
-                  roleDescription="Manajemen penawaran stok dan respon tawaran pesanan (Tahap 3)."
-                />
+              <RequireRole roles={['SUPPLIER', 'ADMIN']}>
+                <SupplierPaymentsPage />
               </RequireRole>
             }
+          />
+          <Route
+            path="/supplier"
+            element={<Navigate to="/supplier/stock" replace />}
           />
 
           {/* Coordinator Routes */}
@@ -226,15 +242,24 @@ export const AppRouter: React.FC = () => {
             }
           />
           <Route
-            path="/inspector/*"
+            path="/inspector/queue"
             element={
-              <RequireRole roles={['QUALITY_INSPECTOR']}>
-                <RolePlaceholderPage
-                  title="Dashboard Pengawas Mutu"
-                  roleDescription="Antrean pemeriksaan dan checklist hasil uji mutu bahan makanan (Tahap 5)."
-                />
+              <RequireRole roles={['QUALITY_INSPECTOR', 'ADMIN']}>
+                <QualityQueuePage />
               </RequireRole>
             }
+          />
+          <Route
+            path="/inspector/check/:batchId"
+            element={
+              <RequireRole roles={['QUALITY_INSPECTOR', 'ADMIN']}>
+                <QualityCheckDetailPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/inspector"
+            element={<Navigate to="/inspector/queue" replace />}
           />
 
           {/* Auditor Routes */}

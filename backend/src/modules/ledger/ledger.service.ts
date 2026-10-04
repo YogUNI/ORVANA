@@ -314,4 +314,71 @@ export class LedgerService {
       },
     };
   }
+
+  /**
+   * Mengambil ringkasan global mutasi ledger per rentang waktu (docs/06 M7)
+   */
+  async getGlobalSummary(query: { from?: string; to?: string; isAuditor?: boolean }) {
+    const where: any = {};
+    if (query.from || query.to) {
+      where.createdAt = {};
+      if (query.from) where.createdAt.gte = new Date(query.from);
+      if (query.to) where.createdAt.lte = new Date(query.to);
+    }
+
+    const entries = await this.prisma.ledgerEntry.findMany({
+      where,
+      include: {
+        order: {
+          include: {
+            supplier: true,
+          },
+        },
+      },
+    });
+
+    let totalHold = 0;
+    let totalReleased = 0;
+    let totalVoid = 0;
+    let totalAdjustment = 0;
+
+    const supplierMap = new Map<string, { name: string; hold: number; released: number; voided: number }>();
+
+    for (const e of entries) {
+      const amt = Number(e.amount);
+      if (e.stage === LedgerStage.HOLD) totalHold += amt;
+      else if (e.stage === LedgerStage.RELEASE) totalReleased += amt;
+      else if (e.stage === LedgerStage.VOID) totalVoid += amt;
+      else if (e.stage === LedgerStage.ADJUSTMENT) totalAdjustment += amt;
+
+      const supId = e.order.supplierId;
+      const supName = query.isAuditor ? 'Pemasok Terdaftar' : e.order.supplier.displayName;
+      if (!supplierMap.has(supId)) {
+        supplierMap.set(supId, { name: supName, hold: 0, released: 0, voided: 0 });
+      }
+      const supStats = supplierMap.get(supId)!;
+      if (e.stage === LedgerStage.HOLD) supStats.hold += amt;
+      else if (e.stage === LedgerStage.RELEASE) supStats.released += amt;
+      else if (e.stage === LedgerStage.VOID) supStats.voided += amt;
+    }
+
+    const effectiveReleased = totalReleased + totalAdjustment;
+    const remainingHold = totalHold - totalReleased - totalVoid;
+
+    return {
+      totalHold,
+      totalReleased,
+      totalVoid,
+      totalAdjustment,
+      effectiveReleased,
+      remainingHold,
+      supplierBreakdown: Array.from(supplierMap.entries()).map(([id, stats]) => ({
+        supplierId: query.isAuditor ? 'MASKED' : id,
+        supplierName: stats.name,
+        hold: stats.hold,
+        released: stats.released,
+        voided: stats.voided,
+      })),
+    };
+  }
 }
