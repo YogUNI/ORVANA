@@ -106,7 +106,7 @@ Jangan mengerjakan P2 atau modul AI kecuali diminta.
 
 Acuan: `07-ui-ux-guidelines.md`, tema Artisan Agritech, lebar 375 px, kontras dan fokus keyboard.
 
-- [ ] **T8.U0** Komponen dasar bersama: `PageHeader`, `StatCard`, `EmptyState`, `ErrorState`, tabel yang berubah menjadi kartu di mobile. Pindahkan query halaman ke hook `features/`.
+- [x] **T8.U0** Komponen dasar bersama: `PageHeader`, `StatCard`, `EmptyState`, `ErrorState`, tabel yang berubah menjadi kartu di mobile. Pindahkan query halaman ke hook `features/`.
 - [ ] **T8.U1** Publik: landing (hero, cara kerja, angka dampak, cari batch), `/trace/:batchCode`, login, register, pending.
 - [ ] **T8.U2** Dapur: dasbor, menu, kebutuhan, detail kebutuhan, penerimaan, pembayaran.
 - [ ] **T8.U3** Pemasok: dasbor, stok, rencana panen, kalender kolektif, pesanan, pembayaran.

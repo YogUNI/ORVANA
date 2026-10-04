@@ -19,10 +19,30 @@ const config: Config = {
           soft: '#EAF2ED',
           border: '#CBE0D3',
         },
+        pine: {
+          50: '#F2F7F4',
+          100: '#E1EFE7',
+          200: '#C5DFD2',
+          300: '#9BC5B2',
+          400: '#6AA68C',
+          500: '#46886D',
+          600: '#346D56',
+          700: '#2A5745',
+          800: '#1E3A2F', // Signature Pine
+          900: '#172E25',
+          950: '#0B1A14',
+        },
         harvest: {
+          DEFAULT: '#D97706',
           gold: '#D97706', // Emas Padi Panen
           amber: '#B45309',
           soft: '#FEF3C7',
+          50: '#FFFBEB',
+          100: '#FEF3C7',
+          200: '#FDE68A',
+          500: '#D97706',
+          600: '#B45309',
+          700: '#92400E',
         },
         earth: {
           DEFAULT: '#8C5E38', // Cokelat Tanah Subur
