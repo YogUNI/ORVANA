@@ -28,14 +28,14 @@ import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 
-@ApiTags('Supply Offers')
-@Controller('supply-offers')
+@ApiTags('Supply Offers & Harvest Plans')
+@Controller()
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth()
 export class SupplyController {
   constructor(private readonly supplyService: SupplyService) {}
 
-  @Get()
+  @Get('supply-offers')
   @Roles(Role.SUPPLIER)
   @ApiOperation({ summary: 'Daftar penawaran stok milik pemasok yang login' })
   async getMyOffers(
@@ -45,7 +45,7 @@ export class SupplyController {
     return this.supplyService.getMyOffers(filter, userId);
   }
 
-  @Get('available')
+  @Get('supply-offers/available')
   @Roles(Role.KITCHEN_MANAGER, Role.ADMIN)
   @ApiOperation({ summary: 'Pratinjau stok pangan aktif di wilayah untuk dapur & admin' })
   async getAvailableOffers(
@@ -55,7 +55,7 @@ export class SupplyController {
     return this.supplyService.getAvailableOffersInRegion(regionId, commodityId);
   }
 
-  @Get(':id')
+  @Get('supply-offers/:id')
   @ApiOperation({ summary: 'Detail satu penawaran stok pasokan' })
   async getOfferById(
     @Param('id') id: string,
@@ -65,7 +65,7 @@ export class SupplyController {
     return this.supplyService.getOfferById(id, userId, userRole);
   }
 
-  @Post()
+  @Post('supply-offers')
   @Roles(Role.SUPPLIER)
   @ApiOperation({ summary: 'Membuat penawaran stok pasokan baru (validasi harga dasar)' })
   async createOffer(
@@ -77,7 +77,7 @@ export class SupplyController {
     return this.supplyService.createOffer(dto, userId, ipAddress);
   }
 
-  @Patch(':id')
+  @Patch('supply-offers/:id')
   @Roles(Role.SUPPLIER)
   @ApiOperation({ summary: 'Memperbarui stok pasokan (tidak boleh turun di bawah reserved)' })
   async updateOffer(
@@ -90,7 +90,7 @@ export class SupplyController {
     return this.supplyService.updateOffer(id, dto, userId, ipAddress);
   }
 
-  @Delete(':id')
+  @Delete('supply-offers/:id')
   @Roles(Role.SUPPLIER)
   @ApiOperation({ summary: 'Membatalkan penawaran stok pasokan (hanya jika reserved = 0)' })
   async cancelOffer(
@@ -106,7 +106,7 @@ export class SupplyController {
   // ENDPOINT RENCANA PANEN (HARVEST PLANS) - docs/06 M3
   // =========================================================================
 
-  @Get('../harvest-plans')
+  @Get('harvest-plans')
   @Roles(Role.SUPPLIER)
   @ApiOperation({ summary: 'Daftar rencana panen milik pemasok yang login' })
   async getMyHarvestPlans(@CurrentUser('sub') userId: string) {
@@ -114,7 +114,7 @@ export class SupplyController {
     return { data };
   }
 
-  @Post('../harvest-plans')
+  @Post('harvest-plans')
   @Roles(Role.SUPPLIER)
   @ApiOperation({ summary: 'Membuat rencana panen baru untuk pemasok' })
   async createHarvestPlan(
@@ -127,7 +127,7 @@ export class SupplyController {
     return { data };
   }
 
-  @Patch('../harvest-plans/:id')
+  @Patch('harvest-plans/:id')
   @Roles(Role.SUPPLIER)
   @ApiOperation({ summary: 'Memperbarui rencana panen milik pemasok' })
   async updateHarvestPlan(
@@ -141,7 +141,7 @@ export class SupplyController {
     return { data };
   }
 
-  @Delete('../harvest-plans/:id')
+  @Delete('harvest-plans/:id')
   @Roles(Role.SUPPLIER)
   @ApiOperation({ summary: 'Menghapus rencana panen milik pemasok' })
   async deleteHarvestPlan(
@@ -158,7 +158,7 @@ export class SupplyController {
   // ENDPOINT KALENDER PANEN KOLEKTIF & HEATMAP (docs/06 M3)
   // =========================================================================
 
-  @Get('../harvest-calendar')
+  @Get('harvest-calendar')
   @Roles(Role.SUPPLIER, Role.ADMIN, Role.KITCHEN_MANAGER, Role.COORDINATOR, Role.AUDITOR)
   @ApiOperation({
     summary:
