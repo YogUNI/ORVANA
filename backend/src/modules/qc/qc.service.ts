@@ -5,11 +5,13 @@ import {
   ConflictException,
   UnprocessableEntityException,
   ForbiddenException,
+  Optional,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { SettingsService } from '../settings/settings.service';
 import { LedgerService } from '../ledger/ledger.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import {
   OrderStatus,
   QcResult,
@@ -26,6 +28,7 @@ export class QcService {
     private readonly auditService: AuditService,
     private readonly settingsService: SettingsService,
     private readonly ledgerService: LedgerService,
+    @Optional() private readonly notificationsService?: NotificationsService,
   ) {}
 
   /**
@@ -289,6 +292,7 @@ export class QcService {
               commodity: {
                 include: { qualityStandard: true },
               },
+              kitchen: true,
               supplier: true,
               ledger: true,
             },
@@ -503,6 +507,37 @@ export class QcService {
           newQualityScore: newQuality,
         },
       });
+
+      // 10. Kirim Notifikasi ke Dapur & Pemasok (docs/03 Bagian 6)
+      if (this.notificationsService) {
+        // Notifikasi ke Pengelola Dapur
+        if (batch.order.kitchen?.managerId) {
+          await this.notificationsService.createNotification(
+            {
+              userId: batch.order.kitchen.managerId,
+              type: 'QC_COMPLETED',
+              title: `Hasil QC: ${qcResult === QcResult.PASS ? 'Lolos Penuh' : qcResult === QcResult.PARTIAL ? 'Lolos Sebagian' : 'Ditolak'} (${calculatedScore})`,
+              body: `Inspeksi mutu batch ${batch.batchCode} (${batch.order.commodity.name}): ${acceptedQty} kg diterima, ${rejectedQty} kg ditolak.`,
+              link: `/kitchen/receiving`,
+            },
+            tx,
+          );
+        }
+
+        // Notifikasi ke Pemasok
+        if (batch.order.supplier?.userId) {
+          await this.notificationsService.createNotification(
+            {
+              userId: batch.order.supplier.userId,
+              type: 'QC_COMPLETED',
+              title: `Hasil Mutu Panen: ${qcResult} (${calculatedScore} Poin)`,
+              body: `Pesanan ${batch.order.orderNo} (${batch.order.commodity.name}) telah diperiksa: ${acceptedQty} kg disetujui untuk dicairkan. Skor mutu Anda kini ${newQuality}.`,
+              link: `/supplier/payments`,
+            },
+            tx,
+          );
+        }
+      }
 
       return {
         message: `Inspeksi mutu selesai dengan hasil ${qcResult} (Skor: ${calculatedScore}). Status pembayaran telah disesuaikan di buku besar.`,

@@ -5,10 +5,12 @@ import {
   ConflictException,
   UnprocessableEntityException,
   ForbiddenException,
+  Optional,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { SettingsService } from '../settings/settings.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import {
   OrderStatus,
   ShipmentStatus,
@@ -41,6 +43,7 @@ export class ShipmentsService {
     private readonly prisma: PrismaService,
     private readonly auditService: AuditService,
     private readonly settingsService: SettingsService,
+    @Optional() private readonly notificationsService?: NotificationsService,
   ) {}
 
   /**
@@ -593,6 +596,58 @@ export class ShipmentsService {
           lossKg: dto.lossKg,
         },
       });
+
+      // Kirim notifikasi lintas peran (docs/03 Bagian 4 & 6)
+      if (this.notificationsService) {
+        if (targetStatus === ShipmentStatus.IN_TRANSIT && shipment.kitchen?.managerId) {
+          // Beri tahu pengelola dapur bahwa armada telah berangkat
+          await this.notificationsService.createNotification(
+            {
+              userId: shipment.kitchen.managerId,
+              type: 'SHIPMENT_IN_TRANSIT',
+              title: 'Armada Pengiriman Sedang Menuju Dapur',
+              body: `Pengiriman ${shipment.shipmentNo} telah berangkat dengan membawa ${shipment.orders.length} pesanan bahan pangan. Kode batch telah diterbitkan.`,
+              link: '/kitchen/receiving',
+            },
+            tx,
+          );
+        } else if (targetStatus === ShipmentStatus.ARRIVED) {
+          // Beri tahu pengelola dapur untuk catat serah terima
+          if (shipment.kitchen?.managerId) {
+            await this.notificationsService.createNotification(
+              {
+                userId: shipment.kitchen.managerId,
+                type: 'SHIPMENT_ARRIVED',
+                title: 'Armada Pengiriman Telah Tiba!',
+                body: `Pengiriman ${shipment.shipmentNo} telah sampai di ${shipment.kitchen.name}. Silakan catat kuantitas serah terima bahan.`,
+                link: '/kitchen/receiving',
+              },
+              tx,
+            );
+          }
+          // Beri tahu pengawas mutu (Quality Inspector) wilayah tersebut
+          const inspectors = await tx.user.findMany({
+            where: {
+              role: Role.QUALITY_INSPECTOR,
+              status: 'ACTIVE',
+              ...(shipment.kitchen.regionId ? { regionId: shipment.kitchen.regionId } : {}),
+            },
+            select: { id: true },
+          });
+          for (const insp of inspectors) {
+            await this.notificationsService.createNotification(
+              {
+                userId: insp.id,
+                type: 'INSPECTION_PENDING',
+                title: 'Bahan Segar Menunggu Uji Kontrol Mutu',
+                body: `Batch dari armada ${shipment.shipmentNo} tiba di ${shipment.kitchen.name}. Siap untuk inspeksi QC dan penerbitan skor.`,
+                link: '/inspector/queue',
+              },
+              tx,
+            );
+          }
+        }
+      }
 
       return {
         message: `Status pengiriman berhasil diubah menjadi ${targetStatus}`,

@@ -3,11 +3,13 @@ import {
   NotFoundException,
   BadRequestException,
   ForbiddenException,
+  Optional,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { LedgerService } from '../ledger/ledger.service';
 import { MatchingService } from '../matching/matching.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { OrderStatus, LedgerStage, Role, DemandStatus } from '@prisma/client';
 import { JwtPayload } from '../../common/decorators/current-user.decorator';
 import { scopeWhere } from '../../common/utils/scope-where.util';
@@ -72,6 +74,7 @@ export class OrdersService {
     private readonly auditService: AuditService,
     private readonly ledgerService: LedgerService,
     private readonly matchingService: MatchingService,
+    @Optional() private readonly notificationsService?: NotificationsService,
   ) {}
 
   /**
@@ -259,7 +262,7 @@ export class OrdersService {
     return this.prisma.$transaction(async (tx) => {
       const order = await tx.order.findUnique({
         where: { id },
-        include: { supplier: true },
+        include: { supplier: true, kitchen: true, commodity: true },
       });
 
       if (!order) {
@@ -333,6 +336,23 @@ export class OrdersService {
           holdAmount,
         },
       });
+
+      // 5. Sinkronkan status DemandRequest (docs/03 bagian 3: MATCHING -> PARTIALLY_FULFILLED / FULFILLED)
+      await this.syncDemandStatus(order.demandId, tx);
+
+      // 6. Kirim notifikasi ke Pengelola Dapur
+      if (this.notificationsService && order.kitchen?.managerId) {
+        await this.notificationsService.createNotification(
+          {
+            userId: order.kitchen.managerId,
+            type: 'ORDER_ACCEPTED',
+            title: 'Pesanan Disanggupi Pemasok',
+            body: `Pemasok ${order.supplier?.displayName || ''} menyanggupi pesanan ${order.commodity?.name || ''} sebesar ${Number(order.quantity)} kg (${order.orderNo}). Dana HOLD Rp ${holdAmount.toLocaleString('id-ID')}.`,
+            link: `/kitchen/demand/${order.demandId}`,
+          },
+          tx,
+        );
+      }
 
       return {
         message: 'Pesanan berhasil disanggupi dan dana pembayaran telah dicadangkan',
@@ -541,6 +561,9 @@ export class OrdersService {
         },
       });
 
+      // Sinkronkan status DemandRequest setelah pembatalan order
+      await this.syncDemandStatus(order.demandId, tx);
+
       return {
         message: 'Pesanan berhasil dibatalkan',
         order: updatedOrder,
@@ -592,6 +615,9 @@ export class OrdersService {
         },
       });
 
+      // Sinkronkan status DemandRequest bila diperlukan
+      await this.syncDemandStatus(order.demandId, dbTx);
+
       return updated;
     };
 
@@ -599,6 +625,61 @@ export class OrdersService {
       return execute(tx);
     }
     return this.prisma.$transaction(execute);
+  }
+
+  /**
+   * Menyinkronkan status DemandRequest (docs/03 bagian 3)
+   * OPEN -> MATCHING -> PARTIALLY_FULFILLED / FULFILLED
+   */
+  async syncDemandStatus(demandId: string, tx?: any) {
+    const client = tx || this.prisma;
+    const demand = await client.demandRequest.findUnique({
+      where: { id: demandId },
+      include: { orders: true },
+    });
+
+    if (!demand || demand.status === DemandStatus.CANCELLED || demand.status === DemandStatus.DRAFT) {
+      return;
+    }
+
+    // Hitung total kuantitas order yang ACCEPTED atau lebih lanjut (CONSOLIDATED, IN_TRANSIT, RECEIVED, QC_PASSED, QC_PARTIAL, PAID, COMPLETED)
+    const confirmedOrders = demand.orders.filter(
+      (o: any) =>
+        o.status !== OrderStatus.PROPOSED &&
+        o.status !== OrderStatus.REJECTED &&
+        o.status !== OrderStatus.EXPIRED &&
+        o.status !== OrderStatus.CANCELLED &&
+        o.status !== OrderStatus.QC_FAILED,
+    );
+
+    const activeOrders = demand.orders.filter(
+      (o: any) =>
+        o.status !== OrderStatus.REJECTED &&
+        o.status !== OrderStatus.EXPIRED &&
+        o.status !== OrderStatus.CANCELLED,
+    );
+
+    const confirmedQty = confirmedOrders.reduce((sum: number, o: any) => sum + Number(o.quantity), 0);
+    const targetQty = Number(demand.quantity);
+
+    let nextDemandStatus = demand.status;
+
+    if (confirmedQty >= targetQty - 0.001) {
+      nextDemandStatus = DemandStatus.FULFILLED;
+    } else if (confirmedQty > 0) {
+      nextDemandStatus = DemandStatus.PARTIALLY_FULFILLED;
+    } else if (activeOrders.length > 0) {
+      nextDemandStatus = DemandStatus.MATCHING;
+    } else {
+      nextDemandStatus = DemandStatus.OPEN;
+    }
+
+    if (demand.status !== nextDemandStatus) {
+      await client.demandRequest.update({
+        where: { id: demandId },
+        data: { status: nextDemandStatus },
+      });
+    }
   }
 
   /**

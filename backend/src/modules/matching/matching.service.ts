@@ -2,10 +2,12 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  Optional,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { SettingsService } from '../settings/settings.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import {
   OfferStatus,
   OrderStatus,
@@ -45,6 +47,7 @@ export class MatchingService {
     private readonly prisma: PrismaService,
     private readonly auditService: AuditService,
     private readonly settingsService: SettingsService,
+    @Optional() private readonly notificationsService?: NotificationsService,
   ) {}
 
   /**
@@ -372,6 +375,26 @@ export class MatchingService {
 
         remaining -= alloc;
         createdOrders.push(newOrder);
+
+        // Kirim notifikasi tawaran pesanan baru ke pemasok
+        if (this.notificationsService && cand.supplierId) {
+          const supProfile = await tx.supplierProfile.findUnique({
+            where: { id: cand.supplierId },
+            select: { userId: true },
+          });
+          if (supProfile?.userId) {
+            await this.notificationsService.createNotification(
+              {
+                userId: supProfile.userId,
+                type: 'ORDER_PROPOSED',
+                title: 'Tawaran Pesanan Baru Masuk!',
+                body: `Dapur ${demand.kitchen?.name || ''} membutuhkan ${alloc} kg ${demand.commodity?.name || ''} (@ Rp ${cand.askingPrice.toLocaleString('id-ID')}). Silakan tanggapi dalam 12 jam.`,
+                link: '/supplier/orders',
+              },
+              tx,
+            );
+          }
+        }
       }
 
       // Perbarui status DemandRequest: jika order berhasil dibuat, transisi ke MATCHING

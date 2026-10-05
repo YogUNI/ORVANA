@@ -82,6 +82,15 @@ describe('OrdersService (docs/06 M4 & docs/03 Bagian 2)', () => {
       supplierProfile: {
         findUnique: jest.fn(),
       },
+      demandRequest: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: 'demand-bayam-69',
+          status: 'MATCHING',
+          quantity: 69.0,
+          orders: [mockOrderProposed],
+        }),
+        update: jest.fn().mockResolvedValue({}),
+      },
       $transaction: jest.fn(async (cb) => cb(prisma)),
     };
 
