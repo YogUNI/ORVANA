@@ -28,49 +28,57 @@ interface DemoAccount {
 
 const DEMO_ACCOUNTS: DemoAccount[] = [
   {
-    role: 'Pengelola Dapur',
-    badge: 'Dapur A (1.000 Porsi)',
-    name: 'Pengelola Dapur A',
+    role: 'Pengelola Dapur Gizi',
+    badge: 'Dapur Berkah Gizi Mandiri (1.000 Porsi)',
+    name: 'Ibu Ratna Dewi',
     email: 'dapur-a@orvana.test',
     icon: UtensilsCrossed,
     tagColor: 'bg-emerald-50 text-emerald-800 border-emerald-200',
   },
   {
     role: 'Petani Pemasok',
-    badge: 'S1 (Tani Makmur)',
-    name: 'Tani Makmur',
+    badge: 'Poktan Makmur Hijau',
+    name: 'Pak Sugeng Riyadi',
     email: 's1@orvana.test',
     icon: Leaf,
     tagColor: 'bg-amber-50 text-amber-900 border-amber-200',
   },
   {
+    role: 'Nelayan Pemasok',
+    badge: 'Mina Lestari Bahari',
+    name: 'Pak Wahyu Hidayat',
+    email: 's5@orvana.test',
+    icon: Leaf,
+    tagColor: 'bg-cyan-50 text-cyan-900 border-cyan-200',
+  },
+  {
     role: 'Koordinator Hub',
-    badge: 'Koperasi Lumbung Desa',
-    name: 'Koperasi Lumbung Desa',
+    badge: 'Koperasi Lumbung Tani Sukamaju',
+    name: 'Bpk. Ahmad Fauzi',
     email: 'koordinator1@orvana.test',
     icon: Truck,
     tagColor: 'bg-blue-50 text-blue-900 border-blue-200',
   },
   {
     role: 'Pengawas Mutu',
-    badge: 'Inspektur QC Gizi',
-    name: 'Pengawas Mutu Demo',
+    badge: 'Dinas Ketahanan Pangan',
+    name: 'dr. Nurul Hidayati, Sp.GK',
     email: 'mutu@orvana.test',
     icon: ShieldCheck,
     tagColor: 'bg-purple-50 text-purple-900 border-purple-200',
   },
   {
     role: 'Admin Dinas',
-    badge: 'Dinas Pembina Wilayah',
-    name: 'Admin Dinas Demo',
+    badge: 'Kepala Dinas Ketahanan Pangan',
+    name: 'H. Bambang Sutrisno, M.Si',
     email: 'admin@orvana.test',
     icon: Users,
     tagColor: 'bg-pine-50 text-pine-900 border-pine-200',
   },
   {
     role: 'Auditor Publik',
-    badge: 'Pemantau Transparansi',
-    name: 'Auditor Publik Demo',
+    badge: 'Inspektorat Pengawasan Daerah',
+    name: 'Drs. Tri Wahyudi, Ak., CA',
     email: 'auditor@orvana.test',
     icon: Eye,
     tagColor: 'bg-stone-100 text-stone-800 border-stone-300',
@@ -234,7 +242,7 @@ export const LoginPage: React.FC = () => {
                   </label>
                   <input
                     type="email"
-                    placeholder="nama@email.com atau akun demo"
+                    placeholder="nama@email.com atau klik akun mitra di bawah"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -248,7 +256,7 @@ export const LoginPage: React.FC = () => {
                       Kata Sandi
                     </label>
                     <span className="text-[11px] font-mono text-stone-400">
-                      Demo: Demo1234!
+                      Sandi: Demo1234!
                     </span>
                   </div>
                   <input
@@ -272,12 +280,12 @@ export const LoginPage: React.FC = () => {
                 </Button>
               </form>
 
-              {/* Quick Demo Switcher Section */}
+              {/* Quick Role Switcher Section */}
               <div className="pt-4 border-t border-surface-border">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-1.5 text-xs font-semibold text-pine-950 font-heading">
                     <KeyRound className="w-3.5 h-3.5 text-harvest-gold" />
-                    <span>Akses Cepat Pengujian Demo</span>
+                    <span>Akses Cepat Pengujian Peran Mitra</span>
                   </div>
                   <button
                     type="button"

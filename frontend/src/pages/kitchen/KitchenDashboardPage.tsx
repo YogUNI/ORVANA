@@ -121,7 +121,7 @@ export const KitchenDashboardPage: React.FC = () => {
             </h1>
 
             <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed font-sans">
-              Kapasitas: <span className="font-bold text-white font-mono">{dashboard?.kitchen?.portionCapacity?.toLocaleString('id-ID') || '1.000'} Porsi Anak/Hari</span> • Terhubung langsung dengan rantai produsen petani lokal Kabupaten Demo.
+              Kapasitas: <span className="font-bold text-white font-mono">{dashboard?.kitchen?.portionCapacity?.toLocaleString('id-ID') || '1.000'} Porsi Anak/Hari</span> • Terhubung langsung dengan rantai produsen petani & nelayan lokal binaan dinas.
             </p>
           </div>
 

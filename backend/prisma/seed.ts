@@ -68,13 +68,13 @@ export async function main() {
   // Kata sandi default akun demo: Demo1234!
   const passwordHash = await bcrypt.hash('Demo1234!', 10);
 
-  // 2. Akun Demo & Profil
-  // A. ADMIN
+  // 2. Akun & Profil Mitra Nyata (6 Peran Resmi)
+  // A. ADMIN DINAS
   const admin = await prisma.user.upsert({
     where: { email: 'admin@orvana.test' },
-    update: { status: UserStatus.ACTIVE, role: Role.ADMIN, regionId: region.id, name: 'Admin Dinas Ketahanan Pangan' },
+    update: { status: UserStatus.ACTIVE, role: Role.ADMIN, regionId: region.id, name: 'H. Bambang Sutrisno, M.Si (Kadis Ketahanan Pangan)' },
     create: {
-      name: 'Admin Dinas Ketahanan Pangan',
+      name: 'H. Bambang Sutrisno, M.Si (Kadis Ketahanan Pangan)',
       email: 'admin@orvana.test',
       passwordHash,
       role: Role.ADMIN,
@@ -84,12 +84,12 @@ export async function main() {
   });
   console.log(`✓ Akun Admin: ${admin.email}`);
 
-  // B. KITCHEN MANAGERS
+  // B. KITCHEN MANAGERS (Pengelola Dapur Sehat & Katering Gizi)
   const kitchenManagerA = await prisma.user.upsert({
     where: { email: 'dapur-a@orvana.test' },
-    update: { status: UserStatus.ACTIVE, role: Role.KITCHEN_MANAGER, regionId: region.id },
+    update: { status: UserStatus.ACTIVE, role: Role.KITCHEN_MANAGER, regionId: region.id, name: 'Ibu Ratna Dewi (Dapur Berkah Gizi Cibinong)' },
     create: {
-      name: 'Pengelola Dapur A',
+      name: 'Ibu Ratna Dewi (Dapur Berkah Gizi Cibinong)',
       email: 'dapur-a@orvana.test',
       passwordHash,
       role: Role.KITCHEN_MANAGER,
@@ -100,9 +100,9 @@ export async function main() {
 
   const kitchenManagerB = await prisma.user.upsert({
     where: { email: 'dapur-b@orvana.test' },
-    update: { status: UserStatus.ACTIVE, role: Role.KITCHEN_MANAGER, regionId: region.id },
+    update: { status: UserStatus.ACTIVE, role: Role.KITCHEN_MANAGER, regionId: region.id, name: 'Chef Hendra Gunawan (Sentra Boga Sehat Ciawi)' },
     create: {
-      name: 'Pengelola Dapur B',
+      name: 'Chef Hendra Gunawan (Sentra Boga Sehat Ciawi)',
       email: 'dapur-b@orvana.test',
       passwordHash,
       role: Role.KITCHEN_MANAGER,
@@ -115,7 +115,7 @@ export async function main() {
   const kitchenA = await prisma.kitchen.upsert({
     where: { code: 'DPR01' },
     update: {
-      name: 'Dapur Gizi Cibinong',
+      name: 'Dapur Berkah Gizi Mandiri Cibinong',
       address: 'Jl. Raya Tegar Beriman No. 1, Cibinong, Kabupaten Bogor',
       portionCapacity: 1000,
       latitude: -6.4800,
@@ -125,7 +125,7 @@ export async function main() {
     },
     create: {
       code: 'DPR01',
-      name: 'Dapur Gizi Cibinong',
+      name: 'Dapur Berkah Gizi Mandiri Cibinong',
       address: 'Jl. Raya Tegar Beriman No. 1, Cibinong, Kabupaten Bogor',
       latitude: -6.4800,
       longitude: 106.8400,
@@ -138,7 +138,7 @@ export async function main() {
   const kitchenB = await prisma.kitchen.upsert({
     where: { code: 'DPR02' },
     update: {
-      name: 'Dapur Gizi Ciawi',
+      name: 'Sentra Boga Sehat Nusantara Ciawi',
       address: 'Jl. Raya Puncak No. 45, Ciawi, Kabupaten Bogor',
       portionCapacity: 600,
       latitude: -6.6500,
@@ -148,7 +148,7 @@ export async function main() {
     },
     create: {
       code: 'DPR02',
-      name: 'Dapur Gizi Ciawi',
+      name: 'Sentra Boga Sehat Nusantara Ciawi',
       address: 'Jl. Raya Puncak No. 45, Ciawi, Kabupaten Bogor',
       latitude: -6.6500,
       longitude: 106.8600,
@@ -157,15 +157,15 @@ export async function main() {
       regionId: region.id,
     },
   });
-  console.log(`✓ Dapur terdaftar: ${kitchenA.code} (1000 porsi), ${kitchenB.code} (600 porsi)`);
+  console.log(`✓ Dapur terdaftar: ${kitchenA.name} (${kitchenA.code}), ${kitchenB.name} (${kitchenB.code})`);
 
-  // C. SUPPLIERS (S1 s.d. S8)
+  // C. SUPPLIERS (Petani, Nelayan, Peternak, Pengolah Pangan Asli)
   const suppliersData = [
     {
       idKey: 's1',
       email: 's1@orvana.test',
-      name: 'Tani Makmur (S1)',
-      displayName: 'Tani Makmur',
+      name: 'Pak Sugeng Riyadi (Kelompok Tani Makmur Hijau)',
+      displayName: 'Pak Sugeng - Tani Makmur',
       type: SupplierType.FARMER,
       village: 'Sukamaju',
       lat: -6.5460,
@@ -178,8 +178,8 @@ export async function main() {
     {
       idKey: 's2',
       email: 's2@orvana.test',
-      name: 'Kelompok Tani Sari (S2)',
-      displayName: 'Kelompok Tani Sari',
+      name: 'Ibu Siti Khodijah (Kebun Sayur Organik Mekarsari)',
+      displayName: 'Ibu Siti - Sayur Mekarsari',
       type: SupplierType.FARMER,
       village: 'Mekarsari',
       lat: -6.5370,
@@ -187,13 +187,13 @@ export async function main() {
       qualityScore: 80,
       reliabilityRate: 0.80,
       totalOrders: 8,
-      publicName: false,
+      publicName: true,
     },
     {
       idKey: 's3',
       email: 's3@orvana.test',
-      name: 'Tani Jaya (S3)',
-      displayName: 'Tani Jaya',
+      name: 'Pak Asep Sunandar (Tani Holtikultura Jayagiri)',
+      displayName: 'Pak Asep - Tani Jayagiri',
       type: SupplierType.FARMER,
       village: 'Jayagiri',
       lat: -6.4561,
@@ -201,13 +201,13 @@ export async function main() {
       qualityScore: 92,
       reliabilityRate: 0.90,
       totalOrders: 12,
-      publicName: false,
+      publicName: true,
     },
     {
       idKey: 's4',
       email: 's4@orvana.test',
-      name: 'Gapoktan Harapan (S4)',
-      displayName: 'Gapoktan Harapan',
+      name: 'H. Dedi Mulyadi (Gapoktan Harapan Mukti)',
+      displayName: 'H. Dedi - Gapoktan Harapan',
       type: SupplierType.FARMER,
       village: 'Harapan',
       lat: -6.6935,
@@ -220,8 +220,8 @@ export async function main() {
     {
       idKey: 's5',
       email: 's5@orvana.test',
-      name: 'Mina Lestari (S5)',
-      displayName: 'Mina Lestari',
+      name: 'Pak Wahyu Hidayat (Tambak Mina Lestari Bahari)',
+      displayName: 'Pak Wahyu - Nelayan Mina Lestari',
       type: SupplierType.FISHER,
       village: 'Cibening',
       lat: -6.6000,
@@ -229,13 +229,13 @@ export async function main() {
       qualityScore: 84,
       reliabilityRate: 0.88,
       totalOrders: 7,
-      publicName: false,
+      publicName: true,
     },
     {
       idKey: 's6',
       email: 's6@orvana.test',
-      name: 'Peternak Ayam Berkah (S6)',
-      displayName: 'Peternak Ayam Berkah',
+      name: 'Pak Joko Prasetyo (Peternakan Ayam Telur Berkah)',
+      displayName: 'Pak Joko - Peternak Berkah',
       type: SupplierType.LIVESTOCK,
       village: 'Karangsari',
       lat: -6.8113,
@@ -243,13 +243,13 @@ export async function main() {
       qualityScore: 78,
       reliabilityRate: 0.85,
       totalOrders: 6,
-      publicName: false,
+      publicName: true,
     },
     {
       idKey: 's7',
       email: 's7@orvana.test',
-      name: 'UMKM Tempe Bu Rina (S7)',
-      displayName: 'UMKM Tempe Bu Rina',
+      name: 'Ibu Rina Wulandari (Sentra Olahan Tempe Higienis)',
+      displayName: 'Bu Rina - Tempe Pasirmulya',
       type: SupplierType.PROCESSOR,
       village: 'Pasirmulya',
       lat: -6.6450,
@@ -262,8 +262,8 @@ export async function main() {
     {
       idKey: 's8',
       email: 's8@orvana.test',
-      name: 'Kelompok Tani Subur (S8)',
-      displayName: 'Kelompok Tani Subur',
+      name: 'Pak Maman Suparman (Paguyuban Tani Padi Subur)',
+      displayName: 'Pak Maman - Tani Padi Subur',
       type: SupplierType.FARMER,
       village: 'Subur',
       lat: -6.4598,
@@ -271,7 +271,7 @@ export async function main() {
       qualityScore: 82,
       reliabilityRate: 0.85,
       totalOrders: 5,
-      publicName: false,
+      publicName: true,
     },
   ];
 
@@ -321,11 +321,11 @@ export async function main() {
   }
   console.log(`✓ 8 Pemasok terdaftar (S1 s.d. S8)`);
 
-  // D. COORDINATORS
+  // D. COORDINATORS (Pengurus Hub Pangan & Koperasi)
   const coordinatorsData = [
     {
       email: 'koordinator1@orvana.test',
-      name: 'Koperasi Lumbung Tani Sukamaju',
+      name: 'Bpk. Ahmad Fauzi (Koperasi Lumbung Tani Sukamaju)',
       orgName: 'Koperasi Lumbung Tani Sukamaju',
       pointName: 'Titik Kumpul Sukamaju Cibinong',
       lat: -6.5700,
@@ -333,8 +333,8 @@ export async function main() {
     },
     {
       email: 'koordinator2@orvana.test',
-      name: 'Pengepul Bersama Ciawi',
-      orgName: 'Pengepul Bersama Ciawi',
+      name: 'Bpk. Ridwan Kamil (Hub Agribisnis Bersama Ciawi)',
+      orgName: 'Hub Agribisnis Bersama Ciawi',
       pointName: 'Titik Kumpul Mekarsari Ciawi',
       lat: -6.5500,
       lng: 106.8900,
@@ -376,14 +376,14 @@ export async function main() {
       },
     });
   }
-  console.log(`✓ 2 Koordinator terdaftar`);
+  console.log(`✓ 2 Koordinator Hub terdaftar`);
 
-  // E. QUALITY INSPECTOR
+  // E. QUALITY INSPECTOR (Ahli Gizi & Pengawas Mutu Pangan)
   const inspector = await prisma.user.upsert({
     where: { email: 'mutu@orvana.test' },
-    update: { status: UserStatus.ACTIVE, role: Role.QUALITY_INSPECTOR, regionId: region.id, name: 'Pengawas Mutu Pangan Dinas' },
+    update: { status: UserStatus.ACTIVE, role: Role.QUALITY_INSPECTOR, regionId: region.id, name: 'dr. Nurul Hidayati, Sp.GK (Pengawas Mutu Gizi Dinas)' },
     create: {
-      name: 'Pengawas Mutu Pangan Dinas',
+      name: 'dr. Nurul Hidayati, Sp.GK (Pengawas Mutu Gizi Dinas)',
       email: 'mutu@orvana.test',
       passwordHash,
       role: Role.QUALITY_INSPECTOR,
@@ -393,12 +393,12 @@ export async function main() {
   });
   console.log(`✓ Pengawas Mutu: ${inspector.email}`);
 
-  // F. AUDITOR
+  // F. AUDITOR (Inspektorat / BPKP Daerah)
   const auditor = await prisma.user.upsert({
     where: { email: 'auditor@orvana.test' },
-    update: { status: UserStatus.ACTIVE, role: Role.AUDITOR, regionId: region.id, name: 'Auditor Inspektorat Daerah' },
+    update: { status: UserStatus.ACTIVE, role: Role.AUDITOR, regionId: region.id, name: 'Drs. Tri Wahyudi, Ak., CA (Auditor Inspektorat Daerah)' },
     create: {
-      name: 'Auditor Inspektorat Daerah',
+      name: 'Drs. Tri Wahyudi, Ak., CA (Auditor Inspektorat Daerah)',
       email: 'auditor@orvana.test',
       passwordHash,
       role: Role.AUDITOR,
