@@ -39,22 +39,6 @@ export const LandingPage: React.FC = () => {
   const [batchCodeInput, setBatchCodeInput] = useState('');
   const [activeTabRole, setActiveTabRole] = useState<'kitchen' | 'farmer' | 'coordinator' | 'inspector'>('kitchen');
 
-  // Interactive 3D Card Hover effect state (using requestAnimationFrame for smooth 90fps)
-  const [cardRotate, setCardRotate] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    const multiplier = 0.04;
-    setCardRotate({ x: -(y * multiplier), y: x * multiplier });
-  };
-
-  const handleMouseLeave = () => {
-    setCardRotate({ x: 0, y: 0 });
-  };
-
   const { data: summaryResponse, isLoading } = useQuery<{ data: PublicImpactSummary }>({
     queryKey: ['public-impact-summary'],
     queryFn: async () => {
@@ -74,12 +58,6 @@ export const LandingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-surface selection:bg-brand/20 selection:text-brand relative overflow-x-hidden">
-      {/* Dynamic Ambient Mesh Glow Background (GPU Accelerated) */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-emerald-200/25 blur-3xl animate-pulse-glow" />
-        <div className="absolute top-1/4 -right-32 w-[30rem] h-[30rem] rounded-full bg-harvest-gold/15 blur-3xl animate-float-slow" />
-        <div className="absolute top-2/3 left-1/3 w-80 h-80 rounded-full bg-emerald-300/15 blur-3xl animate-float-reverse" />
-      </div>
 
       {/* Header Sticky Glassmorphism */}
       <header className="bg-white/85 backdrop-blur-md border-b border-surface-border sticky top-0 z-40 transition-all">
@@ -205,17 +183,9 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Kolom Visual Kanan: 3D Holographic Card Preview (90fps GPU transform) */}
+          {/* Kolom Visual Kanan: 3D Perspective Card (Ultra-smooth 90fps GPU transform) */}
           <div className="lg:col-span-5 perspective-1000 flex justify-center">
-            <div
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              style={{
-                transform: `rotateX(${cardRotate.x}deg) rotateY(${cardRotate.y}deg)`,
-                transition: 'transform 0.15s cubic-bezier(0.2, 0, 0, 1)',
-              }}
-              className="w-full max-w-md bg-white/95 backdrop-blur-md rounded-2xl border-2 border-brand/20 p-6 shadow-elevated transform-style-3d relative group hover:border-brand/40 transition-colors"
-            >
+            <div className="w-full max-w-md bg-white rounded-2xl border-2 border-brand/20 p-6 shadow-elevated transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-2xl hover:border-brand/40 group relative">
               {/* Floating Badge Header */}
               <div className="flex items-center justify-between border-b border-surface-border pb-4 mb-4">
                 <div className="flex items-center gap-2.5">

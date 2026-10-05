@@ -3,10 +3,11 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-surface text-[#1A2621] font-sans antialiased min-h-screen;
-    background-image: radial-gradient(#E8E2D5 0.75px, transparent 0.75px);
-    background-size: 24px 24px;
   }
 
   /* Custom subtle scrollbar */
@@ -39,49 +40,5 @@
   .backface-hidden {
     backface-visibility: hidden;
   }
-}
-
-@keyframes floatSlow {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-8px) rotate(1deg);
-  }
-}
-
-@keyframes floatReverse {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(8px) rotate(-1deg);
-  }
-}
-
-@keyframes pulseGlow {
-  0%, 100% {
-    opacity: 0.4;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.7;
-    transform: scale(1.05);
-  }
-}
-
-.animate-float-slow {
-  animation: floatSlow 7s ease-in-out infinite;
-  will-change: transform;
-}
-
-.animate-float-reverse {
-  animation: floatReverse 8s ease-in-out infinite;
-  will-change: transform;
-}
-
-.animate-pulse-glow {
-  animation: pulseGlow 6s ease-in-out infinite;
-  will-change: transform, opacity;
 }
 
