@@ -96,3 +96,17 @@ flowchart TD
   - Skenario pengujian beban 500 pengguna simultan menggunakan k6 untuk memvalidasi performa penguncian alokasi pesanan di PostgreSQL.
 - [ ] **P4.2: Dasbor Prediksi Keseimbangan Pasokan Daerah:**
   - Menampilkan grafik proyeksi surplus/defisit pangan 14 hari ke depan bagi Admin Dinas Ketahanan Pangan berdasarkan rencana panen kolektif.
+
+### Pilar 5: Python AI & Intelligent Data Pipeline (`ai-service/`)
+- [ ] **P5.1: Arsitektur Layanan Microservice Python FastAPI:**
+  - Struktur folder `ai-service/` mandiri (FastAPI, Pydantic, Uvicorn) di port `8000`, terisolasi dengan health-check endpoint `GET /ai/health` dan non-blocking fallback di NestJS.
+- [ ] **P5.2: Modul NLP Input Stok Natural (Kamus Sinonim & Regex Parser):**
+  - Menguraikan kalimat alami petani lokal (misal: *"besok panen 200 kg cabai rawit harga 45 ribu"*) menjadi objek formulir stok terstruktur dengan satuan (kg, kwintal, ton, ons), tanggal relatif (besok, lusa, tgl 15), dan deteksi komoditas.
+- [ ] **P5.3: Modul Computer Vision Mutu Fisik Komoditas (OpenCV Grading):**
+  - Menerima unggahan foto bahan pangan, mengekstraksi indeks warna HSV dan tekstur keutuhan (deteksi daun segar vs layu/cacat), dan menghasilkan skor rekomendasi mutu 0–100 untuk membantu pengawas QC.
+- [ ] **P5.4: Pipeline Sinkronisasi Harga Pangan Riil Bapanas / PIHPS:**
+  - Integrasi pipeline data harga acuan pasar riil daerah Jawa Barat / Kabupaten Bogor untuk memperbarui batas harga dasar (`floorPrice`) dan batas atas (`ceilingPrice`) secara presisi.
+- [ ] **P5.5: Integrasi Antarmuka UI & Backend NestJS:**
+  - Endpoint NestJS `POST /supply-offers/parse-text` meneruskan teks ke Python service.
+  - Komponen kotak cerdas *"Tulis/Ucapkan Stok dengan Kalimat"* di modal Tambah Stok Petani pada frontend React.
+

@@ -23,6 +23,7 @@ import {
   Calendar,
   Layers,
   Info,
+  Sparkles,
 } from 'lucide-react';
 
 interface Commodity {
@@ -708,6 +709,56 @@ export const SupplierStockPage: React.FC = () => {
               <span>{addError}</span>
             </div>
           )}
+
+          {/* Kotak Cerdas NLP: Tulis Stok dengan Kalimat Alami (docs/08 Modul A) */}
+          <div className="p-3.5 bg-stone-50 border border-pine-200 rounded-card space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-heading font-bold text-stone-900 flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-pine-800" />
+                <span>Asisten Cerdas: Tulis Stok dengan Kalimat Alami</span>
+              </label>
+              <span className="text-[10px] font-mono font-bold text-pine-800 bg-pine-100 px-2 py-0.5 rounded-full">
+                AI NLP
+              </span>
+            </div>
+            <p className="text-[11px] text-stone-500 leading-relaxed">
+              Ketik kalimat biasa, contoh: <em className="text-stone-700">"besok panen 200 kg cabai rawit harga 45 ribu"</em> atau <em className="text-stone-700">"lusa ada bayam 2 kwintal"</em>. Sistem akan mengisikan formulir di bawah secara otomatis!
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={addSourceText}
+                onChange={(e) => setAddSourceText(e.target.value)}
+                placeholder="Tulis kalimat hasil panen Anda di sini..."
+                className="flex-1 px-3 py-2 border border-surface-border rounded-md text-xs bg-white text-stone-900 focus:outline-none focus:ring-1 focus:ring-pine-800"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={async () => {
+                  if (!addSourceText || !addSourceText.trim()) return;
+                  try {
+                    const res: any = await apiClient.post('/supply-offers/parse-text', { text: addSourceText.trim() });
+                    const candidate = res?.data?.candidates?.[0];
+                    if (candidate) {
+                      if (candidate.commodityId) setAddCommodityId(candidate.commodityId);
+                      if (candidate.quantityKg) setAddQuantity(candidate.quantityKg);
+                      if (candidate.harvestDate) setAddHarvestDate(candidate.harvestDate);
+                      if (candidate.askingPrice) setAddPrice(candidate.askingPrice);
+                      alert(`Berhasil diuraikan otomatis: ${candidate.commodityName} sejumlah ${candidate.quantityKg || '-'} kg. Silakan periksa formulir lalu simpan.`);
+                    } else if (res?.data?.warnings?.length) {
+                      alert(res.data.warnings[0]);
+                    }
+                  } catch (err: any) {
+                    alert('Gagal menguraikan kalimat.');
+                  }
+                }}
+                className="text-xs py-2 px-3 border-pine-700 text-pine-800 hover:bg-pine-50 shrink-0 font-semibold"
+              >
+                Urai Kalimat
+              </Button>
+            </div>
+          </div>
 
           <div>
             <label className="block text-xs font-semibold text-gray-700 uppercase mb-1">

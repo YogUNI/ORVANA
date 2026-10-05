@@ -72,6 +72,16 @@ export class SupplyController {
     return this.supplyService.getOfferById(id, userId, userRole);
   }
 
+  @Post('supply-offers/parse-text')
+  @Roles(Role.SUPPLIER)
+  @ApiOperation({ summary: 'Mengurai teks input alami stok via Python AI service (Modul A - docs/08)' })
+  async parseSupplyText(
+    @Body('text') text: string,
+    @CurrentUser('sub') userId: string,
+  ) {
+    return this.supplyService.parseSupplyText(text, userId);
+  }
+
   @Post('supply-offers')
   @Roles(Role.SUPPLIER)
   @ApiOperation({ summary: 'Membuat penawaran stok pasokan baru (validasi harga dasar)' })

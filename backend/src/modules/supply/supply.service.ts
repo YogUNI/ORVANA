@@ -883,5 +883,63 @@ export class SupplyService {
       mutations: entries,
     };
   }
+
+  /**
+   * Mengurai teks alami kalimat petani via AI microservice (Python FastAPI)
+   * Dilengkapi non-blocking fallback jika AI service belum aktif.
+   */
+  async parseSupplyText(text: string, userId: string) {
+    await this.getSupplierProfileOrThrow(userId);
+
+    const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:8000';
+    try {
+      const response = await fetch(`${aiServiceUrl}/ai/parse-text`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`AI service responded with status ${response.status}`);
+      }
+
+      const parsedData: any = await response.json();
+
+      // Cocokkan commodityId berdasarkan canonical name
+      const commodities = await this.prisma.commodity.findMany({
+        where: { isActive: true },
+      });
+
+      const enrichedCandidates = (parsedData.candidates || []).map((cand: any) => {
+        const found = commodities.find(
+          (c) => c.name.toLowerCase() === cand.commodityName.toLowerCase()
+        );
+        return {
+          ...cand,
+          commodityId: found ? found.id : null,
+          commodityUnit: found ? found.unit : 'kg',
+        };
+      });
+
+      return {
+        data: {
+          candidates: enrichedCandidates,
+          warnings: parsedData.warnings || [],
+          rawText: parsedData.rawText || text,
+          aiActive: true,
+        },
+      };
+    } catch (err: any) {
+      // Fallback ramah jika AI service mati/offline
+      return {
+        data: {
+          candidates: [],
+          warnings: ['Layanan cerdas Python sedang offline. Silakan gunakan input manual standar.'],
+          rawText: text,
+          aiActive: false,
+        },
+      };
+    }
+  }
 }
 
