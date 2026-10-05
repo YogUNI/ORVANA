@@ -94,32 +94,23 @@ export const KitchenDashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Hero Operational Banner */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-pine-950 via-pine-900 to-pine-950 text-white rounded-3xl p-6 sm:p-8 shadow-elevated border border-pine-800/60">
-        {/* Subtle decorative farm pattern overlay */}
-        <div className="absolute inset-0 opacity-10 pointer-events-none mix-blend-luminosity">
-          <img
-            src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1200&q=80"
-            alt="Dapur Higienis"
-            className="w-full h-full object-cover"
-          />
-        </div>
-
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-3 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-emerald-200">
-              <Building2 className="w-3.5 h-3.5 text-harvest-gold" />
+      {/* Hero Operational Banner: Pusat Operasional Dapur Gizi */}
+      <div className="bg-surface-card border border-surface-border rounded-card p-6 sm:p-7 shadow-soft">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-2.5 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-stone-100 border border-stone-200 text-xs font-mono text-stone-700">
+              <Building2 className="w-3.5 h-3.5 text-pine-800" />
               <span>
-                {dashboard?.kitchen?.name || 'Dapur Gizi'} • Kode: {dashboard?.kitchen?.code || 'DPR01'}
+                {dashboard?.kitchen?.name || 'Dapur Gizi'} • ID Unit: <strong>{dashboard?.kitchen?.code || 'DPR01'}</strong>
               </span>
             </div>
 
-            <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight">
-              Manajemen Pasokan Pangan Dapur Gizi
+            <h1 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight text-stone-950 leading-tight">
+              Pusat Kendali Pengolahan Gizi Massal
             </h1>
 
-            <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed font-sans">
-              Kapasitas: <span className="font-bold text-white font-mono">{dashboard?.kitchen?.portionCapacity?.toLocaleString('id-ID') || '1.000'} Porsi Anak/Hari</span> • Terhubung langsung dengan rantai produsen petani & nelayan lokal binaan dinas.
+            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
+              Target Kapasitas: <strong className="font-mono text-stone-900">{dashboard?.kitchen?.portionCapacity?.toLocaleString('id-ID') || '1.000'} Porsi Anak/Hari</strong> • Terhubung langsung dengan rantai pasok produsen pangan lokal binaan daerah.
             </p>
           </div>
 
@@ -127,9 +118,7 @@ export const KitchenDashboardPage: React.FC = () => {
           <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 shrink-0">
             <Link to="/kitchen/menu">
               <Button
-                variant="harvest"
-                size="md"
-                className="font-heading font-semibold text-xs sm:text-sm shadow-sm flex items-center gap-1.5 min-h-[44px]"
+                className="bg-brand hover:bg-brand-hover text-white font-heading font-semibold text-xs sm:text-sm shadow-xs flex items-center gap-1.5 py-2.5 px-4"
               >
                 <Plus className="w-4 h-4" />
                 <span>Susun Menu Pekan Ini</span>
@@ -139,10 +128,9 @@ export const KitchenDashboardPage: React.FC = () => {
             <Link to="/kitchen/demand">
               <Button
                 variant="outline"
-                size="md"
-                className="bg-white/10 hover:bg-white/20 text-white border-white/20 text-xs sm:text-sm min-h-[44px] backdrop-blur-xs"
+                className="border-surface-border text-stone-700 hover:bg-stone-50 text-xs sm:text-sm py-2.5 px-4"
               >
-                <ShoppingBag className="w-4 h-4 text-emerald-300 mr-1.5" />
+                <ShoppingBag className="w-4 h-4 text-pine-800 mr-1.5" />
                 <span>Kebutuhan Bahan</span>
               </Button>
             </Link>
@@ -150,26 +138,26 @@ export const KitchenDashboardPage: React.FC = () => {
         </div>
 
         {/* Progress Bar Keterpenuhan Gizi */}
-        <div className="relative z-10 mt-6 pt-5 border-t border-white/10">
+        <div className="mt-6 pt-5 border-t border-surface-border">
           <div className="flex justify-between items-center text-xs font-mono mb-2">
-            <span className="text-emerald-200 flex items-center gap-1.5">
-              <TrendingUp className="w-3.5 h-3.5 text-harvest-gold" />
-              Rasio Keterpenuhan Pasokan:
+            <span className="text-stone-700 flex items-center gap-1.5 font-sans font-semibold">
+              <TrendingUp className="w-3.5 h-3.5 text-pine-800" />
+              Keterpenuhan Pasokan Pangan:
             </span>
-            <span className="font-extrabold text-white text-sm">
+            <span className="font-bold text-stone-900 text-sm">
               {fulfillmentPct}%{' '}
-              <span className="text-emerald-300 font-normal">
+              <span className="text-stone-500 font-normal">
                 ({formatKg(dashboard?.fulfilledKg ?? 0)} / {formatKg(dashboard?.totalDemandKg ?? 0)})
               </span>
             </span>
           </div>
 
-          <div className="w-full h-2.5 bg-emerald-950/80 rounded-full overflow-hidden border border-white/10 p-0.5">
+          <div className="w-full h-2.5 bg-stone-100 rounded-full overflow-hidden border border-stone-200">
             <div
-              className={`h-full rounded-full transition-all duration-700 ${
+              className={`h-full rounded-full transition-all duration-500 ${
                 isOptimalFulfillment
-                  ? 'bg-gradient-to-r from-emerald-500 to-emerald-400'
-                  : 'bg-gradient-to-r from-harvest-gold to-amber-400'
+                  ? 'bg-pine-800'
+                  : 'bg-amber-600'
               }`}
               style={{ width: `${Math.min(100, Math.max(5, fulfillmentPct))}%` }}
             />
@@ -180,98 +168,96 @@ export const KitchenDashboardPage: React.FC = () => {
       {/* Grid 4 Kartu Metrik Operasional Presisi */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* 1. Keterpenuhan Bahan */}
-        <Card className="p-5 bg-white border border-surface-border shadow-soft rounded-2xl hover:border-brand/40 transition-colors">
+        <div className="p-5 bg-white border border-surface-border shadow-soft rounded-card hover:border-brand-border transition-colors group space-y-2">
           <div className="flex items-center justify-between text-xs font-semibold text-stone-500 font-heading">
-            <span>Tingkat Keterpenuhan</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
+            <span className="group-hover:text-stone-900 transition-colors">Tingkat Keterpenuhan</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center">
               <TrendingUp className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold font-mono text-pine-950 mt-2">
+          <p className="text-2xl font-bold font-mono text-stone-950">
             {fulfillmentPct}%
           </p>
-          <p className="text-[11px] text-stone-500 font-sans mt-1">
+          <p className="text-[11px] text-stone-500 font-sans">
             {formatKg(dashboard?.fulfilledKg ?? 0)} bahan lolos QC diterima
           </p>
-        </Card>
+        </div>
 
         {/* 2. Realisasi Belanja Riil */}
-        <Card className="p-5 bg-white border border-surface-border shadow-soft rounded-2xl hover:border-brand/40 transition-colors">
+        <div className="p-5 bg-white border border-surface-border shadow-soft rounded-card hover:border-brand-border transition-colors group space-y-2">
           <div className="flex items-center justify-between text-xs font-semibold text-stone-500 font-heading">
-            <span>Realisasi Belanja Riil</span>
-            <div className="w-8 h-8 rounded-xl bg-harvest-soft text-harvest-amber flex items-center justify-center">
+            <span className="group-hover:text-stone-900 transition-colors">Realisasi Belanja Riil</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center">
               <Receipt className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold font-mono text-pine-950 mt-2">
+          <p className="text-2xl font-bold font-mono text-stone-950">
             {formatRupiah(dashboard?.totalSpendingRupiah ?? 0)}
           </p>
-          <p className="text-[11px] text-emerald-800 font-sans mt-1 flex items-center gap-1 font-semibold">
-            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+          <p className="text-[11px] text-emerald-800 font-sans flex items-center gap-1 font-semibold">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
             Buku besar RELEASE (Cair)
           </p>
-        </Card>
+        </div>
 
         {/* 3. Dana Escrow Terproteksi */}
-        <Card className="p-5 bg-white border border-surface-border shadow-soft rounded-2xl hover:border-brand/40 transition-colors">
+        <div className="p-5 bg-white border border-surface-border shadow-soft rounded-card hover:border-amber-300 transition-colors group space-y-2">
           <div className="flex items-center justify-between text-xs font-semibold text-stone-500 font-heading">
-            <span>Dana Dicadangkan (Escrow)</span>
-            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-800 flex items-center justify-center">
+            <span className="group-hover:text-stone-900 transition-colors">Dana Dicadangkan (Escrow)</span>
+            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-800 flex items-center justify-center">
               <Lock className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold font-mono text-amber-950 mt-2">
+          <p className="text-2xl font-bold font-mono text-amber-900">
             {formatRupiah(dashboard?.escrowHoldRupiah ?? 0)}
           </p>
-          <p className="text-[11px] text-stone-500 font-sans mt-1">
-            Status [HOLD] kepastian bayar petani
+          <p className="text-[11px] text-stone-500 font-sans">
+            Status [HOLD] jaminan dana petani
           </p>
-        </Card>
+        </div>
 
         {/* 4. Armada Dalam Perjalanan */}
-        <Card className="p-5 bg-white border border-surface-border shadow-soft rounded-2xl hover:border-brand/40 transition-colors">
+        <div className="p-5 bg-white border border-surface-border shadow-soft rounded-card hover:border-pine-300 transition-colors group space-y-2">
           <div className="flex items-center justify-between text-xs font-semibold text-stone-500 font-heading">
-            <span>Armada Menuju Dapur</span>
-            <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center">
+            <span className="group-hover:text-stone-900 transition-colors">Armada Menuju Dapur</span>
+            <div className="w-8 h-8 rounded-lg bg-pine-50 text-pine-800 flex items-center justify-center">
               <Truck className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold font-mono text-blue-950 mt-2">
+          <p className="text-2xl font-bold font-mono text-pine-950">
             {dashboard?.pendingReceivingCount ?? 0} Pesanan
           </p>
-          <p className="text-[11px] text-blue-900/80 font-sans mt-1 font-semibold">
+          <p className="text-[11px] text-pine-800 font-sans font-semibold">
             Status IN_TRANSIT (Siap Timbang)
           </p>
-        </Card>
+        </div>
       </div>
 
       {/* Alert Armada Siap Terima (Jika Ada Pengiriman Sedang Berjalan) */}
       {dashboard?.incomingShipments && dashboard.incomingShipments.length > 0 && (
-        <div className="bg-gradient-to-r from-blue-50 via-white to-blue-50/60 p-5 rounded-3xl border-2 border-blue-200 shadow-soft flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="bg-stone-50 p-4 sm:p-5 rounded-card border border-pine-200 shadow-soft flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-start gap-3.5">
-            <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm">
-              <Truck className="w-5 h-5 animate-pulse" />
+            <div className="w-9 h-9 rounded-lg bg-pine-800 text-white flex items-center justify-center shrink-0 shadow-xs">
+              <Truck className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-heading font-bold text-sm text-blue-950">
-                  Armada Logistik Sedang Bergerak Menuju Dapur Anda!
+                <span className="font-heading font-bold text-sm text-stone-900">
+                  Armada Logistik Sedang Menuju Dapur Anda
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-bold border border-blue-300">
-                  {dashboard.incomingShipments.length} Pengiriman Tiba
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-pine-100 text-pine-800 font-bold border border-pine-200">
+                  {dashboard.incomingShipments.length} Pengiriman
                 </span>
               </div>
               <p className="text-xs text-stone-600 font-sans mt-0.5">
-                Pastikan tim timbang dapur bersiap memverifikasi kuantitas riil dan kondisi higienitas fisik bahan pangan.
+                Pastikan tim penerimaan bersiap memverifikasi kuantitas timbang dan kondisi fisik bahan segar.
               </p>
             </div>
           </div>
 
           <Link to="/kitchen/receiving">
             <Button
-              variant="primary"
-              size="sm"
-              className="bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs shrink-0 shadow-xs flex items-center gap-1.5"
+              className="bg-brand hover:bg-brand-hover text-white font-semibold text-xs shrink-0 shadow-xs flex items-center gap-1.5 py-2 px-3.5"
             >
               <PackageOpen className="w-4 h-4" />
               <span>Buka Menu Penerimaan</span>
@@ -284,11 +270,11 @@ export const KitchenDashboardPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Kolom Kiri: Tabel Pesanan Terbaru */}
         <div className="lg:col-span-8 space-y-6">
-          <Card className="p-6 bg-white border border-surface-border shadow-card rounded-3xl">
-            <div className="flex justify-between items-center pb-4 border-b border-surface-border mb-4">
+          <Card className="p-5 sm:p-6 bg-white border border-surface-border shadow-soft rounded-card">
+            <div className="flex justify-between items-center pb-3.5 border-b border-surface-border mb-4">
               <div>
-                <h3 className="font-serif font-bold text-pine-950 text-lg flex items-center gap-2">
-                  <ShoppingBag className="w-5 h-5 text-brand" />
+                <h3 className="font-heading font-bold text-stone-900 text-base flex items-center gap-2">
+                  <ShoppingBag className="w-4 h-4 text-pine-800" />
                   <span>Daftar Alokasi Pesanan Bahan Segar</span>
                 </h3>
                 <p className="text-xs text-stone-500 font-sans mt-0.5">
@@ -298,7 +284,7 @@ export const KitchenDashboardPage: React.FC = () => {
 
               <Link
                 to="/kitchen/demand"
-                className="text-xs font-semibold text-brand hover:underline flex items-center gap-1 font-heading"
+                className="text-xs font-semibold text-pine-800 hover:text-pine-950 flex items-center gap-1 font-heading"
               >
                 <span>Lihat Semua</span>
                 <ChevronRight className="w-3.5 h-3.5" />

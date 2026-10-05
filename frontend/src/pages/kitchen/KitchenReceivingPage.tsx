@@ -190,17 +190,17 @@ export const KitchenReceivingPage: React.FC = () => {
         <>
           {isIncomingLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Skeleton className="h-44 w-full rounded-2xl" />
-              <Skeleton className="h-44 w-full rounded-2xl" />
+              <Skeleton className="h-44 w-full rounded-card" />
+              <Skeleton className="h-44 w-full rounded-card" />
             </div>
           ) : incomingOrders.length === 0 ? (
-            <Card className="p-10 text-center text-stone-500 rounded-3xl bg-white border border-surface-border">
+            <Card className="p-10 text-center text-stone-500 rounded-card bg-white border border-surface-border">
               <PackageOpen className="w-12 h-12 mx-auto mb-3 text-stone-300 stroke-1" />
-              <p className="font-heading font-bold text-stone-800 text-base">
+              <p className="font-heading font-bold text-stone-900 text-base">
                 Tidak Ada Armada yang Sedang Menuju Dapur
               </p>
               <p className="text-xs text-stone-500 mt-1 max-w-md mx-auto">
-                Ketika koordinator memberangkatkan pengiriman logistik dari desa, rincian pesanan dan kode batch barcode akan otomatis muncul di sini.
+                Ketika koordinator memberangkatkan pengiriman logistik dari desa binaan, rincian pesanan dan kode batch barcode akan otomatis muncul di sini.
               </p>
             </Card>
           ) : (
@@ -212,17 +212,17 @@ export const KitchenReceivingPage: React.FC = () => {
                 };
 
                 return (
-                  <Card
+                  <div
                     key={ord.id}
-                    className="p-5 bg-white border border-surface-border shadow-card rounded-3xl flex flex-col justify-between hover:border-brand/40 transition-colors"
+                    className="p-5 bg-white border border-surface-border shadow-soft rounded-card flex flex-col justify-between hover:border-brand-border transition-colors"
                   >
                     <div className="space-y-3">
                       <div className="flex justify-between items-start">
                         <div>
-                          <span className="font-mono text-xs font-bold text-stone-500 block">
+                          <span className="font-mono text-xs font-bold text-stone-400 block">
                             {ord.orderNo}
                           </span>
-                          <h3 className="font-serif font-bold text-lg text-pine-950 mt-0.5">
+                          <h3 className="font-heading font-bold text-lg text-stone-950 mt-0.5">
                             {ord.commodity.name}
                           </h3>
                         </div>
@@ -230,16 +230,16 @@ export const KitchenReceivingPage: React.FC = () => {
                       </div>
 
                       <div className="flex items-center gap-1.5 text-xs text-stone-600">
-                        <MapPin className="w-3.5 h-3.5 text-harvest-amber" />
+                        <MapPin className="w-3.5 h-3.5 text-pine-700" />
                         <span>
-                          Asal: <strong>{ord.supplier.displayName}</strong> (Desa {ord.supplier.village || '-'})
+                          Asal Produsen: <strong>{ord.supplier.displayName}</strong> (Desa {ord.supplier.village || '-'})
                         </span>
                       </div>
 
-                      <div className="bg-surface-muted/60 p-3.5 rounded-2xl border border-surface-border grid grid-cols-2 gap-3 text-xs">
+                      <div className="bg-surface-muted/60 p-3.5 rounded-lg border border-surface-border grid grid-cols-2 gap-3 text-xs">
                         <div>
-                          <span className="text-[11px] text-stone-500 block">Kuantitas Dikirim</span>
-                          <span className="font-bold text-pine-950 font-mono text-base">
+                          <span className="text-[11px] text-stone-500 block">Kuantitas Muatan Dikirim</span>
+                          <span className="font-bold text-stone-950 font-mono text-base">
                             {formatKg(ord.batch?.shippedQuantity || ord.quantity)}
                           </span>
                         </div>
@@ -267,7 +267,7 @@ export const KitchenReceivingPage: React.FC = () => {
                         <span>Catat Timbangan Serah Terima</span>
                       </Button>
                     </div>
-                  </Card>
+                  </div>
                 );
               })}
             </div>

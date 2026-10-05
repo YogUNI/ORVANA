@@ -99,54 +99,54 @@ export const KitchenPaymentsPage: React.FC = () => {
 
       {/* Ringkasan Saldo Transaksi Dapur */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-xs border-l-4 border-l-amber-500">
-          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <span>Dana Dicadangkan (HOLD)</span>
-            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
+        <div className="bg-white border border-surface-border rounded-card p-5 shadow-soft hover:border-amber-300 transition-colors group space-y-1">
+          <div className="flex items-center justify-between text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1">
+            <span className="group-hover:text-stone-900 transition-colors">Dana Dicadangkan (HOLD)</span>
+            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-800 flex items-center justify-center">
               <Clock className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-mono text-gray-900 mt-1">
+          <div className="text-2xl font-bold font-mono text-amber-900 mt-1">
             {formatRupiah(totalHold)}
           </div>
-          <span className="text-[11px] text-gray-500 mt-1 block">
-            Tersimpan aman di rekening escrow
+          <span className="text-[11px] text-stone-500 mt-1 block">
+            Tersimpan aman di penampungan escrow
           </span>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-xs border-l-4 border-l-emerald-600">
-          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <span>Dana Dicairkan (RELEASE)</span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+        <div className="bg-white border border-surface-border rounded-card p-5 shadow-soft hover:border-brand-border transition-colors group space-y-1">
+          <div className="flex items-center justify-between text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1">
+            <span className="group-hover:text-stone-900 transition-colors">Dana Dicairkan (RELEASE)</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center">
               <CheckCircle2 className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-mono text-emerald-700 mt-1">
+          <div className="text-2xl font-bold font-mono text-emerald-800 mt-1">
             {formatRupiah(totalReleased)}
           </div>
-          <span className="text-[11px] text-gray-500 mt-1 block">
+          <span className="text-[11px] text-emerald-800 font-medium mt-1 block">
             Dibayarkan lunas ke petani & nelayan
           </span>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-xs border-l-4 border-l-red-500">
-          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <span>Dana Batal / Kembali (VOID)</span>
-            <div className="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center">
+        <div className="bg-white border border-surface-border rounded-card p-5 shadow-soft hover:border-surface-border transition-colors group space-y-1">
+          <div className="flex items-center justify-between text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1">
+            <span className="group-hover:text-stone-900 transition-colors">Dana Batal / Kembali (VOID)</span>
+            <div className="w-8 h-8 rounded-lg bg-stone-100 text-stone-600 flex items-center justify-center">
               <XCircle className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-mono text-gray-900 mt-1">
+          <div className="text-2xl font-bold font-mono text-stone-700 mt-1">
             {formatRupiah(totalVoid)}
           </div>
-          <span className="text-[11px] text-gray-500 mt-1 block">
+          <span className="text-[11px] text-stone-400 mt-1 block">
             Pengembalian dana afkir / pembatalan
           </span>
         </div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-xs flex flex-col sm:flex-row justify-between items-center gap-3">
+      <div className="bg-white border border-surface-border rounded-card p-4 shadow-soft flex flex-col sm:flex-row justify-between items-center gap-3">
         <div className="flex gap-2 flex-wrap w-full sm:w-auto">
           {[
             { id: 'ALL', label: 'Semua Mutasi' },
@@ -157,10 +157,10 @@ export const KitchenPaymentsPage: React.FC = () => {
             <button
               key={st.id}
               onClick={() => setFilterStage(st.id)}
-              className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+              className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-colors ${
                 filterStage === st.id
-                  ? 'bg-pine-800 text-white shadow-2xs'
-                  : 'text-gray-600 hover:bg-gray-100 bg-gray-50 border border-gray-200/80'
+                  ? 'bg-brand text-white shadow-xs font-bold'
+                  : 'text-stone-600 hover:bg-stone-100 bg-stone-50 border border-surface-border'
               }`}
             >
               {st.label}
@@ -168,21 +168,21 @@ export const KitchenPaymentsPage: React.FC = () => {
           ))}
         </div>
 
-        <span className="text-xs text-gray-500">
-          Menampilkan <strong className="text-gray-800">{entries.length}</strong> catatan pembukuan
+        <span className="text-xs text-stone-500">
+          Menampilkan <strong className="text-stone-900 font-mono">{entries.length}</strong> catatan pembukuan
         </span>
       </div>
 
       {/* Tabel Mutasi Buku Besar */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-xs">
-        <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+      <div className="bg-white border border-surface-border rounded-card overflow-hidden shadow-soft">
+        <div className="p-4 border-b border-surface-border flex items-center justify-between bg-surface-muted/60">
           <div className="flex items-center gap-2">
             <Receipt className="w-4 h-4 text-pine-800" />
-            <h2 className="font-heading font-semibold text-gray-900 text-sm">
+            <h2 className="font-heading font-semibold text-stone-900 text-sm">
               Jurnal Rekam Transaksi Escrow Dapur
             </h2>
           </div>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-stone-500 font-mono">
             Terhubung otomatis dengan status QC & Pengiriman
           </span>
         </div>

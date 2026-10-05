@@ -289,68 +289,68 @@ export const KitchenMenuPage: React.FC = () => {
 
       {/* Summary KPI Strip */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white border border-gray-200 rounded-xl p-4.5 shadow-xs flex items-center justify-between">
-          <div className="space-y-0.5">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider block">
+        <div className="bg-white border border-surface-border rounded-card p-5 shadow-soft hover:border-brand-border transition-colors flex items-center justify-between group">
+          <div className="space-y-1">
+            <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider block group-hover:text-stone-900 transition-colors">
               Sajian Terjadwal Pekan Ini
             </span>
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold font-mono text-gray-900">{totalMenusScheduled}</span>
-              <span className="text-xs text-gray-500">menu / {daysCovered} hari terisi</span>
+              <span className="text-2xl font-bold font-mono text-stone-950">{totalMenusScheduled}</span>
+              <span className="text-xs text-stone-500 font-sans">menu / {daysCovered} hari terisi</span>
             </div>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-pine-50 border border-pine-100 flex items-center justify-center text-pine-800">
+          <div className="w-10 h-10 rounded-lg bg-stone-100 flex items-center justify-center text-pine-800">
             <Utensils className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-xl p-4.5 shadow-xs flex items-center justify-between">
-          <div className="space-y-0.5">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider block">
+        <div className="bg-white border border-surface-border rounded-card p-5 shadow-soft hover:border-brand-border transition-colors flex items-center justify-between group">
+          <div className="space-y-1">
+            <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider block group-hover:text-stone-900 transition-colors">
               Volume Porsi Mingguan
             </span>
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold font-mono text-emerald-700">
+              <span className="text-2xl font-bold font-mono text-emerald-800">
                 {totalPortionsScheduled.toLocaleString('id-ID')}
               </span>
-              <span className="text-xs text-gray-500">porsi total</span>
+              <span className="text-xs text-stone-500 font-sans">porsi total</span>
             </div>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-700">
+          <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-800">
             <Apple className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-xl p-4.5 shadow-xs flex items-center justify-between">
-          <div className="space-y-0.5">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider block">
+        <div className="bg-white border border-surface-border rounded-card p-5 shadow-soft hover:border-brand-border transition-colors flex items-center justify-between group">
+          <div className="space-y-1">
+            <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider block group-hover:text-stone-900 transition-colors">
               Kapasitas Standar Dapur
             </span>
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold font-mono text-gray-900">
+              <span className="text-2xl font-bold font-mono text-stone-950">
                 {(kitchen?.portionCapacity || 1000).toLocaleString('id-ID')}
               </span>
-              <span className="text-xs text-gray-500">porsi / hari operasi</span>
+              <span className="text-xs text-stone-500 font-sans">porsi / hari operasi</span>
             </div>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-700">
+          <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-800">
             <Layers className="w-5 h-5" />
           </div>
         </div>
       </div>
 
       {/* Bar Navigasi Kalender Pekan */}
-      <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-xs">
+      <div className="bg-white border border-surface-border rounded-card p-4 shadow-soft">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-pine-50 text-pine-800 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-stone-100 text-pine-800 flex items-center justify-center">
               <CalendarDays className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block">
+              <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider block">
                 Rentang Layanan
               </span>
-              <span className="font-heading font-bold text-gray-900 text-sm">
+              <span className="font-heading font-bold text-stone-900 text-sm">
                 {formatDate(startDateStr)} — {formatDate(endDateStr)}
               </span>
             </div>
@@ -361,7 +361,7 @@ export const KitchenMenuPage: React.FC = () => {
               variant="outline"
               size="sm"
               onClick={() => setCurrentWeekOffset((prev) => prev - 1)}
-              className="text-xs border-gray-200 text-gray-700 hover:bg-gray-50"
+              className="text-xs border-surface-border text-stone-700 hover:bg-stone-50"
             >
               <ChevronLeft className="w-4 h-4 mr-1" />
               Pekan Lalu
@@ -372,8 +372,8 @@ export const KitchenMenuPage: React.FC = () => {
               onClick={() => setCurrentWeekOffset(0)}
               className={`text-xs font-semibold px-3 ${
                 currentWeekOffset === 0
-                  ? 'bg-pine-100/70 text-pine-900 font-bold'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'bg-stone-200 text-stone-900 font-bold'
+                  : 'text-stone-600 hover:bg-stone-100'
               }`}
             >
               Minggu Ini
@@ -382,7 +382,7 @@ export const KitchenMenuPage: React.FC = () => {
               variant="outline"
               size="sm"
               onClick={() => setCurrentWeekOffset((prev) => prev + 1)}
-              className="text-xs border-gray-200 text-gray-700 hover:bg-gray-50"
+              className="text-xs border-surface-border text-stone-700 hover:bg-stone-50"
             >
               Pekan Depan
               <ChevronRight className="w-4 h-4 ml-1" />
@@ -395,11 +395,11 @@ export const KitchenMenuPage: React.FC = () => {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {[...Array(7)].map((_, i) => (
-            <Skeleton key={i} className="h-72 w-full rounded-xl" />
+            <Skeleton key={i} className="h-72 w-full rounded-card" />
           ))}
         </div>
       ) : error ? (
-        <div className="bg-white border border-red-200 rounded-xl p-8 text-center text-status-danger">
+        <div className="bg-white border border-red-200 rounded-card p-8 text-center text-status-danger">
           <AlertCircle className="w-8 h-8 mx-auto mb-2" />
           <p className="font-semibold">Terjadi kendala saat memuat kalender menu dapur.</p>
         </div>
@@ -418,25 +418,25 @@ export const KitchenMenuPage: React.FC = () => {
             return (
               <div
                 key={dateStr}
-                className={`bg-white border rounded-xl p-4 flex flex-col justify-between transition-all duration-200 hover:shadow-md ${
+                className={`bg-white border rounded-card p-4 flex flex-col justify-between transition-colors shadow-soft hover:border-brand-border ${
                   isToday
-                    ? 'border-pine-600 ring-2 ring-pine-500/20 shadow-sm'
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? 'border-pine-800 ring-2 ring-pine-800/10'
+                    : 'border-surface-border'
                 }`}
               >
                 <div>
                   {/* Header Kartu Hari */}
-                  <div className="flex justify-between items-center pb-3 border-b border-gray-100 mb-3">
+                  <div className="flex justify-between items-center pb-3 border-b border-surface-border mb-3">
                     <div>
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 block">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-stone-400 block font-heading">
                         {dayNames[idx]}
                       </span>
-                      <span className="text-sm font-bold text-gray-900">
+                      <span className="text-sm font-bold text-stone-900 font-mono">
                         {formatDate(dateStr)}
                       </span>
                     </div>
                     {isToday && (
-                      <span className="px-2.5 py-0.5 bg-pine-800 text-white text-[10px] font-bold rounded-full shadow-xs">
+                      <span className="px-2.5 py-0.5 bg-brand text-white text-[10px] font-bold rounded-full">
                         Hari Ini
                       </span>
                     )}

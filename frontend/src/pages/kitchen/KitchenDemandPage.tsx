@@ -222,80 +222,80 @@ export const KitchenDemandPage: React.FC = () => {
 
       {/* KPI Cards Strip */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white border border-gray-200 rounded-xl p-4.5 shadow-xs">
-          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <span>Total Kebutuhan</span>
-            <div className="w-7 h-7 rounded-lg bg-pine-50 text-pine-800 flex items-center justify-center">
+        <div className="bg-white border border-surface-border rounded-card p-5 shadow-soft hover:border-brand-border transition-colors group space-y-1">
+          <div className="flex items-center justify-between text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1">
+            <span className="group-hover:text-stone-900 transition-colors">Total Kebutuhan</span>
+            <div className="w-8 h-8 rounded-lg bg-stone-100 text-pine-800 flex items-center justify-center">
               <Layers className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-mono text-gray-900">
+          <div className="text-2xl font-bold font-mono text-stone-950">
             {formatKg(totalVolume)}
           </div>
-          <span className="text-[11px] text-gray-500 mt-1 block">
-            {demands.length} item permintaan bahan
+          <span className="text-[11px] text-stone-500 block">
+            {demands.length} item komoditas terdata
           </span>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-xl p-4.5 shadow-xs">
-          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <span>Pasokan Terpenuhi</span>
-            <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+        <div className="bg-white border border-surface-border rounded-card p-5 shadow-soft hover:border-brand-border transition-colors group space-y-1">
+          <div className="flex items-center justify-between text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1">
+            <span className="group-hover:text-stone-900 transition-colors">Pasokan Terpenuhi</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center">
               <PackageCheck className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-mono text-emerald-700">
+          <div className="text-2xl font-bold font-mono text-emerald-800">
             {formatKg(totalFulfilled)}
           </div>
-          <div className="mt-2 w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+          <div className="mt-2 w-full bg-stone-100 rounded-full h-1.5 overflow-hidden">
             <div
-              className="bg-emerald-600 h-1.5 rounded-full transition-all duration-500"
+              className="bg-emerald-700 h-1.5 rounded-full transition-all duration-500"
               style={{ width: `${overallPercentage}%` }}
             />
           </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-xl p-4.5 shadow-xs">
-          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <span>Sisa Belum Terpenuhi</span>
-            <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
+        <div className="bg-white border border-surface-border rounded-card p-5 shadow-soft hover:border-amber-300 transition-colors group space-y-1">
+          <div className="flex items-center justify-between text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1">
+            <span className="group-hover:text-stone-900 transition-colors">Sisa Belum Terpenuhi</span>
+            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-800 flex items-center justify-center">
               <Clock className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-mono text-amber-700">
+          <div className="text-2xl font-bold font-mono text-amber-900">
             {formatKg(totalRemaining)}
           </div>
-          <span className="text-[11px] text-gray-500 mt-1 block">
+          <span className="text-[11px] text-stone-500 block">
             {overallPercentage}% telah teralokasi
           </span>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-xl p-4.5 shadow-xs">
-          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <span>Draf Siap Diterbitkan</span>
-            <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center">
+        <div className="bg-white border border-surface-border rounded-card p-5 shadow-soft hover:border-brand-border transition-colors group space-y-1">
+          <div className="flex items-center justify-between text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1">
+            <span className="group-hover:text-stone-900 transition-colors">Draf Siap Diterbitkan</span>
+            <div className="w-8 h-8 rounded-lg bg-stone-100 text-pine-800 flex items-center justify-center">
               <Sparkles className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-mono text-blue-800">
+          <div className="text-2xl font-bold font-mono text-stone-950">
             {draftCount}
           </div>
-          <span className="text-[11px] text-gray-500 mt-1 block">
-            Perlu diterbitkan ke pasar lokal
+          <span className="text-[11px] text-amber-800 font-medium block">
+            Perlu diterbitkan ke produsen lokal
           </span>
         </div>
       </div>
 
       {/* Filter and Action Bar */}
-      <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-xs flex flex-col sm:flex-row justify-between items-center gap-3">
+      <div className="bg-white border border-surface-border rounded-card p-4 shadow-soft flex flex-col sm:flex-row justify-between items-center gap-3">
         <div className="flex items-center gap-2.5 w-full sm:w-auto">
-          <Filter className="w-4 h-4 text-gray-400 shrink-0" />
-          <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">Status:</span>
+          <Filter className="w-4 h-4 text-stone-400 shrink-0" />
+          <span className="text-xs font-bold text-stone-700 uppercase tracking-wider">Status:</span>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
             aria-label="Filter status kebutuhan"
-            className="px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-pine-600 focus:border-pine-600 font-medium"
+            className="px-3 py-1.5 border border-surface-border rounded-md text-xs bg-white text-stone-800 focus:outline-none focus:ring-1 focus:ring-pine-800 font-medium"
           >
             <option value="">Semua Status Permintaan</option>
             {Object.entries(DEMAND_STATUS_LABELS).map(([st, meta]) => (
@@ -306,17 +306,17 @@ export const KitchenDemandPage: React.FC = () => {
           </select>
         </div>
 
-        <div className="text-xs text-gray-500">
-          Menampilkan <span className="font-bold text-gray-800">{demands.length}</span> permintaan bahan pangan
+        <div className="text-xs text-stone-500">
+          Menampilkan <strong className="text-stone-900 font-mono">{demands.length}</strong> kebutuhan bahan
         </div>
       </div>
 
       {/* Table Data */}
       {isLoading ? (
         <div className="space-y-3">
-          <Skeleton className="h-16 w-full rounded-xl" />
-          <Skeleton className="h-16 w-full rounded-xl" />
-          <Skeleton className="h-16 w-full rounded-xl" />
+          <Skeleton className="h-16 w-full rounded-card" />
+          <Skeleton className="h-16 w-full rounded-card" />
+          <Skeleton className="h-16 w-full rounded-card" />
         </div>
       ) : error ? (
         <ErrorState
@@ -332,10 +332,10 @@ export const KitchenDemandPage: React.FC = () => {
           onAction={() => (window.location.href = '/kitchen/menu')}
         />
       ) : (
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-xs">
+        <div className="bg-white border border-surface-border rounded-card overflow-hidden shadow-soft">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-gray-600">
-              <thead className="bg-gray-50/80 border-b border-gray-200 text-xs font-semibold text-gray-700 uppercase">
+            <table className="w-full text-left text-sm text-stone-600">
+              <thead className="bg-surface-muted border-b border-surface-border text-xs font-semibold text-stone-700 uppercase tracking-wider">
                 <tr>
                   <th className="px-5 py-3.5">Komoditas Pangan</th>
                   <th className="px-5 py-3.5">Tanggal Butuh</th>
@@ -346,7 +346,7 @@ export const KitchenDemandPage: React.FC = () => {
                   <th className="px-5 py-3.5 text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-surface-border">
                 {demands.map((d) => {
                   const statusMeta = DEMAND_STATUS_LABELS[d.status] || {
                     label: d.status,
