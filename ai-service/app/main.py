@@ -55,12 +55,32 @@ def parse_text_endpoint(req: TextParseRequest):
         raise HTTPException(status_code=400, detail="Kalimat masukan tidak boleh kosong.")
     return parse_supply_sentence(req.text.strip())
 
-@app.post("/ai/forecast-price")
-def forecast_price_endpoint(req: ForecastRequest):
-    if not req.commodityName:
-        raise HTTPException(status_code=400, detail="Nama komoditas wajib diisi.")
-    target_date = datetime.now() + timedelta(days=max(1, min(90, req.targetDaysAhead)))
-    return forecasting_engine.forecast_price(req.commodityName, target_date)
+from app.nlp.feedback_loop import feedback_manager, FeedbackSample
+from app.nlp.classifier import nlp_engine
+
+@app.post("/ai/feedback")
+def submit_feedback_endpoint(feedback: FeedbackSample):
+    """
+    Menyimpan koreksi nyata dari user/petani saat kalimat salah diuraikan.
+    """
+    res = feedback_manager.record_feedback(feedback)
+    return {
+        "success": True,
+        "message": "Feedback berhasil disimpan untuk continuous learning.",
+        "data": res
+    }
+
+@app.post("/ai/retrain")
+def retrain_model_endpoint():
+    """
+    Memicu proses retraining berkala atau on-demand dengan menggabungkan dataset sintetis & feedback riil.
+    """
+    train_res = nlp_engine.train_model()
+    return {
+        "success": True,
+        "message": "Model NLP berhasil dilatih ulang secara realtime.",
+        "metrics": train_res
+    }
 
 @app.post("/ai/quality-score")
 async def quality_score_endpoint(

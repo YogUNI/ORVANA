@@ -1,0 +1,14 @@
+[
+  {
+    "rawText": "bawa cengek 15 kilo",
+    "correctedIntent": "OFFER_STOCK",
+    "correctedCommodities": [
+      {
+        "name": "Cabai rawit",
+        "quantityKg": 15.0
+      }
+    ],
+    "notes": null,
+    "timestamp": "2026-10-06T02:11:16.940338"
+  }
+]
