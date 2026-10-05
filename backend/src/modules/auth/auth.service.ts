@@ -131,6 +131,7 @@ export class AuthService {
   async login(dto: LoginDto) {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email.toLowerCase() },
+      include: { region: true },
     });
 
     if (!user) {
@@ -172,6 +173,7 @@ export class AuthService {
         role: user.role,
         status: user.status,
         regionId: user.regionId,
+        region: user.region,
       },
       ...tokens,
     };

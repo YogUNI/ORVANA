@@ -313,7 +313,18 @@ export class MasterDataService {
 
     return this.prisma.priceReference.findMany({
       where,
-      include: { commodity: true, region: true },
+      include: {
+        commodity: true,
+        region: true,
+        setBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
+      },
       orderBy: { validFrom: 'desc' },
     });
   }

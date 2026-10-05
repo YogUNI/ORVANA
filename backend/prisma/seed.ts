@@ -16,13 +16,16 @@ export async function main() {
   const region = await prisma.region.upsert({
     where: {
       name_province: {
-        name: 'Kabupaten Demo',
+        name: 'Kabupaten Bogor',
         province: 'Jawa Barat',
       },
     },
-    update: {},
+    update: {
+      name: 'Kabupaten Bogor',
+      province: 'Jawa Barat',
+    },
     create: {
-      name: 'Kabupaten Demo',
+      name: 'Kabupaten Bogor',
       province: 'Jawa Barat',
     },
   });
@@ -35,9 +38,9 @@ export async function main() {
   // A. ADMIN
   const admin = await prisma.user.upsert({
     where: { email: 'admin@orvana.test' },
-    update: { status: UserStatus.ACTIVE, role: Role.ADMIN, regionId: region.id },
+    update: { status: UserStatus.ACTIVE, role: Role.ADMIN, regionId: region.id, name: 'Admin Dinas Ketahanan Pangan' },
     create: {
-      name: 'Admin Dinas Demo',
+      name: 'Admin Dinas Ketahanan Pangan',
       email: 'admin@orvana.test',
       passwordHash,
       role: Role.ADMIN,
@@ -78,19 +81,20 @@ export async function main() {
   const kitchenA = await prisma.kitchen.upsert({
     where: { code: 'DPR01' },
     update: {
-      name: 'Dapur Gizi Demo A',
+      name: 'Dapur Gizi Cibinong',
+      address: 'Jl. Raya Tegar Beriman No. 1, Cibinong, Kabupaten Bogor',
       portionCapacity: 1000,
-      latitude: -6.6000,
-      longitude: 106.8000,
+      latitude: -6.4800,
+      longitude: 106.8400,
       managerId: kitchenManagerA.id,
       regionId: region.id,
     },
     create: {
       code: 'DPR01',
-      name: 'Dapur Gizi Demo A',
-      address: 'Jl. Dapur Sehat No. 1, Kabupaten Demo',
-      latitude: -6.6000,
-      longitude: 106.8000,
+      name: 'Dapur Gizi Cibinong',
+      address: 'Jl. Raya Tegar Beriman No. 1, Cibinong, Kabupaten Bogor',
+      latitude: -6.4800,
+      longitude: 106.8400,
       portionCapacity: 1000,
       managerId: kitchenManagerA.id,
       regionId: region.id,
@@ -100,19 +104,20 @@ export async function main() {
   const kitchenB = await prisma.kitchen.upsert({
     where: { code: 'DPR02' },
     update: {
-      name: 'Dapur Gizi Demo B',
+      name: 'Dapur Gizi Ciawi',
+      address: 'Jl. Raya Puncak No. 45, Ciawi, Kabupaten Bogor',
       portionCapacity: 600,
-      latitude: -6.6400,
-      longitude: 106.8500,
+      latitude: -6.6500,
+      longitude: 106.8600,
       managerId: kitchenManagerB.id,
       regionId: region.id,
     },
     create: {
       code: 'DPR02',
-      name: 'Dapur Gizi Demo B',
-      address: 'Jl. Gizi Sejahtera No. 2, Kabupaten Demo',
-      latitude: -6.6400,
-      longitude: 106.8500,
+      name: 'Dapur Gizi Ciawi',
+      address: 'Jl. Raya Puncak No. 45, Ciawi, Kabupaten Bogor',
+      latitude: -6.6500,
+      longitude: 106.8600,
       portionCapacity: 600,
       managerId: kitchenManagerB.id,
       regionId: region.id,
@@ -268,7 +273,7 @@ export async function main() {
         userId: user.id,
         displayName: s.displayName,
         type: s.type,
-        address: `Desa ${s.village}, Kabupaten Demo`,
+        address: `Desa ${s.village}, Kabupaten Bogor`,
         village: s.village,
         latitude: s.lat,
         longitude: s.lng,
@@ -286,17 +291,17 @@ export async function main() {
   const coordinatorsData = [
     {
       email: 'koordinator1@orvana.test',
-      name: 'Koperasi Lumbung Desa',
-      orgName: 'Koperasi Lumbung Desa',
-      pointName: 'Titik Kumpul Sukamaju',
+      name: 'Koperasi Lumbung Tani Sukamaju',
+      orgName: 'Koperasi Lumbung Tani Sukamaju',
+      pointName: 'Titik Kumpul Sukamaju Cibinong',
       lat: -6.5700,
       lng: 106.8100,
     },
     {
       email: 'koordinator2@orvana.test',
-      name: 'Pengepul Bersama',
-      orgName: 'Pengepul Bersama',
-      pointName: 'Titik Kumpul Mekarsari',
+      name: 'Pengepul Bersama Ciawi',
+      orgName: 'Pengepul Bersama Ciawi',
+      pointName: 'Titik Kumpul Mekarsari Ciawi',
       lat: -6.5500,
       lng: 106.8900,
     },
@@ -305,7 +310,7 @@ export async function main() {
   for (const c of coordinatorsData) {
     const user = await prisma.user.upsert({
       where: { email: c.email },
-      update: { status: UserStatus.ACTIVE, role: Role.COORDINATOR, regionId: region.id },
+      update: { status: UserStatus.ACTIVE, role: Role.COORDINATOR, regionId: region.id, name: c.name },
       create: {
         name: c.name,
         email: c.email,
@@ -321,6 +326,7 @@ export async function main() {
       update: {
         organizationName: c.orgName,
         collectionPointName: c.pointName,
+        address: `Titik Kumpul ${c.pointName}, Kabupaten Bogor`,
         latitude: c.lat,
         longitude: c.lng,
         regionId: region.id,
@@ -329,7 +335,7 @@ export async function main() {
         userId: user.id,
         organizationName: c.orgName,
         collectionPointName: c.pointName,
-        address: `Titik Kumpul ${c.pointName}, Kabupaten Demo`,
+        address: `Titik Kumpul ${c.pointName}, Kabupaten Bogor`,
         latitude: c.lat,
         longitude: c.lng,
         regionId: region.id,
@@ -341,9 +347,9 @@ export async function main() {
   // E. QUALITY INSPECTOR
   const inspector = await prisma.user.upsert({
     where: { email: 'mutu@orvana.test' },
-    update: { status: UserStatus.ACTIVE, role: Role.QUALITY_INSPECTOR, regionId: region.id },
+    update: { status: UserStatus.ACTIVE, role: Role.QUALITY_INSPECTOR, regionId: region.id, name: 'Pengawas Mutu Pangan Dinas' },
     create: {
-      name: 'Pengawas Mutu Demo',
+      name: 'Pengawas Mutu Pangan Dinas',
       email: 'mutu@orvana.test',
       passwordHash,
       role: Role.QUALITY_INSPECTOR,
@@ -356,9 +362,9 @@ export async function main() {
   // F. AUDITOR
   const auditor = await prisma.user.upsert({
     where: { email: 'auditor@orvana.test' },
-    update: { status: UserStatus.ACTIVE, role: Role.AUDITOR, regionId: region.id },
+    update: { status: UserStatus.ACTIVE, role: Role.AUDITOR, regionId: region.id, name: 'Auditor Inspektorat Daerah' },
     create: {
-      name: 'Auditor Publik Demo',
+      name: 'Auditor Inspektorat Daerah',
       email: 'auditor@orvana.test',
       passwordHash,
       role: Role.AUDITOR,
@@ -419,7 +425,7 @@ export async function main() {
       },
     });
 
-    // Harga Acuan (wilayah Kabupaten Demo, diset oleh Admin)
+    // Harga Acuan (wilayah Kabupaten Bogor, diset oleh Admin)
     const existingPriceRef = await prisma.priceReference.findFirst({
       where: {
         commodityId: commodity.id,

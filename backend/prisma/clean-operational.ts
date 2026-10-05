@@ -29,6 +29,43 @@ async function cleanOperationalData() {
   await prisma.demandRequest.deleteMany();
   await prisma.menuPlan.deleteMany();
 
+  console.log('  -> Memperbarui nama wilayah resmi dan akun operasional...');
+  // Perbarui nama wilayah jika masih 'Kabupaten Demo'
+  await prisma.region.updateMany({
+    where: { name: 'Kabupaten Demo' },
+    data: { name: 'Kabupaten Bogor' },
+  });
+
+  // Perbarui nama tampilan akun admin, pengawas, dan auditor
+  await prisma.user.updateMany({
+    where: { email: 'admin@orvana.test' },
+    data: { name: 'Admin Dinas Ketahanan Pangan' },
+  });
+  await prisma.user.updateMany({
+    where: { email: 'mutu@orvana.test' },
+    data: { name: 'Pengawas Mutu Pangan Dinas' },
+  });
+  await prisma.user.updateMany({
+    where: { email: 'auditor@orvana.test' },
+    data: { name: 'Auditor Inspektorat Daerah' },
+  });
+
+  // Perbarui nama dapur jika masih berbau demo
+  await prisma.kitchen.updateMany({
+    where: { code: 'DPR01' },
+    data: {
+      name: 'Dapur Gizi Cibinong',
+      address: 'Jl. Raya Tegar Beriman No. 1, Cibinong, Kabupaten Bogor',
+    },
+  });
+  await prisma.kitchen.updateMany({
+    where: { code: 'DPR02' },
+    data: {
+      name: 'Dapur Gizi Ciawi',
+      address: 'Jl. Raya Puncak No. 45, Ciawi, Kabupaten Bogor',
+    },
+  });
+
   console.log('✅ Semua data transaksi/pesanan demo telah dibersihkan 100%!');
   console.log('💡 Akun login per role (Admin, Dapur, Petani, Koordinator, QC, Auditor) serta Master Data komoditas & resep tetap siap dipakai untuk testing manual Anda.');
 }

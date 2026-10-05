@@ -150,7 +150,7 @@ export class MarketPriceSyncService {
         const floorPrice = Math.round((refPrice * benchmark.floorRatio) / 100) * 100;
         const ceilingPrice = Math.round((refPrice * benchmark.ceilingRatio) / 100) * 100;
 
-        // Tutup entri aktif sebelumnya untuk komoditas & wilayah ini
+        // Periksa apakah sudah ada entri aktif untuk komoditas & wilayah ini
         const activePrevious = await tx.priceReference.findFirst({
           where: {
             commodityId: comm.id,
@@ -160,15 +160,37 @@ export class MarketPriceSyncService {
           orderBy: { validFrom: 'desc' },
         });
 
+        // Cari user admin pertama jika actorId = SYSTEM atau SYSTEM_CRON
+        let setterId = actorId;
+        if (setterId === 'SYSTEM' || setterId === 'SYSTEM_CRON') {
+          const firstAdmin = await tx.user.findFirst({ where: { role: 'ADMIN' } });
+          setterId = firstAdmin?.id || actorId;
+        }
+
         if (activePrevious) {
-          if (
-            Number(activePrevious.referencePrice) === refPrice &&
-            Number(activePrevious.floorPrice) === floorPrice &&
-            Number(activePrevious.ceilingPrice) === ceilingPrice
-          ) {
+          // Jika entri aktif bertanggal hari ini, update langsung in-place
+          const prevDateStr = new Date(activePrevious.validFrom).toISOString().split('T')[0];
+          if (prevDateStr === todayStr) {
+            await tx.priceReference.update({
+              where: { id: activePrevious.id },
+              data: {
+                floorPrice,
+                referencePrice: refPrice,
+                ceilingPrice,
+                setById: setterId,
+              },
+            });
+            updatedCount++;
+            syncedItems.push({
+              commodity: comm.name,
+              floorPrice,
+              referencePrice: refPrice,
+              ceilingPrice,
+            });
             continue;
           }
 
+          // Jika entri aktif dari tanggal sebelum hari ini, tutup masa berlakunya kemarin
           const dayBefore = new Date(validFromDate);
           dayBefore.setDate(dayBefore.getDate() - 1);
 
@@ -176,13 +198,6 @@ export class MarketPriceSyncService {
             where: { id: activePrevious.id },
             data: { validTo: dayBefore },
           });
-        }
-
-        // Cari user admin pertama jika actorId = SYSTEM
-        let setterId = actorId;
-        if (setterId === 'SYSTEM' || setterId === 'SYSTEM_CRON') {
-          const firstAdmin = await tx.user.findFirst({ where: { role: 'ADMIN' } });
-          setterId = firstAdmin?.id || actorId;
         }
 
         // Simpan harga acuan baru terverifikasi

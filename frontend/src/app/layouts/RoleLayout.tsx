@@ -227,8 +227,9 @@ export const RoleLayout: React.FC = () => {
         {/* Desktop Topbar */}
         <header className="hidden md:flex h-16 bg-white/80 backdrop-blur-xs border-b border-surface-border px-8 items-center justify-between sticky top-0 z-20">
           <div className="flex items-center gap-3">
-            <span className="text-xs font-mono text-stone-500 bg-stone-100 px-2.5 py-1 rounded-md border border-stone-200">
-              Wilayah Operasional: <strong>{user.regionId || 'Provinsi DIY'}</strong>
+            <span className="text-xs font-mono text-stone-600 bg-stone-100 px-3 py-1.5 rounded-md border border-stone-200 flex items-center gap-1.5">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              Wilayah Operasional: <strong className="text-stone-900 font-semibold">{user.region?.name || 'Kabupaten Bogor'}</strong>
             </span>
           </div>
 

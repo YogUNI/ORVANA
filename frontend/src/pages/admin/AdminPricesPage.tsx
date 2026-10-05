@@ -34,6 +34,12 @@ interface PriceReference {
   validTo?: string | null;
   commodity?: Commodity;
   region?: Region;
+  setBy?: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  };
 }
 
 export const AdminPricesPage: React.FC = () => {
@@ -294,6 +300,7 @@ export const AdminPricesPage: React.FC = () => {
                   <th className="px-5 py-3.5 text-right text-brand">Harga Acuan</th>
                   <th className="px-5 py-3.5 text-right text-gray-800">Batas Atas</th>
                   <th className="px-5 py-3.5 text-center">Berlaku Sejak</th>
+                  <th className="px-5 py-3.5">Sumber / Dasar Regulasi</th>
                   <th className="px-5 py-3.5 text-center">Status</th>
                 </tr>
               </thead>
@@ -306,7 +313,8 @@ export const AdminPricesPage: React.FC = () => {
                         {p.commodity?.name || 'Komoditas'}
                       </td>
                       <td className="px-5 py-4 text-gray-700">
-                        {p.region?.name || 'Wilayah'}
+                        <div className="font-medium text-stone-900">{p.region?.name || 'Kabupaten Bogor'}</div>
+                        <div className="text-[11px] text-stone-400">{p.region?.province || 'Jawa Barat'}</div>
                       </td>
                       <td className="px-5 py-4 text-right font-medium text-amber-700">
                         {formatRupiah(p.floorPrice)}
@@ -319,6 +327,12 @@ export const AdminPricesPage: React.FC = () => {
                       </td>
                       <td className="px-5 py-4 text-center text-xs text-gray-600">
                         {formatDate(p.validFrom)}
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          <span>Panel Bapanas & PIHPS BI</span>
+                        </div>
                       </td>
                       <td className="px-5 py-4 text-center">
                         <Badge color={isActive ? 'success' : 'neutral'}>
