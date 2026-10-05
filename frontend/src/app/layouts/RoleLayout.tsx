@@ -102,9 +102,7 @@ export const RoleLayout: React.FC = () => {
         <div className="space-y-6">
           {/* Logo & Header Peran */}
           <div className="flex items-center gap-3 pb-4 border-b border-surface-border">
-            <span className="w-10 h-10 rounded-card bg-brand flex items-center justify-center text-white font-serif font-black text-2xl shadow-sm border border-brand-light">
-              O
-            </span>
+            <img src="/logo-icon.svg" alt="ORVANA" className="w-10 h-10 object-contain drop-shadow-sm" />
             <div>
               <span className="font-heading font-extrabold text-lg text-gray-950 block leading-tight tracking-tight">
                 ORVANA
@@ -160,9 +158,7 @@ export const RoleLayout: React.FC = () => {
       {/* Header Mobile */}
       <header className="md:hidden bg-white border-b border-surface-border px-4 h-14 flex items-center justify-between sticky top-0 z-30 shadow-sm">
         <div className="flex items-center gap-2.5">
-          <span className="w-8 h-8 rounded-DEFAULT bg-brand flex items-center justify-center text-white font-serif font-bold text-lg">
-            O
-          </span>
+          <img src="/logo-icon.svg" alt="ORVANA" className="w-8 h-8 object-contain" />
           <span className="font-heading font-extrabold text-base text-gray-950 tracking-tight">ORVANA</span>
           <span className="text-[10px] font-mono text-emerald-800 bg-emerald-50 px-1 rounded">
             {ROLE_LABELS[user.role]}

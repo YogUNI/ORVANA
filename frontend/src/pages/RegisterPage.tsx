@@ -88,10 +88,8 @@ export const RegisterPage: React.FC = () => {
       <div className="max-w-xl mx-auto">
         <div className="text-center mb-6">
           <Link to="/" className="inline-flex items-center gap-2.5 mb-2">
-            <span className="w-9 h-9 rounded-xl bg-pine-900 flex items-center justify-center text-white font-serif font-black text-xl shadow-sm border border-pine-700">
-              O
-            </span>
-            <span className="font-serif font-bold text-2xl text-pine-950">ORVANA</span>
+            <img src="/logo-icon.svg" alt="ORVANA" className="w-10 h-10 object-contain drop-shadow-sm" />
+            <span className="font-heading font-extrabold text-2xl text-pine-950 tracking-tight">ORVANA</span>
           </Link>
           <h2 className="font-serif font-bold text-2xl text-pine-950">
             Daftar Akun Baru

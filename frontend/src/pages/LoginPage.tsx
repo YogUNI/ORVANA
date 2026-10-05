@@ -37,10 +37,8 @@ export const LoginPage: React.FC = () => {
     <div className="min-h-screen bg-surface flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <Link to="/" className="inline-flex items-center gap-2.5 mb-4">
-          <span className="w-10 h-10 rounded-xl bg-pine-900 flex items-center justify-center text-white font-serif font-black text-2xl shadow-sm border border-pine-700">
-            O
-          </span>
-          <span className="font-serif font-bold text-2xl text-pine-950 tracking-tight">
+          <img src="/logo-icon.svg" alt="ORVANA" className="w-11 h-11 object-contain drop-shadow-sm" />
+          <span className="font-heading font-extrabold text-2xl text-pine-950 tracking-tight">
             ORVANA
           </span>
         </Link>

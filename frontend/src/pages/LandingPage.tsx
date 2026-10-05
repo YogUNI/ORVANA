@@ -56,9 +56,7 @@ export const LandingPage: React.FC = () => {
       <header className="bg-white/80 backdrop-blur-md border-b border-surface-border sticky top-0 z-30 shadow-xs">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-18 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="w-10 h-10 rounded-card bg-brand flex items-center justify-center text-white font-serif font-black text-2xl shadow-sm border border-brand-light">
-              O
-            </span>
+            <img src="/logo-icon.svg" alt="ORVANA" className="w-10 h-10 object-contain drop-shadow-sm" />
             <div>
               <span className="font-heading font-extrabold text-xl text-gray-950 tracking-tight block leading-tight">
                 ORVANA
