@@ -97,11 +97,11 @@ export const RoleLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-surface">
-      {/* Sidebar Desktop */}
-      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-surface-border p-5 shrink-0 justify-between shadow-soft">
-        <div className="space-y-6">
-          {/* Logo & Header Peran */}
-          <div className="flex items-center gap-3 pb-4 border-b border-surface-border">
+      {/* Sidebar Desktop: Posisi Fixed/Sticky Setinggi Layar Viewport */}
+      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-surface-border p-5 shrink-0 justify-between shadow-soft sticky top-0 h-screen z-30">
+        <div className="flex flex-col min-h-0 flex-1">
+          {/* Logo & Header Peran (Fixed di Atas Sidebar) */}
+          <div className="flex items-center gap-3 pb-4 border-b border-surface-border shrink-0">
             <img src="/logo-icon.svg" alt="ORVANA" className="w-10 h-10 object-contain drop-shadow-sm" />
             <div>
               <span className="font-heading font-extrabold text-lg text-gray-950 block leading-tight tracking-tight">
@@ -113,8 +113,8 @@ export const RoleLayout: React.FC = () => {
             </div>
           </div>
 
-          {/* Navigasi Links */}
-          <nav className="space-y-1">
+          {/* Navigasi Links dengan Scroll Internal jika item sangat banyak */}
+          <nav className="space-y-1 py-4 overflow-y-auto flex-1 pr-1 custom-scrollbar">
             {navLinks.map((item) => {
               const Icon = item.icon;
               return (
@@ -137,8 +137,8 @@ export const RoleLayout: React.FC = () => {
           </nav>
         </div>
 
-        {/* User Card & Logout */}
-        <div className="pt-4 border-t border-surface-border space-y-3">
+        {/* User Card & Logout (Tetap Terkunci Rapi di Bawah Sidebar Viewport) */}
+        <div className="pt-4 border-t border-surface-border space-y-3 shrink-0">
           <div className="p-3 bg-surface-muted/70 rounded-DEFAULT border border-surface-border">
             <p className="text-xs font-heading font-bold text-gray-900 truncate">{user.name}</p>
             <p className="text-[11px] text-gray-500 truncate mt-0.5 font-mono">{user.email}</p>

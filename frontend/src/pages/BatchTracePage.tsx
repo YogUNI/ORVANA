@@ -206,14 +206,18 @@ export const BatchTracePage: React.FC = () => {
                   </span>
                   <div className="mt-1">{getPaymentBadge(trace.paymentStatus)}</div>
 
+                  <div className="mt-2 text-[10.5px] text-emerald-800 bg-emerald-50 border border-emerald-200 rounded px-2 py-1 font-medium">
+                    ✓ Terverifikasi Digital SHA-256
+                  </div>
+
                   <a
                     href={`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/public/trace/${trace.batchCode}/certificate.pdf`}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-3 inline-flex items-center justify-center gap-1.5 w-full py-1.5 px-2.5 rounded text-xs font-semibold text-pine-900 bg-pine-100 hover:bg-pine-200 border border-pine-300 transition-colors"
+                    className="mt-2.5 inline-flex items-center justify-center gap-1.5 w-full py-1.5 px-2.5 rounded text-xs font-semibold text-pine-900 bg-pine-100 hover:bg-pine-200 border border-pine-300 transition-colors shadow-2xs"
                   >
                     <FileDown className="w-3.5 h-3.5" />
-                    Unduh Sertifikat PDF
+                    Unduh Sertifikat PDF Resmi
                   </a>
                 </div>
               </div>

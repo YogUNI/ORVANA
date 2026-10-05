@@ -249,17 +249,17 @@ export const SupplierOrdersPage: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {proposedOrders.map((ord) => (
-              <Card
+              <div
                 key={ord.id}
-                className="p-5 border-l-4 border-l-amber-500 bg-white shadow-sm flex flex-col justify-between"
+                className="p-5 bg-white border border-surface-border rounded-card shadow-soft hover:border-brand-border transition-colors flex flex-col justify-between"
               >
                 <div>
                   <div className="flex justify-between items-start mb-2">
                     <div>
-                      <span className="text-xs font-mono font-bold text-gray-500 block">
+                      <span className="text-xs font-mono font-bold text-gray-400 block">
                         {ord.orderNo}
                       </span>
-                      <h3 className="font-heading font-bold text-lg text-gray-900">
+                      <h3 className="font-heading font-bold text-lg text-gray-950 mt-0.5">
                         {ord.commodity.name}
                       </h3>
                     </div>
@@ -267,35 +267,35 @@ export const SupplierOrdersPage: React.FC = () => {
                   </div>
 
                   <div className="flex items-center gap-1.5 text-xs text-gray-600 mb-4">
-                    <MapPin className="w-3.5 h-3.5 text-gray-400" />
+                    <MapPin className="w-3.5 h-3.5 text-pine-700" />
                     <span>
-                      Tujuan: <strong>{ord.kitchen.name}</strong> ({ord.kitchen.code})
+                      Dapur Pemesan: <strong className="text-gray-900">{ord.kitchen.name}</strong> ({ord.kitchen.code})
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2 bg-gray-50 p-3 rounded-lg border border-gray-100 text-xs mb-4">
+                  <div className="grid grid-cols-3 gap-2 bg-surface-muted/60 p-3.5 rounded-lg border border-surface-border text-xs mb-4">
                     <div>
-                      <span className="text-gray-400 block">Kuantitas</span>
-                      <span className="font-bold text-gray-900 font-mono text-sm">
+                      <span className="text-gray-500 text-[11px] block">Kuantitas Diminta</span>
+                      <span className="font-bold text-gray-950 font-mono text-sm">
                         {formatKg(ord.quantity)}
                       </span>
                     </div>
                     <div>
-                      <span className="text-gray-400 block">Harga Tawaran</span>
-                      <span className="font-bold text-gray-900 font-mono text-sm">
+                      <span className="text-gray-500 text-[11px] block">Harga Satuan</span>
+                      <span className="font-bold text-gray-950 font-mono text-sm">
                         {formatRupiah(ord.pricePerUnit)}
                       </span>
                     </div>
                     <div>
-                      <span className="text-gray-400 block">Total Komitmen</span>
-                      <span className="font-bold text-brand font-mono text-sm">
+                      <span className="text-gray-500 text-[11px] block">Total Nilai Order</span>
+                      <span className="font-bold text-emerald-800 font-mono text-sm">
                         {formatRupiah(ord.totalPrice)}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
+                <div className="flex items-center gap-2 pt-3 border-t border-surface-border">
                   <Button
                     onClick={() => {
                       if (
@@ -309,10 +309,10 @@ export const SupplierOrdersPage: React.FC = () => {
                       }
                     }}
                     isLoading={acceptMutation.isPending}
-                    className="flex-1 bg-brand text-white hover:bg-brand-hover text-xs font-semibold py-2"
+                    className="flex-1 bg-brand text-white hover:bg-brand-hover text-xs font-semibold py-2.5 shadow-xs"
                   >
                     <CheckCircle2 className="w-4 h-4 mr-1.5" />
-                    Sanggupi Tawaran
+                    Sanggupi Pesanan Ini
                   </Button>
 
                   <Button
@@ -322,78 +322,140 @@ export const SupplierOrdersPage: React.FC = () => {
                       setRejectError('');
                       setRejectionReason('');
                     }}
-                    className="border-gray-200 text-gray-600 hover:text-status-danger hover:border-red-200 text-xs py-2"
+                    className="border-surface-border text-gray-600 hover:text-status-danger hover:border-red-200 text-xs py-2.5 px-3"
                   >
                     <XCircle className="w-4 h-4 mr-1" />
                     Tolak
                   </Button>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         )
       ) : activeTab === 'ACTIVE' ? (
         /* Tab Pesanan Sedang Berjalan */
         activeOrders.length === 0 ? (
-          <Card className="p-8 text-center text-gray-500">
-            <Truck className="w-8 h-8 mx-auto mb-2 text-gray-300 stroke-1" />
-            <p className="font-semibold text-gray-700">Belum ada pesanan aktif.</p>
-            <p className="text-xs text-gray-400 mt-1">
+          <Card className="p-8 text-center text-stone-500 bg-white border border-surface-border">
+            <Truck className="w-8 h-8 mx-auto mb-2 text-stone-300 stroke-1" />
+            <p className="font-semibold text-stone-800">Belum ada pesanan aktif.</p>
+            <p className="text-xs text-stone-500 mt-1 max-w-md mx-auto">
               Pesanan yang telah disanggupi akan diproses oleh koordinator wilayah untuk penjemputan dan pengiriman ke dapur.
             </p>
           </Card>
         ) : (
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {activeOrders.map((ord) => {
               const statusMeta = ORDER_STATUS_LABELS[ord.status] || {
                 label: ord.status,
                 color: 'neutral',
               };
+
+              const getStageProgress = (status: string) => {
+                switch (status) {
+                  case 'ACCEPTED':
+                    return { step: 1, label: 'Menunggu Penjemputan Koordinator', sub: 'Siapkan komoditas di titik jemput' };
+                  case 'CONSOLIDATED':
+                    return { step: 2, label: 'Terkonsolidasi di Pengiriman', sub: 'Muatan telah digabung oleh kurir/pengepul' };
+                  case 'IN_TRANSIT':
+                    return { step: 3, label: 'Dalam Perjalanan Menuju Dapur', sub: 'Armada logistik sedang meluncur' };
+                  case 'DELIVERED':
+                    return { step: 4, label: 'Tiba di Dapur Gizi', sub: 'Menunggu proses inspeksi mutu QC' };
+                  default:
+                    return { step: 1, label: statusMeta.label, sub: '' };
+                }
+              };
+
+              const stageInfo = getStageProgress(ord.status);
+
               return (
-                <Card key={ord.id} className="p-4 bg-white shadow-sm">
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono font-bold text-gray-900 text-sm">
+                <div
+                  key={ord.id}
+                  className="p-5 bg-white border border-surface-border rounded-card shadow-soft hover:border-brand-border transition-colors flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex justify-between items-start mb-2.5">
+                      <div>
+                        <span className="text-xs font-mono font-bold text-stone-400 block">
                           {ord.orderNo}
                         </span>
-                        <Badge color={statusMeta.color}>{statusMeta.label}</Badge>
+                        <h3 className="font-heading font-bold text-base text-stone-900 mt-0.5">
+                          {ord.commodity.name}
+                        </h3>
                       </div>
-                      <p className="font-heading font-bold text-base text-gray-900 mt-0.5">
-                        {ord.commodity.name} - {formatKg(ord.quantity)}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Tujuan: {ord.kitchen.name} • Kesepakatan: {formatRupiah(ord.totalPrice)}
-                      </p>
+                      <Badge color={statusMeta.color}>{statusMeta.label}</Badge>
                     </div>
 
-                    <div className="text-left sm:text-right">
-                      <span className="text-xs text-gray-400 block">Status Operasional</span>
-                      <span className="text-xs font-semibold text-gray-700">
-                        {ord.status === 'ACCEPTED'
-                          ? 'Menunggu Penjemputan Koordinator'
-                          : ord.status === 'CONSOLIDATED'
-                          ? 'Tergabung dalam Pengiriman'
-                          : ord.status === 'IN_TRANSIT'
-                          ? 'Sedang Dalam Perjalanan'
-                          : 'Telah Diterima di Dapur'}
+                    <div className="flex items-center gap-1.5 text-xs text-stone-600 mb-3.5">
+                      <MapPin className="w-3.5 h-3.5 text-pine-700 shrink-0" />
+                      <span>
+                        Dapur Pemesan: <strong className="text-stone-900">{ord.kitchen.name}</strong>
                       </span>
-                      {ord.batch && (
-                        <div className="mt-2 flex items-center sm:justify-end gap-2">
-                          <a
-                            href={`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/public/trace/${ord.batch.batchCode}/qr.png`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-1 text-xs text-pine-700 hover:text-pine-900 font-semibold"
-                          >
-                            <QrCode className="w-3.5 h-3.5" />
-                            QR Batch
-                          </a>
-                        </div>
-                      )}
+                    </div>
+
+                    {/* Metrik Nilai & Kuantitas */}
+                    <div className="grid grid-cols-2 gap-2 bg-surface-muted/60 p-3 rounded-lg border border-surface-border text-xs mb-3.5">
+                      <div>
+                        <span className="text-stone-500 text-[11px] block">Kuantitas Komitmen</span>
+                        <span className="font-bold text-stone-900 font-mono text-sm">
+                          {formatKg(ord.quantity)}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-stone-500 text-[11px] block">Total Nilai Terkunci</span>
+                        <span className="font-bold text-brand font-mono text-sm">
+                          {formatRupiah(ord.totalPrice)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Progress Tahapan Operasional */}
+                    <div className="p-3 bg-stone-50/80 rounded-lg border border-stone-200/80 mb-3">
+                      <div className="flex items-center justify-between text-xs mb-1.5">
+                        <span className="font-semibold text-stone-800 flex items-center gap-1.5">
+                          <Truck className="w-3.5 h-3.5 text-pine-700" />
+                          {stageInfo.label}
+                        </span>
+                        <span className="text-[11px] font-mono text-stone-400">
+                          Tahap {stageInfo.step}/4
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-stone-500">
+                        {stageInfo.sub}
+                      </p>
+                      {/* Baris Tracker Mini */}
+                      <div className="grid grid-cols-4 gap-1.5 mt-2">
+                        {[1, 2, 3, 4].map((s) => (
+                          <div
+                            key={s}
+                            className={`h-1.5 rounded-full ${
+                              s <= stageInfo.step ? 'bg-pine-700' : 'bg-stone-200'
+                            }`}
+                          />
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </Card>
+
+                  {/* Batch Traceability Link */}
+                  {ord.batch && (
+                    <div className="pt-3 border-t border-surface-border flex items-center justify-between">
+                      <div className="text-[11px] font-mono text-stone-500">
+                        Batch: <span className="text-stone-800 font-bold">{ord.batch.batchCode}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <a
+                          href={`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/public/trace/${ord.batch.batchCode}/qr.png`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 text-xs text-pine-800 hover:text-pine-950 font-semibold px-2 py-1 bg-pine-50 rounded border border-pine-200"
+                        >
+                          <QrCode className="w-3.5 h-3.5" />
+                          QR Code
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
@@ -401,50 +463,53 @@ export const SupplierOrdersPage: React.FC = () => {
       ) : (
         /* Tab Riwayat Selesai */
         historyOrders.length === 0 ? (
-          <Card className="p-8 text-center text-gray-500">
-            <p className="font-semibold text-gray-700">Belum ada riwayat pesanan selesai.</p>
+          <Card className="p-8 text-center text-stone-500 bg-white border border-surface-border">
+            <p className="font-semibold text-stone-800">Belum ada riwayat pesanan selesai.</p>
+            <p className="text-xs text-stone-500 mt-1">
+              Seluruh pesanan yang telah dibayar (PAID) atau selesai pemeriksaan mutu akan terarsip di sini.
+            </p>
           </Card>
         ) : (
-          <div className="overflow-x-auto bg-white rounded-lg border border-gray-200">
-            <table className="w-full text-left text-sm text-gray-600">
-              <thead className="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-700 uppercase">
+          <div className="overflow-x-auto bg-white rounded-card border border-surface-border shadow-soft">
+            <table className="w-full text-left text-sm text-stone-600">
+              <thead className="bg-surface-muted border-b border-surface-border text-xs font-semibold text-stone-700 uppercase tracking-wider">
                 <tr>
-                  <th className="px-4 py-3">No. Order</th>
-                  <th className="px-4 py-3">Komoditas</th>
-                  <th className="px-4 py-3">Dapur Tujuan</th>
-                  <th className="px-4 py-3 text-right">Kuantitas</th>
-                  <th className="px-4 py-3 text-right">Total Komitmen</th>
-                  <th className="px-4 py-3 text-center">Status Akhir</th>
-                  <th className="px-4 py-3 text-center">Aksi</th>
+                  <th className="px-4 py-3.5">No. Order</th>
+                  <th className="px-4 py-3.5">Komoditas</th>
+                  <th className="px-4 py-3.5">Dapur Tujuan</th>
+                  <th className="px-4 py-3.5 text-right">Kuantitas</th>
+                  <th className="px-4 py-3.5 text-right">Total Transaksi</th>
+                  <th className="px-4 py-3.5 text-center">Status Akhir</th>
+                  <th className="px-4 py-3.5 text-center">Dokumen & Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-surface-border">
                 {historyOrders.map((ord) => {
                   const statusMeta = ORDER_STATUS_LABELS[ord.status] || {
                     label: ord.status,
                     color: 'neutral',
                   };
                   return (
-                    <tr key={ord.id} className="hover:bg-gray-50/75">
-                      <td className="px-4 py-3 font-mono font-bold text-gray-900">
+                    <tr key={ord.id} className="hover:bg-stone-50/75 transition-colors">
+                      <td className="px-4 py-3.5 font-mono font-bold text-stone-900 text-xs">
                         {ord.orderNo}
                       </td>
-                      <td className="px-4 py-3 font-medium text-gray-900">
+                      <td className="px-4 py-3.5 font-medium text-stone-900">
                         {ord.commodity.name}
                       </td>
-                      <td className="px-4 py-3 text-xs text-gray-600">
+                      <td className="px-4 py-3.5 text-xs text-stone-600">
                         {ord.kitchen.name}
                       </td>
-                      <td className="px-4 py-3 text-right font-mono font-semibold text-gray-900">
+                      <td className="px-4 py-3.5 text-right font-mono font-semibold text-stone-900 text-xs">
                         {formatKg(ord.quantity)}
                       </td>
-                      <td className="px-4 py-3 text-right font-mono font-bold text-brand">
+                      <td className="px-4 py-3.5 text-right font-mono font-bold text-emerald-800 text-xs">
                         {formatRupiah(ord.totalPrice)}
                       </td>
-                      <td className="px-4 py-3 text-center">
+                      <td className="px-4 py-3.5 text-center">
                         <Badge color={statusMeta.color}>{statusMeta.label}</Badge>
                       </td>
-                      <td className="px-4 py-3 text-center">
+                      <td className="px-4 py-3.5 text-center">
                         <div className="flex items-center justify-center gap-1.5 flex-wrap">
                           {ord.batch && (
                             <>
@@ -453,7 +518,7 @@ export const SupplierOrdersPage: React.FC = () => {
                                 target="_blank"
                                 rel="noreferrer"
                                 title="Unduh QR Code Batch"
-                                className="p-1.5 rounded border border-stone-200 text-stone-600 hover:bg-stone-50 transition-colors"
+                                className="p-1.5 rounded border border-surface-border text-stone-600 hover:bg-stone-100 transition-colors"
                               >
                                 <QrCode className="w-3.5 h-3.5" />
                               </a>
@@ -461,8 +526,8 @@ export const SupplierOrdersPage: React.FC = () => {
                                 href={`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/public/trace/${ord.batch.batchCode}/certificate.pdf`}
                                 target="_blank"
                                 rel="noreferrer"
-                                title="Unduh Sertifikat PDF"
-                                className="p-1.5 rounded border border-pine-300 text-pine-800 bg-pine-50 hover:bg-pine-100 transition-colors"
+                                title="Unduh Sertifikat PDF Bermeterai Digital"
+                                className="p-1.5 rounded border border-pine-200 text-pine-800 bg-pine-50 hover:bg-pine-100 transition-colors"
                               >
                                 <FileDown className="w-3.5 h-3.5" />
                               </a>
@@ -479,7 +544,7 @@ export const SupplierOrdersPage: React.FC = () => {
                             </Button>
                           )}
                           {ord.status === 'DISPUTED' && (
-                            <span className="text-xs font-semibold text-amber-700">
+                            <span className="text-xs font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
                               Dalam Mediasi
                             </span>
                           )}

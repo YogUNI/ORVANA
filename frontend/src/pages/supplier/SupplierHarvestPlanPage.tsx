@@ -188,17 +188,17 @@ export const SupplierHarvestPlanPage: React.FC = () => {
           <Skeleton className="h-24 w-full" />
         </div>
       ) : plans.length === 0 ? (
-        <Card className="p-12 text-center text-stone-500 bg-white">
+        <Card className="p-12 text-center text-stone-500 bg-white border border-surface-border rounded-card">
           <CalendarDays className="w-12 h-12 text-stone-300 mx-auto mb-3 stroke-1" />
-          <p className="font-serif font-bold text-lg text-pine-900">
+          <p className="font-heading font-bold text-lg text-stone-900">
             Belum ada rencana panen yang dicatat
           </p>
-          <p className="text-xs text-stone-400 mt-1 max-w-md mx-auto">
+          <p className="text-xs text-stone-500 mt-1 max-w-md mx-auto">
             Mulailah mencatat jadwal tanam dan estimasi tanggal panen Anda agar permintaan dapur gizi dapat disesuaikan sejak dini.
           </p>
           <Button
             onClick={handleOpenCreateModal}
-            className="mt-4 bg-pine-800 hover:bg-pine-900 text-white text-xs px-4 py-2"
+            className="mt-4 bg-brand hover:bg-brand-hover text-white text-xs px-4 py-2"
           >
             <Plus className="w-4 h-4 mr-1.5" />
             Catat Panen Perdana
@@ -207,31 +207,31 @@ export const SupplierHarvestPlanPage: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {plans.map((p) => (
-            <Card
+            <div
               key={p.id}
-              className="p-5 bg-white border border-stone-200 shadow-soft flex flex-col justify-between hover:border-pine-300 transition-all"
+              className="p-5 bg-white border border-surface-border rounded-card shadow-soft flex flex-col justify-between hover:border-brand-border transition-colors"
             >
               <div>
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-serif font-bold text-lg text-pine-950">
+                  <h3 className="font-heading font-bold text-base text-stone-900">
                     {p.commodity.name}
                   </h3>
                   <Badge color="info">Proyeksi Panen</Badge>
                 </div>
 
-                <div className="space-y-1.5 text-xs text-stone-600 font-sans mt-3">
-                  <div className="flex justify-between border-b border-stone-100 pb-1">
-                    <span className="text-stone-400">Estimasi Kuantitas:</span>
-                    <strong className="font-mono text-pine-900">{formatKg(p.expectedQuantity)}</strong>
+                <div className="space-y-2 text-xs text-stone-600 mt-3">
+                  <div className="flex justify-between items-center bg-surface-muted/60 p-2 rounded border border-surface-border">
+                    <span className="text-stone-500 text-[11px]">Estimasi Kuantitas:</span>
+                    <strong className="font-mono text-stone-900 text-sm">{formatKg(p.expectedQuantity)}</strong>
                   </div>
-                  <div className="flex justify-between border-b border-stone-100 pb-1">
-                    <span className="text-stone-400">Target Tanggal Panen:</span>
-                    <strong className="font-mono text-stone-800">{formatDate(p.expectedHarvestDate)}</strong>
+                  <div className="flex justify-between items-center bg-surface-muted/60 p-2 rounded border border-surface-border">
+                    <span className="text-stone-500 text-[11px]">Target Tanggal Panen:</span>
+                    <strong className="font-mono text-stone-900">{formatDate(p.expectedHarvestDate)}</strong>
                   </div>
                   {p.notes && (
                     <div className="pt-1">
-                      <span className="text-stone-400 block mb-0.5">Catatan:</span>
-                      <p className="italic text-stone-700 bg-stone-50 p-2 rounded border border-stone-100">
+                      <span className="text-stone-400 block text-[11px] mb-0.5">Catatan Khusus:</span>
+                      <p className="text-stone-700 bg-stone-50 p-2 rounded border border-surface-border text-xs">
                         "{p.notes}"
                       </p>
                     </div>
@@ -239,11 +239,11 @@ export const SupplierHarvestPlanPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-4 mt-4 border-t border-stone-100">
+              <div className="flex justify-end gap-2 pt-3 mt-4 border-t border-surface-border">
                 <Button
                   variant="outline"
                   onClick={() => handleOpenEditModal(p)}
-                  className="text-xs py-1 px-2.5 border-stone-300 text-stone-700 hover:bg-stone-50"
+                  className="text-xs py-1 px-2.5 border-surface-border text-stone-700 hover:bg-stone-50"
                 >
                   <Edit2 className="w-3.5 h-3.5 mr-1" />
                   Ubah
@@ -255,13 +255,13 @@ export const SupplierHarvestPlanPage: React.FC = () => {
                       deleteMutation.mutate(p.id);
                     }
                   }}
-                  className="text-xs py-1 px-2.5 border-red-200 text-red-600 hover:bg-red-50"
+                  className="text-xs py-1 px-2.5 border-red-200 text-status-danger hover:bg-red-50"
                 >
                   <Trash2 className="w-3.5 h-3.5 mr-1" />
                   Hapus
                 </Button>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       )}

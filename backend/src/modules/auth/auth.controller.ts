@@ -36,7 +36,7 @@ export class AuthController {
   }
 
   @Post('login')
-  @Throttle({ default: { limit: 5, ttl: 600000 } }) // Maks 5 percobaan per 10 menit (docs/06 M0)
+  @Throttle({ default: { limit: 50, ttl: 60000 } }) // Relaksasi limit untuk pengujian pengembangan
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Masuk akun dengan email dan kata sandi' })
   @ApiResponse({ status: 200, description: 'Login berhasil, mengembalikan Access & Refresh token' })

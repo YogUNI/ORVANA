@@ -41,6 +41,27 @@ export interface CandidatePreview {
   estimatedTotal: number;
 }
 
+export interface EliminatedOffer {
+  offerId: string;
+  supplierName: string;
+  village?: string | null;
+  askingPrice: number;
+  availableQuantity: number;
+  harvestDate: string;
+  reasons: string[];
+}
+
+export interface MatchingDiagnostics {
+  totalOffersChecked: number;
+  eligibleCandidatesCount: number;
+  eliminatedCount: number;
+  eliminatedOffers: EliminatedOffer[];
+  priceCeiling: number;
+  priceFloor: number;
+  maxShelfLifeDays: number;
+  minQualityScore: number;
+}
+
 @Injectable()
 export class MatchingService {
   constructor(
@@ -52,12 +73,13 @@ export class MatchingService {
 
   /**
    * Mengambil dan memfilter kandidat pasokan yang memenuhi syarat untuk satu DemandRequest
-   * docs/04 bagian 4.1
+   * docs/04 bagian 4.1 + diagnosa cerdas untuk transparansi dapur
    */
   async findCandidates(demandId: string, testDistanceMap?: Map<string, number>): Promise<{
     demand: any;
     candidates: CandidatePreview[];
     referencePrice: number;
+    diagnostics: MatchingDiagnostics;
   }> {
     const demand = await this.prisma.demandRequest.findUnique({
       where: { id: demandId },
@@ -139,13 +161,18 @@ export class MatchingService {
     const capMax = demandQty * maxSharePerSupplier;
 
     const candidates: CandidatePreview[] = [];
+    const eliminatedOffers: EliminatedOffer[] = [];
 
     for (const offer of offers) {
       const supplier = offer.supplier;
+      const reasons: string[] = [];
 
       // 4.1 Filter: Pemasok harus ACTIVE dan belum dikecualikan
-      if (supplier.user.status !== 'ACTIVE' || excludedSupplierIds.has(supplier.id)) {
-        continue;
+      if (supplier.user.status !== 'ACTIVE') {
+        reasons.push('Akun pemasok belum aktif atau disuspend');
+      }
+      if (excludedSupplierIds.has(supplier.id)) {
+        reasons.push('Pemasok pernah menolak atau tawaran kedaluwarsa pada permintaan ini');
       }
 
       // 4.2 Filter: Stok bebas (available = quantityAvailable - quantityReserved > 0)
@@ -153,28 +180,37 @@ export class MatchingService {
         0,
         Number(offer.quantityAvailable) - Number(offer.quantityReserved),
       );
-      if (available <= 0) continue;
+      if (available <= 0) {
+        reasons.push('Stok pasokan sudah habis terpesan seluruhnya');
+      }
 
       // 4.3 Filter: Tanggal Panen harvestDate <= neededDate dan umur <= masa simpan komoditas
       const harvestDateObj = new Date(offer.harvestDate);
       const diffTime = neededDateObj.getTime() - harvestDateObj.getTime();
       const ageDays = Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
 
-      if (harvestDateObj > neededDateObj || ageDays > demand.commodity.shelfLifeDays) {
-        continue;
+      if (harvestDateObj > neededDateObj) {
+        reasons.push(`Tanggal panen (${offer.harvestDate.toISOString().split('T')[0]}) melewati tanggal kebutuhan dapur (${demand.neededDate.toISOString().split('T')[0]})`);
+      } else if (ageDays > demand.commodity.shelfLifeDays) {
+        reasons.push(`Umur simpan pasokan (${ageDays} hari) melebihi batas kesegaran komoditas (${demand.commodity.shelfLifeDays} hari)`);
       }
 
       // 4.4 Filter: askingPrice <= maxPricePerUnit dan askingPrice >= floorPrice
       const askingPrice = Number(offer.askingPrice);
-      if (askingPrice > Number(demand.maxPricePerUnit) || askingPrice < floorPrice) {
-        continue;
+      if (askingPrice > Number(demand.maxPricePerUnit)) {
+        reasons.push(`Harga penawaran (Rp ${askingPrice.toLocaleString('id-ID')}) melebihi pagu anggaran dapur (Rp ${Number(demand.maxPricePerUnit).toLocaleString('id-ID')})`);
+      }
+      if (askingPrice < floorPrice) {
+        reasons.push(`Harga penawaran (Rp ${askingPrice.toLocaleString('id-ID')}) di bawah harga dasar pemerintah (Rp ${floorPrice.toLocaleString('id-ID')})`);
       }
 
       // 4.5 Filter: qualityScore >= ambang batas minimal
       const qualityScore = Number(supplier.qualityScore);
-      if (qualityScore < minScoreThreshold) continue;
+      if (qualityScore < minScoreThreshold) {
+        reasons.push(`Skor reputasi mutu pemasok (${qualityScore}) di bawah ambang batas minimal (${minScoreThreshold})`);
+      }
 
-      // 4.6 Hitung Jarak (gunakan testDistanceMap jika disediakan dalam pengujian, jika tidak gunakan Haversine)
+      // 4.6 Hitung Jarak
       const distanceKm =
         testDistanceMap?.get(supplier.id) ??
         calculateHaversineDistance(
@@ -185,7 +221,22 @@ export class MatchingService {
         );
 
       // Batas keras jarak: distanceKm <= maxRadiusKm * 2
-      if (distanceKm > maxRadiusKm * 2) continue;
+      if (distanceKm > maxRadiusKm * 2) {
+        reasons.push(`Jarak pemasok (${Math.round(distanceKm)} km) melebihi batas jangkauan maksimal (${maxRadiusKm * 2} km)`);
+      }
+
+      if (reasons.length > 0) {
+        eliminatedOffers.push({
+          offerId: offer.id,
+          supplierName: supplier.displayName,
+          village: supplier.village,
+          askingPrice,
+          availableQuantity: available,
+          harvestDate: offer.harvestDate.toISOString().split('T')[0],
+          reasons,
+        });
+        continue;
+      }
 
       // 4.7 Hitung Skor Kecocokan Komprehensif
       const reliabilityRate = Number(supplier.reliabilityRate);
@@ -233,10 +284,22 @@ export class MatchingService {
       return a.offerId.localeCompare(b.offerId);
     });
 
+    const diagnostics: MatchingDiagnostics = {
+      totalOffersChecked: offers.length,
+      eligibleCandidatesCount: candidates.length,
+      eliminatedCount: eliminatedOffers.length,
+      eliminatedOffers,
+      priceCeiling: Number(demand.maxPricePerUnit),
+      priceFloor: floorPrice,
+      maxShelfLifeDays: demand.commodity.shelfLifeDays,
+      minQualityScore: minScoreThreshold,
+    };
+
     return {
       demand,
       candidates,
       referencePrice,
+      diagnostics,
     };
   }
 

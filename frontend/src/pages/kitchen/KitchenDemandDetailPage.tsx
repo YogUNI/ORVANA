@@ -53,6 +53,7 @@ interface DemandDetail {
     name: string;
     unit: string;
     category: string;
+    shelfLifeDays?: number;
   };
   kitchen?: {
     name: string;
@@ -419,16 +420,62 @@ export const KitchenDemandDetailPage: React.FC = () => {
             )}
           </div>
 
+          {/* Panel Diagnosa Pencocokan (Smart Matching Diagnostics) */}
+          {candidatesData?.diagnostics && (
+            <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                <div className="flex items-center gap-2 font-bold text-slate-800 text-sm">
+                  <Compass className="w-4 h-4 text-pine-800" />
+                  <span>Diagnosa Transparansi Pasokan:</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs">
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold">
+                    {candidatesData.diagnostics.eligibleCandidatesCount} Lolos Kriteria
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-semibold">
+                    {candidatesData.diagnostics.eliminatedCount} Tereliminasi
+                  </span>
+                </div>
+              </div>
+
+              {candidatesData.diagnostics.eliminatedCount > 0 && (
+                <div className="space-y-2 pt-1 border-t border-slate-200">
+                  <p className="text-xs text-slate-600 font-medium">
+                    Penawaran stok yang tidak dapat dialokasikan untuk jadwal kebutuhan ini:
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                    {candidatesData.diagnostics.eliminatedOffers.map((elim: any) => (
+                      <div key={elim.offerId} className="bg-white border border-slate-200 p-2.5 rounded-lg shadow-2xs">
+                        <div className="flex justify-between items-start mb-1">
+                          <strong className="text-slate-900 font-semibold">{elim.supplierName}</strong>
+                          <span className="text-slate-500 font-mono text-[11px]">{formatRupiah(elim.askingPrice)}</span>
+                        </div>
+                        <ul className="list-disc list-inside space-y-0.5 text-amber-800 text-[11px]">
+                          {elim.reasons.map((r: string, i: number) => (
+                            <li key={i}>{r}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           {isCandidatesLoading ? (
             <div className="space-y-3">
               <Skeleton className="h-16 w-full rounded-xl" />
               <Skeleton className="h-16 w-full rounded-xl" />
             </div>
           ) : !candidatesData?.candidates || candidatesData.candidates.length === 0 ? (
-            <div className="py-8 text-center text-gray-400">
-              <Users className="w-8 h-8 mx-auto mb-2 opacity-40 stroke-1" />
-              <p className="text-sm">
-                Belum ada kandidat pemasok aktif yang memenuhi kriteria (radius ≤ 100 km, mutu ≥ {demand.minQualityScore}, stok bebas &gt; 0).
+            <div className="py-8 text-center text-gray-500 bg-amber-50/50 border border-amber-200 rounded-xl p-6">
+              <AlertCircle className="w-8 h-8 mx-auto mb-2 text-amber-600" />
+              <p className="text-sm font-semibold text-slate-800">
+                Tidak ada pemasok lokal yang memenuhi kriteria untuk tanggal kebutuhan ini.
+              </p>
+              <p className="text-xs text-slate-500 mt-1 max-w-lg mx-auto">
+                Silakan cek kotak diagnosa di atas untuk melihat penawaran petani yang tereliminasi (misal: melewati masa simpan {demand.commodity?.shelfLifeDays || 3} hari atau di luar pagu anggaran Rp {Number(demand.maxPricePerUnit).toLocaleString('id-ID')}).
               </p>
             </div>
           ) : (

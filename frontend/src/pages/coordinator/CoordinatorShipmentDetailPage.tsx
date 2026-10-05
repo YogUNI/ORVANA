@@ -16,7 +16,19 @@ import {
   QrCode,
   MapPin,
   Play,
+  Navigation,
 } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Fix icon Leaflet
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+});
 
 interface ShipmentDetail {
   id: string;
@@ -34,6 +46,8 @@ interface ShipmentDetail {
     name: string;
     code: string;
     address?: string;
+    latitude?: number;
+    longitude?: number;
   };
   coordinator?: {
     user: { name: string; phone?: string };
@@ -237,6 +251,93 @@ export const CoordinatorShipmentDetailPage: React.FC = () => {
           })}
         </div>
       </Card>
+
+      {/* Visualisasi Peta Rute Penjemputan Logistik (Multi-Stop Route Map) */}
+      {(() => {
+        const kitchenPos: [number, number] = [
+          shipment.kitchen.latitude || -6.48,
+          shipment.kitchen.longitude || 106.84,
+        ];
+
+        const validSupplierPositions = shipment.orders
+          .filter((o) => o.supplier?.latitude && o.supplier?.longitude)
+          .map((o) => ({
+            name: o.supplier.displayName,
+            village: o.supplier.village,
+            commodity: o.commodity.name,
+            qty: o.quantity,
+            pos: [o.supplier.latitude!, o.supplier.longitude!] as [number, number],
+          }));
+
+        // Jalur multi-titik dari para petani menuju dapur tujuan
+        const polylinePositions: [number, number][] = [
+          ...validSupplierPositions.map((s) => s.pos),
+          kitchenPos,
+        ];
+
+        return (
+          <Card className="p-6 bg-white overflow-hidden space-y-3">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+              <div className="flex items-center gap-2">
+                <Navigation className="w-5 h-5 text-pine-800" />
+                <h3 className="font-heading font-bold text-gray-900 text-base">
+                  Visualisasi Jalur Logistik Pengiriman (Multi-Stop Map)
+                </h3>
+              </div>
+              <span className="text-xs text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full font-medium">
+                {validSupplierPositions.length} Titik Penjemputan ➔ 1 Dapur Tujuan
+              </span>
+            </div>
+
+            <div className="h-72 w-full rounded-xl overflow-hidden border border-gray-200 relative z-0">
+              <MapContainer
+                center={kitchenPos}
+                zoom={11}
+                scrollWheelZoom={false}
+                className="h-full w-full"
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+
+                {/* Marker Dapur Tujuan */}
+                <Marker position={kitchenPos}>
+                  <Popup>
+                    <div className="p-1 text-xs">
+                      <strong className="block text-pine-900 font-bold">{shipment.kitchen.name}</strong>
+                      <span className="text-gray-500">Dapur Tujuan Penerima</span>
+                    </div>
+                  </Popup>
+                </Marker>
+
+                {/* Marker Masing-masing Titik Petani */}
+                {validSupplierPositions.map((sup, sIdx) => (
+                  <Marker key={sIdx} position={sup.pos}>
+                    <Popup>
+                      <div className="p-1 text-xs">
+                        <strong className="block text-gray-900 font-bold">{sup.name}</strong>
+                        <span className="text-gray-500 block">Desa: {sup.village || '-'}</span>
+                        <span className="text-emerald-700 font-semibold block mt-0.5">
+                          {sup.commodity} ({formatKg(sup.qty)})
+                        </span>
+                      </div>
+                    </Popup>
+                  </Marker>
+                ))}
+
+                {/* Garis Polyline Jalur Logistik */}
+                {polylinePositions.length >= 2 && (
+                  <Polyline
+                    positions={polylinePositions}
+                    pathOptions={{ color: '#166534', weight: 4, dashArray: '6, 8', opacity: 0.8 }}
+                  />
+                )}
+              </MapContainer>
+            </div>
+          </Card>
+        );
+      })()}
 
       {/* Informasi Rute & Manifest Muatan */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

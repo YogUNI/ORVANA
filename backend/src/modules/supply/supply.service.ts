@@ -778,5 +778,110 @@ export class SupplyService {
       commodities: calendarData,
     };
   }
+
+  /**
+   * Mengambil buku mutasi stok persediaan (Inventory Ledger) milik pemasok (Pilar 2 - P2.1)
+   * Mengumpulkan riwayat pendaftaran stok, perubahan kuantitas, reservasi alokasi, dan pembatalan
+   */
+  async getStockMutations(userId: string) {
+    const profile = await this.getSupplierProfileOrThrow(userId);
+
+    // Ambil seluruh log mutasi stok pemasok ini dari AuditLog
+    const auditLogs = await this.prisma.auditLog.findMany({
+      where: {
+        entity: 'SupplyOffer',
+        userId,
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+    });
+
+    // Ambil seluruh order masuk yang mereservasi kuantitas stok pemasok
+    const orders = await this.prisma.order.findMany({
+      where: {
+        supplierId: profile.id,
+      },
+      include: {
+        commodity: true,
+        kitchen: true,
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+    });
+
+    const entries: {
+      id: string;
+      date: string;
+      commodityName: string;
+      type: 'IN' | 'RESERVED' | 'RELEASED' | 'UPDATE';
+      typeLabel: string;
+      quantityKg: number;
+      balanceNote: string;
+      referenceNo: string;
+    }[] = [];
+
+    for (const log of auditLogs) {
+      const meta = (log.meta as Record<string, any>) || {};
+      if (log.action === 'SUPPLY_OFFER_CREATED') {
+        entries.push({
+          id: log.id,
+          date: log.createdAt.toISOString(),
+          commodityName: meta.commodityName || 'Komoditas Pangan',
+          type: 'IN',
+          typeLabel: 'Panen Masuk (Setor Stok)',
+          quantityKg: Number(meta.quantityAvailable || 0),
+          balanceNote: `Pendaftaran pasokan baru @ Rp ${Number(meta.askingPrice || 0).toLocaleString('id-ID')}`,
+          referenceNo: `OFFER-${log.entityId?.slice(0, 8).toUpperCase()}`,
+        });
+      } else if (log.action === 'SUPPLY_OFFER_UPDATED') {
+        entries.push({
+          id: log.id,
+          date: log.createdAt.toISOString(),
+          commodityName: meta.commodityName || 'Komoditas Pangan',
+          type: 'UPDATE',
+          typeLabel: 'Koreksi Stok',
+          quantityKg: Number(meta.newQuantity ?? meta.quantityAvailable ?? 0),
+          balanceNote: 'Penyesuaian kuantitas panen di gudang tani',
+          referenceNo: `OFFER-${log.entityId?.slice(0, 8).toUpperCase()}`,
+        });
+      }
+    }
+
+    for (const ord of orders) {
+      if (ord.status === 'ACCEPTED' || ord.status === 'CONSOLIDATED' || ord.status === 'IN_TRANSIT' || ord.status === 'RECEIVED' || ord.status === 'QC_PASSED') {
+        entries.push({
+          id: `ord-res-${ord.id}`,
+          date: ord.updatedAt.toISOString(),
+          commodityName: ord.commodity.name,
+          type: 'RESERVED',
+          typeLabel: 'Alokasi Pesanan Dapur',
+          quantityKg: Number(ord.quantity),
+          balanceNote: `Terikat pesanan ${ord.orderNo} menuju ${ord.kitchen.name}`,
+          referenceNo: ord.orderNo,
+        });
+      } else if (ord.status === 'REJECTED' || ord.status === 'CANCELLED' || ord.status === 'EXPIRED') {
+        entries.push({
+          id: `ord-rel-${ord.id}`,
+          date: ord.updatedAt.toISOString(),
+          commodityName: ord.commodity.name,
+          type: 'RELEASED',
+          typeLabel: 'Pelepasan Reservasi (Kembali Bebas)',
+          quantityKg: Number(ord.quantity),
+          balanceNote: `Reservasi dibatalkan (${ord.status}) untuk pesanan ${ord.orderNo}`,
+          referenceNo: ord.orderNo,
+        });
+      }
+    }
+
+    // Urutkan menurun berdasarkan tanggal mutasi terbaru
+    entries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    return {
+      supplierName: profile.displayName,
+      village: profile.village,
+      totalMutations: entries.length,
+      mutations: entries,
+    };
+  }
 }
 

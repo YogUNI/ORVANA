@@ -56,7 +56,18 @@ interface SupplyOffer {
 export const SupplierStockPage: React.FC = () => {
   const queryClient = useQueryClient();
 
+  const [activeTab, setActiveTab] = useState<'STOCKS' | 'MUTATIONS'>('STOCKS');
   const [statusFilter, setStatusFilter] = useState<string>('');
+
+  // Fetch Buku Mutasi Stok Persediaan (Inventory Ledger - Pilar 2 P2.1)
+  const { data: mutationData, isLoading: isMutationsLoading } = useQuery({
+    queryKey: ['my-supply-mutations'],
+    queryFn: async () => {
+      const res: any = await apiClient.get('/supply-offers/mutations');
+      return res.data || res;
+    },
+    enabled: activeTab === 'MUTATIONS',
+  });
 
   // Modal State Tambah Stok
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -326,25 +337,141 @@ export const SupplierStockPage: React.FC = () => {
         />
       </div>
 
-      {/* Filter Status */}
-      <Card className="p-4">
-        <div className="flex items-center gap-3">
-          <Filter className="w-4 h-4 text-gray-500" />
-          <span className="text-xs font-semibold text-gray-700 uppercase">Status Stok:</span>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-1.5 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand"
-          >
-            <option value="">Semua Status</option>
-            {Object.entries(OFFER_STATUS_LABELS).map(([st, meta]) => (
-              <option key={st} value={st}>
-                {meta.label}
-              </option>
-            ))}
-          </select>
+      {/* Navigasi Tab Stok Panen vs Buku Mutasi Persediaan */}
+      <div className="flex items-center gap-4 border-b border-gray-200">
+        <button
+          onClick={() => setActiveTab('STOCKS')}
+          className={`pb-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+            activeTab === 'STOCKS'
+              ? 'border-pine-800 text-pine-900'
+              : 'border-transparent text-gray-500 hover:text-gray-900'
+          }`}
+        >
+          <Layers className="w-4 h-4 text-pine-800" />
+          Katalog Stok Aktif ({data?.length || 0})
+        </button>
+
+        <button
+          onClick={() => setActiveTab('MUTATIONS')}
+          className={`pb-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+            activeTab === 'MUTATIONS'
+              ? 'border-pine-800 text-pine-900'
+              : 'border-transparent text-gray-500 hover:text-gray-900'
+          }`}
+        >
+          <Calendar className="w-4 h-4 text-emerald-700" />
+          Buku Mutasi Stok (Inventory Ledger)
+        </button>
+      </div>
+
+      {activeTab === 'MUTATIONS' ? (
+        /* Tampilan Buku Mutasi Persediaan (Inventory Ledger) */
+        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-xs space-y-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-gray-100">
+            <div>
+              <h3 className="font-heading font-bold text-gray-900 text-base">
+                Jurnal Mutasi Stok Persediaan Panen
+              </h3>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Catatan riwayat pergerakan kuantitas stok: panen masuk, reservasi order dapur, dan pelepasan stok bebas.
+              </p>
+            </div>
+            <span className="text-xs font-semibold px-2.5 py-1 bg-pine-100 text-pine-900 rounded-full">
+              {mutationData?.totalMutations || 0} Entri Jurnal Terverifikasi
+            </span>
+          </div>
+
+          {isMutationsLoading ? (
+            <div className="space-y-3">
+              <Skeleton className="h-14 w-full" />
+              <Skeleton className="h-14 w-full" />
+            </div>
+          ) : !mutationData?.mutations || mutationData.mutations.length === 0 ? (
+            <div className="py-12 text-center text-gray-400">
+              <Layers className="w-8 h-8 mx-auto mb-2 opacity-40 stroke-1" />
+              <p className="text-sm">Belum ada riwayat mutasi stok persediaan yang tercatat.</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm text-gray-600">
+                <thead className="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-700 uppercase">
+                  <tr>
+                    <th className="px-4 py-3">Waktu Mutasi</th>
+                    <th className="px-4 py-3">No. Referensi</th>
+                    <th className="px-4 py-3">Komoditas</th>
+                    <th className="px-4 py-3">Tipe Mutasi</th>
+                    <th className="px-4 py-3 text-right">Debit / Kredit (Kg)</th>
+                    <th className="px-4 py-3">Keterangan Transaksi</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {mutationData.mutations.map((mut: any) => {
+                    const isPositive = mut.type === 'IN' || mut.type === 'RELEASED';
+                    return (
+                      <tr key={mut.id} className="hover:bg-gray-50/80 transition-colors">
+                        <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
+                          {formatDate(mut.date)}
+                        </td>
+                        <td className="px-4 py-3 font-mono text-xs font-bold text-gray-900 whitespace-nowrap">
+                          {mut.referenceNo}
+                        </td>
+                        <td className="px-4 py-3 font-medium text-gray-900">
+                          {mut.commodityName}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <span
+                            className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
+                              mut.type === 'IN'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : mut.type === 'RESERVED'
+                                ? 'bg-amber-100 text-amber-800'
+                                : mut.type === 'RELEASED'
+                                ? 'bg-blue-100 text-blue-800'
+                                : 'bg-gray-100 text-gray-800'
+                            }`}
+                          >
+                            {mut.typeLabel}
+                          </span>
+                        </td>
+                        <td
+                          className={`px-4 py-3 text-right font-mono font-bold whitespace-nowrap ${
+                            isPositive ? 'text-emerald-700' : 'text-amber-800'
+                          }`}
+                        >
+                          {isPositive ? '+' : '-'}{formatKg(mut.quantityKg)}
+                        </td>
+                        <td className="px-4 py-3 text-xs text-gray-600">
+                          {mut.balanceNote}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
-      </Card>
+      ) : (
+        <>
+          {/* Filter Status */}
+          <Card className="p-4">
+            <div className="flex items-center gap-3">
+              <Filter className="w-4 h-4 text-gray-500" />
+              <span className="text-xs font-semibold text-gray-700 uppercase">Status Stok:</span>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-3 py-1.5 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand"
+              >
+                <option value="">Semua Status</option>
+                {Object.entries(OFFER_STATUS_LABELS).map(([st, meta]) => (
+                  <option key={st} value={st}>
+                    {meta.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </Card>
 
       {/* Content Area */}
       {isLoading ? (
@@ -367,9 +494,9 @@ export const SupplierStockPage: React.FC = () => {
       ) : (
         <div className="space-y-4">
           {/* Tampilan Desktop: Tabel */}
-          <div className="hidden md:block bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-            <table className="w-full text-left text-sm text-gray-600">
-              <thead className="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-700 uppercase">
+          <div className="hidden md:block bg-white border border-surface-border rounded-card overflow-hidden shadow-soft">
+            <table className="w-full text-left text-sm text-stone-600">
+              <thead className="bg-surface-muted border-b border-surface-border text-xs font-semibold text-stone-700 uppercase tracking-wider">
                 <tr>
                   <th className="px-5 py-3.5">Komoditas</th>
                   <th className="px-5 py-3.5">Tanggal Panen</th>
@@ -381,7 +508,7 @@ export const SupplierStockPage: React.FC = () => {
                   <th className="px-5 py-3.5 text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-surface-border">
                 {data.map((offer) => {
                   const statusMeta = OFFER_STATUS_LABELS[offer.status] || {
                     label: offer.status,
@@ -391,23 +518,33 @@ export const SupplierStockPage: React.FC = () => {
                   const isActive = offer.status === 'ACTIVE';
 
                   return (
-                    <tr key={offer.id} className="hover:bg-gray-50/75 transition-colors">
-                      <td className="px-5 py-4 font-bold text-gray-900">
-                        {offer.commodity?.name || 'Komoditas'}
+                    <tr
+                      key={offer.id}
+                      className="hover:bg-stone-50/80 transition-colors group"
+                    >
+                      <td className="px-5 py-4">
+                        <span className="font-heading font-bold text-stone-900 group-hover:text-brand transition-colors block">
+                          {offer.commodity?.name || 'Komoditas'}
+                        </span>
+                        {offer.sourceText && (
+                          <span className="text-[11px] text-stone-400 truncate max-w-xs block mt-0.5">
+                            {offer.sourceText}
+                          </span>
+                        )}
                       </td>
-                      <td className="px-5 py-4 text-gray-700">
+                      <td className="px-5 py-4 text-stone-600 font-mono text-xs">
                         {formatDate(offer.harvestDate)}
                       </td>
-                      <td className="px-5 py-4 text-right font-mono font-bold text-gray-900">
+                      <td className="px-5 py-4 text-right font-mono font-bold text-stone-900">
                         {formatKg(offer.quantityAvailable)}
                       </td>
                       <td className="px-5 py-4 text-right font-mono text-amber-700 font-semibold">
                         {formatKg(offer.quantityReserved)}
                       </td>
-                      <td className="px-5 py-4 text-right font-mono text-emerald-700 font-semibold">
+                      <td className="px-5 py-4 text-right font-mono text-emerald-800 font-bold">
                         {formatKg(offer.availableQuantity)}
                       </td>
-                      <td className="px-5 py-4 text-right font-bold text-brand">
+                      <td className="px-5 py-4 text-right font-bold text-brand font-mono">
                         {formatRupiah(offer.askingPrice)}/kg
                       </td>
                       <td className="px-5 py-4 text-center">
@@ -417,13 +554,14 @@ export const SupplierStockPage: React.FC = () => {
                         <div className="flex items-center justify-end gap-1.5">
                           {isActive && (
                             <Button
-                              variant="ghost"
+                              variant="outline"
                               size="sm"
                               onClick={() => openEditModal(offer)}
                               title="Ubah Stok atau Harga"
-                              className="text-xs py-1 px-2 min-h-[32px]"
+                              className="text-xs py-1 px-2.5 border-surface-border text-stone-700 hover:bg-stone-100 hover:text-stone-900"
                             >
-                              <Edit2 className="w-3.5 h-3.5 text-gray-600" />
+                              <Edit2 className="w-3.5 h-3.5 mr-1 text-stone-500" />
+                              Ubah
                             </Button>
                           )}
 
@@ -437,14 +575,14 @@ export const SupplierStockPage: React.FC = () => {
                                   cancelMutation.mutate(offer.id);
                                 }
                               }}
-                              className={`p-1.5 rounded transition-colors ${
+                              className={`p-1.5 rounded-md border transition-colors ${
                                 isReserved
-                                  ? 'text-gray-300 cursor-not-allowed'
-                                  : 'text-gray-400 hover:text-status-danger'
+                                  ? 'border-stone-100 text-stone-300 cursor-not-allowed bg-stone-50'
+                                  : 'border-red-200 text-status-danger hover:bg-red-50 hover:border-red-300'
                               }`}
                               title={
                                 isReserved
-                                  ? 'Tidak dapat dibatalkan karena ada kuantitas tereservasi'
+                                  ? 'Tidak dapat dibatalkan karena ada kuantitas tereservasi pesanan'
                                   : 'Batalkan penawaran stok'
                               }
                             >
@@ -460,8 +598,8 @@ export const SupplierStockPage: React.FC = () => {
             </table>
           </div>
 
-          {/* Tampilan Mobile: Kartu (Touch-Friendly) */}
-          <div className="grid grid-cols-1 gap-3 md:hidden">
+          {/* Tampilan Mobile: Kartu (Touch-Friendly dengan Feedback Hover & Border Halus) */}
+          <div className="grid grid-cols-1 gap-3.5 md:hidden">
             {data.map((offer) => {
               const statusMeta = OFFER_STATUS_LABELS[offer.status] || {
                 label: offer.status,
@@ -471,44 +609,47 @@ export const SupplierStockPage: React.FC = () => {
               const isActive = offer.status === 'ACTIVE';
 
               return (
-                <Card key={offer.id} className="p-4 space-y-3">
+                <div
+                  key={offer.id}
+                  className="p-4 bg-white border border-surface-border rounded-card shadow-soft hover:border-brand-border transition-colors space-y-3"
+                >
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-heading font-bold text-gray-900 text-base">
+                      <h3 className="font-heading font-bold text-stone-900 text-base">
                         {offer.commodity?.name}
                       </h3>
-                      <div className="flex items-center gap-1.5 text-xs text-gray-500 mt-0.5">
-                        <Calendar className="w-3.5 h-3.5" />
+                      <div className="flex items-center gap-1.5 text-xs text-stone-500 mt-0.5 font-mono">
+                        <Calendar className="w-3.5 h-3.5 text-pine-700" />
                         <span>Panen: {formatDate(offer.harvestDate)}</span>
                       </div>
                     </div>
                     <Badge color={statusMeta.color}>{statusMeta.label}</Badge>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2 bg-gray-50 p-2.5 rounded text-xs">
+                  <div className="grid grid-cols-3 gap-2 bg-surface-muted/60 p-2.5 rounded-lg border border-surface-border text-xs">
                     <div>
-                      <span className="text-gray-500 block text-[10px]">Total</span>
-                      <span className="font-mono font-bold text-gray-900">
+                      <span className="text-stone-500 block text-[10px]">Total Stok</span>
+                      <span className="font-mono font-bold text-stone-900">
                         {formatKg(offer.quantityAvailable)}
                       </span>
                     </div>
                     <div>
-                      <span className="text-amber-700 block text-[10px]">Tereservasi</span>
-                      <span className="font-mono font-bold text-amber-700">
+                      <span className="text-amber-800 block text-[10px]">Tereservasi</span>
+                      <span className="font-mono font-bold text-amber-800">
                         {formatKg(offer.quantityReserved)}
                       </span>
                     </div>
                     <div>
-                      <span className="text-emerald-700 block text-[10px]">Bebas</span>
-                      <span className="font-mono font-bold text-emerald-700">
+                      <span className="text-emerald-800 block text-[10px]">Bebas Alokasi</span>
+                      <span className="font-mono font-bold text-emerald-800">
                         {formatKg(offer.availableQuantity)}
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                  <div className="flex justify-between items-center pt-2 border-t border-surface-border">
                     <div>
-                      <span className="text-[10px] text-gray-400 block">Harga Ajuan</span>
+                      <span className="text-[10px] text-stone-400 block font-sans">Harga Satuan Ajuan</span>
                       <span className="font-bold text-brand font-mono text-sm">
                         {formatRupiah(offer.askingPrice)}/kg
                       </span>
@@ -520,33 +661,38 @@ export const SupplierStockPage: React.FC = () => {
                           variant="outline"
                           size="sm"
                           onClick={() => openEditModal(offer)}
+                          className="border-surface-border text-stone-700 hover:bg-stone-50 text-xs py-1 px-3"
                         >
                           <Edit2 className="w-3.5 h-3.5 mr-1" />
                           Ubah
                         </Button>
                       )}
                       {isActive && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
+                        <button
                           disabled={isReserved}
                           onClick={() => {
                             if (confirm('Batalkan penawaran stok pasokan ini?')) {
                               cancelMutation.mutate(offer.id);
                             }
                           }}
-                          className={isReserved ? 'opacity-30' : 'text-status-danger'}
+                          className={`p-2 rounded-md border text-xs transition-colors ${
+                            isReserved
+                              ? 'border-stone-100 text-stone-300 bg-stone-50 cursor-not-allowed'
+                              : 'border-red-200 text-status-danger hover:bg-red-50'
+                          }`}
                         >
                           <Trash2 className="w-4 h-4" />
-                        </Button>
+                        </button>
                       )}
                     </div>
                   </div>
-                </Card>
+                </div>
               );
             })}
           </div>
         </div>
+      )}
+      </>
       )}
 
       {/* Modal Tambah Stok Pasokan */}
@@ -642,17 +788,24 @@ export const SupplierStockPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase mb-1">
-              Tanggal Panen
-            </label>
+            <div className="flex justify-between items-center mb-1">
+              <label className="block text-xs font-semibold text-gray-700 uppercase">
+                Tanggal Panen
+              </label>
+              {commodities?.find((c) => c.id === addCommodityId)?.shelfLifeDays && (
+                <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
+                  Masa Simpan Segar: {commodities.find((c) => c.id === addCommodityId)?.shelfLifeDays} Hari
+                </span>
+              )}
+            </div>
             <Input
               type="date"
               value={addHarvestDate}
               onChange={(e) => setAddHarvestDate(e.target.value)}
               required
             />
-            <span className="text-[11px] text-gray-500">
-              Kebutuhan dapur diutamakan dari hasil panen segar yang baru dipetik.
+            <span className="text-[11px] text-gray-500 mt-1 block">
+              Dapur gizi massal hanya menerima hasil panen yang berumur maksimal toleransi simpan di atas sejak dipetik.
             </span>
           </div>
 

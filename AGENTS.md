@@ -121,3 +121,4 @@ Variabel lingkungan (lihat `.env.example`): `DATABASE_URL`, `JWT_ACCESS_SECRET`,
 | `docs/09-seed-data.md` | Data demo dan vektor uji bernilai konkret |
 | `docs/10-roadmap-tasks.md` | Tahap dan checklist tugas |
 | `docs/11-testing-demo.md` | Strategi uji, skenario E2E, skrip demo lomba |
+| `docs/12-quality-audit-future-roadmap.md` | Audit mutu komprehensif dan roadmap aksi masa depan |

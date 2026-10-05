@@ -45,6 +45,13 @@ export class SupplyController {
     return this.supplyService.getMyOffers(filter, userId);
   }
 
+  @Get('supply-offers/mutations')
+  @Roles(Role.SUPPLIER)
+  @ApiOperation({ summary: 'Buku mutasi stok persediaan (Inventory Ledger) pemasok (Pilar 2 - P2.1)' })
+  async getStockMutations(@CurrentUser('sub') userId: string) {
+    return this.supplyService.getStockMutations(userId);
+  }
+
   @Get('supply-offers/available')
   @Roles(Role.KITCHEN_MANAGER, Role.ADMIN)
   @ApiOperation({ summary: 'Pratinjau stok pangan aktif di wilayah untuk dapur & admin' })

@@ -67,42 +67,55 @@ export const SupplierPaymentsPage: React.FC = () => {
       {/* 3 Kartu Ringkasan Metrik Finansial */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <StatCard
-          label="Total Dana Dicadangkan (HOLD)"
+          label="Dana Terkunci Escrow (HOLD)"
           value={formatRupiah(totalHold)}
           subtext="Jaminan dana pesanan aktif yang disanggupi"
-          icon={<Clock className="w-5 h-5 text-amber-600" />}
+          icon={<Clock className="w-5 h-5 text-amber-700" />}
         />
 
         <StatCard
-          label="Total Dana Dicairkan (RELEASE)"
+          label="Dana Berhak Dicairkan (RELEASE)"
           value={formatRupiah(totalReleased)}
-          subtext="Pembayaran berhak diterima hasil lolos QC"
-          icon={<CheckCircle2 className="w-5 h-5 text-emerald-600" />}
+          subtext="Hasil pembayaran resmi lolos inspeksi QC"
+          icon={<CheckCircle2 className="w-5 h-5 text-pine-800" />}
         />
 
         <StatCard
-          label="Total Pembatalan / Cacat (VOID)"
+          label="Komoditas Afkir / Batal (VOID)"
           value={formatRupiah(totalVoid)}
-          subtext="Pengurangan akibat barang ditolak QC / batal"
+          subtext="Potongan akibat penolakan QC atau pembatalan"
           icon={<XCircle className="w-5 h-5 text-stone-500" />}
         />
       </div>
 
+      {/* Info Card Alur Pencairan Bertahap */}
+      <div className="p-4 bg-stone-50 border border-surface-border rounded-card text-xs text-stone-700 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          <Receipt className="w-5 h-5 text-pine-800 shrink-0" />
+          <span>
+            <strong>Prinsip Arus Kas Petani Orvana:</strong> Dana dialokasikan saat Anda menyanggupi tawaran, terkunci aman di penampungan (Escrow), dan langsung dicairkan penuh saat dapur memvalidasi mutu pangan.
+          </span>
+        </div>
+        <div className="text-[11px] font-mono text-stone-500 shrink-0">
+          Standar Akuntansi Pangan Lokal
+        </div>
+      </div>
+
       {/* Filter Tahapan Mutasi */}
-      <div className="flex flex-wrap gap-1.5 bg-gray-100 p-1 rounded-lg border border-gray-200 w-fit text-xs font-semibold">
+      <div className="flex flex-wrap gap-1.5 bg-stone-100 p-1 rounded-lg border border-stone-200 w-fit text-xs font-semibold">
         {[
           { key: 'ALL', label: 'Semua Mutasi' },
-          { key: 'HOLD', label: 'Dicadangkan (HOLD)' },
+          { key: 'HOLD', label: 'Terkunci Escrow (HOLD)' },
           { key: 'RELEASE', label: 'Dicairkan (RELEASE)' },
-          { key: 'VOID', label: 'Dibatalkan (VOID)' },
+          { key: 'VOID', label: 'Batal / Afkir (VOID)' },
         ].map((tab) => (
           <button
             key={tab.key}
             onClick={() => setStageFilter(tab.key)}
             className={`px-3 py-1.5 rounded-md transition-colors ${
               stageFilter === tab.key
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-white text-stone-900 shadow-sm font-bold'
+                : 'text-stone-600 hover:text-stone-900'
             }`}
           >
             {tab.label}
@@ -111,10 +124,15 @@ export const SupplierPaymentsPage: React.FC = () => {
       </div>
 
       {/* Tabel Mutasi Buku Besar */}
-      <Card className="p-6 bg-white">
-        <h3 className="font-heading font-bold text-gray-900 text-base mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
-          <Receipt className="w-5 h-5 text-brand" />
-          Buku Besar Transaksi Bertahap ({entries.length})
+      <Card className="p-6 bg-white border border-surface-border rounded-card shadow-soft">
+        <h3 className="font-heading font-bold text-stone-900 text-base mb-4 pb-3 border-b border-surface-border flex items-center justify-between">
+          <span className="flex items-center gap-2">
+            <Receipt className="w-5 h-5 text-pine-800" />
+            Buku Rekening Mutasi Bertahap
+          </span>
+          <span className="text-xs font-mono font-normal text-stone-500">
+            {entries.length} baris tercatat
+          </span>
         </h3>
 
         {isLoading ? (
@@ -123,45 +141,45 @@ export const SupplierPaymentsPage: React.FC = () => {
             <Skeleton className="h-14 w-full" />
           </div>
         ) : entries.length === 0 ? (
-          <div className="py-8 text-center text-gray-400 text-xs">
-            Belum ada catatan mutasi buku besar untuk akun pemasok ini.
+          <div className="py-12 text-center text-stone-400 text-xs">
+            Belum ada catatan mutasi buku besar untuk penyaringan ini.
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-gray-600">
-              <thead className="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-700 uppercase">
+            <table className="w-full text-left text-sm text-stone-600">
+              <thead className="bg-surface-muted border-b border-surface-border text-xs font-semibold text-stone-700 uppercase tracking-wider">
                 <tr>
-                  <th className="px-4 py-3">Waktu</th>
-                  <th className="px-4 py-3">No. Order</th>
-                  <th className="px-4 py-3">Komoditas & Dapur</th>
-                  <th className="px-4 py-3 text-center">Tahap Buku Besar</th>
-                  <th className="px-4 py-3 text-right">Nominal</th>
-                  <th className="px-4 py-3">Keterangan / Catatan</th>
+                  <th className="px-4 py-3.5">Tanggal / Waktu</th>
+                  <th className="px-4 py-3.5">No. Order</th>
+                  <th className="px-4 py-3.5">Komoditas & Dapur</th>
+                  <th className="px-4 py-3.5 text-center">Tahap Buku Besar</th>
+                  <th className="px-4 py-3.5 text-right">Nominal Mutasi</th>
+                  <th className="px-4 py-3.5">Catatan Validasi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-surface-border">
                 {entries.map((entry) => {
                   const isRelease = entry.stage === 'RELEASE';
                   const isHold = entry.stage === 'HOLD';
                   const isVoid = entry.stage === 'VOID';
 
                   return (
-                    <tr key={entry.id} className="hover:bg-gray-50/75">
-                      <td className="px-4 py-3 text-xs text-gray-500">
+                    <tr key={entry.id} className="hover:bg-stone-50/75 transition-colors">
+                      <td className="px-4 py-3.5 text-xs text-stone-500 whitespace-nowrap">
                         {formatDate(entry.createdAt)}
                       </td>
-                      <td className="px-4 py-3 font-mono font-bold text-gray-900">
+                      <td className="px-4 py-3.5 font-mono font-bold text-stone-900 text-xs">
                         {entry.order?.orderNo || entry.orderId}
                       </td>
-                      <td className="px-4 py-3">
-                        <span className="font-semibold text-gray-900 block text-xs">
-                          {entry.order?.commodity?.name || 'Komoditas'}
+                      <td className="px-4 py-3.5">
+                        <span className="font-semibold text-stone-900 block text-xs">
+                          {entry.order?.commodity?.name || 'Komoditas Pangan'}
                         </span>
-                        <span className="text-[11px] text-gray-400">
+                        <span className="text-[11px] text-stone-500">
                           {entry.order?.kitchen?.name || 'Dapur Gizi'}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-center">
+                      <td className="px-4 py-3.5 text-center">
                         <Badge
                           color={
                             isRelease ? 'success' : isHold ? 'info' : isVoid ? 'neutral' : 'warning'
@@ -171,17 +189,18 @@ export const SupplierPaymentsPage: React.FC = () => {
                         </Badge>
                       </td>
                       <td
-                        className={`px-4 py-3 text-right font-mono font-bold text-sm ${
+                        className={`px-4 py-3.5 text-right font-mono font-bold text-sm ${
                           isRelease
-                            ? 'text-emerald-700'
+                            ? 'text-emerald-800'
                             : isHold
-                            ? 'text-blue-700'
-                            : 'text-gray-500 line-through'
+                            ? 'text-pine-800'
+                            : 'text-stone-400 line-through'
                         }`}
                       >
+                        {isRelease && '+ '}
                         {formatRupiah(entry.amount)}
                       </td>
-                      <td className="px-4 py-3 text-xs text-gray-600 max-w-xs truncate">
+                      <td className="px-4 py-3.5 text-xs text-stone-600 max-w-xs truncate">
                         {entry.note || '-'}
                       </td>
                     </tr>
