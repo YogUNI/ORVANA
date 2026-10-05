@@ -68,6 +68,10 @@ export const KitchenDemandPage: React.FC = () => {
     null
   );
 
+  // NLP State
+  const [nlpInputText, setNlpInputText] = useState('');
+  const [nlpExtractedItems, setNlpExtractedItems] = useState<any[]>([]);
+
   // Fetch Demand Requests
   const { data, isLoading, error } = useQuery({
     queryKey: ['demand-requests', statusFilter],
@@ -219,6 +223,90 @@ export const KitchenDemandPage: React.FC = () => {
           <span className="font-medium">{notification.text}</span>
         </div>
       )}
+
+      {/* Asisten Cerdas NLP Perencanaan Bahan Dapur */}
+      <div className="bg-white border border-emerald-300 rounded-card p-4 sm:p-5 shadow-soft space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-brand" />
+            <span className="text-xs font-bold text-stone-900 uppercase tracking-wider">
+              Asisten Perencanaan Bahan (AI NLP)
+            </span>
+          </div>
+          <span className="text-[10px] font-mono font-bold text-pine-800 bg-pine-100 px-2 py-0.5 rounded-full">
+            AI Active
+          </span>
+        </div>
+        <p className="text-xs text-stone-600 leading-relaxed">
+          Tulis kebutuhan dapur dengan kalimat biasa, contoh: <em className="text-stone-800 font-medium">"pekan depan butuh 150 kg beras, 40 kg wortel, dan 30 kg ikan lele untuk makan siang"</em>. Sistem akan mengekstrak komoditas dan volumenya secara otomatis.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <input
+            type="text"
+            value={nlpInputText}
+            onChange={(e) => setNlpInputText(e.target.value)}
+            placeholder="Ketik kebutuhan bahan dapur Anda..."
+            className="flex-1 px-3.5 py-2.5 border border-surface-border rounded-lg text-xs bg-stone-50/50 text-stone-900 focus:outline-none focus:ring-1 focus:ring-pine-800"
+          />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={async () => {
+              if (!nlpInputText.trim()) return;
+              try {
+                const res: any = await apiClient.post('/demand-requests/parse-text', { text: nlpInputText.trim() });
+                const candidates = res?.data?.candidates || [];
+                setNlpExtractedItems(candidates);
+                if (candidates.length > 0) {
+                  setNotification({
+                    type: 'success',
+                    text: `AI berhasil mengekstrak ${candidates.length} item bahan baku!`,
+                  });
+                } else if (res?.data?.warnings?.length) {
+                  setNotification({
+                    type: 'error',
+                    text: res.data.warnings[0],
+                  });
+                }
+              } catch (err: any) {
+                setNotification({
+                  type: 'error',
+                  text: 'Gagal menguraikan kalimat kebutuhan.',
+                });
+              }
+            }}
+            className="text-xs py-2.5 px-4 border-pine-700 text-pine-800 hover:bg-pine-50 font-semibold shrink-0"
+          >
+            Urai Kebutuhan
+          </Button>
+        </div>
+
+        {nlpExtractedItems.length > 0 && (
+          <div className="pt-2 border-t border-emerald-100 space-y-2 animate-fadeIn">
+            <span className="text-[11px] font-bold text-pine-900 block">
+              Daftar Bahan Terdeteksi ({nlpExtractedItems.length} item):
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              {nlpExtractedItems.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="p-2.5 rounded-lg border border-emerald-200 bg-emerald-50/50 text-xs flex justify-between items-center"
+                >
+                  <div>
+                    <span className="font-bold text-stone-900 block">{item.commodityName}</span>
+                    <span className="text-[10px] text-stone-500 font-mono">
+                      Target: {item.quantityKg ? `${item.quantityKg} kg` : 'Belum ditentukan'}
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono bg-white border border-emerald-300 text-pine-800 px-2 py-0.5 rounded font-semibold">
+                    {item.commodityCategory}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* KPI Cards Strip */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

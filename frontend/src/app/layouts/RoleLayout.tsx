@@ -25,6 +25,7 @@ import {
   Scale,
   History,
   FileSpreadsheet,
+  Cpu,
 } from 'lucide-react';
 import { NotificationBell } from '../../features/notifications/NotificationBell';
 
@@ -55,6 +56,7 @@ export const RoleLayout: React.FC = () => {
           { to: '/admin/ledger', label: 'Buku Besar & Keuangan', icon: CreditCard },
           { to: '/admin/audit', label: 'Log Audit Sistem', icon: History },
           { to: '/admin/reports', label: 'Laporan & Ekspor CSV', icon: FileSpreadsheet },
+          { to: '/admin/ai-lab', label: 'Pusat AI & Model Lab', icon: Cpu },
         ];
       case 'KITCHEN_MANAGER':
         return [

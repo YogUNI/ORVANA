@@ -86,4 +86,11 @@ export class DemandController {
     const ipAddress = req.ip || req.socket.remoteAddress;
     return this.demandService.cancelDemandRequest(id, dto, userId, userRole, ipAddress);
   }
+
+  @Post('parse-text')
+  @Roles(Role.KITCHEN_MANAGER, Role.ADMIN)
+  @ApiOperation({ summary: 'Mengurai teks kebutuhan bahan dapur via AI NLP microservice' })
+  async parseDemandText(@Body('text') text: string) {
+    return this.demandService.parseDemandText(text);
+  }
 }

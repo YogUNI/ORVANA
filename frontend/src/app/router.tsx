@@ -14,6 +14,7 @@ import { AdminDisputesPage } from '../pages/admin/AdminDisputesPage';
 import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage';
 import { AdminAuditPage } from '../pages/admin/AdminAuditPage';
 import { AdminReportsPage } from '../pages/admin/AdminReportsPage';
+import { AdminAILabPage } from '../pages/admin/AdminAILabPage';
 import { AuditorDashboardPage } from '../pages/auditor/AuditorDashboardPage';
 import { QualityStandardsPage } from '../pages/inspector/QualityStandardsPage';
 import { KitchenDashboardPage } from '../pages/kitchen/KitchenDashboardPage';
@@ -146,6 +147,14 @@ export const AppRouter: React.FC = () => {
             element={
               <RequireRole roles={['ADMIN']}>
                 <AdminReportsPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/admin/ai-lab"
+            element={
+              <RequireRole roles={['ADMIN']}>
+                <AdminAILabPage />
               </RequireRole>
             }
           />

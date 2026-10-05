@@ -399,4 +399,59 @@ export class DemandService {
       message: 'Permintaan bahan berhasil dibatalkan',
     };
   }
+
+  /**
+   * Mengurai kalimat kebutuhan bahan dapur via AI microservice (Python FastAPI)
+   * Dilengkapi penyesuaian komoditas lokal dan non-blocking fallback.
+   */
+  async parseDemandText(text: string) {
+    const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:8000';
+    try {
+      const response = await fetch(`${aiServiceUrl}/ai/parse-text`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`AI service responded with status ${response.status}`);
+      }
+
+      const parsedData: any = await response.json();
+
+      const commodities = await this.prisma.commodity.findMany({
+        where: { isActive: true },
+      });
+
+      const enrichedCandidates = (parsedData.candidates || []).map((cand: any) => {
+        const found = commodities.find(
+          (c) => c.name.toLowerCase() === cand.commodityName.toLowerCase()
+        );
+        return {
+          ...cand,
+          commodityId: found ? found.id : null,
+          commodityUnit: found ? found.unit : 'kg',
+        };
+      });
+
+      return {
+        data: {
+          candidates: enrichedCandidates,
+          warnings: parsedData.warnings || [],
+          rawText: parsedData.rawText || text,
+          aiActive: true,
+        },
+      };
+    } catch (err: any) {
+      return {
+        data: {
+          candidates: [],
+          warnings: ['Layanan cerdas Python sedang offline. Silakan gunakan input manual standar.'],
+          rawText: text,
+          aiActive: false,
+        },
+      };
+    }
+  }
 }
+
