@@ -17,7 +17,6 @@ import {
   ArrowRight,
   MapPin,
   Sparkles,
-  Award,
   ChevronRight,
   Building2,
   Leaf,
@@ -197,22 +196,35 @@ export const LandingPage: React.FC = () => {
         </div>
       </header>
 
-      {/* HERO SECTION DENGAN 3D PERSPECTIVE CARD & DIRECT STORY */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-14 lg:pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
-          {/* Kolom Teks Kiri */}
-          <div className="lg:col-span-7 space-y-5 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/90 text-xs font-semibold text-emerald-900 shadow-2xs">
-              <Award className="w-3.5 h-3.5 text-emerald-700" />
-              <span>Inovasi Kedaulatan Pangan & Gizi Generasi Emas</span>
-            </div>
+      {/* HERO SECTION DENGAN FOTOGRAFI HD PANEN PETANI LOKAL & SIMULASI INTERAKTIF */}
+      <section className="relative z-10 overflow-hidden border-b border-surface-border">
+        {/* Latar Belakang Foto Panen HD dengan Lapisan Vignette & Warm Parchment */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <img
+            src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=2000&q=80"
+            alt="Lahan Pertanian Pangan Lokal"
+            className="w-full h-full object-cover object-center opacity-[0.09] filter saturate-50"
+            loading="eager"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-surface/60 via-surface/90 to-surface" />
+          <div className="absolute inset-0 bg-gradient-to-r from-surface via-surface/85 to-transparent" />
+        </div>
 
-            <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold text-pine-950 tracking-tight leading-[1.12]">
-              Mencocokkan Menu Dapur dengan <br className="hidden sm:inline" />
-              <span className="text-brand underline decoration-harvest-gold/60 decoration-wavy decoration-3">
-                Panen Petani Lokal
-              </span>
-            </h1>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-16 lg:pb-24">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+            {/* Kolom Teks Kiri */}
+            <div className="lg:col-span-7 space-y-6 text-left">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50/95 border border-emerald-300 text-xs font-semibold text-emerald-950 shadow-xs backdrop-blur-xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+                <span>Rantai Pasok Gizi Generasi Emas • Petani & Dapur Mandiri</span>
+              </div>
+
+              <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold text-pine-950 tracking-tight leading-[1.12]">
+                Mencocokkan Menu Dapur dengan <br className="hidden sm:inline" />
+                <span className="text-brand underline decoration-harvest-gold/60 decoration-wavy decoration-3">
+                  Panen Petani Lokal
+                </span>
+              </h1>
 
             <p className="text-base sm:text-lg text-gray-700 leading-relaxed max-w-2xl">
               Platform agritech terintegrasi yang menjembatani dapur gizi massal sekolah dengan produsen lokal: alokasi cerdas multi-kriteria, proteksi harga dasar, penjaminan dana escrow, dan passport digital bahan makanan anak bangsa.
@@ -362,7 +374,8 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
       {/* SECTION BUKU BESAR DAERAH & DAMPAK NYATA */}
       <section id="dampak" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-12">
@@ -707,8 +720,8 @@ export const LandingPage: React.FC = () => {
           {/* Interactive Role Card Content */}
           <div className="max-w-4xl mx-auto bg-white rounded-2xl border border-surface-border p-6 sm:p-8 shadow-card">
             {activeTabRole === 'kitchen' && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3 text-left">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <div className="md:col-span-7 space-y-3 text-left">
                   <span className="text-xs font-mono font-bold text-brand uppercase tracking-wider">
                     Langkah 1: Perencanaan Menu & Kebutuhan
                   </span>
@@ -724,29 +737,35 @@ export const LandingPage: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <div className="p-4 bg-surface-muted/70 rounded-xl border border-surface-border space-y-2 text-xs font-mono text-left">
-                  <div className="text-gray-500 font-bold border-b border-surface-border pb-1">
-                    Simulasi Demand Terbit
+                <div className="md:col-span-5 space-y-3">
+                  <div className="relative h-28 rounded-xl overflow-hidden shadow-xs border border-surface-border">
+                    <img
+                      src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=800&q=80"
+                      alt="Dapur Gizi Higienis"
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-pine-950/70 via-transparent to-transparent flex items-end p-2.5">
+                      <span className="text-[10px] font-mono font-semibold text-white">Dapur Gizi Massal Bersertifikat</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Menu: R1 (Senin)</span>
-                    <span className="text-emerald-700 font-bold">1.000 Anak</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Bayam Hijau (+15% susut):</span>
-                    <span className="font-bold text-pine-950">69,0 kg</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Harga Maksimum:</span>
-                    <span>Rp 10.000 / kg</span>
+                  <div className="p-3 bg-surface-muted/70 rounded-xl border border-surface-border space-y-1.5 text-xs font-mono text-left">
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Menu R1 (1.000 Anak):</span>
+                      <span className="font-bold text-pine-950">69,0 kg Bayam</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Batas Harga:</span>
+                      <span className="text-emerald-700 font-bold">Rp 10.000 / kg</span>
+                    </div>
                   </div>
                 </div>
               </div>
             )}
 
             {activeTabRole === 'farmer' && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3 text-left">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <div className="md:col-span-7 space-y-3 text-left">
                   <span className="text-xs font-mono font-bold text-harvest-amber uppercase tracking-wider">
                     Langkah 2: Kepastian Pasar & Alokasi Kuota
                   </span>
@@ -762,29 +781,35 @@ export const LandingPage: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <div className="p-4 bg-surface-muted/70 rounded-xl border border-surface-border space-y-2 text-xs font-mono text-left">
-                  <div className="text-gray-500 font-bold border-b border-surface-border pb-1">
-                    Tawaran Masuk (S1 - Tani Makmur)
+                <div className="md:col-span-5 space-y-3">
+                  <div className="relative h-28 rounded-xl overflow-hidden shadow-xs border border-surface-border">
+                    <img
+                      src="https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=800&q=80"
+                      alt="Petani Sayur Lokal Memanen"
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-pine-950/70 via-transparent to-transparent flex items-end p-2.5">
+                      <span className="text-[10px] font-mono font-semibold text-white">Petani Mitra Lokal Terdaftar</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Pesanan Dapur DPR01:</span>
-                    <span className="text-brand font-bold">40,0 kg</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Harga Disepakati:</span>
-                    <span>Rp 8.000 / kg</span>
-                  </div>
-                  <div className="flex justify-between text-emerald-800 font-bold">
-                    <span>Dana Dicadangkan:</span>
-                    <span>Rp 320.000 [HOLD]</span>
+                  <div className="p-3 bg-surface-muted/70 rounded-xl border border-surface-border space-y-1.5 text-xs font-mono text-left">
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Tawaran S1:</span>
+                      <span className="text-brand font-bold">40,0 kg (@ Rp 8.000)</span>
+                    </div>
+                    <div className="flex justify-between text-emerald-800 font-bold">
+                      <span>Dana Dicadangkan:</span>
+                      <span>Rp 320.000 [HOLD]</span>
+                    </div>
                   </div>
                 </div>
               </div>
             )}
 
             {activeTabRole === 'coordinator' && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3 text-left">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <div className="md:col-span-7 space-y-3 text-left">
                   <span className="text-xs font-mono font-bold text-blue-800 uppercase tracking-wider">
                     Langkah 3: Konsolidasi & Distribusi
                   </span>
@@ -800,29 +825,35 @@ export const LandingPage: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <div className="p-4 bg-surface-muted/70 rounded-xl border border-surface-border space-y-2 text-xs font-mono text-left">
-                  <div className="text-gray-500 font-bold border-b border-surface-border pb-1">
-                    Konsolidasi Pengiriman
+                <div className="md:col-span-5 space-y-3">
+                  <div className="relative h-28 rounded-xl overflow-hidden shadow-xs border border-surface-border">
+                    <img
+                      src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80"
+                      alt="Logistik Konsolidasi Armada Pangan"
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-pine-950/70 via-transparent to-transparent flex items-end p-2.5">
+                      <span className="text-[10px] font-mono font-semibold text-white">Konsolidasi Rute Pendek (&lt; 25 km)</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Titik Kumpul:</span>
-                    <span>Sukamaju & Mekarsari</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Kode Batch Dihasilkan:</span>
-                    <span className="text-blue-800 font-bold">ORV-20261014-DPR01-0001</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Total Muatan:</span>
-                    <span className="font-bold">69,0 kg</span>
+                  <div className="p-3 bg-surface-muted/70 rounded-xl border border-surface-border space-y-1.5 text-xs font-mono text-left">
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Kode Batch:</span>
+                      <span className="text-blue-800 font-bold">ORV-20261014-DPR01-0001</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Muatan Konsolidasi:</span>
+                      <span className="font-bold">69,0 kg</span>
+                    </div>
                   </div>
                 </div>
               </div>
             )}
 
             {activeTabRole === 'inspector' && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3 text-left">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <div className="md:col-span-7 space-y-3 text-left">
                   <span className="text-xs font-mono font-bold text-purple-800 uppercase tracking-wider">
                     Langkah 4: Pemeriksaan Mutu & Pembayaran
                   </span>
@@ -838,21 +869,27 @@ export const LandingPage: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <div className="p-4 bg-surface-muted/70 rounded-xl border border-surface-border space-y-2 text-xs font-mono text-left">
-                  <div className="text-gray-500 font-bold border-b border-surface-border pb-1">
-                    Hasil Pemeriksaan Mutu
+                <div className="md:col-span-5 space-y-3">
+                  <div className="relative h-28 rounded-xl overflow-hidden shadow-xs border border-surface-border">
+                    <img
+                      src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80"
+                      alt="Pemeriksaan Mutu dan Keamanan Pangan"
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-pine-950/70 via-transparent to-transparent flex items-end p-2.5">
+                      <span className="text-[10px] font-mono font-semibold text-white">Inspeksi Standar Ahli Gizi</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Skor Checklist Gizi:</span>
-                    <span className="text-emerald-700 font-bold">90 / 100 [PASS]</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Jumlah Diterima:</span>
-                    <span>40,0 kg (100%)</span>
-                  </div>
-                  <div className="flex justify-between text-emerald-800 font-bold">
-                    <span>Pencairan Buku Besar:</span>
-                    <span>Rp 320.000 [RELEASE]</span>
+                  <div className="p-3 bg-surface-muted/70 rounded-xl border border-surface-border space-y-1.5 text-xs font-mono text-left">
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Skor Mutu QC:</span>
+                      <span className="text-emerald-700 font-bold">90 / 100 [PASS]</span>
+                    </div>
+                    <div className="flex justify-between text-emerald-800 font-bold">
+                      <span>Pencairan Dana:</span>
+                      <span>Rp 320.000 [RELEASE]</span>
+                    </div>
                   </div>
                 </div>
               </div>
