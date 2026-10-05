@@ -12,24 +12,58 @@ const prisma = new PrismaClient();
 export async function main() {
   console.log('🌱 Memulai penyemaian data dasar (T1.6 / docs/09 Bagian 1 - 4)...');
 
-  // 1. Wilayah
-  const region = await prisma.region.upsert({
-    where: {
-      name_province: {
-        name: 'Kabupaten Bogor',
-        province: 'Jawa Barat',
-      },
-    },
-    update: {
-      name: 'Kabupaten Bogor',
-      province: 'Jawa Barat',
-    },
-    create: {
-      name: 'Kabupaten Bogor',
-      province: 'Jawa Barat',
-    },
-  });
-  console.log(`✓ Wilayah terdaftar: ${region.name}, ${region.province} (${region.id})`);
+  // 1. Wilayah — Seluruh Indonesia (32 daerah, 17 provinsi)
+  const INDONESIA_REGIONS = [
+    // Zona 1 — Jawa, Bali, Lampung, Sumsel, NTB (multiplier ≈ 1.00)
+    { name: 'Kabupaten Bogor',        province: 'Jawa Barat' },
+    { name: 'Kota Bandung',           province: 'Jawa Barat' },
+    { name: 'Kabupaten Cirebon',      province: 'Jawa Barat' },
+    { name: 'Kota Jakarta Selatan',   province: 'DKI Jakarta' },
+    { name: 'Kota Jakarta Timur',     province: 'DKI Jakarta' },
+    { name: 'Kabupaten Tangerang',    province: 'Banten' },
+    { name: 'Kabupaten Serang',       province: 'Banten' },
+    { name: 'Kota Semarang',          province: 'Jawa Tengah' },
+    { name: 'Kabupaten Banyumas',     province: 'Jawa Tengah' },
+    { name: 'Kabupaten Sleman',       province: 'D.I. Yogyakarta' },
+    { name: 'Kota Yogyakarta',        province: 'D.I. Yogyakarta' },
+    { name: 'Kota Surabaya',          province: 'Jawa Timur' },
+    { name: 'Kabupaten Malang',       province: 'Jawa Timur' },
+    { name: 'Kota Denpasar',          province: 'Bali' },
+    { name: 'Kabupaten Tabanan',      province: 'Bali' },
+    { name: 'Kota Bandar Lampung',    province: 'Lampung' },
+    { name: 'Kota Palembang',         province: 'Sumatera Selatan' },
+    { name: 'Kota Mataram',           province: 'Nusa Tenggara Barat' },
+    // Zona 2 — Sumatera, Kalimantan, Sulsel, Sulut (multiplier ≈ 1.10)
+    { name: 'Kota Medan',             province: 'Sumatera Utara' },
+    { name: 'Kabupaten Deli Serdang', province: 'Sumatera Utara' },
+    { name: 'Kota Padang',            province: 'Sumatera Barat' },
+    { name: 'Kota Pekanbaru',         province: 'Riau' },
+    { name: 'Kota Jambi',             province: 'Jambi' },
+    { name: 'Kota Bengkulu',          province: 'Bengkulu' },
+    { name: 'Kota Pontianak',         province: 'Kalimantan Barat' },
+    { name: 'Kota Balikpapan',        province: 'Kalimantan Timur' },
+    { name: 'Kota Samarinda',         province: 'Kalimantan Timur' },
+    { name: 'Kota Makassar',          province: 'Sulawesi Selatan' },
+    { name: 'Kabupaten Gowa',         province: 'Sulawesi Selatan' },
+    { name: 'Kota Manado',            province: 'Sulawesi Utara' },
+    // Zona 3 — Papua (multiplier ≈ 1.28)
+    { name: 'Kota Jayapura',          province: 'Papua' },
+    { name: 'Kota Kupang',            province: 'Nusa Tenggara Timur' },
+  ];
+
+  const regionMap = new Map<string, string>(); // "name|province" → id
+  for (const reg of INDONESIA_REGIONS) {
+    const r = await prisma.region.upsert({
+      where: { name_province: { name: reg.name, province: reg.province } },
+      update: { name: reg.name, province: reg.province },
+      create: { name: reg.name, province: reg.province },
+    });
+    regionMap.set(`${reg.name}|${reg.province}`, r.id);
+  }
+  console.log(`✓ ${INDONESIA_REGIONS.length} wilayah Indonesia terdaftar`);
+
+  // Referensi utama untuk demo users (Kabupaten Bogor)
+  const region = { id: regionMap.get('Kabupaten Bogor|Jawa Barat')! };
 
   // Kata sandi default akun demo: Demo1234!
   const passwordHash = await bcrypt.hash('Demo1234!', 10);

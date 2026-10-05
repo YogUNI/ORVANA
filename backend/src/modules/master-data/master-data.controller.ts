@@ -178,11 +178,15 @@ export class MasterDataController {
 
   @Post('price-references/sync-market')
   @Roles(Role.ADMIN)
-  @ApiOperation({ summary: 'Sinkronisasi harga pasar harian resmi dari Panel Bapanas & PIHPS BI (Khusus ADMIN)' })
+  @ApiOperation({ summary: 'Sinkronisasi harga pasar dari Panel Bapanas & PIHPS BI. syncAll=true untuk seluruh wilayah nasional.' })
   async syncMarketPrices(
     @Body() dto: SyncMarketPriceDto,
     @CurrentUser('sub') adminId: string,
   ) {
+    if (dto.syncAll) {
+      return this.priceSyncService.syncAllRegions(adminId);
+    }
     return this.priceSyncService.syncPricesForRegion(dto.regionId, adminId);
   }
 }
+
