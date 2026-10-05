@@ -51,10 +51,10 @@ export const NotificationsPage: React.FC = () => {
     queryKey: ['notifications-page', unreadOnly, page],
     queryFn: async () => {
       const unreadParam = unreadOnly ? '&unread=true' : '';
-      const res = await apiClient.get<NotificationsPageResponse>(
+      const res: any = await apiClient.get(
         `/notifications?page=${page}&limit=20${unreadParam}`,
       );
-      return res.data;
+      return res as NotificationsPageResponse;
     },
   });
 

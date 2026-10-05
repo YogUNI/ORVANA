@@ -66,26 +66,26 @@ export const AdminLedgerPage: React.FC = () => {
   const [filterStage, setFilterStage] = useState<string>('ALL');
 
   // Query mutasi buku besar
-  const { data: ledgerResponse, isLoading: isLoadingEntries } = useQuery<{ data: LedgerEntryItem[] }>({
+  const { data: ledgerResponse, isLoading: isLoadingEntries } = useQuery<LedgerEntryItem[]>({
     queryKey: ['admin-ledger', filterStage],
     queryFn: async () => {
       const stageParam = filterStage !== 'ALL' ? `?stage=${filterStage}` : '';
-      const res = await apiClient.get<{ data: LedgerEntryItem[] }>(`/ledger${stageParam}`);
-      return res.data;
+      const res: any = await apiClient.get(`/ledger${stageParam}`);
+      return (res.data || res) as LedgerEntryItem[];
     },
   });
 
   // Query ringkasan global buku besar (docs/06 M7)
-  const { data: summaryResponse, isLoading: isLoadingSummary } = useQuery<GlobalSummaryResponse>({
+  const { data: summaryData, isLoading: isLoadingSummary } = useQuery<GlobalSummaryResponse['data']>({
     queryKey: ['admin-ledger-summary'],
     queryFn: async () => {
-      const res = await apiClient.get<GlobalSummaryResponse>('/ledger/summary');
-      return res.data;
+      const res: any = await apiClient.get('/ledger/summary');
+      return (res.data || res) as GlobalSummaryResponse['data'];
     },
   });
 
-  const entries = ledgerResponse?.data || [];
-  const summary = summaryResponse?.data;
+  const entries = ledgerResponse || [];
+  const summary = summaryData;
 
   const getStageBadge = (stage: string) => {
     switch (stage) {

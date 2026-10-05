@@ -60,16 +60,16 @@ export const AdminDisputesPage: React.FC = () => {
   const [actionError, setActionError] = useState<string>('');
 
   // Fetch daftar sengketa
-  const { data: response, isLoading } = useQuery<{ data: DisputeItem[] }>({
+  const { data: disputesData, isLoading } = useQuery<DisputeItem[]>({
     queryKey: ['admin-disputes', statusFilter],
     queryFn: async () => {
       const url = statusFilter === 'ALL' ? '/disputes' : `/disputes?status=${statusFilter}`;
-      const res = await apiClient.get<{ data: DisputeItem[] }>(url);
-      return res.data;
+      const res: any = await apiClient.get(url);
+      return (res.data || res) as DisputeItem[];
     },
   });
 
-  const disputes = response?.data || [];
+  const disputes = disputesData || [];
 
   // Mutasi: Ubah status menjadi UNDER_REVIEW
   const reviewMutation = useMutation({

@@ -49,25 +49,25 @@ export const SupplierHarvestPlanPage: React.FC = () => {
   const [formError, setFormError] = useState('');
 
   // Fetch rencana panen pemasok
-  const { data: plansResponse, isLoading } = useQuery<{ data: HarvestPlanItem[] }>({
+  const { data: plansData, isLoading } = useQuery<HarvestPlanItem[]>({
     queryKey: ['supplier-harvest-plans'],
     queryFn: async () => {
-      const res = await apiClient.get<{ data: HarvestPlanItem[] }>('/harvest-plans');
-      return res.data;
+      const res: any = await apiClient.get('/harvest-plans');
+      return (res.data || res) as HarvestPlanItem[];
     },
   });
 
   // Fetch daftar komoditas aktif
-  const { data: commoditiesResponse } = useQuery<{ data: CommodityOption[] }>({
+  const { data: commoditiesData } = useQuery<CommodityOption[]>({
     queryKey: ['commodities-active'],
     queryFn: async () => {
-      const res = await apiClient.get<{ data: CommodityOption[] }>('/commodities?isActive=true');
-      return res.data;
+      const res: any = await apiClient.get('/commodities');
+      return (res.data || res) as CommodityOption[];
     },
   });
 
-  const plans = plansResponse?.data || [];
-  const commodities = commoditiesResponse?.data || [];
+  const plans = plansData || [];
+  const commodities = commoditiesData || [];
 
   // Mutasi: Buat atau Update rencana panen
   const saveMutation = useMutation({
@@ -295,6 +295,9 @@ export const SupplierHarvestPlanPage: React.FC = () => {
                   disabled={!!editingPlan}
                   className="w-full px-3 py-2 border border-stone-300 rounded-lg text-xs focus:ring-1 focus:ring-pine-700 outline-hidden bg-white"
                 >
+                  <option value="" disabled>
+                    -- Pilih Komoditas Pangan --
+                  </option>
                   {commodities.map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.name}

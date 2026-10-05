@@ -64,15 +64,13 @@ interface ImpactMetrics {
 const PIE_COLORS = ['#10B981', '#F59E0B', '#EF4444'];
 
 export const AdminDashboardPage: React.FC = () => {
-  const { data: metricsResponse, isLoading } = useQuery<{ data: ImpactMetrics }>({
+  const { data: metrics, isLoading } = useQuery<ImpactMetrics>({
     queryKey: ['impact-metrics'],
     queryFn: async () => {
-      const res = await apiClient.get<{ data: ImpactMetrics }>('/dashboard/impact');
-      return res.data;
+      const res: any = await apiClient.get('/dashboard/impact');
+      return (res.data || res) as ImpactMetrics;
     },
   });
-
-  const metrics = metricsResponse?.data;
 
   // Data untuk Bar Chart: Pemenuhan vs Penolakan Bahan Pangan
   const volumeData = metrics

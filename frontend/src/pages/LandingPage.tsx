@@ -46,15 +46,13 @@ export const LandingPage: React.FC = () => {
   // Interactive FAQ Accordion State
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
 
-  const { data: summaryResponse, isLoading } = useQuery<{ data: PublicImpactSummary }>({
+  const { data: impact, isLoading } = useQuery<PublicImpactSummary>({
     queryKey: ['public-impact-summary'],
     queryFn: async () => {
-      const res = await apiClient.get<{ data: PublicImpactSummary }>('/public/impact-summary');
-      return res.data;
+      const res: any = await apiClient.get('/public/impact-summary');
+      return (res.data || res) as PublicImpactSummary;
     },
   });
-
-  const impact = summaryResponse?.data;
 
   const handleTraceSubmit = (e: React.FormEvent) => {
     e.preventDefault();

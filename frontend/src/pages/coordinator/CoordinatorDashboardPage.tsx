@@ -49,15 +49,13 @@ interface CoordinatorDashboardData {
 }
 
 export const CoordinatorDashboardPage: React.FC = () => {
-  const { data: response, isLoading } = useQuery<{ data: CoordinatorDashboardData }>({
+  const { data: dashboard, isLoading } = useQuery<CoordinatorDashboardData>({
     queryKey: ['coordinator-dashboard'],
     queryFn: async () => {
-      const res = await apiClient.get<{ data: CoordinatorDashboardData }>('/dashboard/coordinator');
-      return res.data;
+      const res: any = await apiClient.get('/dashboard/coordinator');
+      return (res.data || res) as CoordinatorDashboardData;
     },
   });
-
-  const dashboard = response?.data;
 
   if (isLoading) {
     return (

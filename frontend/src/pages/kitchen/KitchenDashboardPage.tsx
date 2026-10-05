@@ -66,15 +66,13 @@ interface KitchenDashboardData {
 }
 
 export const KitchenDashboardPage: React.FC = () => {
-  const { data: response, isLoading } = useQuery<{ data: KitchenDashboardData }>({
+  const { data: dashboard, isLoading } = useQuery<KitchenDashboardData>({
     queryKey: ['kitchen-dashboard'],
     queryFn: async () => {
-      const res = await apiClient.get<{ data: KitchenDashboardData }>('/dashboard/kitchen');
-      return res.data;
+      const res: any = await apiClient.get('/dashboard/kitchen');
+      return (res.data || res) as KitchenDashboardData;
     },
   });
-
-  const dashboard = response?.data;
 
   if (isLoading) {
     return (

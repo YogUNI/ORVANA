@@ -52,16 +52,16 @@ export const KitchenPaymentsPage: React.FC = () => {
   const [disputeEntry, setDisputeEntry] = useState<LedgerEntryItem | null>(null);
   const [reviewEntry, setReviewEntry] = useState<LedgerEntryItem | null>(null);
 
-  const { data: ledgerResponse, isLoading, error } = useQuery<{ data: LedgerEntryItem[] }>({
+  const { data: ledgerData, isLoading, error } = useQuery<LedgerEntryItem[]>({
     queryKey: ['ledger-kitchen', filterStage],
     queryFn: async () => {
       const stageParam = filterStage !== 'ALL' ? `?stage=${filterStage}` : '';
-      const res = await apiClient.get<{ data: LedgerEntryItem[] }>(`/ledger${stageParam}`);
-      return res.data;
+      const res: any = await apiClient.get(`/ledger${stageParam}`);
+      return (res.data || res) as LedgerEntryItem[];
     },
   });
 
-  const entries = ledgerResponse?.data || [];
+  const entries = ledgerData || [];
 
   const totalHold = entries
     .filter((e) => e.stage === 'HOLD')

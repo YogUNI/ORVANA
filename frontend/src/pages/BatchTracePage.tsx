@@ -63,16 +63,14 @@ export const BatchTracePage: React.FC = () => {
   const { batchCode } = useParams<{ batchCode: string }>();
   const [searchInput, setSearchInput] = useState('');
 
-  const { data: traceResponse, isLoading, isError } = useQuery<{ data: PublicTraceData }>({
+  const { data: trace, isLoading, isError } = useQuery<PublicTraceData>({
     queryKey: ['public-trace', batchCode],
     queryFn: async () => {
-      const res = await apiClient.get<{ data: PublicTraceData }>(`/public/trace/${batchCode}`);
-      return res.data;
+      const res: any = await apiClient.get(`/public/trace/${batchCode}`);
+      return (res.data || res) as PublicTraceData;
     },
     enabled: !!batchCode,
   });
-
-  const trace = traceResponse?.data;
 
   const getQcBadge = (result?: string | null) => {
     switch (result) {

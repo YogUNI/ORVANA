@@ -53,26 +53,26 @@ export const AuditorDashboardPage: React.FC = () => {
   const [filterStage, setFilterStage] = useState<string>('ALL');
 
   // Query mutasi buku besar tersamarkan
-  const { data: ledgerResponse, isLoading: isLoadingEntries } = useQuery<{ data: AuditorLedgerEntry[] }>({
+  const { data: ledgerEntries, isLoading: isLoadingEntries } = useQuery<AuditorLedgerEntry[]>({
     queryKey: ['auditor-ledger', filterStage],
     queryFn: async () => {
       const stageParam = filterStage !== 'ALL' ? `?stage=${filterStage}` : '';
-      const res = await apiClient.get<{ data: AuditorLedgerEntry[] }>(`/ledger${stageParam}`);
-      return res.data;
+      const res: any = await apiClient.get(`/ledger${stageParam}`);
+      return (res.data || res) as AuditorLedgerEntry[];
     },
   });
 
   // Query ringkasan buku besar auditor
-  const { data: summaryResponse, isLoading: isLoadingSummary } = useQuery<AuditorSummaryResponse>({
+  const { data: summaryData, isLoading: isLoadingSummary } = useQuery<AuditorSummaryResponse['data']>({
     queryKey: ['auditor-ledger-summary'],
     queryFn: async () => {
-      const res = await apiClient.get<AuditorSummaryResponse>('/ledger/summary');
-      return res.data;
+      const res: any = await apiClient.get('/ledger/summary');
+      return (res.data || res) as AuditorSummaryResponse['data'];
     },
   });
 
-  const entries = ledgerResponse?.data || [];
-  const summary = summaryResponse?.data;
+  const entries = ledgerEntries || [];
+  const summary = summaryData;
 
   const getStageBadge = (stage: string) => {
     switch (stage) {

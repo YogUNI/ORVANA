@@ -50,17 +50,16 @@ interface CalendarResponse {
 export const HarvestCalendarPage: React.FC = () => {
   const [selectedWeeks, setSelectedWeeks] = useState<number>(4);
 
-  const { data: response, isLoading } = useQuery<{ data: CalendarResponse }>({
+  const { data: calendarData, isLoading } = useQuery<CalendarResponse>({
     queryKey: ['harvest-calendar', selectedWeeks],
     queryFn: async () => {
-      const res = await apiClient.get<{ data: CalendarResponse }>(
+      const res: any = await apiClient.get(
         `/harvest-calendar?weeks=${selectedWeeks}`,
       );
-      return res.data;
+      return (res.data || res) as CalendarResponse;
     },
   });
 
-  const calendarData = response?.data;
   const commodities = calendarData?.commodities || [];
   const weeks = calendarData?.weeks || [];
 

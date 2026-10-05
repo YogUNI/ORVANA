@@ -52,15 +52,13 @@ interface SupplierDashboardData {
 }
 
 export const SupplierDashboardPage: React.FC = () => {
-  const { data: response, isLoading } = useQuery<{ data: SupplierDashboardData }>({
+  const { data: dashboard, isLoading } = useQuery<SupplierDashboardData>({
     queryKey: ['supplier-dashboard'],
     queryFn: async () => {
-      const res = await apiClient.get<{ data: SupplierDashboardData }>('/dashboard/supplier');
-      return res.data;
+      const res: any = await apiClient.get('/dashboard/supplier');
+      return (res.data || res) as SupplierDashboardData;
     },
   });
-
-  const dashboard = response?.data;
 
   if (isLoading) {
     return (
