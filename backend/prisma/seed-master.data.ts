@@ -60,7 +60,7 @@ export const COMMODITIES_SEED_DATA: CommoditySeedData[] = [
     wastePercent: 0.05,
     floorPrice: 30000,
     referencePrice: 45000,
-    ceilingPrice: 8000, // will be verified: 80000 in doc
+    ceilingPrice: 80000,
   },
   {
     name: 'Bawang merah',

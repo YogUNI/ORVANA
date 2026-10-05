@@ -9,7 +9,7 @@ import {
 
 const prisma = new PrismaClient();
 
-async function main() {
+export async function main() {
   console.log('🌱 Memulai penyemaian data dasar (T1.6 / docs/09 Bagian 1 - 4)...');
 
   // 1. Wilayah
@@ -500,14 +500,20 @@ async function main() {
   const { seedHistoricalOrders } = await import('./seed-history');
   await seedHistoricalOrders(prisma);
 
+  // 7. Stok Pemasok untuk Skenario Demo Langsung (docs/09 bagian 6 & docs/11 bagian 4)
+  const { seedDemoStocks } = await import('./seed-stocks');
+  await seedDemoStocks(prisma);
+
   console.log('🎉 Seluruh data dasar, master data, dan riwayat demo berhasil disemai!');
 }
 
-main()
-  .catch((e) => {
-    console.error('❌ Terjadi kesalahan saat penyemaian data:', e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+if (require.main === module) {
+  main()
+    .catch((e) => {
+      console.error('❌ Terjadi kesalahan saat penyemaian data:', e);
+      process.exit(1);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
+}
