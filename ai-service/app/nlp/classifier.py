@@ -10,53 +10,33 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.model_selection import cross_val_score
 
 from app.nlp.commodities import COMMODITY_SYNONYMS
-
-# Dataset latih intensi ucapan petani lokal (Corpus Data)
-INTENT_TRAINING_DATA = [
-    # OFFER_STOCK: Menawarkan stok yang siap kirim / panen segera
-    ("besok panen 200 kg cabai rawit harga 45 ribu", "OFFER_STOCK"),
-    ("lusa ada bayam 2 kwintal siap angkut", "OFFER_STOCK"),
-    ("kangkung 1 ton minggu depan 7rb", "OFFER_STOCK"),
-    ("ada lele 50 kilo tgl 15 harga 30.000", "OFFER_STOCK"),
-    ("siap kirim tomat 100 kg dari cibening", "OFFER_STOCK"),
-    ("stok telur ayam ready 500 butir atau 30 kilo", "OFFER_STOCK"),
-    ("panen raya bawang merah 3 kwintal siap setor dapur", "OFFER_STOCK"),
-    ("ada tempe segar bu rina 80 kg baru jadi", "OFFER_STOCK"),
-    ("beras ramos 500 kilo siap kirim", "OFFER_STOCK"),
-    ("ikan nila 100 kg baru angkat kolam", "OFFER_STOCK"),
-
-    # HARVEST_PLAN: Proyeksi masa depan / tanam baru (belum siap sekarang)
-    ("bulan depan baru mau panen padi 2 hektar", "HARVEST_PLAN"),
-    ("rencana panen cabai rawit akhir bulan november", "HARVEST_PLAN"),
-    ("masih tanam kangkung estimasi panen 20 hari lagi", "HARVEST_PLAN"),
-    ("bibit lele baru sebar perkiraan panen 2 bulan", "HARVEST_PLAN"),
-    ("jadwal panen wortel masih 3 minggu lagi", "HARVEST_PLAN"),
-
-    # PRICE_INQUIRY: Bertanya harga acuan / pasar
-    ("berapa harga cabai rawit hari ini di pasar bogor?", "PRICE_INQUIRY"),
-    ("harga dasar gabah kering berapa ya pak?", "PRICE_INQUIRY"),
-    ("apakah harga telur ayam naik minggu ini?", "PRICE_INQUIRY"),
-    ("cek harga acuan bapanas untuk bawang merah", "PRICE_INQUIRY"),
-
-    # IRRELEVANT / GREETING
-    ("selamat pagi pak koordinator", "IRRELEVANT"),
-    ("terima kasih infonya", "IRRELEVANT"),
-    ("hujan deras di sawah hari ini", "IRRELEVANT"),
-    ("halo assalamualaikum", "IRRELEVANT"),
-]
+from app.nlp.dataset_generator import generate_training_dataset
 
 class HybridNLPClassifier:
     def __init__(self):
-        # 1. Inisialisasi Intent Classifier
-        self.intent_vectorizer = TfidfVectorizer(ngram_range=(1, 2), lowercase=True)
-        texts, labels = zip(*INTENT_TRAINING_DATA)
+        # 1. Hasilkan 550 data latih domain pertanian Indonesia
+        self.dataset = generate_training_dataset(target_count=550)
+        texts, labels = zip(*self.dataset)
+
+        # 2. Inisialisasi TF-IDF Feature Extractor (Unigram + Bigram + Sublinear TF Scaling)
+        self.intent_vectorizer = TfidfVectorizer(
+            ngram_range=(1, 2),
+            sublinear_tf=True,
+            min_df=1,
+            lowercase=True
+        )
         X = self.intent_vectorizer.fit_transform(texts)
-        self.intent_clf = MultinomialNB(alpha=0.5)
+
+        # 3. Model Multinomial Naive Bayes dengan evaluasi Cross Validation 5-Fold
+        self.intent_clf = MultinomialNB(alpha=0.2)
+        cv_scores = cross_val_score(self.intent_clf, X, labels, cv=5)
+        self.mean_accuracy = float(np.mean(cv_scores))
         self.intent_clf.fit(X, labels)
 
-        # 2. Inisialisasi Commodity Fuzzy Semantic Vectorizer (Character n-grams untuk toleransi typo)
+        # 4. Inisialisasi Commodity Fuzzy Semantic Vectorizer (Character n-grams 2-4 untuk toleransi typo)
         self.char_vectorizer = TfidfVectorizer(analyzer="char_wb", ngram_range=(2, 4), lowercase=True)
         self.canonical_names = list(COMMODITY_SYNONYMS.keys())
         
