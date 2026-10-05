@@ -33,13 +33,17 @@ PRICE_REGEXES = [
     re.compile(r'(?:harga\s*)?(?P<val>\d+(?:[.,]\d+)?)\s*(?P<mult>ribu|rb|k)\b(?:\s*(?:/|per)\s*(?:kg|kilo))?', re.IGNORECASE),
 ]
 
+from app.nlp.number_words import normalize_indonesian_number_words
+
 def parse_quantities(text: str) -> List[Tuple[float, int, int]]:
     """
     Ekstraksi kuantitas dalam kilogram.
+    Mendukung angka kata ("dua kwintal", "setengah ton", "tiga puluh lima kilo").
     Returns: List of (quantity_kg, start_pos, end_pos)
     """
+    norm_text = normalize_indonesian_number_words(text)
     results = []
-    for m in QUANTITY_REGEX.finditer(text):
+    for m in QUANTITY_REGEX.finditer(norm_text):
         raw_val = m.group("val").replace(",", ".")
         unit = m.group("unit").lower()
         multiplier = UNIT_MULTIPLIERS.get(unit, 1.0)

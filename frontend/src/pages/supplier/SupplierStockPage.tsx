@@ -79,6 +79,7 @@ export const SupplierStockPage: React.FC = () => {
   );
   const [addPrice, setAddPrice] = useState<number>(0);
   const [addSourceText, setAddSourceText] = useState('');
+  const [parsedCandidates, setParsedCandidates] = useState<any[]>([]);
   const [addError, setAddError] = useState<string | null>(null);
 
   // Modal State Edit Stok
@@ -138,6 +139,7 @@ export const SupplierStockPage: React.FC = () => {
     const defaultRef = priceReferences?.find((p) => p.commodityId === defaultCommId);
     setAddPrice(defaultRef ? Number(defaultRef.referencePrice) : 8000);
     setAddSourceText('');
+    setParsedCandidates([]);
     setAddError(null);
     setIsAddModalOpen(true);
   };
@@ -739,13 +741,14 @@ export const SupplierStockPage: React.FC = () => {
                   if (!addSourceText || !addSourceText.trim()) return;
                   try {
                     const res: any = await apiClient.post('/supply-offers/parse-text', { text: addSourceText.trim() });
-                    const candidate = res?.data?.candidates?.[0];
-                    if (candidate) {
-                      if (candidate.commodityId) setAddCommodityId(candidate.commodityId);
-                      if (candidate.quantityKg) setAddQuantity(candidate.quantityKg);
-                      if (candidate.harvestDate) setAddHarvestDate(candidate.harvestDate);
-                      if (candidate.askingPrice) setAddPrice(candidate.askingPrice);
-                      alert(`Berhasil diuraikan otomatis: ${candidate.commodityName} sejumlah ${candidate.quantityKg || '-'} kg. Silakan periksa formulir lalu simpan.`);
+                    const candidates = res?.data?.candidates || [];
+                    setParsedCandidates(candidates);
+                    if (candidates.length > 0) {
+                      const first = candidates[0];
+                      if (first.commodityId) setAddCommodityId(first.commodityId);
+                      if (first.quantityKg) setAddQuantity(first.quantityKg);
+                      if (first.harvestDate) setAddHarvestDate(first.harvestDate);
+                      if (first.askingPrice) setAddPrice(first.askingPrice);
                     } else if (res?.data?.warnings?.length) {
                       alert(res.data.warnings[0]);
                     }
@@ -758,6 +761,40 @@ export const SupplierStockPage: React.FC = () => {
                 Urai Kalimat
               </Button>
             </div>
+
+            {/* List Rekomendasi Multi-Komoditas */}
+            {parsedCandidates.length > 1 && (
+              <div className="pt-2 border-t border-emerald-200 space-y-1.5">
+                <span className="text-[11px] font-bold text-pine-900 block">
+                  Ditemukan {parsedCandidates.length} komoditas dalam kalimat:
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                  {parsedCandidates.map((cand, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        if (cand.commodityId) setAddCommodityId(cand.commodityId);
+                        if (cand.quantityKg) setAddQuantity(cand.quantityKg);
+                        if (cand.harvestDate) setAddHarvestDate(cand.harvestDate);
+                        if (cand.askingPrice) setAddPrice(cand.askingPrice);
+                      }}
+                      className="text-left p-2 rounded border border-emerald-300 bg-white hover:bg-emerald-50 text-xs transition-colors flex justify-between items-center"
+                    >
+                      <div>
+                        <div className="font-bold text-stone-900">{cand.commodityName}</div>
+                        <div className="text-[10px] text-stone-500 font-mono">
+                          {cand.quantityKg ? `${cand.quantityKg} kg` : '-'} | {cand.askingPrice ? formatRupiah(cand.askingPrice) : '-'}
+                        </div>
+                      </div>
+                      <span className="text-[10px] bg-pine-100 text-pine-800 px-1.5 py-0.5 rounded font-medium">
+                        Pilih
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <div>

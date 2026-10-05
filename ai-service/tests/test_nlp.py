@@ -64,7 +64,25 @@ def test_nlp_test_cases():
     assert len(res6.candidates) == 0
     print("[PASS] Kasus 6 Lulus: Kalimat tanpa komoditas ditolak dengan sopan")
 
-    print("\nSUCCESS: SEMUA KASUS UJI NLP DOKUMEN 08 BAGIAN 3.6 LULUS 100%!")
+    # Kasus 7 (Gold Standard Words-to-Number): "lusa ada panen tiga puluh lima kilo lele sama setengah ton beras"
+    res7 = parse_supply_sentence("lusa ada panen tiga puluh lima kilo lele sama setengah ton beras", base_date=base_date)
+    assert len(res7.candidates) == 2
+    assert res7.candidates[0].commodityName == "Ikan lele"
+    assert res7.candidates[0].quantityKg == 35.0
+    assert res7.candidates[1].commodityName == "Beras"
+    assert res7.candidates[1].quantityKg == 500.0
+    print("[PASS] Kasus 7 Lulus: Angka kata terbilang ('tiga puluh lima kilo' -> 35kg, 'setengah ton' -> 500kg)")
+
+    # Kasus 8 (Gold Standard Multi-Entity): 3 komoditas sekaligus dalam 1 pesan
+    res8 = parse_supply_sentence("besok cabai rawit dua kwintal 45rb, tomat 100 kg 12 ribu, sama bayam 25 kilo 8.000", base_date=base_date)
+    assert len(res8.candidates) == 3
+    assert res8.candidates[0].commodityName == "Cabai rawit" and res8.candidates[0].quantityKg == 200.0 and res8.candidates[0].askingPrice == 45000.0
+    assert res8.candidates[1].commodityName == "Tomat" and res8.candidates[1].quantityKg == 100.0 and res8.candidates[1].askingPrice == 12000.0
+    assert res8.candidates[2].commodityName == "Bayam" and res8.candidates[2].quantityKg == 25.0 and res8.candidates[2].askingPrice == 8000.0
+    print("[PASS] Kasus 8 Lulus: Multi-Entity Clause Segmentation (3 komoditas terekstrak presisi)")
+
+    print("\nSUCCESS: SEMUA KASUS UJI NLP DOKUMEN 08 & GOLD STANDARD LULUS 100%!")
 
 if __name__ == "__main__":
     test_nlp_test_cases()
+
