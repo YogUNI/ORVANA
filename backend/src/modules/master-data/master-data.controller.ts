@@ -18,6 +18,8 @@ import { CreateCommodityDto, UpdateCommodityDto } from './dto/commodity.dto';
 import { SetQualityStandardDto } from './dto/quality-standard.dto';
 import { CreateRecipeDto, UpdateRecipeDto, SetRecipeItemsDto } from './dto/recipe.dto';
 import { CreatePriceReferenceDto } from './dto/price-reference.dto';
+import { SyncMarketPriceDto } from './dto/sync-market-price.dto';
+import { MarketPriceSyncService } from './market-price-sync.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -28,7 +30,10 @@ import { CurrentUser } from '../../common/decorators/current-user.decorator';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth()
 export class MasterDataController {
-  constructor(private readonly masterDataService: MasterDataService) {}
+  constructor(
+    private readonly masterDataService: MasterDataService,
+    private readonly priceSyncService: MarketPriceSyncService,
+  ) {}
 
   // 1. Wilayah
   @Get('regions')
@@ -169,5 +174,15 @@ export class MasterDataController {
   ) {
     const ipAddress = req.ip || req.socket.remoteAddress;
     return this.masterDataService.createPriceReference(dto, adminId, ipAddress);
+  }
+
+  @Post('price-references/sync-market')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Sinkronisasi harga pasar harian resmi dari Panel Bapanas & PIHPS BI (Khusus ADMIN)' })
+  async syncMarketPrices(
+    @Body() dto: SyncMarketPriceDto,
+    @CurrentUser('sub') adminId: string,
+  ) {
+    return this.priceSyncService.syncPricesForRegion(dto.regionId, adminId);
   }
 }

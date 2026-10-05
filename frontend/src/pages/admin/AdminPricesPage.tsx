@@ -10,7 +10,7 @@ import { EmptyState } from '../../components/ui/EmptyState';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { Plus, Tag, Search, AlertCircle } from 'lucide-react';
+import { Plus, Tag, Search, AlertCircle, RefreshCw, CheckCircle2, Globe } from 'lucide-react';
 
 interface Commodity {
   id: string;
@@ -107,6 +107,37 @@ export const AdminPricesPage: React.FC = () => {
     },
   });
 
+  // State & Mutation Sinkronisasi Bapanas/PIHPS
+  const [syncFeedback, setSyncFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  const syncMutation = useMutation({
+    mutationFn: async () => {
+      const res: any = await apiClient.post('/price-references/sync-market', {
+        regionId: regions?.[0]?.id,
+      });
+      return res.data || res;
+    },
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ['price-references'] });
+      setSyncFeedback({
+        type: 'success',
+        message:
+          data.message ||
+          'Sinkronisasi berhasil! Seluruh koridor harga pangan wilayah telah diperbarui sesuai Panel Bapanas & PIHPS hari ini.',
+      });
+      setTimeout(() => setSyncFeedback(null), 6000);
+    },
+    onError: (err: any) => {
+      setSyncFeedback({
+        type: 'error',
+        message:
+          err?.response?.data?.error?.message ||
+          'Gagal melakukan sinkronisasi harga pasar. Silakan coba beberapa saat lagi.',
+      });
+      setTimeout(() => setSyncFeedback(null), 6000);
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
@@ -155,24 +186,61 @@ export const AdminPricesPage: React.FC = () => {
         subtitle="Koridor harga wajar pangan lokal: perlindungan harga dasar produsen dan batas atas belanja dapur gizi."
         icon={<Tag className="w-6 h-6 text-pine-800" />}
         actions={
-          <Button
-            onClick={openCreateModal}
-            className="w-full sm:w-auto bg-pine-800 hover:bg-pine-900 text-white flex items-center gap-1.5 text-xs font-semibold"
-          >
-            <Plus className="w-4 h-4" />
-            Tetapkan Harga Acuan
-          </Button>
+          <div className="flex items-center gap-2.5 w-full sm:w-auto flex-wrap">
+            <Button
+              variant="outline"
+              onClick={() => syncMutation.mutate()}
+              isLoading={syncMutation.isPending}
+              className="w-full sm:w-auto border-pine-700 text-pine-800 hover:bg-pine-50 flex items-center justify-center gap-1.5 text-xs font-semibold shadow-2xs"
+              title="Tarik data harga pangan pasar terkini dari Panel Bapanas & PIHPS"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 text-pine-700 ${syncMutation.isPending ? 'animate-spin' : ''}`} />
+              Sinkronisasi Harga Pasar (Bapanas)
+            </Button>
+            <Button
+              onClick={openCreateModal}
+              className="w-full sm:w-auto bg-pine-800 hover:bg-pine-900 text-white flex items-center justify-center gap-1.5 text-xs font-semibold shadow-2xs"
+            >
+              <Plus className="w-4 h-4" />
+              Tetapkan Harga Manual
+            </Button>
+          </div>
         }
       />
 
+      {/* Alert Notifikasi Sinkronisasi */}
+      {syncFeedback && (
+        <div
+          className={`p-4 rounded-xl flex items-center gap-3 text-sm shadow-sm transition-all animate-fadeIn ${
+            syncFeedback.type === 'success'
+              ? 'bg-emerald-50 text-emerald-900 border border-emerald-200'
+              : 'bg-red-50 text-status-danger border border-red-200'
+          }`}
+        >
+          {syncFeedback.type === 'success' ? (
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+          ) : (
+            <AlertCircle className="w-5 h-5 text-status-danger shrink-0" />
+          )}
+          <span className="font-medium">{syncFeedback.message}</span>
+        </div>
+      )}
+
       {/* Info Banner */}
-      <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg flex items-start gap-3">
-        <Tag className="w-5 h-5 text-brand shrink-0 mt-0.5" />
-        <div className="text-xs text-emerald-900 leading-relaxed">
-          <strong>Invarian Perlindungan Petani & Dapur:</strong> Penawaran pemasok di bawah{' '}
-          <em>Harga Dasar</em> akan ditolak sistem untuk melindungi pendapatan petani. Permintaan dapur tidak boleh
-          melebihi <em>Batas Atas</em> untuk menjaga anggaran dinas. Menetapkan harga baru otomatis menutup masa berlaku
-          harga lama.
+      <div className="p-4 bg-emerald-50/70 border border-emerald-200 rounded-xl flex items-start gap-3 shadow-2xs">
+        <div className="w-8 h-8 rounded-lg bg-white border border-emerald-200 text-pine-800 flex items-center justify-center shrink-0 mt-0.5">
+          <Globe className="w-4 h-4 text-emerald-700" />
+        </div>
+        <div className="text-xs text-emerald-950 leading-relaxed space-y-1">
+          <div className="font-bold flex items-center gap-2">
+            <span>Integrasi Panel Harga Pangan Nasional (Bapanas) & PIHPS Bank Indonesia</span>
+            <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full">
+              Realtime Harian
+            </span>
+          </div>
+          <p className="text-emerald-900">
+            Sistem secara otomatis memperbarui koridor harga komoditas pangan setiap pagi pukul 05.00 WIB. Penawaran petani di bawah <strong>Harga Dasar (HPP)</strong> ditolak sistem untuk melindungi pendapatan produsen, dan belanja dapur tidak boleh melampaui <strong>Batas Atas</strong> untuk menjaga efisiensi anggaran dinas.
+          </p>
         </div>
       </div>
 
