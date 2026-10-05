@@ -8,10 +8,8 @@ import { Button } from '../components/ui/Button';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Logo } from '../components/ui/Logo';
 import {
-  Sprout,
   ShieldCheck,
   Truck,
-  Scale,
   Search,
   Users,
   CheckCircle2,
@@ -25,6 +23,9 @@ import {
   Leaf,
   Activity,
   QrCode,
+  Check,
+  ChevronDown,
+  ArrowUpRight,
 } from 'lucide-react';
 
 interface PublicImpactSummary {
@@ -38,6 +39,13 @@ interface PublicImpactSummary {
 export const LandingPage: React.FC = () => {
   const [batchCodeInput, setBatchCodeInput] = useState('');
   const [activeTabRole, setActiveTabRole] = useState<'kitchen' | 'farmer' | 'coordinator' | 'inspector'>('kitchen');
+
+  // Interactive Live Calculator State
+  const [calcPortions, setCalcPortions] = useState<number>(1000);
+  const [calcCommodity, setCalcCommodity] = useState<'bayam' | 'lele' | 'beras' | 'telur'>('bayam');
+
+  // Interactive FAQ Accordion State
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
 
   const { data: summaryResponse, isLoading } = useQuery<{ data: PublicImpactSummary }>({
     queryKey: ['public-impact-summary'],
@@ -56,11 +64,84 @@ export const LandingPage: React.FC = () => {
     }
   };
 
+  // Kalkulasi estimasi real-time rumus docs/04 bagian 2
+  const getCalcResults = () => {
+    switch (calcCommodity) {
+      case 'bayam': {
+        // R1: 0.06 kg/porsi, 15% waste
+        const raw = calcPortions * 0.06 * 1.15;
+        const rounded = Math.ceil(raw * 10) / 10;
+        const cost = rounded * 8000;
+        return { name: 'Bayam Segar (Resep R1)', qtyKg: rounded, estCost: cost, unitPrice: 8000, wastePct: 15 };
+      }
+      case 'lele': {
+        // R1: 0.07 kg/porsi, 10% waste
+        const raw = calcPortions * 0.07 * 1.10;
+        const rounded = Math.ceil(raw * 10) / 10;
+        const cost = rounded * 30000;
+        return { name: 'Ikan Lele Segar (Resep R1)', qtyKg: rounded, estCost: cost, unitPrice: 30000, wastePct: 10 };
+      }
+      case 'beras': {
+        // R1-R5: 0.08 kg/porsi, 2% waste
+        const raw = calcPortions * 0.08 * 1.02;
+        const rounded = Math.ceil(raw * 10) / 10;
+        const cost = rounded * 14000;
+        return { name: 'Beras Lokal (Resep R1)', qtyKg: rounded, estCost: cost, unitPrice: 14000, wastePct: 2 };
+      }
+      case 'telur': {
+        // R2: 0.06 kg/porsi, 3% waste
+        const raw = calcPortions * 0.06 * 1.03;
+        const rounded = Math.ceil(raw * 10) / 10;
+        const cost = rounded * 28000;
+        return { name: 'Telur Ayam (Resep R2)', qtyKg: rounded, estCost: cost, unitPrice: 28000, wastePct: 3 };
+      }
+    }
+  };
+
+  const calc = getCalcResults();
+
+  const faqs = [
+    {
+      q: 'Apa bedanya ORVANA dengan marketplace produk pertanian biasa?',
+      a: 'Marketplace biasa berbasis transaksi bebas sewaktu-waktu. ORVANA adalah sistem terencana: mencocokkan jadwal menu kebutuhan dapur gizi massal 1–2 minggu sebelumnya dengan kalender panen petani lokal, dilengkapi batasan alokasi anti monopoli (cap 60%), jaminan harga dasar dinas, dan audit mutu bertingkat.',
+    },
+    {
+      q: 'Bagaimana petani terjamin menerima pembayaran tepat waktu?',
+      a: 'Sistem buku besar digital ORVANA menggunakan prinsip Escrow (rekening penampung aman): begitu petani menyanggupi order, dana langsung dicadangkan [HOLD]. Setelah pengawas mutu menyatakan lolos [PASS], dana otomatis dicairkan [RELEASE] langsung ke saldo petani.',
+    },
+    {
+      q: 'Bagaimana peran koordinator dan pengawas mutu memastikan standar gizi anak sekolah?',
+      a: 'Koordinator menjemput dan mengonsolidasi panen dari petani dengan radius pendek (< 25 km) untuk mencegah penurunan susut bobot. Pengawas mutu independen memeriksa fisik, kesegaran, dan kebersihan dengan standar checklist 100 poin sebelum makanan dimasak.',
+    },
+    {
+      q: 'Apakah masyarakat umum dan orang tua murid bisa melacak asal makanan?',
+      a: 'Ya. Setiap batch makanan yang disajikan memiliki kode batch unik dan QR code yang dapat dipindai secara publik tanpa perlu login. Menampilkan peta desa produsen, tanggal panen, hasil QC, dan sertifikat penelusuran resmi.',
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-surface selection:bg-brand/20 selection:text-brand relative overflow-x-hidden">
+      {/* Top Banner Akuntabilitas */}
+      <div className="bg-pine-950 text-white text-[11px] font-mono py-2 px-4 border-b border-pine-800">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-1 text-center sm:text-left">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-emerald-300 font-semibold">Sistem Produksi Aktif</span>
+            <span className="text-gray-400 hidden sm:inline">•</span>
+            <span className="text-gray-300">Protokol Transparansi Rantai Pasok Pangan Dapur Gizi Massal</span>
+          </div>
+          <Link
+            to="/trace/ORV-20260920-DPR01-0001"
+            className="text-harvest-amber hover:text-amber-300 underline flex items-center gap-1 font-semibold"
+          >
+            <span>Verifikasi Contoh Batch #ORV-20260920-DPR01-0001</span>
+            <ArrowUpRight className="w-3 h-3" />
+          </Link>
+        </div>
+      </div>
 
       {/* Header Sticky Glassmorphism */}
-      <header className="bg-white/85 backdrop-blur-md border-b border-surface-border sticky top-0 z-40 transition-all">
+      <header className="bg-white/90 backdrop-blur-md border-b border-surface-border sticky top-0 z-40 transition-all shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
           <Link to="/" className="group flex items-center gap-3">
             <Logo size="md" />
@@ -74,20 +155,27 @@ export const LandingPage: React.FC = () => {
             </div>
           </Link>
 
-          {/* Quick Nav & Action Buttons */}
-          <div className="flex items-center gap-3 sm:gap-4">
-            <a
-              href="#cara-kerja"
-              className="hidden md:inline-block text-xs font-semibold text-gray-700 hover:text-pine-900 transition-colors px-3 py-1.5"
-            >
-              Cara Kerja
-            </a>
-            <a
-              href="#dampak"
-              className="hidden md:inline-block text-xs font-semibold text-gray-700 hover:text-pine-900 transition-colors px-3 py-1.5"
-            >
+          {/* Quick Nav Links */}
+          <div className="hidden lg:flex items-center gap-6 text-xs font-semibold text-gray-700">
+            <a href="#dampak" className="hover:text-pine-900 transition-colors">
               Buku Besar & Dampak
             </a>
+            <a href="#arsitektur" className="hover:text-pine-900 transition-colors">
+              Nilai Tambah
+            </a>
+            <a href="#kalkulator" className="hover:text-pine-900 transition-colors">
+              Simulasi Kebutuhan
+            </a>
+            <a href="#cara-kerja" className="hover:text-pine-900 transition-colors">
+              Alur 4 Peran
+            </a>
+            <a href="#faq" className="hover:text-pine-900 transition-colors">
+              FAQ
+            </a>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2.5 sm:gap-3">
             <Link to="/trace/ORV-20260920-DPR01-0001">
               <span className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-emerald-900 bg-emerald-50 hover:bg-emerald-100/80 px-3 py-2 rounded-DEFAULT border border-emerald-200/80 transition-colors">
                 <QrCode className="w-3.5 h-3.5 text-emerald-700" />
@@ -96,7 +184,7 @@ export const LandingPage: React.FC = () => {
             </Link>
             <div className="h-5 w-px bg-surface-border hidden sm:block" />
             <Link to="/login">
-              <Button variant="outline" size="sm" className="font-medium text-xs sm:text-sm">
+              <Button variant="outline" size="sm" className="font-semibold text-xs sm:text-sm">
                 Masuk Sistem
               </Button>
             </Link>
@@ -109,25 +197,25 @@ export const LandingPage: React.FC = () => {
         </div>
       </header>
 
-      {/* HERO SECTION DENGAN 3D PERSPECTIVE CARD */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-16 lg:pb-24">
+      {/* HERO SECTION DENGAN 3D PERSPECTIVE CARD & DIRECT STORY */}
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-14 lg:pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           {/* Kolom Teks Kiri */}
-          <div className="lg:col-span-7 space-y-6 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50/90 border border-emerald-200/80 text-xs font-semibold text-emerald-900 shadow-2xs backdrop-blur-xs">
+          <div className="lg:col-span-7 space-y-5 text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/90 text-xs font-semibold text-emerald-900 shadow-2xs">
               <Award className="w-3.5 h-3.5 text-emerald-700" />
-              <span>Kedaulatan Pangan Generasi Emas • Dapur Gizi Massal</span>
+              <span>Inovasi Kedaulatan Pangan & Gizi Generasi Emas</span>
             </div>
 
             <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold text-pine-950 tracking-tight leading-[1.12]">
               Mencocokkan Menu Dapur dengan <br className="hidden sm:inline" />
-              <span className="relative inline-block text-brand underline decoration-harvest-gold/60 decoration-wavy decoration-3">
+              <span className="text-brand underline decoration-harvest-gold/60 decoration-wavy decoration-3">
                 Panen Petani Lokal
               </span>
             </h1>
 
             <p className="text-base sm:text-lg text-gray-700 leading-relaxed max-w-2xl">
-              Platform agritech terpadu yang menghubungkan rencana menu dapur gizi anak sekolah dengan panen petani dan nelayan lokal: alokasi cerdas multi-kriteria, perlindungan harga dasar, audit mutu bertingkat, dan pembukuan transparan.
+              Platform agritech terintegrasi yang menjembatani dapur gizi massal sekolah dengan produsen lokal: alokasi cerdas multi-kriteria, proteksi harga dasar, penjaminan dana escrow, dan passport digital bahan makanan anak bangsa.
             </p>
 
             {/* Kotak Pencarian Batch Interaktif */}
@@ -166,19 +254,19 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Micro Highlights Pill */}
-            <div className="pt-3 flex flex-wrap gap-4 text-xs text-gray-600 font-medium">
+            {/* Trust Highlights */}
+            <div className="pt-3 flex flex-wrap gap-4 text-xs text-gray-700 font-medium">
               <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-status-success" />
-                <span>Anti Tengkulak & Monopoli (Batas Cap 60%)</span>
+                <Check className="w-4 h-4 text-status-success font-bold" />
+                <span>Anti Monopoli (Batas Cap 60%)</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-status-success" />
-                <span>Dana Terjamin di Rekening Bersama</span>
+                <Check className="w-4 h-4 text-status-success font-bold" />
+                <span>Pencadangan Dana Escrow Otomatis</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-status-success" />
-                <span>Passport Mutu Digital QR Code</span>
+                <Check className="w-4 h-4 text-status-success font-bold" />
+                <span>Sertifikat Mutu QR Terbuka</span>
               </div>
             </div>
           </div>
@@ -276,24 +364,24 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* LIVE IMPACT SUMMARY / BUKU BESAR TERBUKA */}
+      {/* SECTION BUKU BESAR DAERAH & DAMPAK NYATA */}
       <section id="dampak" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="bg-white rounded-2xl border border-surface-border p-6 sm:p-8 shadow-soft">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-surface-border pb-4">
+        <div className="bg-white rounded-3xl border border-surface-border p-6 sm:p-10 shadow-soft">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-surface-border pb-5">
             <div>
               <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-pine-900 mb-1">
                 <Sparkles className="w-4 h-4 text-harvest-gold" />
-                <span>Indikator Dampak & Akuntabilitas Publik</span>
+                <span>Buku Besar Terbuka & Agregasi Dampak</span>
               </div>
-              <h2 className="font-serif text-2xl font-bold text-pine-950">
-                Data Agregat Transaksi Buku Besar Daerah
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-pine-950">
+                Transparansi Real-Time Ekonomi Lokal
               </h2>
-              <p className="text-xs text-gray-600 mt-0.5">
-                Angka riil dari perputaran bahan pangan segar, perlindungan petani, dan serapan gizi dapur
+              <p className="text-xs sm:text-sm text-gray-600 mt-0.5">
+                Data agregat langsung dari catatan transaksi append-only yang telah dituntaskan
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Badge color="accent">Buku Besar Append-Only</Badge>
+              <Badge color="accent">Audit Publik Terverifikasi</Badge>
               <Link to="/auditor/dashboard">
                 <Button variant="ghost" size="sm" className="text-xs font-semibold text-emerald-800">
                   <span>Portal Auditor</span>
@@ -303,172 +391,289 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6">
             {/* 1. Belanja Lokal */}
-            <div className="p-4 bg-emerald-50/40 rounded-xl border border-emerald-100 hover:border-emerald-300 transition-colors">
+            <div className="p-4 sm:p-5 bg-emerald-50/50 rounded-2xl border border-emerald-100 hover:border-emerald-300 transition-colors">
               <span className="text-xs text-emerald-800 flex items-center gap-1 font-medium">
                 <DollarSign className="w-3.5 h-3.5 text-emerald-700" />
                 Perputaran Belanja Lokal
               </span>
-              <p className="text-xl sm:text-2xl font-serif font-bold text-emerald-950 mt-1.5">
+              <p className="text-xl sm:text-2xl font-serif font-bold text-emerald-950 mt-2">
                 {isLoading ? <Skeleton className="h-7 w-20" /> : formatRupiah(impact?.localSpendingRupiah || 0)}
               </p>
-              <span className="text-[10px] text-emerald-800/80 block mt-1">100% langsung ke produsen daerah</span>
+              <span className="text-[10px] text-emerald-800/80 block mt-1">100% langsung diserap petani daerah</span>
             </div>
 
             {/* 2. Produsen Terlibat */}
-            <div className="p-4 bg-blue-50/40 rounded-xl border border-blue-100 hover:border-blue-300 transition-colors">
+            <div className="p-4 sm:p-5 bg-blue-50/50 rounded-2xl border border-blue-100 hover:border-blue-300 transition-colors">
               <span className="text-xs text-blue-800 flex items-center gap-1 font-medium">
                 <Users className="w-3.5 h-3.5 text-blue-700" />
                 Mitra Produsen Terlibat
               </span>
-              <p className="text-xl sm:text-2xl font-serif font-bold text-gray-900 mt-1.5">
+              <p className="text-xl sm:text-2xl font-serif font-bold text-gray-900 mt-2">
                 {isLoading ? <Skeleton className="h-7 w-12" /> : `${impact?.producersInvolved || 0} Produsen`}
               </p>
-              <span className="text-[10px] text-gray-500 block mt-1">Kelompok tani, nelayan & UMKM binaan</span>
+              <span className="text-[10px] text-gray-500 block mt-1">Kelompok tani, peternak & UMKM</span>
             </div>
 
             {/* 3. Pangan Terserap */}
-            <div className="p-4 bg-amber-50/40 rounded-xl border border-amber-100 hover:border-amber-300 transition-colors">
+            <div className="p-4 sm:p-5 bg-amber-50/50 rounded-2xl border border-amber-100 hover:border-amber-300 transition-colors">
               <span className="text-xs text-amber-800 flex items-center gap-1 font-medium">
                 <CheckCircle2 className="w-3.5 h-3.5 text-amber-700" />
                 Total Pangan Terserap
               </span>
-              <p className="text-xl sm:text-2xl font-mono font-bold text-pine-950 mt-1.5">
+              <p className="text-xl sm:text-2xl font-mono font-bold text-pine-950 mt-2">
                 {isLoading ? <Skeleton className="h-7 w-16" /> : formatKg(impact?.totalDeliveredKg || 0)}
               </p>
-              <span className="text-[10px] text-amber-900/70 block mt-1">Bahan makanan segar tersalurkan</span>
+              <span className="text-[10px] text-amber-900/70 block mt-1">Bahan segar bergizi tersalurkan</span>
             </div>
 
             {/* 4. Kelulusan Mutu */}
-            <div className="p-4 bg-purple-50/40 rounded-xl border border-purple-100 hover:border-purple-300 transition-colors">
+            <div className="p-4 sm:p-5 bg-purple-50/50 rounded-2xl border border-purple-100 hover:border-purple-300 transition-colors">
               <span className="text-xs text-purple-800 flex items-center gap-1 font-medium">
                 <ShieldCheck className="w-3.5 h-3.5 text-purple-700" />
                 Tingkat Lolos Mutu QC
               </span>
-              <p className="text-xl sm:text-2xl font-mono font-bold text-purple-950 mt-1.5">
+              <p className="text-xl sm:text-2xl font-mono font-bold text-purple-950 mt-2">
                 {isLoading ? <Skeleton className="h-7 w-14" /> : `${impact?.qualityPassRatePct || 0}%`}
               </p>
               <span className="text-[10px] text-purple-900/70 block mt-1">Standar inspeksi ahli gizi</span>
             </div>
 
             {/* 5. Jarak Tempuh */}
-            <div className="p-4 bg-stone-50 rounded-xl border border-stone-200 col-span-2 md:col-span-1">
+            <div className="p-4 sm:p-5 bg-stone-50 rounded-2xl border border-stone-200 col-span-2 md:col-span-1">
               <span className="text-xs text-gray-700 flex items-center gap-1 font-medium">
                 <MapPin className="w-3.5 h-3.5 text-earth-terracotta" />
                 Rata-rata Radius Jarak
               </span>
-              <p className="text-xl sm:text-2xl font-mono font-bold text-earth-terracotta mt-1.5">
+              <p className="text-xl sm:text-2xl font-mono font-bold text-earth-terracotta mt-2">
                 {isLoading ? <Skeleton className="h-7 w-16" /> : `${impact?.avgDistanceKm || 0} km`}
               </p>
-              <span className="text-[10px] text-gray-500 block mt-1">Emisi rendah & bahan lebih segar</span>
+              <span className="text-[10px] text-gray-500 block mt-1">Rute pendek, emisi karbon rendah</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 4 PILAR UTAMA ORVANA */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-12">
+      {/* SECTION TABEL PERBANDINGAN: ORVANA VS KONVENSIONAL */}
+      <section id="arsitektur" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="text-center max-w-2xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-muted border border-surface-border text-xs font-mono text-gray-600 mb-2">
-            <span>Arsitektur Rantai Pasok Berkelanjutan</span>
-          </div>
-          <h2 className="font-serif text-3xl font-bold text-pine-950">
-            Prinsip Ekosistem Pangan Berkeadilan
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+            Perbandingan Nyata
+          </span>
+          <h2 className="font-serif text-3xl font-bold text-pine-950 mt-3">
+            Mengapa Ekosistem Pangan Memilih ORVANA?
           </h2>
-          <p className="text-sm text-gray-600 mt-2">
-            Mengapa dapur gizi massal dan kelompok tani membutuhkan ORVANA dibanding sistem konvensional.
+          <p className="text-xs sm:text-sm text-gray-600 mt-2">
+            Perbedaan fundamental antara rantai pasok konvensional perantara dengan arsitektur digital ORVANA.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Pilar 1 */}
-          <div className="bg-white rounded-2xl border border-surface-border p-6 flex flex-col justify-between hover:shadow-card transition-all group">
-            <div>
-              <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center mb-5 border border-emerald-200 group-hover:scale-105 transition-transform">
-                <Sprout className="w-6 h-6" />
-              </div>
-              <h3 className="font-heading font-bold text-lg text-pine-950">
-                Pencocokan Cerdas & Adil
-              </h3>
-              <p className="text-xs sm:text-sm text-gray-600 mt-2 leading-relaxed">
-                Algoritma multi-kriteria mencocokkan jarak, skor mutu, kesegaran panen, dan keandalan dengan batas kuota 60% per pemasok guna pemerataan ekonomi desa.
-              </p>
-            </div>
-            <div className="pt-4 mt-4 border-t border-surface-border flex items-center text-xs font-semibold text-brand">
-              <span>Greedy allocation anti monopoli</span>
-              <ChevronRight className="w-3.5 h-3.5 ml-1" />
-            </div>
+        <div className="bg-white rounded-3xl border border-surface-border overflow-hidden shadow-soft">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs sm:text-sm">
+              <thead>
+                <tr className="border-b border-surface-border bg-surface-muted/60">
+                  <th className="py-4 px-6 font-heading font-bold text-gray-700 w-1/3">Aspek Pengadaan</th>
+                  <th className="py-4 px-6 font-heading font-bold text-rose-800 bg-rose-50/50 w-1/3">
+                    Pengadaan Konvensional (Tengkulak)
+                  </th>
+                  <th className="py-4 px-6 font-heading font-bold text-emerald-950 bg-emerald-50/70 w-1/3">
+                    ORVANA Digital Rantai Pasok
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-surface-border">
+                <tr>
+                  <td className="py-4 px-6 font-medium text-gray-900">Perlindungan Harga Petani</td>
+                  <td className="py-4 px-6 text-gray-600 bg-rose-50/20">
+                    Harga ditekan sepihak, sering di bawah biaya produksi.
+                  </td>
+                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/30 flex items-center gap-2">
+                    <Check className="w-4 h-4 text-emerald-700 shrink-0" />
+                    <span>Otomatis tolak tawaran di bawah harga dasar wilayah.</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-medium text-gray-900">Kepastian Serapan Panen</td>
+                  <td className="py-4 px-6 text-gray-600 bg-rose-50/20">
+                    Transaksi mendadak, risiko panen membusuk di kebun tinggi.
+                  </td>
+                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/30">
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-emerald-700 shrink-0" />
+                      <span>Terencana 1-2 minggu lebih awal dari menu dapur.</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-medium text-gray-900">Pencegahan Monopoli Kuota</td>
+                  <td className="py-4 px-6 text-gray-600 bg-rose-50/20">
+                    Didominasi 1 distributor besar, petani kecil terpinggirkan.
+                  </td>
+                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/30">
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-emerald-700 shrink-0" />
+                      <span>Algoritma Greedy membatasi kuota maks 60% per petani.</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-medium text-gray-900">Jaminan Keamanan Pembayaran</td>
+                  <td className="py-4 px-6 text-gray-600 bg-rose-50/20">
+                    Pembayaran mundur berminggu-minggu bahkan gagal bayar.
+                  </td>
+                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/30">
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-emerald-700 shrink-0" />
+                      <span>Dana [HOLD] di awal, langsung [RELEASE] begitu QC lolos.</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-medium text-gray-900">Ketertelusuran Asal Pangan</td>
+                  <td className="py-4 px-6 text-gray-600 bg-rose-50/20">
+                    Asal muasal bahan tidak jelas, sulit dipertanggungjawabkan.
+                  </td>
+                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/30">
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-emerald-700 shrink-0" />
+                      <span>QR Code publik menampilkan riwayat desa, supir, & QC.</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
+        </div>
+      </section>
 
-          {/* Pilar 2 */}
-          <div className="bg-white rounded-2xl border border-surface-border p-6 flex flex-col justify-between hover:shadow-card transition-all group">
-            <div>
-              <div className="w-12 h-12 rounded-xl bg-amber-50 text-harvest-amber flex items-center justify-center mb-5 border border-amber-200 group-hover:scale-105 transition-transform">
-                <Scale className="w-6 h-6" />
+      {/* SECTION KALKULATOR KEBUTUHAN DAPUR INTERAKTIF */}
+      <section id="kalkulator" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div className="bg-brand text-white rounded-3xl p-6 sm:p-12 shadow-elevated">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Sisi Kontrol Form */}
+            <div className="lg:col-span-7 space-y-6">
+              <div>
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-harvest-gold bg-white/10 px-3 py-1 rounded-full border border-white/15 inline-block mb-3">
+                  Simulasi Kalkulator Kebutuhan Riil
+                </span>
+                <h2 className="font-serif text-2xl sm:text-4xl font-bold tracking-tight">
+                  Hitung Kebutuhan Bahan Sesuai Porsi Anak Sekolah
+                </h2>
+                <p className="text-emerald-100 text-xs sm:text-sm mt-2 leading-relaxed">
+                  Gunakan simulator di bawah untuk melihat bagaimana rumus matematis ORVANA menghitung kebutuhan bahan kotor (+persen susut masak) dan estimasi anggaran perlindungan petani.
+                </p>
               </div>
-              <h3 className="font-heading font-bold text-lg text-pine-950">
-                Proteksi Harga Dasar
-              </h3>
-              <p className="text-xs sm:text-sm text-gray-600 mt-2 leading-relaxed">
-                Mencegah predatory pricing dengan sistem penolakan otomatis jika harga tawaran di bawah floor price dinas. Dilengkapi escrow pencadangan dana otomatis.
-              </p>
-            </div>
-            <div className="pt-4 mt-4 border-t border-surface-border flex items-center text-xs font-semibold text-harvest-amber">
-              <span>Batas perlindungan petani</span>
-              <ChevronRight className="w-3.5 h-3.5 ml-1" />
-            </div>
-          </div>
 
-          {/* Pilar 3 */}
-          <div className="bg-white rounded-2xl border border-surface-border p-6 flex flex-col justify-between hover:shadow-card transition-all group">
-            <div>
-              <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-800 flex items-center justify-center mb-5 border border-blue-200 group-hover:scale-105 transition-transform">
-                <Truck className="w-6 h-6" />
-              </div>
-              <h3 className="font-heading font-bold text-lg text-pine-950">
-                Logistik Agregat Pendek
-              </h3>
-              <p className="text-xs sm:text-sm text-gray-600 mt-2 leading-relaxed">
-                Koordinator lokal mengonsolidasi pesanan beberapa petani dalam satu rute penjemputan efisien, memangkas susut bobot dan emisi karbon perjalanan.
-              </p>
-            </div>
-            <div className="pt-4 mt-4 border-t border-surface-border flex items-center text-xs font-semibold text-blue-800">
-              <span>Radius &lt; 25 km dari dapur</span>
-              <ChevronRight className="w-3.5 h-3.5 ml-1" />
-            </div>
-          </div>
+              {/* Slider & Pemilihan Komoditas */}
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between items-center text-xs font-mono mb-2">
+                    <span className="text-emerald-200">Jumlah Porsi Penerima Manfaat:</span>
+                    <span className="font-extrabold text-base text-harvest-gold">{calcPortions.toLocaleString('id-ID')} Porsi Anak</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="100"
+                    max="5000"
+                    step="100"
+                    value={calcPortions}
+                    onChange={(e) => setCalcPortions(parseInt(e.target.value))}
+                    className="w-full h-2 bg-emerald-900 rounded-lg appearance-none cursor-pointer accent-harvest-gold"
+                  />
+                  <div className="flex justify-between text-[10px] font-mono text-emerald-300 mt-1">
+                    <span>100 porsi</span>
+                    <span>1.000 porsi</span>
+                    <span>2.500 porsi</span>
+                    <span>5.000 porsi</span>
+                  </div>
+                </div>
 
-          {/* Pilar 4 */}
-          <div className="bg-white rounded-2xl border border-surface-border p-6 flex flex-col justify-between hover:shadow-card transition-all group">
-            <div>
-              <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-800 flex items-center justify-center mb-5 border border-purple-200 group-hover:scale-105 transition-transform">
-                <ShieldCheck className="w-6 h-6" />
+                <div>
+                  <label className="text-xs font-mono text-emerald-200 block mb-2">
+                    Pilih Bahan Pokok Resep:
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {[
+                      { id: 'bayam', label: 'Bayam Hijau', desc: '+15% Susut' },
+                      { id: 'lele', label: 'Ikan Lele', desc: '+10% Susut' },
+                      { id: 'beras', label: 'Beras Lokal', desc: '+2% Susut' },
+                      { id: 'telur', label: 'Telur Ayam', desc: '+3% Susut' },
+                    ].map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => setCalcCommodity(item.id as any)}
+                        className={`p-2.5 rounded-xl border text-left transition-all ${
+                          calcCommodity === item.id
+                            ? 'bg-harvest-gold text-pine-950 border-harvest-gold font-bold shadow-sm'
+                            : 'bg-white/10 text-white border-white/15 hover:bg-white/15 text-gray-200'
+                        }`}
+                      >
+                        <p className="text-xs leading-none">{item.label}</p>
+                        <p className="text-[10px] opacity-80 font-mono mt-1">{item.desc}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <h3 className="font-heading font-bold text-lg text-pine-950">
-                Mutu & Passport QR
-              </h3>
-              <p className="text-xs sm:text-sm text-gray-600 mt-2 leading-relaxed">
-                Pemeriksaan ketat oleh pengawas mutu dengan bobot checklist gizi. Setiap batch makanan anak sekolah dapat dipindai hingga ke nama desa asal panen.
-              </p>
             </div>
-            <div className="pt-4 mt-4 border-t border-surface-border flex items-center text-xs font-semibold text-purple-800">
-              <span>Sertifikat audit & QR publik</span>
-              <ChevronRight className="w-3.5 h-3.5 ml-1" />
+
+            {/* Sisi Hasil Kalkulasi */}
+            <div className="lg:col-span-5 bg-white text-gray-950 rounded-2xl p-6 shadow-2xl border-2 border-harvest-gold/40 space-y-4">
+              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                <span className="text-xs font-mono font-bold text-gray-500 uppercase">
+                  Hasil Formula Demand Planner
+                </span>
+                <Badge color="success">Rumus Baku Resmi</Badge>
+              </div>
+
+              <div>
+                <p className="text-xs text-gray-500">Komoditas Terpilih:</p>
+                <p className="font-heading font-extrabold text-lg text-pine-950">{calc.name}</p>
+              </div>
+
+              <div className="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200 space-y-2">
+                <div className="flex justify-between items-baseline text-xs">
+                  <span className="text-gray-600">Total Kebutuhan Kotor (+Susut {calc.wastePct}%):</span>
+                  <span className="font-mono text-xl font-bold text-emerald-900">{formatKg(calc.qtyKg)}</span>
+                </div>
+                <div className="flex justify-between items-baseline text-xs border-t border-emerald-200/60 pt-2">
+                  <span className="text-gray-600">Estimasi Anggaran Acuan Dinas:</span>
+                  <span className="font-mono text-xl font-bold text-emerald-950">{formatRupiah(calc.estCost)}</span>
+                </div>
+              </div>
+
+              <div className="text-[11px] font-mono text-gray-500 space-y-1">
+                <p>• Harga Dasar Acuan: {formatRupiah(calc.unitPrice)} / kg</p>
+                <p>• Dibulatkan ke atas kelipatan 0,1 kg sesuai aturan dinas</p>
+                <p>• Langsung siap dialokasikan otomatis ke multi-petani lokal</p>
+              </div>
+
+              <Link to="/register" className="block pt-2">
+                <Button variant="harvest" size="md" className="w-full font-bold text-white shadow-sm flex items-center justify-center gap-2">
+                  <span>Mulai Pasok Dapur Sekarang</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ALUR KERJA INTERAKTIF PER PERAN */}
+      {/* SECTION ALUR KERJA 4 PERAN INTERAKTIF */}
       <section id="cara-kerja" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="bg-surface-muted/60 rounded-3xl border border-surface-border p-6 sm:p-10">
           <div className="text-center max-w-xl mx-auto mb-8">
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-pine-950">
-              Bagaimana Alur Rantai Pasok Bekerja?
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+              Alur Terpadu Multi-Peran
+            </span>
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-pine-950 mt-3">
+              Bagaimana Alur Kerja 4 Peran Lapangan?
             </h2>
             <p className="text-xs sm:text-sm text-gray-600 mt-1">
-              Pilih peran pengguna di bawah untuk melihat bagaimana sistem mengorkestrasi rantai pasok secara mulus
+              Pilih peran pengguna di bawah untuk melihat simulasi interface dan tanggung jawab masing-masing
             </p>
 
             {/* Role Switcher Tabs */}
@@ -503,7 +708,7 @@ export const LandingPage: React.FC = () => {
           <div className="max-w-4xl mx-auto bg-white rounded-2xl border border-surface-border p-6 sm:p-8 shadow-card">
             {activeTabRole === 'kitchen' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
+                <div className="space-y-3 text-left">
                   <span className="text-xs font-mono font-bold text-brand uppercase tracking-wider">
                     Langkah 1: Perencanaan Menu & Kebutuhan
                   </span>
@@ -519,7 +724,7 @@ export const LandingPage: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <div className="p-4 bg-surface-muted/70 rounded-xl border border-surface-border space-y-2 text-xs font-mono">
+                <div className="p-4 bg-surface-muted/70 rounded-xl border border-surface-border space-y-2 text-xs font-mono text-left">
                   <div className="text-gray-500 font-bold border-b border-surface-border pb-1">
                     Simulasi Demand Terbit
                   </div>
@@ -541,7 +746,7 @@ export const LandingPage: React.FC = () => {
 
             {activeTabRole === 'farmer' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
+                <div className="space-y-3 text-left">
                   <span className="text-xs font-mono font-bold text-harvest-amber uppercase tracking-wider">
                     Langkah 2: Kepastian Pasar & Alokasi Kuota
                   </span>
@@ -557,7 +762,7 @@ export const LandingPage: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <div className="p-4 bg-surface-muted/70 rounded-xl border border-surface-border space-y-2 text-xs font-mono">
+                <div className="p-4 bg-surface-muted/70 rounded-xl border border-surface-border space-y-2 text-xs font-mono text-left">
                   <div className="text-gray-500 font-bold border-b border-surface-border pb-1">
                     Tawaran Masuk (S1 - Tani Makmur)
                   </div>
@@ -579,7 +784,7 @@ export const LandingPage: React.FC = () => {
 
             {activeTabRole === 'coordinator' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
+                <div className="space-y-3 text-left">
                   <span className="text-xs font-mono font-bold text-blue-800 uppercase tracking-wider">
                     Langkah 3: Konsolidasi & Distribusi
                   </span>
@@ -595,7 +800,7 @@ export const LandingPage: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <div className="p-4 bg-surface-muted/70 rounded-xl border border-surface-border space-y-2 text-xs font-mono">
+                <div className="p-4 bg-surface-muted/70 rounded-xl border border-surface-border space-y-2 text-xs font-mono text-left">
                   <div className="text-gray-500 font-bold border-b border-surface-border pb-1">
                     Konsolidasi Pengiriman
                   </div>
@@ -617,7 +822,7 @@ export const LandingPage: React.FC = () => {
 
             {activeTabRole === 'inspector' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                <div className="space-y-3">
+                <div className="space-y-3 text-left">
                   <span className="text-xs font-mono font-bold text-purple-800 uppercase tracking-wider">
                     Langkah 4: Pemeriksaan Mutu & Pembayaran
                   </span>
@@ -633,7 +838,7 @@ export const LandingPage: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <div className="p-4 bg-surface-muted/70 rounded-xl border border-surface-border space-y-2 text-xs font-mono">
+                <div className="p-4 bg-surface-muted/70 rounded-xl border border-surface-border space-y-2 text-xs font-mono text-left">
                   <div className="text-gray-500 font-bold border-b border-surface-border pb-1">
                     Hasil Pemeriksaan Mutu
                   </div>
@@ -656,20 +861,58 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* CALL TO ACTION DENGAN SENTUHAN BRAND ARTISAN AGRITECH */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16">
-        <div className="bg-brand text-white rounded-3xl p-8 sm:p-14 relative overflow-hidden shadow-elevated">
-          {/* Subtle background glow */}
-          <div className="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-emerald-400/20 blur-3xl pointer-events-none" />
-          <div className="absolute top-0 right-1/3 w-64 h-64 rounded-full bg-harvest-gold/15 blur-3xl pointer-events-none" />
+      {/* SECTION FAQ (PERTANYAAN UMUM) */}
+      <section id="faq" className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-12">
+        <div className="text-center mb-8">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+            Pertanyaan Umum
+          </span>
+          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-pine-950 mt-3">
+            Klarifikasi Sistem & Operasional
+          </h2>
+        </div>
 
+        <div className="space-y-3">
+          {faqs.map((faq, index) => {
+            const isExpanded = expandedFaq === index;
+            return (
+              <div
+                key={index}
+                className="bg-white rounded-2xl border border-surface-border overflow-hidden transition-all shadow-xs"
+              >
+                <button
+                  type="button"
+                  onClick={() => setExpandedFaq(isExpanded ? null : index)}
+                  className="w-full p-5 text-left flex items-center justify-between gap-4 font-heading font-bold text-sm text-pine-950 hover:bg-surface-muted/50 transition-colors"
+                >
+                  <span>{faq.q}</span>
+                  <ChevronDown
+                    className={`w-4 h-4 text-emerald-800 shrink-0 transition-transform duration-200 ${
+                      isExpanded ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+                {isExpanded && (
+                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-gray-600 leading-relaxed border-t border-surface-border/50 text-left">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* CALL TO ACTION DENGAN SENTUHAN BRAND ARTISAN AGRITECH */}
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-14">
+        <div className="bg-brand text-white rounded-3xl p-8 sm:p-14 relative overflow-hidden shadow-elevated">
           <div className="relative z-10 max-w-2xl text-left space-y-4">
-            <Badge color="accent">Bergabung Bersama Gerakan Pangan Bergizi</Badge>
+            <Badge color="accent">Gerakan Pangan Bergizi Nasional</Badge>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight leading-tight">
               Wujudkan Rantai Pasok Pangan Mandiri, Berkeadilan, dan Bermutu
             </h2>
-            <p className="text-emerald-100/90 text-sm sm:text-base leading-relaxed">
-              Daftarkan dapur gizi massal, kelompok tani, atau koperasi distribusi Anda ke dalam jaringan ORVANA sekarang.
+            <p className="text-emerald-100 text-sm sm:text-base leading-relaxed">
+              Daftarkan dapur gizi massal, kelompok tani, atau koperasi distribusi Anda ke dalam jaringan digital ORVANA sekarang.
             </p>
             <div className="pt-4 flex flex-wrap items-center gap-3">
               <Link to="/register">
