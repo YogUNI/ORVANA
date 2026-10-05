@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
 import { formatRupiah, formatDate } from '../../lib/format';
-import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Skeleton } from '../../components/ui/Skeleton';
 import {
@@ -12,10 +11,10 @@ import {
   Receipt,
   Scale,
   Star,
+  AlertCircle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { StatCard } from '../../components/ui/StatCard';
 import { DisputeModal } from '../../features/disputes/DisputeModal';
 import { SupplierReviewModal } from '../../features/reviews/SupplierReviewModal';
 
@@ -41,7 +40,7 @@ interface LedgerEntryItem {
       name: string;
     };
   };
-  // Auditor masked fields
+  // Auditor masked fields fallback
   orderNo?: string;
   commodityName?: string;
   supplierName?: string;
@@ -53,7 +52,7 @@ export const KitchenPaymentsPage: React.FC = () => {
   const [disputeEntry, setDisputeEntry] = useState<LedgerEntryItem | null>(null);
   const [reviewEntry, setReviewEntry] = useState<LedgerEntryItem | null>(null);
 
-  const { data: ledgerResponse, isLoading } = useQuery<{ data: LedgerEntryItem[] }>({
+  const { data: ledgerResponse, isLoading, error } = useQuery<{ data: LedgerEntryItem[] }>({
     queryKey: ['ledger-kitchen', filterStage],
     queryFn: async () => {
       const stageParam = filterStage !== 'ALL' ? `?stage=${filterStage}` : '';
@@ -77,116 +76,158 @@ export const KitchenPaymentsPage: React.FC = () => {
   const getStageBadge = (stage: string) => {
     switch (stage) {
       case 'HOLD':
-        return <Badge color="warning">HOLD (Dicadangkan)</Badge>;
+        return <Badge color="warning">HOLD (Escrow Dicadangkan)</Badge>;
       case 'RELEASE':
-        return <Badge color="success">RELEASE (Dibayarkan)</Badge>;
+        return <Badge color="success">RELEASE (Dicairkan)</Badge>;
       case 'VOID':
-        return <Badge color="danger">VOID (Dibatalkan)</Badge>;
+        return <Badge color="danger">VOID (Batal / Kembali)</Badge>;
       case 'ADJUSTMENT':
-        return <Badge color="info">ADJUSTMENT</Badge>;
+        return <Badge color="info">ADJUSTMENT (Koreksi)</Badge>;
       default:
         return <Badge color="neutral">{stage}</Badge>;
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
       <PageHeader
-        title="Pembukuan & Transaksi Dapur"
-        subtitle="Pantau status pencadangan dana pesanan dapur, pencairan pasokan lulus mutu, dan penyesuaian saldo buku besar."
+        title="Pembukuan & Mutasi Dana Dapur"
+        subtitle="Pantau status pencadangan dana pesanan dapur (escrow), pencairan pasokan lulus uji mutu, dan riwayat penyesuaian saldo buku besar."
         icon={<Receipt className="w-6 h-6 text-pine-800" />}
       />
 
       {/* Ringkasan Saldo Transaksi Dapur */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard
-          label="Total Dana Dicadangkan (HOLD)"
-          value={formatRupiah(totalHold)}
-          subtext="Dana aman dalam escrow"
-          icon={<Clock className="w-5 h-5" />}
-        />
+        <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-xs border-l-4 border-l-amber-500">
+          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+            <span>Dana Dicadangkan (HOLD)</span>
+            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
+              <Clock className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-2xl font-bold font-mono text-gray-900 mt-1">
+            {formatRupiah(totalHold)}
+          </div>
+          <span className="text-[11px] text-gray-500 mt-1 block">
+            Tersimpan aman di rekening escrow
+          </span>
+        </div>
 
-        <StatCard
-          label="Total Dana Dicairkan (RELEASE)"
-          value={formatRupiah(totalReleased)}
-          subtext="Telah dicairkan ke produsen"
-          icon={<CheckCircle2 className="w-5 h-5" />}
-          highlight={true}
-        />
+        <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-xs border-l-4 border-l-emerald-600">
+          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+            <span>Dana Dicairkan (RELEASE)</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+              <CheckCircle2 className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-2xl font-bold font-mono text-emerald-700 mt-1">
+            {formatRupiah(totalReleased)}
+          </div>
+          <span className="text-[11px] text-gray-500 mt-1 block">
+            Dibayarkan lunas ke petani & nelayan
+          </span>
+        </div>
 
-        <StatCard
-          label="Total Dana Batal/Kembali (VOID)"
-          value={formatRupiah(totalVoid)}
-          subtext="Akibat afkir / pesanan batal"
-          icon={<XCircle className="w-5 h-5" />}
-        />
+        <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-xs border-l-4 border-l-red-500">
+          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+            <span>Dana Batal / Kembali (VOID)</span>
+            <div className="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center">
+              <XCircle className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-2xl font-bold font-mono text-gray-900 mt-1">
+            {formatRupiah(totalVoid)}
+          </div>
+          <span className="text-[11px] text-gray-500 mt-1 block">
+            Pengembalian dana afkir / pembatalan
+          </span>
+        </div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex gap-2 border-b border-gray-200 pb-2">
-        {['ALL', 'HOLD', 'RELEASE', 'VOID'].map((st) => (
-          <button
-            key={st}
-            onClick={() => setFilterStage(st)}
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-              filterStage === st
-                ? 'bg-brand text-white'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            {st === 'ALL' ? 'Semua Mutasi' : st}
-          </button>
-        ))}
+      <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-xs flex flex-col sm:flex-row justify-between items-center gap-3">
+        <div className="flex gap-2 flex-wrap w-full sm:w-auto">
+          {[
+            { id: 'ALL', label: 'Semua Mutasi' },
+            { id: 'HOLD', label: 'HOLD (Pencadangan)' },
+            { id: 'RELEASE', label: 'RELEASE (Pencairan)' },
+            { id: 'VOID', label: 'VOID (Pembatalan)' },
+          ].map((st) => (
+            <button
+              key={st.id}
+              onClick={() => setFilterStage(st.id)}
+              className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                filterStage === st.id
+                  ? 'bg-pine-800 text-white shadow-2xs'
+                  : 'text-gray-600 hover:bg-gray-100 bg-gray-50 border border-gray-200/80'
+              }`}
+            >
+              {st.label}
+            </button>
+          ))}
+        </div>
+
+        <span className="text-xs text-gray-500">
+          Menampilkan <strong className="text-gray-800">{entries.length}</strong> catatan pembukuan
+        </span>
       </div>
 
       {/* Tabel Mutasi Buku Besar */}
-      <Card className="p-0 overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-xs">
         <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-          <h2 className="font-heading font-semibold text-gray-900 text-sm">
-            Riwayat Pembukuan Dana Dapur
-          </h2>
-          <span className="text-xs text-gray-500">
-            {entries.length} entri tercatat
+          <div className="flex items-center gap-2">
+            <Receipt className="w-4 h-4 text-pine-800" />
+            <h2 className="font-heading font-semibold text-gray-900 text-sm">
+              Jurnal Rekam Transaksi Escrow Dapur
+            </h2>
+          </div>
+          <span className="text-xs text-gray-400">
+            Terhubung otomatis dengan status QC & Pengiriman
           </span>
         </div>
 
         {isLoading ? (
           <div className="p-6 space-y-3">
-            <Skeleton className="h-6 w-full" />
-            <Skeleton className="h-6 w-full" />
-            <Skeleton className="h-6 w-full" />
+            <Skeleton className="h-6 w-full rounded-lg" />
+            <Skeleton className="h-6 w-full rounded-lg" />
+            <Skeleton className="h-6 w-full rounded-lg" />
+          </div>
+        ) : error ? (
+          <div className="p-8 text-center text-status-danger">
+            <AlertCircle className="w-8 h-8 mx-auto mb-2" />
+            <p className="font-semibold text-sm">Gagal memuat catatan transaksi buku besar.</p>
           </div>
         ) : entries.length === 0 ? (
           <div className="p-12 text-center text-gray-500">
-            <Receipt className="w-10 h-10 mx-auto text-gray-300 mb-2" />
-            <p className="font-medium">Belum ada mutasi buku besar</p>
-            <p className="text-xs text-gray-400 mt-1">
-              Pencadangan dana otomatis tercatat saat pesanan diterima oleh pemasok.
+            <Receipt className="w-10 h-10 mx-auto text-gray-300 mb-2 stroke-1" />
+            <p className="font-medium text-gray-700">Belum ada mutasi buku besar tercatat</p>
+            <p className="text-xs text-gray-400 mt-1 max-w-sm mx-auto">
+              Pencadangan dana otomatis masuk ke rekening escrow saat pesanan diterima oleh pemasok.
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-gray-50 text-gray-500 text-xs font-semibold uppercase tracking-wider border-b border-gray-200">
+              <thead className="bg-gray-50/80 text-gray-600 text-xs font-semibold uppercase tracking-wider border-b border-gray-200">
                 <tr>
-                  <th className="px-4 py-3">Tanggal</th>
-                  <th className="px-4 py-3">No. Pesanan</th>
-                  <th className="px-4 py-3">Pemasok</th>
-                  <th className="px-4 py-3">Komoditas</th>
-                  <th className="px-4 py-3">Tahapan</th>
-                  <th className="px-4 py-3 text-right">Nominal</th>
-                  <th className="px-4 py-3">Keterangan</th>
-                  <th className="px-4 py-3 text-center">Aksi</th>
+                  <th className="px-4 py-3.5">Waktu Pencatatan</th>
+                  <th className="px-4 py-3.5">No. Pesanan</th>
+                  <th className="px-4 py-3.5">Pemasok Lokal</th>
+                  <th className="px-4 py-3.5">Komoditas</th>
+                  <th className="px-4 py-3.5">Tahapan Escrow</th>
+                  <th className="px-4 py-3.5 text-right">Nominal Transaksi</th>
+                  <th className="px-4 py-3.5">Keterangan / Dasar</th>
+                  <th className="px-4 py-3.5 text-center">Aksi Cepat</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-gray-700">
                 {entries.map((entry) => (
                   <tr key={entry.id} className="hover:bg-gray-50/80 transition-colors">
-                    <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
+                    <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap font-medium">
                       {formatDate(entry.createdAt)}
                     </td>
-                    <td className="px-4 py-3 font-mono font-medium text-xs text-gray-900">
+                    <td className="px-4 py-3 font-mono font-bold text-xs text-gray-900 whitespace-nowrap">
                       {entry.order?.orderNo || entry.orderNo}
                     </td>
                     <td className="px-4 py-3 text-xs font-medium">
@@ -198,19 +239,19 @@ export const KitchenPaymentsPage: React.FC = () => {
                     <td className="px-4 py-3 whitespace-nowrap">
                       {getStageBadge(entry.stage)}
                     </td>
-                    <td className="px-4 py-3 text-right font-mono font-semibold text-gray-900 whitespace-nowrap">
+                    <td className="px-4 py-3 text-right font-mono font-bold text-gray-900 whitespace-nowrap">
                       {formatRupiah(entry.amount)}
                     </td>
                     <td className="px-4 py-3 text-xs text-gray-500 max-w-xs truncate">
                       {entry.note || '-'}
                     </td>
-                    <td className="px-4 py-3 text-center">
-                      <div className="flex items-center justify-center gap-1.5 flex-wrap">
+                    <td className="px-4 py-3 text-center whitespace-nowrap">
+                      <div className="flex items-center justify-center gap-1.5">
                         {entry.stage === 'RELEASE' && (
                           <Button
                             size="sm"
                             onClick={() => setReviewEntry(entry)}
-                            className="text-xs py-1 px-2.5 bg-pine-800 hover:bg-pine-900 text-white font-sans"
+                            className="text-xs py-1 px-2.5 bg-pine-800 hover:bg-pine-900 text-white font-semibold shadow-2xs"
                           >
                             <Star className="w-3.5 h-3.5 mr-1 text-amber-300 fill-amber-300" />
                             Ulas
@@ -234,7 +275,7 @@ export const KitchenPaymentsPage: React.FC = () => {
             </table>
           </div>
         )}
-      </Card>
+      </div>
 
       {/* Modal Ulas Pemasok */}
       {reviewEntry && (
@@ -255,7 +296,7 @@ export const KitchenPaymentsPage: React.FC = () => {
           commodityName={disputeEntry.order?.commodity?.name || disputeEntry.commodityName || ''}
           onClose={() => setDisputeEntry(null)}
           onSuccess={() => {
-            // refresh data
+            // Data otomatis refresh via query
           }}
         />
       )}

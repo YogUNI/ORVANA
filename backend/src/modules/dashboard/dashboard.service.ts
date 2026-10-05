@@ -292,9 +292,10 @@ export class DashboardService {
       };
     }
 
-    const [demands, orders] = await Promise.all([
+    const [demands, orders, menuPlansCount] = await Promise.all([
       this.prisma.demandRequest.findMany({
         where: { kitchenId: kitchen.id },
+        include: { commodity: true },
       }),
       this.prisma.order.findMany({
         where: { kitchenId: kitchen.id },
@@ -305,8 +306,12 @@ export class DashboardService {
             include: { qualityChecks: true },
           },
           ledger: true,
+          shipment: true,
         },
         orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.menuPlan.count({
+        where: { kitchenId: kitchen.id },
       }),
     ]);
 
@@ -314,6 +319,7 @@ export class DashboardService {
 
     let fulfilledKg = 0;
     let totalSpendingRupiah = 0;
+    let escrowHoldRupiah = 0;
     let activeOrdersCount = 0;
     let pendingReceivingCount = 0;
 
@@ -332,31 +338,62 @@ export class DashboardService {
         fulfilledKg += Number(qc.acceptedQuantity);
       }
 
-      // Belanja riil dari ledger RELEASE
-      const releases = o.ledger.filter((l) => l.stage === LedgerStage.RELEASE);
-      for (const r of releases) {
-        totalSpendingRupiah += Number(r.amount);
+      // Hitung mutasi belanja riil dan escrow
+      for (const l of o.ledger) {
+        if (l.stage === LedgerStage.RELEASE) {
+          totalSpendingRupiah += Number(l.amount);
+        } else if (l.stage === LedgerStage.HOLD) {
+          escrowHoldRupiah += Number(l.amount);
+        } else if (l.stage === LedgerStage.VOID) {
+          escrowHoldRupiah -= Number(l.amount);
+        }
       }
     }
 
     const fulfillmentRatePct = totalDemandKg > 0 ? Math.round((fulfilledKg / totalDemandKg) * 10000) / 100 : 0;
 
+    // Filter incoming shipments (dalam perjalanan atau sudah tiba menunggu penerimaan)
+    const incomingShipments = orders
+      .filter((o) => o.status === 'IN_TRANSIT' && o.batch)
+      .map((o) => ({
+        orderId: o.id,
+        orderNo: o.orderNo,
+        batchCode: o.batch?.batchCode || '-',
+        commodityName: o.commodity?.name || '-',
+        supplierName: o.supplier?.displayName || '-',
+        shippedQuantity: Number(o.batch?.shippedQuantity || o.quantity),
+        shipmentNo: o.shipment?.shipmentNo || '-',
+        scheduledAt: o.shipment?.scheduledAt || null,
+      }));
+
     return {
-      kitchen: { id: kitchen.id, name: kitchen.name, code: kitchen.code },
+      kitchen: {
+        id: kitchen.id,
+        name: kitchen.name,
+        code: kitchen.code,
+        portionCapacity: kitchen.portionCapacity,
+        address: kitchen.address,
+      },
       totalDemandKg: Math.round(totalDemandKg * 100) / 100,
       fulfilledKg: Math.round(fulfilledKg * 100) / 100,
       fulfillmentRatePct,
       totalSpendingRupiah: Math.round(totalSpendingRupiah),
+      escrowHoldRupiah: Math.max(0, Math.round(escrowHoldRupiah)),
       activeOrdersCount,
       pendingReceivingCount,
-      recentOrders: orders.slice(0, 5).map((o) => ({
+      menuPlansCount,
+      incomingShipments,
+      recentOrders: orders.slice(0, 6).map((o) => ({
         id: o.id,
         orderNo: o.orderNo,
         commodityName: o.commodity?.name || '-',
         supplierName: o.supplier?.displayName || '-',
         quantityKg: Number(o.quantity),
+        pricePerUnit: Number(o.pricePerUnit),
+        totalPrice: Math.round(Number(o.quantity) * Number(o.pricePerUnit)),
         status: o.status,
         createdAt: o.createdAt,
+        batchCode: o.batch?.batchCode || null,
       })),
     };
   }

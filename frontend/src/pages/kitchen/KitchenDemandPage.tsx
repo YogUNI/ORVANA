@@ -3,7 +3,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../lib/apiClient';
 import { formatKg, formatRupiah, formatDate } from '../../lib/format';
 import { DEMAND_STATUS_LABELS } from '../../lib/labels';
-import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Skeleton } from '../../components/ui/Skeleton';
@@ -21,6 +20,10 @@ import {
   AlertCircle,
   CheckCircle2,
   Sparkles,
+  Layers,
+  CalendarDays,
+  PackageCheck,
+  Clock,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -28,6 +31,7 @@ interface Commodity {
   id: string;
   name: string;
   unit: string;
+  category?: string;
 }
 
 interface DemandRequest {
@@ -59,7 +63,7 @@ export const KitchenDemandPage: React.FC = () => {
   const [editNote, setEditNote] = useState('');
   const [editError, setEditError] = useState<string | null>(null);
 
-  // Status Notification
+  // Status Notification Toast
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; text: string } | null>(
     null
   );
@@ -94,14 +98,14 @@ export const KitchenDemandPage: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['demand-requests'] });
       setNotification({
         type: 'success',
-        text: 'Permintaan bahan berhasil diterbitkan ke pasar lokal!',
+        text: 'Permintaan bahan pangan berhasil diterbitkan ke pasar lokal!',
       });
       setTimeout(() => setNotification(null), 4000);
     },
     onError: (err: any) => {
       const errorMsg =
         err?.response?.data?.error?.message ||
-        'Gagal menerbitkan permintaan. Pastikan harga di atas harga dasar produsen dan tanggal minimal besok.';
+        'Gagal menerbitkan permintaan. Pastikan harga di atas batas dasar petani dan tanggal butuh minimal besok.';
       setNotification({ type: 'error', text: errorMsg });
       setTimeout(() => setNotification(null), 6000);
     },
@@ -117,7 +121,7 @@ export const KitchenDemandPage: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['demand-requests'] });
       setNotification({
         type: 'success',
-        text: 'Permintaan berhasil dibatalkan dan reservasi telah dilepas.',
+        text: 'Permintaan bahan berhasil dibatalkan dan reservasi pasokan telah dilepas.',
       });
       setTimeout(() => setNotification(null), 4000);
     },
@@ -143,7 +147,7 @@ export const KitchenDemandPage: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['demand-requests'] });
       setIsEditModalOpen(false);
-      setNotification({ type: 'success', text: 'Perubahan draf kebutuhan berhasil disimpan.' });
+      setNotification({ type: 'success', text: 'Perubahan draf kebutuhan berhasil diperbarui.' });
       setTimeout(() => setNotification(null), 4000);
     },
     onError: (err: any) => {
@@ -167,28 +171,43 @@ export const KitchenDemandPage: React.FC = () => {
     editMutation.mutate();
   };
 
+  const demands = data || [];
+
+  // Summary Metrics
+  const totalVolume = demands.reduce((sum, d) => sum + Number(d.quantity || 0), 0);
+  const totalFulfilled = demands.reduce((sum, d) => sum + Number(d.fulfilledQuantity || 0), 0);
+  const totalRemaining = demands.reduce((sum, d) => sum + Number(d.remainingQuantity || d.quantity || 0), 0);
+  const overallPercentage = totalVolume > 0 ? Math.min(100, Math.round((totalFulfilled / totalVolume) * 100)) : 0;
+  const draftCount = demands.filter((d) => d.status === 'DRAFT').length;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
       <PageHeader
-        title="Daftar Kebutuhan Bahan Dapur"
-        subtitle="Pantau status pemenuhan pasokan lokal, kelola draf kebutuhan, dan terbitkan pesanan ke produsen terdekat."
+        title="Daftar Kebutuhan Komoditas Dapur"
+        subtitle="Kelola permintaan pasokan bahan pangan hasil kalkulasi menu, terbitkan ke pasar produsen lokal, dan pantau status alokasi pesanan."
         icon={<Sparkles className="w-6 h-6 text-pine-800" />}
         actions={
-          <Link to="/kitchen/menu">
-            <Button variant="outline" className="border-pine-700 text-pine-800 hover:bg-pine-50 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-pine-700" />
-              Kalender Menu Mingguan
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2.5 w-full sm:w-auto">
+            <Link to="/kitchen/menu" className="w-full sm:w-auto">
+              <Button
+                variant="outline"
+                className="w-full sm:w-auto border-pine-700 text-pine-800 hover:bg-pine-50 flex items-center justify-center gap-2 font-semibold shadow-xs"
+              >
+                <CalendarDays className="w-4 h-4 text-pine-700" />
+                Kalender Menu Mingguan
+              </Button>
+            </Link>
+          </div>
         }
       />
 
+      {/* Toast Alert Notification */}
       {notification && (
         <div
-          className={`p-4 rounded-lg flex items-center gap-3 text-sm ${
+          className={`p-4 rounded-xl flex items-center gap-3 text-sm shadow-sm transition-all animate-fadeIn ${
             notification.type === 'success'
-              ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+              ? 'bg-emerald-50 text-emerald-900 border border-emerald-200'
               : 'bg-red-50 text-status-danger border border-red-200'
           }`}
         >
@@ -197,21 +216,88 @@ export const KitchenDemandPage: React.FC = () => {
           ) : (
             <AlertCircle className="w-5 h-5 text-status-danger shrink-0" />
           )}
-          <span>{notification.text}</span>
+          <span className="font-medium">{notification.text}</span>
         </div>
       )}
 
-      {/* Filter Bar */}
-      <Card className="p-4">
-        <div className="flex items-center gap-3">
-          <Filter className="w-4 h-4 text-gray-500" />
-          <span className="text-xs font-semibold text-gray-700 uppercase">Filter Status:</span>
+      {/* KPI Cards Strip */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white border border-gray-200 rounded-xl p-4.5 shadow-xs">
+          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+            <span>Total Kebutuhan</span>
+            <div className="w-7 h-7 rounded-lg bg-pine-50 text-pine-800 flex items-center justify-center">
+              <Layers className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-2xl font-bold font-mono text-gray-900">
+            {formatKg(totalVolume)}
+          </div>
+          <span className="text-[11px] text-gray-500 mt-1 block">
+            {demands.length} item permintaan bahan
+          </span>
+        </div>
+
+        <div className="bg-white border border-gray-200 rounded-xl p-4.5 shadow-xs">
+          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+            <span>Pasokan Terpenuhi</span>
+            <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+              <PackageCheck className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-2xl font-bold font-mono text-emerald-700">
+            {formatKg(totalFulfilled)}
+          </div>
+          <div className="mt-2 w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+            <div
+              className="bg-emerald-600 h-1.5 rounded-full transition-all duration-500"
+              style={{ width: `${overallPercentage}%` }}
+            />
+          </div>
+        </div>
+
+        <div className="bg-white border border-gray-200 rounded-xl p-4.5 shadow-xs">
+          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+            <span>Sisa Belum Terpenuhi</span>
+            <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
+              <Clock className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-2xl font-bold font-mono text-amber-700">
+            {formatKg(totalRemaining)}
+          </div>
+          <span className="text-[11px] text-gray-500 mt-1 block">
+            {overallPercentage}% telah teralokasi
+          </span>
+        </div>
+
+        <div className="bg-white border border-gray-200 rounded-xl p-4.5 shadow-xs">
+          <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+            <span>Draf Siap Diterbitkan</span>
+            <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center">
+              <Sparkles className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-2xl font-bold font-mono text-blue-800">
+            {draftCount}
+          </div>
+          <span className="text-[11px] text-gray-500 mt-1 block">
+            Perlu diterbitkan ke pasar lokal
+          </span>
+        </div>
+      </div>
+
+      {/* Filter and Action Bar */}
+      <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-xs flex flex-col sm:flex-row justify-between items-center gap-3">
+        <div className="flex items-center gap-2.5 w-full sm:w-auto">
+          <Filter className="w-4 h-4 text-gray-400 shrink-0" />
+          <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">Status:</span>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-1.5 border border-gray-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand"
+            aria-label="Filter status kebutuhan"
+            className="px-3 py-1.5 border border-gray-300 rounded-lg text-xs bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-pine-600 focus:border-pine-600 font-medium"
           >
-            <option value="">Semua Status</option>
+            <option value="">Semua Status Permintaan</option>
             {Object.entries(DEMAND_STATUS_LABELS).map(([st, meta]) => (
               <option key={st} value={st}>
                 {meta.label}
@@ -219,14 +305,18 @@ export const KitchenDemandPage: React.FC = () => {
             ))}
           </select>
         </div>
-      </Card>
+
+        <div className="text-xs text-gray-500">
+          Menampilkan <span className="font-bold text-gray-800">{demands.length}</span> permintaan bahan pangan
+        </div>
+      </div>
 
       {/* Table Data */}
       {isLoading ? (
         <div className="space-y-3">
-          <Skeleton className="h-16 w-full" />
-          <Skeleton className="h-16 w-full" />
-          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full rounded-xl" />
+          <Skeleton className="h-16 w-full rounded-xl" />
+          <Skeleton className="h-16 w-full rounded-xl" />
         </div>
       ) : error ? (
         <ErrorState
@@ -234,31 +324,30 @@ export const KitchenDemandPage: React.FC = () => {
           message="Terjadi kendala saat memuat permintaan bahan dapur dari peladen."
           onRetry={() => queryClient.invalidateQueries({ queryKey: ['demand-requests'] })}
         />
-      ) : !data || data.length === 0 ? (
+      ) : demands.length === 0 ? (
         <EmptyState
           title="Belum Ada Kebutuhan Bahan"
-          description="Jadwalkan menu harian pada kalender pekan ini dan jalankan kalkulasi otomatis kebutuhan bahan."
+          description="Jadwalkan menu harian pada kalender pekan ini dan jalankan kalkulasi otomatis kebutuhan bahan baku."
           actionText="Buka Kalender Menu"
           onAction={() => (window.location.href = '/kitchen/menu')}
         />
       ) : (
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-gray-600">
-              <thead className="bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-700 uppercase">
+              <thead className="bg-gray-50/80 border-b border-gray-200 text-xs font-semibold text-gray-700 uppercase">
                 <tr>
-                  <th className="px-5 py-3.5">Komoditas</th>
+                  <th className="px-5 py-3.5">Komoditas Pangan</th>
                   <th className="px-5 py-3.5">Tanggal Butuh</th>
-                  <th className="px-5 py-3.5 text-right">Kebutuhan</th>
-                  <th className="px-5 py-3.5 text-right">Terpenuhi</th>
-                  <th className="px-5 py-3.5 text-right">Sisa</th>
-                  <th className="px-5 py-3.5 text-right">Batas Harga Maks</th>
+                  <th className="px-5 py-3.5 text-right">Target Kebutuhan</th>
+                  <th className="px-5 py-3.5 text-center">Progres Alokasi</th>
+                  <th className="px-5 py-3.5 text-right">Batas Maks / kg</th>
                   <th className="px-5 py-3.5 text-center">Status</th>
-                  <th className="px-5 py-3.5 text-right">Aksi Cepat</th>
+                  <th className="px-5 py-3.5 text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
-                {data.map((d) => {
+              <tbody className="divide-y divide-gray-100">
+                {demands.map((d) => {
                   const statusMeta = DEMAND_STATUS_LABELS[d.status] || {
                     label: d.status,
                     color: 'neutral',
@@ -270,30 +359,56 @@ export const KitchenDemandPage: React.FC = () => {
                     d.status === 'MATCHING' ||
                     d.status === 'PARTIALLY_FULFILLED';
 
+                  const qty = Number(d.quantity);
+                  const fulfilled = Number(d.fulfilledQuantity || 0);
+                  const pct = qty > 0 ? Math.min(100, Math.round((fulfilled / qty) * 100)) : 0;
+
                   return (
-                    <tr key={d.id} className="hover:bg-gray-50/75 transition-colors">
-                      <td className="px-5 py-4 font-bold text-gray-900">
-                        {d.commodity?.name || 'Komoditas'}
+                    <tr key={d.id} className="hover:bg-gray-50/80 transition-colors">
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-lg bg-pine-50 text-pine-800 flex items-center justify-center font-bold text-xs shrink-0">
+                            {d.commodity?.name?.charAt(0) || 'K'}
+                          </div>
+                          <div>
+                            <span className="font-bold text-gray-900 block leading-tight">
+                              {d.commodity?.name || 'Komoditas'}
+                            </span>
+                            {d.commodity?.category && (
+                              <span className="text-[11px] text-gray-400">
+                                {d.commodity.category}
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </td>
-                      <td className="px-5 py-4 text-gray-700">
+                      <td className="px-5 py-4 text-xs text-gray-700 whitespace-nowrap font-medium">
                         {formatDate(d.neededDate)}
                       </td>
-                      <td className="px-5 py-4 text-right font-mono font-bold text-gray-900">
+                      <td className="px-5 py-4 text-right font-mono font-bold text-gray-900 whitespace-nowrap">
                         {formatKg(d.quantity)}
                       </td>
-                      <td className="px-5 py-4 text-right font-mono text-emerald-700 font-semibold">
-                        {formatKg(d.fulfilledQuantity || 0)}
-                      </td>
-                      <td className="px-5 py-4 text-right font-mono text-amber-700 font-semibold">
-                        {formatKg(d.remainingQuantity || d.quantity)}
-                      </td>
-                      <td className="px-5 py-4 text-right font-medium text-gray-800">
-                        {formatRupiah(d.maxPricePerUnit)}/kg
-                      </td>
                       <td className="px-5 py-4 text-center">
+                        <div className="max-w-[130px] mx-auto space-y-1">
+                          <div className="flex justify-between text-[11px] font-mono">
+                            <span className="text-emerald-700 font-semibold">{formatKg(fulfilled)}</span>
+                            <span className="text-gray-400">({pct}%)</span>
+                          </div>
+                          <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                            <div
+                              className="bg-emerald-600 h-1.5 rounded-full"
+                              style={{ width: `${pct}%` }}
+                            />
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-5 py-4 text-right font-mono text-xs font-semibold text-gray-800 whitespace-nowrap">
+                        {formatRupiah(d.maxPricePerUnit)}
+                      </td>
+                      <td className="px-5 py-4 text-center whitespace-nowrap">
                         <Badge color={statusMeta.color}>{statusMeta.label}</Badge>
                       </td>
-                      <td className="px-5 py-4 text-right">
+                      <td className="px-5 py-4 text-right whitespace-nowrap">
                         <div className="flex items-center justify-end gap-1.5">
                           {isDraft && (
                             <>
@@ -301,8 +416,8 @@ export const KitchenDemandPage: React.FC = () => {
                                 size="sm"
                                 onClick={() => publishMutation.mutate(d.id)}
                                 isLoading={publishMutation.isPending}
-                                title="Terbitkan Permintaan ke Pasar"
-                                className="bg-brand text-white hover:bg-brand-hover text-xs py-1 px-2.5 min-h-[32px]"
+                                title="Terbitkan Permintaan ke Pasar Produsen"
+                                className="bg-pine-800 text-white hover:bg-pine-900 text-xs py-1 px-2.5 min-h-[30px] font-semibold shadow-2xs"
                               >
                                 <Send className="w-3.5 h-3.5 mr-1" />
                                 Terbitkan
@@ -312,7 +427,7 @@ export const KitchenDemandPage: React.FC = () => {
                                 size="sm"
                                 onClick={() => openEditModal(d)}
                                 title="Ubah Draf Kebutuhan"
-                                className="text-xs py-1 px-2 min-h-[32px]"
+                                className="text-xs py-1 px-2 min-h-[30px] border-gray-200 text-gray-700 hover:bg-gray-100"
                               >
                                 <Edit2 className="w-3.5 h-3.5" />
                               </Button>
@@ -323,10 +438,11 @@ export const KitchenDemandPage: React.FC = () => {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="text-xs py-1 px-2 min-h-[32px]"
-                              title="Lihat Rincian & Pesanan"
+                              className="text-xs py-1 px-2.5 min-h-[30px] text-pine-800 hover:bg-pine-50 font-medium"
+                              title="Lihat Rincian & Pasokan Terkait"
                             >
-                              <Eye className="w-3.5 h-3.5 text-gray-600" />
+                              <Eye className="w-3.5 h-3.5 mr-1" />
+                              Rincian
                             </Button>
                           </Link>
 
@@ -341,7 +457,7 @@ export const KitchenDemandPage: React.FC = () => {
                                   cancelMutation.mutate(d.id);
                                 }
                               }}
-                              className="p-1.5 text-gray-400 hover:text-status-danger transition-colors rounded"
+                              className="p-1.5 text-gray-400 hover:text-status-danger transition-colors rounded-lg hover:bg-red-50"
                               title="Batalkan Permintaan"
                             >
                               <XCircle className="w-4 h-4" />
@@ -366,7 +482,7 @@ export const KitchenDemandPage: React.FC = () => {
       >
         <form onSubmit={handleEditSubmit} className="space-y-4">
           {editError && (
-            <div className="p-3 bg-red-50 text-status-danger border border-red-200 rounded text-sm flex items-start gap-2">
+            <div className="p-3 bg-red-50 text-status-danger border border-red-200 rounded-lg text-sm flex items-start gap-2">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <span>{editError}</span>
             </div>
@@ -398,8 +514,8 @@ export const KitchenDemandPage: React.FC = () => {
               onChange={(e) => setEditPrice(parseInt(e.target.value) || 0)}
               required
             />
-            <span className="text-[11px] text-gray-500">
-              Harga tidak boleh lebih rendah dari batas harga dasar petani wilayah.
+            <span className="text-[11px] text-gray-500 mt-1 block">
+              Harga tidak boleh lebih rendah dari batas harga dasar petani wilayah (HPP).
             </span>
           </div>
 
@@ -437,7 +553,11 @@ export const KitchenDemandPage: React.FC = () => {
             >
               Batal
             </Button>
-            <Button type="submit" isLoading={editMutation.isPending}>
+            <Button
+              type="submit"
+              isLoading={editMutation.isPending}
+              className="bg-pine-800 hover:bg-pine-900 text-white font-semibold"
+            >
               Simpan Perubahan
             </Button>
           </div>

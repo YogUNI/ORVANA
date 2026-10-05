@@ -130,6 +130,7 @@ describe('DashboardService - Impact Metrics Test Vectors (docs/09 section 7)', (
             order: { findMany: jest.fn().mockResolvedValue(mockOrders) },
             demandRequest: { findMany: jest.fn().mockResolvedValue(mockDemands) },
             priceReference: { findMany: jest.fn().mockResolvedValue(mockPriceReferences) },
+            menuPlan: { count: jest.fn().mockResolvedValue(4) },
           },
         },
       ],
