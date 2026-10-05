@@ -7,9 +7,10 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 
-from app.nlp.commodities import find_commodity_matches
+from app.nlp.commodities import find_commodity_matches, COMMODITY_SYNONYMS
 from app.nlp.quantities_prices import parse_quantities, parse_prices
 from app.nlp.dates import parse_dates
+from app.nlp.classifier import nlp_engine
 
 class SupplyCandidate(BaseModel):
     commodityName: str
@@ -21,6 +22,8 @@ class SupplyCandidate(BaseModel):
     missing: List[str] = Field(default_factory=list)
 
 class ParseTextResponse(BaseModel):
+    intent: str = "OFFER_STOCK"
+    intentConfidence: float = 0.90
     candidates: List[SupplyCandidate]
     warnings: List[str] = Field(default_factory=list)
     rawText: str
@@ -30,11 +33,30 @@ def parse_supply_sentence(text: str, base_date: Optional[datetime] = None) -> Pa
         base_date = datetime.now()
 
     warnings: List[str] = []
+
+    # 1. Klasifikasi Niat Kalimat (ML TF-IDF Naive Bayes)
+    predicted_intent, intent_conf = nlp_engine.predict_intent(text)
     
-    # 1. Temukan komoditas
+    # 2. Temukan komoditas (Kamus Sinonim Eksak)
     commodity_matches = find_commodity_matches(text)
+
+    # 3. Jika tidak ditemukan eksak, coba Fuzzy Semantic Matching untuk toleransi typo
+    if not commodity_matches:
+        words = text.split()
+        for w in words:
+            clean_w = "".join(c for c in w if c.isalnum())
+            if len(clean_w) >= 3:
+                fuzzy_canon, f_score = nlp_engine.fuzzy_match_commodity(clean_w)
+                if fuzzy_canon and f_score >= 0.65:
+                    cat = COMMODITY_SYNONYMS[fuzzy_canon][0]
+                    commodity_matches.append((fuzzy_canon, cat, text.lower().find(clean_w.lower()), 0))
+                    warnings.append(f"Mendeteksi kemungkinan komoditas '{fuzzy_canon}' dari kata '{clean_w}'.")
+                    break
+
     if not commodity_matches:
         return ParseTextResponse(
+            intent=predicted_intent,
+            intentConfidence=intent_conf,
             candidates=[],
             warnings=["Komoditas pangan dan jumlah belum terbaca dengan jelas."],
             rawText=text
@@ -124,6 +146,8 @@ def parse_supply_sentence(text: str, base_date: Optional[datetime] = None) -> Pa
             )
 
     return ParseTextResponse(
+        intent=predicted_intent,
+        intentConfidence=intent_conf,
         candidates=candidates,
         warnings=warnings,
         rawText=text
