@@ -53,9 +53,10 @@ export const LandingPage: React.FC = () => {
   // Interactive FAQ Accordion State
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
 
-  // Scroll Spy Active Section State
+  // Scroll Spy Active Section & Scrolled Navbar Glass State
   const [activeSection, setActiveSection] = useState<string>('');
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
   // Refs for smooth animated sliding pill indicator
   const navContainerRef = React.useRef<HTMLDivElement | null>(null);
@@ -100,7 +101,10 @@ export const LandingPage: React.FC = () => {
   React.useEffect(() => {
     const sections = ['dampak', 'keunggulan', 'kalkulator', 'nlp-demo', 'alur', 'faq'];
     const handleScroll = () => {
-      const scrollY = window.scrollY + 120;
+      const currentScrollY = window.scrollY;
+      setIsScrolled(currentScrollY > 20);
+
+      const scrollY = currentScrollY + 120;
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);
         if (el) {
@@ -112,7 +116,7 @@ export const LandingPage: React.FC = () => {
           }
         }
       }
-      if (window.scrollY < 200) {
+      if (currentScrollY < 200) {
         setActiveSection('');
       }
     };
@@ -232,9 +236,15 @@ export const LandingPage: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. STICKY NAVBAR MODERN BERSIH DENGAN SCROLL-SPY ACTIVE PILL */}
-      <header className="bg-white/95 backdrop-blur-md border-b border-stone-200/90 sticky top-0 z-40 shadow-xs transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
+      {/* 2. STICKY NAVBAR DENGAN DYNAMIC FROSTED GLASS (BLUR & TRANSPARAN SAAT SCROLL) */}
+      <header
+        className={`sticky top-0 z-40 transition-all duration-300 ease-in-out ${
+          isScrolled
+            ? 'bg-[#FAF8F5]/80 backdrop-blur-xl border-b border-stone-200/80 shadow-xs h-18'
+            : 'bg-transparent border-b border-transparent h-20'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
           
           {/* Logo Brand */}
           <Link to="/" className="flex items-center gap-3 shrink-0 group">
@@ -253,7 +263,11 @@ export const LandingPage: React.FC = () => {
           <nav
             ref={navContainerRef}
             onMouseLeave={() => setHoveredNav(null)}
-            className="hidden xl:flex items-center relative text-xs font-semibold text-stone-600 bg-stone-100/80 p-1.5 rounded-full border border-stone-200/90 shadow-inner"
+            className={`hidden xl:flex items-center relative text-xs font-semibold text-stone-600 p-1.5 rounded-full transition-all duration-300 ${
+              isScrolled
+                ? 'bg-stone-100/90 border border-stone-200/90 shadow-2xs'
+                : 'bg-stone-200/50 backdrop-blur-md border border-stone-300/40'
+            }`}
           >
             {/* Sliding Pill Background indicator */}
             <div
