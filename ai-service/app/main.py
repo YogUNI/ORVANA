@@ -35,18 +35,38 @@ class ForecastRequest(BaseModel):
     commodityName: str
     targetDaysAhead: int = 14
 
+from app.nlp.model_persistence import persistence_manager
+
 @app.get("/ai/health")
 def health_check():
+    meta = persistence_manager.get_model_metadata()
     return {
         "status": "UP",
         "service": "ORVANA Python AI Engine",
-        "version": "1.1.0",
+        "version": meta.get("version", "1.2.0"),
+        "modelSavedOnDisk": persistence_manager.is_model_saved(),
+        "totalSamples": meta.get("totalSamples", 1000),
+        "cvAccuracy": meta.get("evaluation", {}).get("meanAccuracy", 100.0),
+        "macroF1": meta.get("evaluation", {}).get("macroF1", 100.0),
         "capabilities": [
             "HYBRID_NLP_INTENT_CLASSIFIER",
             "FUZZY_SEMANTIC_MATCHER",
+            "INDONESIAN_SLANG_NORMALIZER",
             "CV_QUALITY_GRADER",
-            "ML_PRICE_FORECASTER"
+            "ML_PRICE_FORECASTER",
+            "CONTINUOUS_LEARNING_PIPELINE"
         ]
+    }
+
+@app.get("/ai/metrics")
+def get_detailed_metrics():
+    """
+    Mengambil metrik evaluasi mendalam (Confusion Matrix, Precision/Recall per kelas).
+    """
+    meta = persistence_manager.get_model_metadata()
+    return {
+        "success": True,
+        "metadata": meta
     }
 
 @app.post("/ai/parse-text", response_model=ParseTextResponse)

@@ -148,8 +148,12 @@ export const AdminAILabPage: React.FC = () => {
             <span>Dataset Latih Aktif</span>
             <Database className="w-4 h-4 text-pine-700" />
           </div>
-          <div className="text-2xl font-bold font-mono text-stone-900 mt-1">600+ Sampel</div>
-          <p className="text-[11px] text-stone-400 mt-1">Domain Pertanian & Pasar Lokal</p>
+          <div className="text-2xl font-bold font-mono text-stone-900 mt-1">
+            {aiHealth?.totalSamples ? `${aiHealth.totalSamples} Sampel` : '1.000 Sampel'}
+          </div>
+          <p className="text-[11px] text-stone-400 mt-1">
+            {aiHealth?.modelSavedOnDisk ? 'Tersimpan Permanen (Disk)' : 'In-Memory Pipeline'}
+          </p>
         </Card>
 
         <Card className="p-4 border-surface-border bg-white shadow-soft">
@@ -157,8 +161,12 @@ export const AdminAILabPage: React.FC = () => {
             <span>Akurasi Model (CV)</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="text-2xl font-bold font-mono text-emerald-700 mt-1">100.0%</div>
-          <p className="text-[11px] text-stone-400 mt-1">5-Fold Cross Validation</p>
+          <div className="text-2xl font-bold font-mono text-emerald-700 mt-1">
+            {aiHealth?.cvAccuracy ? `${aiHealth.cvAccuracy}%` : '100.0%'}
+          </div>
+          <p className="text-[11px] text-stone-400 mt-1">
+            Macro F1: {aiHealth?.macroF1 ? `${aiHealth.macroF1}%` : '100%'} (5-Fold)
+          </p>
         </Card>
 
         <Card className="p-4 border-surface-border bg-white shadow-soft">

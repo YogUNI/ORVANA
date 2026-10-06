@@ -1,0 +1,90 @@
+{
+  "version": "1.2.0",
+  "totalSamples": 1001,
+  "feedbackSamples": 1,
+  "evaluation": {
+    "meanAccuracy": 100.0,
+    "stdAccuracy": 0.0,
+    "foldAccuracies": [
+      100.0,
+      100.0,
+      100.0,
+      100.0,
+      100.0
+    ],
+    "classes": [
+      "HARVEST_PLAN",
+      "IRRELEVANT",
+      "OFFER_STOCK",
+      "PRICE_INQUIRY"
+    ],
+    "classificationReport": {
+      "HARVEST_PLAN": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 250.0
+      },
+      "IRRELEVANT": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 120.0
+      },
+      "OFFER_STOCK": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 501.0
+      },
+      "PRICE_INQUIRY": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 130.0
+      },
+      "accuracy": 1.0,
+      "macro avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 1001.0
+      },
+      "weighted avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 1001.0
+      }
+    },
+    "confusionMatrix": [
+      [
+        250,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        120,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        501,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        130
+      ]
+    ],
+    "macroF1": 100.0,
+    "weightedF1": 100.0
+  },
+  "savedAt": "2026-10-06T14:11:21.221831"
+}

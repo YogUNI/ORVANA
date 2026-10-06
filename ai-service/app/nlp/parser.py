@@ -12,6 +12,7 @@ from app.nlp.quantities_prices import parse_quantities, parse_prices
 from app.nlp.dates import parse_dates
 from app.nlp.classifier import nlp_engine
 from app.nlp.number_words import normalize_indonesian_number_words
+from app.nlp.preprocessor import normalize_slang_and_dialect
 
 class SupplyCandidate(BaseModel):
     commodityName: str
@@ -35,13 +36,14 @@ def parse_supply_sentence(text: str, base_date: Optional[datetime] = None) -> Pa
 
     warnings: List[str] = []
 
-    # Normalisasi kata bilangan terlebih dahulu agar konsisten di semua ekstraktor
-    norm_text = normalize_indonesian_number_words(text)
+    # 1. Bersihkan slang / dialek petani dan normalisasi kata bilangan
+    slang_cleaned = normalize_slang_and_dialect(text)
+    norm_text = normalize_indonesian_number_words(slang_cleaned)
 
-    # 1. Klasifikasi Niat Kalimat (ML TF-IDF Naive Bayes)
+    # 2. Klasifikasi Niat Kalimat (ML TF-IDF Naive Bayes)
     predicted_intent, intent_conf = nlp_engine.predict_intent(norm_text)
     
-    # 2. Temukan komoditas (Kamus Sinonim Eksak)
+    # 3. Temukan komoditas (Kamus Sinonim Eksak)
     commodity_matches = find_commodity_matches(norm_text)
 
     # 3. Jika tidak ditemukan eksak, coba Fuzzy Semantic Matching untuk toleransi typo

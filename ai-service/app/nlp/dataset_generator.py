@@ -98,8 +98,8 @@ def generate_training_dataset(target_count: int = 550) -> List[Tuple[str, str]]:
     random.seed(42)
     dataset: List[Tuple[str, str]] = []
 
-    # 1. Generate OFFER_STOCK (~300 sampel)
-    for _ in range(300):
+    # 1. Generate OFFER_STOCK (~500 sampel)
+    for _ in range(500):
         _, comm_variants = random.choice(COMMODITY_VARIANTS)
         comm = random.choice(comm_variants)
         qty, unit = random.choice(QUANTITY_SAMPLES)
@@ -110,8 +110,8 @@ def generate_training_dataset(target_count: int = 550) -> List[Tuple[str, str]]:
         text = " ".join(text.split())
         dataset.append((text, "OFFER_STOCK"))
 
-    # 2. Generate HARVEST_PLAN (~100 sampel)
-    for _ in range(100):
+    # 2. Generate HARVEST_PLAN / DEMAND_REQUEST (~250 sampel)
+    for _ in range(250):
         _, comm_variants = random.choice(COMMODITY_VARIANTS)
         comm = random.choice(comm_variants)
         qty, unit = random.choice(QUANTITY_SAMPLES)
@@ -121,16 +121,16 @@ def generate_training_dataset(target_count: int = 550) -> List[Tuple[str, str]]:
         text = " ".join(text.split())
         dataset.append((text, "HARVEST_PLAN"))
 
-    # 3. Generate PRICE_INQUIRY (~80 sampel)
-    for _ in range(80):
+    # 3. Generate PRICE_INQUIRY (~130 sampel)
+    for _ in range(130):
         _, comm_variants = random.choice(COMMODITY_VARIANTS)
         comm = random.choice(comm_variants)
         tmpl = random.choice(INQUIRY_TEMPLATES)
         text = tmpl.format(comm=comm).strip()
         dataset.append((text, "PRICE_INQUIRY"))
 
-    # 4. Generate IRRELEVANT (~70 sampel)
-    for _ in range(70):
+    # 4. Generate IRRELEVANT (~120 sampel)
+    for _ in range(120):
         text = random.choice(IRRELEVANT_TEMPLATES)
         dataset.append((text, "IRRELEVANT"))
 
@@ -138,8 +138,9 @@ def generate_training_dataset(target_count: int = 550) -> List[Tuple[str, str]]:
     return dataset[:target_count]
 
 if __name__ == "__main__":
-    data = generate_training_dataset(550)
+    data = generate_training_dataset(1000)
     print(f"Dataset berhasil digenerate: {len(data)} sampel data latih.")
     from collections import Counter
     counts = Counter(label for _, label in data)
     print("Distribusi Kelas:", counts)
+
