@@ -2,65 +2,21 @@ import React, { useState, useRef } from 'react';
 import {
   Sparkles,
   TrendingUp,
-  Leaf,
-  Truck,
-  Building2,
-  Lock,
-  CheckCircle2,
   Volume2,
   VolumeX,
   Play,
   Pause,
   ExternalLink,
-  QrCode,
+  Building2,
+  CheckCircle2,
+  Lock,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-interface FlowMilestone {
-  id: 'farm' | 'transit' | 'kitchen';
-  step: string;
-  role: string;
-  title: string;
-  badge: string;
-  metric: string;
-  icon: React.ReactNode;
-}
-
-const MILESTONES: FlowMilestone[] = [
-  {
-    id: 'farm',
-    step: '01',
-    role: 'HULU PRODUKSI',
-    title: 'Panen Petani Desa',
-    badge: 'Cap 60% Adil',
-    metric: '40 kg Bayam Hijau',
-    icon: <Leaf className="w-3.5 h-3.5 text-emerald-400" />,
-  },
-  {
-    id: 'transit',
-    step: '02',
-    role: 'DISTRIBUSI DINGIN',
-    title: 'Kurir Dingin Tersegel',
-    badge: 'Suhu +4°C Terkunci',
-    metric: '6,2 km Transit Live',
-    icon: <Truck className="w-3.5 h-3.5 text-amber-400" />,
-  },
-  {
-    id: 'kitchen',
-    step: '03',
-    role: 'HILIR KONSUMSI',
-    title: 'Dapur Gizi & Lab QC',
-    badge: 'QC Lulus & Escrow Cair',
-    metric: '1.000 Porsi Gizi',
-    icon: <Building2 className="w-3.5 h-3.5 text-sky-400" />,
-  },
-];
 
 export const SupplyChain3DHero: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'video' | 'engine'>('video');
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
-  const [activeMilestoneIndex, setActiveMilestoneIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const togglePlay = () => {
@@ -80,13 +36,11 @@ export const SupplyChain3DHero: React.FC = () => {
     setIsMuted(!isMuted);
   };
 
-  const activeMilestone = MILESTONES[activeMilestoneIndex];
-
   return (
     <div className="w-full flex flex-col items-center select-none">
-      {/* 1. TOP DOCK SELECTOR (SINEMATIK VIDEO VS LIVE ENGINE) */}
-      <div className="flex items-center justify-between w-full max-w-xl mb-3 px-1 gap-2">
-        <div className="inline-flex p-1 bg-stone-900/90 backdrop-blur-xl rounded-2xl border border-stone-700/80 shadow-md">
+      {/* 1. MINIMALIST SEGMENTED SWITCHER (CLEAN & SUBTLE) */}
+      <div className="flex items-center justify-between w-full max-w-xl mb-3 px-1">
+        <div className="inline-flex p-1 bg-stone-900/90 backdrop-blur-xl rounded-2xl border border-stone-800 shadow-sm">
           <button
             type="button"
             onClick={() => setActiveTab('video')}
@@ -97,7 +51,7 @@ export const SupplyChain3DHero: React.FC = () => {
             }`}
           >
             <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Simulasi Sinematik 3D</span>
+            <span>Simulasi Rantai Pasok 3D</span>
           </button>
           <button
             type="button"
@@ -114,24 +68,24 @@ export const SupplyChain3DHero: React.FC = () => {
         </div>
 
         {activeTab === 'video' && (
-          <div className="flex items-center gap-2">
-            <span className="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 bg-stone-900/80 px-2.5 py-1 rounded-full border border-emerald-500/30">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-              <span>Full HD 60 FPS Loop</span>
-            </span>
-          </div>
+          <Link
+            to="/trace/ORV-20260920-DPR01-0001"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 hover:text-emerald-950 transition-colors"
+          >
+            <span>Uji Cek Paspor QR</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </Link>
         )}
       </div>
 
-      {/* 2. MAIN CINEMATIC THEATRE HERO STAGE */}
+      {/* 2. PURE CINEMATIC THEATRE (LEAN, CLEAN, ZERO CLUTTER) */}
       {activeTab === 'video' && (
         <div className="w-full max-w-xl flex flex-col items-center group">
-          {/* THE THEATRE FRAME CONTAINER */}
-          <div className="relative w-full aspect-[16/9] rounded-3xl overflow-hidden border border-white/20 shadow-2xl bg-stone-950 text-white transform-gpu transition-all duration-500 hover:shadow-emerald-950/40 hover:border-emerald-500/40">
-            {/* AMBIENT GLOW BACKLIGHT */}
-            <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-emerald-500/20 via-amber-500/15 to-sky-500/20 blur-xl opacity-60 pointer-events-none -z-10 group-hover:opacity-100 transition-opacity" />
+          <div className="relative w-full aspect-[16/9] rounded-3xl overflow-hidden border border-stone-200/90 shadow-2xl bg-stone-950 transition-all duration-500 hover:border-emerald-700/40">
+            {/* AMBIENT SOFT SHADOW GLOW */}
+            <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-emerald-500/20 via-transparent to-amber-500/15 blur-xl opacity-50 pointer-events-none -z-10 group-hover:opacity-80 transition-opacity" />
 
-            {/* REAL CINEMATIC 3D LOOP VIDEO */}
+            {/* FULL HD 3D LOOP VIDEO */}
             <video
               ref={videoRef}
               src="/videos/hero-supply-chain.mp4"
@@ -139,130 +93,55 @@ export const SupplyChain3DHero: React.FC = () => {
               loop
               muted={isMuted}
               playsInline
-              className="w-full h-full object-cover object-center scale-[1.02] filter saturate-[1.05] contrast-[1.02]"
+              className="w-full h-full object-cover object-center scale-[1.02]"
             />
 
-            {/* SUBTLE GRADIENT VIGNETTE ON EDGES */}
-            <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-transparent to-stone-950/30 pointer-events-none" />
-
-            {/* TOP BAR OVERLAY: LIVE STATUS & QUICK CONTROLS */}
-            <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between pointer-events-auto z-20">
-              <div className="flex items-center gap-2 bg-stone-950/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15 text-[11px] font-mono shadow-md">
-                <span className="flex h-2 w-2 relative">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <span className="font-bold uppercase tracking-wide text-white">
-                  Rantai Pasok Live
-                </span>
-                <span className="text-stone-500">•</span>
-                <span className="text-emerald-400 font-semibold text-[10px]">
-                  Terverifikasi QR
-                </span>
-              </div>
-
-              {/* Video Play/Pause & Mute Buttons */}
-              <div className="flex items-center gap-1.5 bg-stone-950/80 backdrop-blur-md p-1 rounded-full border border-white/15 shadow-md">
-                <button
-                  type="button"
-                  onClick={togglePlay}
-                  className="p-1.5 rounded-full text-stone-300 hover:text-white hover:bg-stone-800 transition-colors"
-                  title={isPlaying ? 'Jeda Video' : 'Putar Video'}
-                >
-                  {isPlaying ? (
-                    <Pause className="w-3.5 h-3.5" />
-                  ) : (
-                    <Play className="w-3.5 h-3.5 fill-current" />
-                  )}
-                </button>
-                <button
-                  type="button"
-                  onClick={toggleMute}
-                  className="p-1.5 rounded-full text-stone-300 hover:text-white hover:bg-stone-800 transition-colors"
-                  title={isMuted ? 'Nyalakan Audio' : 'Bisukan Audio'}
-                >
-                  {isMuted ? (
-                    <VolumeX className="w-3.5 h-3.5" />
-                  ) : (
-                    <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* BOTTOM BAR OVERLAY: PASSPORT BADGE & DIRECT LINK */}
-            <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-auto z-20">
-              <div className="flex items-center gap-2 bg-stone-950/85 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/15 text-xs shadow-lg max-w-[65%]">
-                <QrCode className="w-4 h-4 text-emerald-400 shrink-0" />
-                <div className="truncate">
-                  <span className="text-[10px] font-mono text-stone-400 block uppercase font-bold">
-                    Tahap {activeMilestone.step}: {activeMilestone.role}
-                  </span>
-                  <span className="text-xs font-semibold text-white truncate block">
-                    {activeMilestone.title} ({activeMilestone.metric})
-                  </span>
-                </div>
-              </div>
-
-              <Link
-                to="/trace/ORV-20260920-DPR01-0001"
-                className="inline-flex items-center gap-1.5 text-xs font-mono font-bold bg-emerald-500 hover:bg-emerald-400 text-stone-950 px-3.5 py-2 rounded-xl shadow-md transition-all hover:scale-105 active:scale-95"
+            {/* MINIMAL CORNER CONTROLS (FADES IN ON HOVER) */}
+            <div className="absolute top-3.5 right-3.5 flex items-center gap-1.5 bg-stone-950/70 backdrop-blur-md p-1 rounded-full border border-white/10 opacity-70 group-hover:opacity-100 transition-opacity z-20">
+              <button
+                type="button"
+                onClick={togglePlay}
+                className="p-1.5 rounded-full text-stone-300 hover:text-white hover:bg-stone-800 transition-colors"
+                title={isPlaying ? 'Jeda' : 'Putar'}
               >
-                <span>Uji Paspor QR</span>
-                <ExternalLink className="w-3 h-3" />
-              </Link>
+                {isPlaying ? (
+                  <Pause className="w-3.5 h-3.5" />
+                ) : (
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={toggleMute}
+                className="p-1.5 rounded-full text-stone-300 hover:text-white hover:bg-stone-800 transition-colors"
+                title={isMuted ? 'Nyalakan Audio' : 'Bisukan'}
+              >
+                {isMuted ? (
+                  <VolumeX className="w-3.5 h-3.5" />
+                ) : (
+                  <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
+                )}
+              </button>
             </div>
           </div>
 
-          {/* 3. THREE-STAGE FLOW CHIPS DIRECTLY BENEATH THE THEATRE */}
-          <div className="grid grid-cols-3 gap-2 w-full mt-3">
-            {MILESTONES.map((m, idx) => {
-              const isActive = idx === activeMilestoneIndex;
-              return (
-                <button
-                  key={m.id}
-                  onClick={() => setActiveMilestoneIndex(idx)}
-                  className={`p-2.5 rounded-2xl border text-left transition-all duration-300 flex flex-col justify-between ${
-                    isActive
-                      ? 'bg-stone-900 text-white border-emerald-500 shadow-md shadow-emerald-950/20'
-                      : 'bg-white/80 hover:bg-white text-stone-700 border-stone-200/90'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span
-                      className={`text-[9px] font-mono font-extrabold ${
-                        isActive ? 'text-emerald-400' : 'text-stone-400'
-                      }`}
-                    >
-                      TAHAP {m.step}
-                    </span>
-                    <span
-                      className={`w-2 h-2 rounded-full ${
-                        isActive ? 'bg-emerald-400 animate-pulse' : 'bg-stone-300'
-                      }`}
-                    />
-                  </div>
-                  <div className="flex items-center gap-1.5 my-0.5">
-                    {m.icon}
-                    <span className="text-xs font-bold truncate leading-tight">
-                      {m.title}
-                    </span>
-                  </div>
-                  <span
-                    className={`text-[10px] font-mono block truncate ${
-                      isActive ? 'text-emerald-300' : 'text-stone-500'
-                    }`}
-                  >
-                    {m.metric}
-                  </span>
-                </button>
-              );
-            })}
+          {/* SINGLE CONCISE CAPTION BENEATH THE VIDEO */}
+          <div className="w-full mt-2.5 px-2 flex items-center justify-between text-xs text-stone-500">
+            <span className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="font-medium text-stone-700">
+                Alur Rantai Pasok Terintegrasi:
+              </span>
+              <span>Lahan Petani ➔ Armada Dingin ➔ Dapur Gizi Massal</span>
+            </span>
+            <span className="font-mono text-[11px] text-stone-400">
+              Simulasi 3D
+            </span>
           </div>
         </div>
       )}
 
-      {/* 4. VIEW 2: LIVE MATCHING ENGINE ALGORITHM DATA CARD */}
+      {/* 3. VIEW 2: LIVE MATCHING ENGINE ALGORITHM DATA CARD */}
       {activeTab === 'engine' && (
         <div className="w-full max-w-xl bg-stone-950/90 text-white rounded-3xl border border-white/15 p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden text-left animate-in fade-in duration-300">
           <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-bl-full -z-0 opacity-80" />
