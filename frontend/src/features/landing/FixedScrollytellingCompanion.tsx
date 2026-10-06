@@ -1,133 +1,84 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  Sparkles,
+  Search,
+  Calculator,
+  Bot,
+  ArrowUp,
+  X,
+  ChevronUp,
+  ExternalLink,
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-interface StageConfig {
-  id: string;
-  name: string;
+interface SectionTip {
   title: string;
   badge: string;
   badgeColor: string;
-  description: string;
-  // Position docked nicely at screen periphery so it never overlaps main cards:
-  dockSide: 'right' | 'left';
-  pos: {
-    y: number; // percentage from top viewport (vh)
-    scale: number;
-    rotateY: number; // degrees
-    rotateZ: number;
-  };
-  glowColor: string;
+  tip: string;
 }
 
 export const FixedScrollytellingCompanion: React.FC = () => {
-  const [activeStageIndex, setActiveStageIndex] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [currentTip, setCurrentTip] = useState<SectionTip>({
+    title: 'Inspektur Digital',
+    badge: 'Online 24/7',
+    badgeColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+    tip: 'Siap memandu rantai pasok pangan gizi.',
+  });
+  const [showBubble, setShowBubble] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Stages mapped precisely with scroll milestones
-  const stages: StageConfig[] = useMemo(
-    () => [
-      {
-        id: 'hero',
-        name: 'Ekosistem Pangan',
-        title: 'Inspektur Digital Orvana',
-        badge: 'Mitra Inspeksi',
-        badgeColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
-        description: 'Memantau integritas pasokan pangan dari petani ke dapur massal.',
-        dockSide: 'right',
-        pos: { y: 68, scale: 0.95, rotateY: -12, rotateZ: 2 },
-        glowColor: 'rgba(16, 185, 129, 0.45)',
-      },
-      {
-        id: 'techballs',
-        name: 'Fisika Pasokan',
-        title: 'Komoditas Terverifikasi',
-        badge: 'Fisika Komoditas',
-        badgeColor: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
-        description: 'Setiap komoditas dipantau parameter susut, mutu, dan kuota panen.',
-        dockSide: 'left',
-        pos: { y: 65, scale: 0.9, rotateY: 14, rotateZ: -2 },
-        glowColor: 'rgba(245, 158, 11, 0.45)',
-      },
-      {
-        id: 'alur',
-        name: 'Sinergi 4 Peran',
-        title: 'Rantai Pasok Berkeadilan',
-        badge: 'Sinergi Lapangan',
-        badgeColor: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-        description: 'Petani panen, koordinator jemput, lab uji mutu, dapur terima tepat waktu.',
-        dockSide: 'right',
-        pos: { y: 68, scale: 0.95, rotateY: -14, rotateZ: 3 },
-        glowColor: 'rgba(59, 130, 246, 0.45)',
-      },
-      {
-        id: 'kalkulator',
-        name: 'Estimasi Kebutuhan',
-        title: 'Kalkulator Gizi Presisi',
-        badge: 'Demand Planner',
-        badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-        description: 'Hitung kebutuhan bahan bersih dan kotor sesuai target porsi harian.',
-        dockSide: 'right',
-        pos: { y: 72, scale: 0.88, rotateY: -10, rotateZ: 2 },
-        glowColor: 'rgba(16, 185, 129, 0.5)',
-      },
-      {
-        id: 'trace',
-        name: 'Penelusuran Publik',
-        title: 'Paspor Digital QR',
-        badge: '100% Transparan',
-        badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-        description: 'Setiap kemasan dapat dilacak publik hingga petani dan suhu pengiriman.',
-        dockSide: 'left',
-        pos: { y: 65, scale: 0.95, rotateY: 15, rotateZ: -2 },
-        glowColor: 'rgba(16, 185, 129, 0.5)',
-      },
-      {
-        id: 'ledger',
-        name: 'Escrow & Pembayaran',
-        title: 'Pencairan Otomatis',
-        badge: 'Smart Escrow',
-        badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
-        description: 'Begitu dapur approve QC, dana langsung masuk rekening kas petani.',
-        dockSide: 'right',
-        pos: { y: 68, scale: 0.95, rotateY: -12, rotateZ: 2 },
-        glowColor: 'rgba(168, 85, 247, 0.45)',
-      },
-      {
-        id: 'cta',
-        name: 'Daftar Mitra',
-        title: 'Ayo Bergabung Sekarang',
-        badge: 'Siap Berkolaborasi',
-        badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-        description: 'Gabung menjadi dapur percontohan atau kelompok tani terdaftar.',
-        dockSide: 'right',
-        pos: { y: 70, scale: 1.0, rotateY: -8, rotateZ: 1 },
-        glowColor: 'rgba(234, 179, 8, 0.5)',
-      },
-    ],
-    []
-  );
-
-  // Monitor scroll milestone
+  // Monitor scroll position smoothly to update the inspector's status tip
   useEffect(() => {
     const handleScroll = () => {
+      const scrollY = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (docHeight <= 0) return;
-      const progress = Math.max(0, Math.min(1, window.scrollY / docHeight));
+      const progress = docHeight > 0 ? scrollY / docHeight : 0;
 
-      if (progress < 0.12) {
-        setActiveStageIndex(0); // Hero
-      } else if (progress < 0.28) {
-        setActiveStageIndex(1); // Techballs
-      } else if (progress < 0.45) {
-        setActiveStageIndex(2); // Alur
-      } else if (progress < 0.62) {
-        setActiveStageIndex(3); // Kalkulator
-      } else if (progress < 0.78) {
-        setActiveStageIndex(4); // Trace
-      } else if (progress < 0.90) {
-        setActiveStageIndex(5); // Ledger
+      if (progress < 0.15) {
+        setCurrentTip({
+          title: 'Hero Showcase',
+          badge: 'Selamat Datang',
+          badgeColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+          tip: 'Pelajari sistem alokasi panen lokal & dapur gizi mandiri.',
+        });
+      } else if (progress < 0.35) {
+        setCurrentTip({
+          title: 'Fisika Pasokan',
+          badge: 'Komoditas Live',
+          badgeColor: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+          tip: 'Bola komoditas bereaksi terhadap kursor Anda!',
+        });
+      } else if (progress < 0.55) {
+        setCurrentTip({
+          title: 'Alur 4 Peran',
+          badge: 'Sinergi Lapangan',
+          badgeColor: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+          tip: 'Petani, koordinator, ahli gizi QC, dan pengelola dapur bersatu.',
+        });
+      } else if (progress < 0.75) {
+        setCurrentTip({
+          title: 'Simulasi Kebutuhan',
+          badge: 'Demand Planner',
+          badgeColor: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+          tip: 'Uji hitung kebutuhan kotor & anggaran makan bergizi anak.',
+        });
+      } else if (progress < 0.9) {
+        setCurrentTip({
+          title: 'Paspor Digital QR',
+          badge: 'Transparansi Penuh',
+          badgeColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+          tip: 'Scan kode batch untuk melihat riwayat panen dan sertifikat lab.',
+        });
       } else {
-        setActiveStageIndex(6); // CTA
+        setCurrentTip({
+          title: 'Ekosistem Orvana',
+          badge: 'Mari Bergabung',
+          badgeColor: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+          tip: 'Daftarkan kelompok tani atau dapur percontohan Anda.',
+        });
       }
     };
 
@@ -136,137 +87,205 @@ export const FixedScrollytellingCompanion: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Subtle mouse tracking
+  // Subtle mouse tilt for the character
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      const normX = (e.clientX / window.innerWidth - 0.5) * 2;
-      const normY = (e.clientY / window.innerHeight - 0.5) * 2;
-      setMouseOffset({ x: normX * 10, y: normY * 10 });
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const charCenterX = rect.left + rect.width / 2;
+      const charCenterY = rect.top + rect.height / 2;
+
+      const deltaX = Math.max(-1, Math.min(1, (e.clientX - charCenterX) / 400));
+      const deltaY = Math.max(-1, Math.min(1, (e.clientY - charCenterY) / 400));
+
+      setMouseOffset({ x: deltaX * 12, y: deltaY * 12 });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const activeStage = stages[activeStageIndex];
-  const isRight = activeStage.dockSide === 'right';
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+      setIsOpen(false);
+    }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setIsOpen(false);
+  };
 
   return (
-    <div
-      className="fixed inset-0 pointer-events-none z-20 hidden xl:block overflow-hidden"
-      aria-hidden="true"
+    <aside
+      aria-label="Asisten Virtual Orvana"
+      ref={containerRef}
+      className="fixed bottom-6 right-6 z-40 select-none flex flex-col items-end pointer-events-auto"
     >
-      {/* FIXED DOCKED STAGE CONTAINER (Positioned at Screen Periphery / Edge) */}
-      <div
-        className="absolute transition-all duration-1000 ease-out will-change-transform"
-        style={{
-          right: isRight ? '1.5rem' : 'auto',
-          left: isRight ? 'auto' : '1.5rem',
-          top: `${activeStage.pos.y}%`,
-          transform: `translateY(-50%) translate3d(${mouseOffset.x}px, ${mouseOffset.y}px, 0) scale(${activeStage.pos.scale})`,
-        }}
-      >
-        <div
-          className="relative flex items-center gap-3 transition-transform duration-700 ease-out"
-          style={{
-            perspective: '1000px',
-            transform: `rotateY(${activeStage.pos.rotateY + mouseOffset.x * 0.3}deg) rotateZ(${activeStage.pos.rotateZ}deg)`,
-          }}
-        >
-          {/* OPTIONAL EXPANDABLE MINI HUD CALLOUT */}
-          {isExpanded && (
-            <div
-              className={`w-64 bg-stone-900/95 backdrop-blur-xl border border-stone-700/80 p-3.5 rounded-2xl shadow-2xl pointer-events-auto transition-all duration-300 animate-in fade-in zoom-in-95 ${
-                isRight ? 'order-1 mr-2' : 'order-2 ml-2'
-              }`}
-              style={{
-                boxShadow: `0 12px 30px -10px ${activeStage.glowColor}`,
-              }}
+      {/* 1. EXPANDED ACTION CONCIERGE DRAWER / POPUP */}
+      {isOpen && (
+        <div className="mb-3 w-80 bg-stone-900/95 backdrop-blur-2xl border border-stone-700/80 rounded-2xl shadow-2xl p-4 text-stone-100 transition-all duration-300 animate-in fade-in zoom-in-95 slide-in-from-bottom-4">
+          <div className="flex items-center justify-between pb-3 border-b border-stone-800">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              <div>
+                <h4 className="text-xs font-bold font-heading text-stone-100 leading-tight">
+                  Concierge Virtual Orvana
+                </h4>
+                <p className="text-[10px] font-mono text-stone-400">
+                  Navigasi Cepat & Akses Fitur
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="p-1 rounded-lg text-stone-400 hover:text-stone-100 hover:bg-stone-800 transition-colors"
+              aria-label="Tutup Menu"
             >
-              <div className="flex items-center justify-between mb-1.5">
-                <span
-                  className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${activeStage.badgeColor}`}
-                >
-                  {activeStage.badge}
-                </span>
-                <span className="flex h-2 w-2 relative">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-              </div>
+              <X className="w-4 h-4" />
+            </button>
+          </div>
 
-              <p className="text-xs font-bold text-stone-100 leading-snug mb-1">
-                {activeStage.title}
-              </p>
-              <p className="text-[11px] text-stone-400 leading-relaxed">
-                {activeStage.description}
-              </p>
+          {/* Quick Shortcuts */}
+          <div className="py-3 space-y-1.5 text-xs">
+            <button
+              onClick={() => scrollToSection('alur')}
+              className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-stone-800/60 hover:bg-stone-800 text-stone-200 hover:text-emerald-300 transition-all text-left"
+            >
+              <span className="flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Pelajari Alur 4 Peran</span>
+              </span>
+              <ChevronUp className="w-3.5 h-3.5 rotate-90 text-stone-500" />
+            </button>
 
-              {/* STAGE DOTS */}
-              <div className="mt-2.5 pt-2 border-t border-stone-800 flex items-center justify-between">
-                <span className="text-[9px] font-mono text-stone-500 uppercase tracking-wider">
-                  {activeStage.name}
-                </span>
-                <div className="flex items-center gap-1">
-                  {stages.map((st, idx) => (
-                    <span
-                      key={st.id}
-                      className={`h-1.5 rounded-full transition-all duration-300 ${
-                        idx === activeStageIndex
-                          ? 'w-3.5 bg-emerald-400'
-                          : 'w-1.5 bg-stone-700'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
+            <button
+              onClick={() => scrollToSection('kalkulator')}
+              className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-stone-800/60 hover:bg-stone-800 text-stone-200 hover:text-purple-300 transition-all text-left"
+            >
+              <span className="flex items-center gap-2">
+                <Calculator className="w-3.5 h-3.5 text-purple-400" />
+                <span>Kalkulator Kebutuhan Gizi</span>
+              </span>
+              <ChevronUp className="w-3.5 h-3.5 rotate-90 text-stone-500" />
+            </button>
 
-          {/* 3D AVATAR FIGURE (CLICKABLE TO TOGGLE INFO HUD) */}
-          <div
-            onClick={() => setIsExpanded((prev) => !prev)}
-            className={`relative group cursor-pointer pointer-events-auto select-none ${
-              isRight ? 'order-2' : 'order-1'
-            }`}
-          >
-            {/* AMBIENT RADIAL LIGHTING */}
-            <div
-              className="absolute -inset-4 rounded-full blur-xl opacity-50 transition-colors duration-1000 pointer-events-none group-hover:opacity-80"
-              style={{ backgroundColor: activeStage.glowColor }}
-            />
+            <button
+              onClick={() => scrollToSection('asisten')}
+              className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-stone-800/60 hover:bg-stone-800 text-stone-200 hover:text-amber-300 transition-all text-left"
+            >
+              <span className="flex items-center gap-2">
+                <Bot className="w-3.5 h-3.5 text-amber-400" />
+                <span>Tanya Asisten AI Pasokan</span>
+              </span>
+              <ChevronUp className="w-3.5 h-3.5 rotate-90 text-stone-500" />
+            </button>
 
-            {/* MONCY ORBITAL HALO RING */}
-            <div
-              className="absolute -inset-2 rounded-full border border-emerald-400/30 opacity-60 pointer-events-none group-hover:border-emerald-400/60 transition-colors"
-              style={{
-                animation: 'spin 18s linear infinite',
-              }}
-            />
+            <Link
+              to="/trace/ORV-20260920-DPR01-0001"
+              className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-emerald-950/40 hover:bg-emerald-900/50 border border-emerald-600/30 text-emerald-200 transition-all text-left"
+            >
+              <span className="flex items-center gap-2">
+                <Search className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="font-semibold">Buka Demo Paspor QR</span>
+              </span>
+              <ExternalLink className="w-3.5 h-3.5 text-emerald-400" />
+            </Link>
+          </div>
 
-            {/* PRISTINE CUTOUT IMAGE */}
-            <div className="relative w-36 h-48 sm:w-44 sm:h-56 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-              <img
-                src="/images/orvana-character-cutout.png"
-                alt="Orvana 3D Digital Companion"
-                className="w-full h-full object-contain pointer-events-none transition-all duration-500"
-                style={{
-                  filter: `drop-shadow(0 15px 25px rgba(0,0,0,0.45)) drop-shadow(0 0 16px ${activeStage.glowColor})`,
-                }}
-              />
-
-              {/* TABLET HOLOGRAM GLOW */}
-              <div className="absolute top-[48%] left-[38%] -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-emerald-400/25 rounded-full blur-md animate-pulse pointer-events-none" />
-            </div>
-
-            {/* MINI BADGE PILL BELOW CHARACTER */}
-            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-stone-900/90 backdrop-blur-md border border-stone-700/80 px-2.5 py-0.5 rounded-full text-[10px] font-mono text-stone-200 whitespace-nowrap shadow-lg group-hover:border-emerald-500 transition-colors flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>{isExpanded ? 'Tutup HUD' : activeStage.badge}</span>
-            </div>
+          <div className="pt-2 border-t border-stone-800 flex items-center justify-between text-[11px]">
+            <button
+              onClick={scrollToTop}
+              className="flex items-center gap-1 text-stone-400 hover:text-stone-200 transition-colors"
+            >
+              <ArrowUp className="w-3 h-3" />
+              <span>Kembali ke Atas</span>
+            </button>
+            <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-800/50">
+              Audit Grade
+            </span>
           </div>
         </div>
+      )}
+
+      {/* 2. CONTEXTUAL SPEECH BUBBLE (STATUS INSPEKTUR) */}
+      {!isOpen && showBubble && (
+        <div className="mb-2 mr-1 w-64 bg-stone-900/90 backdrop-blur-md border border-stone-700/80 rounded-2xl p-3 shadow-xl transition-all duration-300 animate-in fade-in slide-in-from-bottom-2 relative">
+          <button
+            onClick={() => setShowBubble(false)}
+            className="absolute top-2 right-2 text-stone-500 hover:text-stone-300"
+            title="Sembunyikan dialog"
+          >
+            <X className="w-3 h-3" />
+          </button>
+          <div className="flex items-center gap-1.5 mb-1">
+            <span
+              className={`text-[9px] font-mono font-bold px-2 py-0.2 rounded-full border ${currentTip.badgeColor}`}
+            >
+              {currentTip.badge}
+            </span>
+          </div>
+          <p className="text-xs font-bold text-stone-100 leading-tight">
+            {currentTip.title}
+          </p>
+          <p className="text-[11px] text-stone-300 leading-relaxed mt-0.5">
+            {currentTip.tip}
+          </p>
+        </div>
+      )}
+
+      {/* 3. FLOATING 3D CHARACTER AVATAR DOCK BUTTON (CORNER FIXED) */}
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        className="relative group cursor-pointer flex items-end justify-center"
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsOpen((prev) => !prev);
+          }
+        }}
+        aria-label="Buka Asisten Inspektur Virtual"
+      >
+        {/* Glow Ring & Orbit Background */}
+        <div className="absolute inset-0 rounded-full bg-emerald-500/25 blur-xl group-hover:bg-emerald-400/40 transition-colors pointer-events-none" />
+
+        <div
+          className="absolute -inset-1 rounded-full border border-emerald-400/40 opacity-70 group-hover:opacity-100 pointer-events-none transition-opacity"
+          style={{
+            animation: 'spin 20s linear infinite',
+          }}
+        />
+
+        {/* 3D Character Model with Interactive Parallax Tilt */}
+        <div
+          className="relative w-28 h-36 sm:w-32 sm:h-40 flex items-center justify-center transition-transform duration-300 group-hover:scale-105"
+          style={{
+            perspective: '800px',
+            transform: `rotateY(${mouseOffset.x}deg) rotateX(${-mouseOffset.y}deg)`,
+          }}
+        >
+          <img
+            src="/images/orvana-character-cutout.png"
+            alt="Virtual 3D Inspector"
+            className="w-full h-full object-contain filter drop-shadow-[0_12px_20px_rgba(0,0,0,0.5)] transition-all duration-300"
+          />
+
+          {/* Hologram Scanner Glow on Tablet */}
+          <div className="absolute top-[48%] left-[40%] -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-emerald-400/20 rounded-full blur-md animate-pulse pointer-events-none" />
+        </div>
+
+        {/* Badge Pill Click Indicator */}
+        <div className="absolute -bottom-1.5 bg-stone-900/95 backdrop-blur-md border border-stone-700 px-2.5 py-0.5 rounded-full shadow-lg flex items-center gap-1.5 group-hover:border-emerald-500 transition-colors">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+          <span className="text-[10px] font-mono font-bold text-stone-200">
+            {isOpen ? 'Tutup' : 'Asisten AI'}
+          </span>
+        </div>
       </div>
-    </div>
+    </aside>
   );
 };
