@@ -12,7 +12,6 @@ import { ScrollReveal } from '../components/ui/ScrollReveal';
 import { InteractiveParticleCanvas } from '../features/landing/InteractiveParticleCanvas';
 import { InteractiveSpotlightCursor } from '../features/landing/InteractiveSpotlightCursor';
 import { MoncyCustomCursor } from '../features/landing/MoncyCustomCursor';
-import { TechBalls } from '../features/landing/TechBalls';
 import { SmartFloatingConcierge } from '../features/landing/SmartFloatingConcierge';
 import {
   ShieldCheck,
@@ -493,9 +492,6 @@ export const LandingPage: React.FC = () => {
           </div>
         </div>
       </section>
-
-      {/* 7b. INTERACTIVE 3D COMMODITY TECHBALLS PHYSICS (MONCY.DEV PHYSICS ENGINE) */}
-      <TechBalls />
 
       <ScrollReveal animation="fade-up" delayMs={0}>
         {/* 8. ALUR KERJA 4 PERAN LAPANGAN (INTERACTIVE ROLE ECOSYSTEM) */}
