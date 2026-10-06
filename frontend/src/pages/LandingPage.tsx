@@ -415,6 +415,46 @@ export const LandingPage: React.FC = () => {
 
           </div>
         </div>
+
+        {/* Ambient Infinite Supply Chain Logistics Ribbon (Pita Animasi Mengalir Halus) */}
+        <div className="w-full mt-10 border-t border-b border-stone-200/80 bg-white/60 backdrop-blur-md py-3 overflow-hidden select-none">
+          <div className="flex items-center gap-8 whitespace-nowrap animate-marquee">
+            {[1, 2].map((loopIdx) => (
+              <div key={loopIdx} className="flex items-center gap-8 shrink-0 text-xs font-mono text-stone-600">
+                <span className="flex items-center gap-2 text-emerald-950 font-bold">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  ALIRAN INTEGRASI DIGITAL
+                </span>
+                <span className="text-stone-300">/</span>
+                <span className="flex items-center gap-1.5">
+                  <span className="text-stone-900 font-semibold">🌾 Petik Panen Desa</span>
+                  <span className="text-[10px] text-emerald-800 bg-emerald-100 px-1.5 py-0.2 rounded font-bold">Cap 60%</span>
+                </span>
+                <span className="text-stone-400">➔</span>
+                <span className="flex items-center gap-1.5">
+                  <span className="text-stone-900 font-semibold">🚚 Logistik Suhu Dingin</span>
+                  <span className="text-[10px] text-amber-800 bg-amber-100 px-1.5 py-0.2 rounded font-bold">+4°C</span>
+                </span>
+                <span className="text-stone-400">➔</span>
+                <span className="flex items-center gap-1.5">
+                  <span className="text-stone-900 font-semibold">🔍 Uji Mutu Ahli Gizi</span>
+                  <span className="text-[10px] text-sky-800 bg-sky-100 px-1.5 py-0.2 rounded font-bold">QC 100%</span>
+                </span>
+                <span className="text-stone-400">➔</span>
+                <span className="flex items-center gap-1.5">
+                  <span className="text-stone-900 font-semibold">🍳 Dapur Gizi Massal</span>
+                  <span className="text-[10px] text-purple-800 bg-purple-100 px-1.5 py-0.2 rounded font-bold">1.000 Porsi</span>
+                </span>
+                <span className="text-stone-400">➔</span>
+                <span className="flex items-center gap-1.5">
+                  <span className="text-stone-900 font-semibold">🔒 Pencairan Escrow Instan</span>
+                  <span className="text-[10px] text-emerald-800 bg-emerald-100 px-1.5 py-0.2 rounded font-bold">Real-time</span>
+                </span>
+                <span className="text-stone-300">/</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* 4. LIVE INTERACTIVE AI NLP SIMULATOR SANDBOX (Fitur Baru Pembeda Kelas Dunia) */}
