@@ -9,6 +9,8 @@ import { Skeleton } from '../components/ui/Skeleton';
 import { Logo } from '../components/ui/Logo';
 import { SupplyChain3DHero } from '../features/landing/SupplyChain3DHero';
 import { ScrollReveal } from '../components/ui/ScrollReveal';
+import { InteractiveParticleCanvas } from '../features/landing/InteractiveParticleCanvas';
+import { InteractiveSpotlightCursor } from '../features/landing/InteractiveSpotlightCursor';
 import {
   ShieldCheck,
   Truck,
@@ -213,8 +215,11 @@ export const LandingPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-stone-900 selection:bg-emerald-800/20 selection:text-emerald-950 font-sans antialiased relative">
-      
+    <div className="min-h-screen bg-[#FAF8F5] text-stone-900 selection:bg-emerald-800/20 selection:text-emerald-950 font-sans antialiased relative overflow-x-hidden">
+      {/* Moncy.dev Style: Interactive Background Particle Field & Mouse Spotlight Follower */}
+      <InteractiveParticleCanvas />
+      <InteractiveSpotlightCursor />
+
       {/* FLOATING GLASS DOCK / ISLAND NAVBAR */}
       <header className="sticky top-0 z-40 w-full px-4 sm:px-6 lg:px-8 py-3 transition-all duration-300 pointer-events-none">
         <div

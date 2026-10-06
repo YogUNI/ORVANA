@@ -10,6 +10,7 @@ import {
   Eye,
   Play,
   Pause,
+  Compass,
 } from 'lucide-react';
 
 interface Hotspot {
@@ -74,13 +75,13 @@ export const SupplyChain3DHero: React.FC = () => {
   const [showHotspots, setShowHotspots] = useState(true);
   const [isPlayingSimulation, setIsPlayingSimulation] = useState(true);
 
-  // Scroll-driven parallax depth
+  // Scroll-driven camera parallax
   const [scrollYOffset, setScrollYOffset] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
-      if (offset < 800) {
+      if (offset < 1000) {
         setScrollYOffset(offset);
       }
     };
@@ -88,7 +89,7 @@ export const SupplyChain3DHero: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // 3D Parallax Tilt state
+  // 3D Interactive Orbit & Drag Physics (Inspired by moncy.dev)
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [tilt, setTilt] = useState<{
     rotateX: number;
@@ -103,6 +104,72 @@ export const SupplyChain3DHero: React.FC = () => {
     glareY: 50,
     isHovered: false,
   });
+
+  // Interactive Drag-to-Rotate State
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const startDragPos = useRef({ x: 0, y: 0 });
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    startDragPos.current = { x: e.clientX - dragOffset.x, y: e.clientY - dragOffset.y };
+  };
+
+  const handleMouseMoveGlobal = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isDragging) {
+      const newX = e.clientX - startDragPos.current.x;
+      const newY = e.clientY - startDragPos.current.y;
+      // Clamp drag rotation angles (-24 to +24 deg)
+      setDragOffset({
+        x: Math.max(-24, Math.min(24, newX * 0.15)),
+        y: Math.max(-18, Math.min(18, newY * 0.15)),
+      });
+      return;
+    }
+
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = -((y - centerY) / centerY) * 10;
+    const rotateY = ((x - centerX) / centerX) * 12;
+
+    const glareX = (x / rect.width) * 100;
+    const glareY = (y / rect.height) * 100;
+
+    setTilt({
+      rotateX: Number(rotateX.toFixed(2)),
+      rotateY: Number(rotateY.toFixed(2)),
+      glareX: Number(glareX.toFixed(1)),
+      glareY: Number(glareY.toFixed(1)),
+      isHovered: true,
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+    setTilt({
+      rotateX: 0,
+      rotateY: 0,
+      glareX: 50,
+      glareY: 50,
+      isHovered: false,
+    });
+  };
+
+  // Reset angle to default
+  const handleResetOrbit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setDragOffset({ x: 0, y: 0 });
+  };
 
   // Automated cinematic simulation flow (Living video simulation)
   useEffect(() => {
@@ -119,73 +186,42 @@ export const SupplyChain3DHero: React.FC = () => {
     return () => clearInterval(interval);
   }, [isPlayingSimulation]);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+  // Scroll camera calculations
+  const scrollTiltX = Math.min((scrollYOffset / 500) * 8, 8);
+  const scrollTranslateY = Math.min((scrollYOffset / 500) * 22, 22);
 
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    // Smooth tilt limit (-8 to +8 deg)
-    const rotateX = -((y - centerY) / centerY) * 8;
-    const rotateY = ((x - centerX) / centerX) * 8;
-
-    const glareX = (x / rect.width) * 100;
-    const glareY = (y / rect.height) * 100;
-
-    setTilt({
-      rotateX: Number(rotateX.toFixed(2)),
-      rotateY: Number(rotateY.toFixed(2)),
-      glareX: Number(glareX.toFixed(1)),
-      glareY: Number(glareY.toFixed(1)),
-      isHovered: true,
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setTilt({
-      rotateX: 0,
-      rotateY: 0,
-      glareX: 50,
-      glareY: 50,
-      isHovered: false,
-    });
-  };
-
-  // Hitung pengaruh scroll pada 3D tilt & shift
-  const scrollTiltX = Math.min((scrollYOffset / 500) * 6, 6);
-  const scrollTranslateY = Math.min((scrollYOffset / 500) * 18, 18);
+  // Combined rotation (Tilt + Drag + Scroll)
+  const finalRotateX = tilt.rotateX - dragOffset.y - scrollTiltX;
+  const finalRotateY = tilt.rotateY + dragOffset.x;
 
   return (
-    <div className="w-full max-w-lg lg:max-w-none flex flex-col items-center">
+    <div className="w-full max-w-lg lg:max-w-none flex flex-col items-center select-none">
       {/* Top Controls Bar: Tab Switcher & Video Simulation Controls */}
       <div className="flex flex-wrap items-center justify-between w-full max-w-md mb-3 px-1 gap-2">
-        <div className="inline-flex p-1 bg-stone-200/70 backdrop-blur-md rounded-2xl border border-stone-300/80 shadow-2xs">
+        <div className="inline-flex p-1 bg-stone-900/60 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xs">
           <button
             type="button"
             onClick={() => setActiveTab('3d')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
               activeTab === '3d'
-                ? 'bg-white text-emerald-950 shadow-xs'
-                : 'text-stone-600 hover:text-stone-900'
+                ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40 shadow-xs'
+                : 'text-stone-400 hover:text-white'
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-            <span>3D Living Video</span>
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span>3D Interactive Orbit</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('engine')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
               activeTab === 'engine'
-                ? 'bg-white text-emerald-950 shadow-xs'
-                : 'text-stone-600 hover:text-stone-900'
+                ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40 shadow-xs'
+                : 'text-stone-400 hover:text-white'
             }`}
           >
-            <TrendingUp className="w-3.5 h-3.5 text-emerald-700" />
-            <span>Live Matching Data</span>
+            <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Matching Engine</span>
           </button>
         </div>
 
@@ -196,8 +232,8 @@ export const SupplyChain3DHero: React.FC = () => {
               onClick={() => setIsPlayingSimulation(!isPlayingSimulation)}
               className={`text-[11px] font-mono flex items-center gap-1.5 font-semibold px-2.5 py-1.5 rounded-xl border transition-all ${
                 isPlayingSimulation
-                  ? 'bg-emerald-900 text-white border-emerald-950 shadow-xs'
-                  : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
+                  ? 'bg-emerald-900 text-white border-emerald-700 shadow-xs'
+                  : 'bg-stone-900/70 text-stone-300 border-white/10 hover:bg-stone-800'
               }`}
             >
               {isPlayingSimulation ? (
@@ -207,19 +243,31 @@ export const SupplyChain3DHero: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <Play className="w-3 h-3 text-amber-500 fill-amber-500" />
+                  <Play className="w-3 h-3 text-amber-400 fill-amber-400" />
                   <span>Putar</span>
                 </>
               )}
             </button>
 
+            {dragOffset.x !== 0 || dragOffset.y !== 0 ? (
+              <button
+                type="button"
+                onClick={handleResetOrbit}
+                className="text-[11px] font-mono text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold px-2 py-1.5 rounded-xl bg-stone-900/70 border border-amber-500/30 transition-colors"
+                title="Reset Posisi Sudut 3D"
+              >
+                <Compass className="w-3 h-3 animate-spin" />
+                <span>Reset</span>
+              </button>
+            ) : null}
+
             <button
               type="button"
               onClick={() => setShowHotspots(!showHotspots)}
-              className="text-[11px] font-mono text-emerald-900 hover:text-emerald-950 flex items-center gap-1 font-semibold px-2 py-1.5 rounded-xl hover:bg-emerald-100/50 transition-colors"
+              className="text-[11px] font-mono text-stone-300 hover:text-white flex items-center gap-1 font-semibold p-2 rounded-xl bg-stone-900/60 border border-white/10 transition-colors"
               title="Toggle Hotspot Pins"
             >
-              <Eye className="w-3 h-3" />
+              <Eye className="w-3 h-3 text-emerald-400" />
             </button>
           </div>
         )}
@@ -230,20 +278,28 @@ export const SupplyChain3DHero: React.FC = () => {
         <div className="w-full relative perspective-1200">
           <div
             ref={containerRef}
-            onMouseMove={handleMouseMove}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMoveGlobal}
+            onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseLeave}
             style={{
-              transform: `rotateX(${tilt.rotateX - scrollTiltX}deg) rotateY(${tilt.rotateY}deg) translateY(${scrollTranslateY}px)`,
-              transition: tilt.isHovered ? 'transform 0.08s ease-out' : 'transform 0.5s cubic-bezier(0.2,0.8,0.2,1)',
+              transform: `rotateX(${finalRotateX}deg) rotateY(${finalRotateY}deg) translateY(${scrollTranslateY}px)`,
+              transition: isDragging
+                ? 'none'
+                : tilt.isHovered
+                ? 'transform 0.08s ease-out'
+                : 'transform 0.6s cubic-bezier(0.2,0.8,0.2,1)',
             }}
-            className="relative rounded-3xl overflow-hidden border-2 border-stone-200/90 shadow-2xl bg-stone-950 text-white transform-style-3d cursor-crosshair group"
+            className={`relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-stone-950 text-white transform-style-3d group ${
+              isDragging ? 'cursor-grabbing' : 'cursor-grab'
+            }`}
           >
-            {/* Dynamic Light Sheen / Glare Overlay */}
+            {/* Dynamic Light Sheen / Specular Flare Overlay */}
             <div
               className="absolute inset-0 pointer-events-none z-30 transition-opacity duration-300"
               style={{
                 opacity: tilt.isHovered ? 0.35 : 0,
-                background: `radial-gradient(circle 320px at ${tilt.glareX}% ${tilt.glareY}%, rgba(255,255,255,0.7), transparent 80%)`,
+                background: `radial-gradient(circle 340px at ${tilt.glareX}% ${tilt.glareY}%, rgba(255,255,255,0.7), transparent 80%)`,
               }}
             />
 
@@ -255,7 +311,7 @@ export const SupplyChain3DHero: React.FC = () => {
               <img
                 src="/images/orvana-3d-diorama.jpg"
                 alt="ORVANA 3D Supply Chain Isometric Diorama"
-                className="w-full h-full object-cover object-center animate-ken-burns transform-gpu"
+                className="w-full h-full object-cover object-center animate-ken-burns transform-gpu pointer-events-none"
                 loading="eager"
               />
 
@@ -280,7 +336,6 @@ export const SupplyChain3DHero: React.FC = () => {
                   </filter>
                 </defs>
 
-                {/* Flowing Laser Line */}
                 <path
                   d="M 26 40 Q 38 48, 48 56 T 74 36"
                   fill="none"
@@ -306,17 +361,17 @@ export const SupplyChain3DHero: React.FC = () => {
               {/* Subtle Ambient Vignette */}
               <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-transparent to-stone-950/30 pointer-events-none" />
 
-              {/* Top Live Video HUD Pill */}
-              <div className="absolute top-3.5 left-3.5 z-20 flex items-center gap-2 bg-stone-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-stone-700/80 text-[11px] font-mono shadow-lg">
+              {/* Top Live Video HUD Pill (Moncy.dev style) */}
+              <div className="absolute top-3.5 left-3.5 z-20 flex items-center gap-2 bg-stone-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15 text-[11px] font-mono shadow-lg">
                 <span className="flex h-2 w-2 relative">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
                 <span className="text-emerald-400 font-bold uppercase tracking-wide">
-                  {isPlayingSimulation ? 'Cinematic Live Simulation' : '3D Paused'}
+                  {isDragging ? 'DRAGGING 3D ORBIT' : isPlayingSimulation ? '3D LIVING SIMULATION' : 'ORBIT PAUSED'}
                 </span>
                 <span className="text-stone-500">•</span>
-                <span className="text-stone-300 text-[10px]">Scroll / Gerakkan Mouse</span>
+                <span className="text-stone-300 text-[10px]">Klik & Drag untuk Putar</span>
               </div>
 
               {/* Interactive AR Hotspots */}
@@ -337,12 +392,11 @@ export const SupplyChain3DHero: React.FC = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           setActiveHotspot(hotspot);
-                          setIsPlayingSimulation(false); // pause auto-loop saat user memilih manual
+                          setIsPlayingSimulation(false);
                         }}
                         className="relative group/pin p-2 focus:outline-none"
                         aria-label={hotspot.title}
                       >
-                        {/* Radar Pulse Ring */}
                         <span
                           className={`absolute inset-0 rounded-full animate-radar-ring ${
                             hotspot.id === 'farm'
@@ -352,7 +406,6 @@ export const SupplyChain3DHero: React.FC = () => {
                               : 'bg-sky-400'
                           }`}
                         />
-                        {/* Center Pin Button */}
                         <span
                           className={`relative flex items-center justify-center w-8 h-8 rounded-full shadow-lg border-2 transition-transform duration-200 ${
                             isSelected ? 'scale-125 ring-4 ring-white/50' : 'hover:scale-110'
@@ -378,7 +431,7 @@ export const SupplyChain3DHero: React.FC = () => {
                 style={{
                   transform: `translateY(${-scrollYOffset * 0.05}px)`,
                 }}
-                className="absolute bottom-3 left-3 z-20 hidden sm:flex items-center gap-2 bg-stone-900/85 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-stone-700/80 text-[10.5px] font-mono shadow-xl animate-float-slow transition-transform"
+                className="absolute bottom-3 left-3 z-20 hidden sm:flex items-center gap-2 bg-stone-900/85 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/10 text-[10.5px] font-mono shadow-xl animate-float-slow transition-transform"
               >
                 <Lock className="w-3.5 h-3.5 text-emerald-400" />
                 <span className="text-stone-300">Escrow Protected:</span>
@@ -390,7 +443,7 @@ export const SupplyChain3DHero: React.FC = () => {
                 style={{
                   transform: `translateY(${-scrollYOffset * 0.07}px)`,
                 }}
-                className="absolute bottom-3 right-3 z-20 hidden sm:flex items-center gap-2 bg-stone-900/85 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-stone-700/80 text-[10.5px] font-mono shadow-xl animate-float-reverse transition-transform"
+                className="absolute bottom-3 right-3 z-20 hidden sm:flex items-center gap-2 bg-stone-900/85 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/10 text-[10.5px] font-mono shadow-xl animate-float-reverse transition-transform"
               >
                 <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
                 <span className="text-stone-300">Batch:</span>
@@ -400,7 +453,7 @@ export const SupplyChain3DHero: React.FC = () => {
 
             {/* Bottom Interactive Inspection Detail Card & Simulation Timeline */}
             {activeHotspot && (
-              <div className="p-4 bg-stone-900/95 backdrop-blur-lg border-t border-stone-800 text-left relative z-20">
+              <div className="p-4 bg-stone-950/95 backdrop-blur-xl border-t border-white/10 text-left relative z-20">
                 {/* Simulation Timeline Progress Bar */}
                 <div className="grid grid-cols-3 gap-1.5 mb-2.5">
                   {HOTSPOTS.map((h) => {
@@ -409,14 +462,15 @@ export const SupplyChain3DHero: React.FC = () => {
                       <button
                         key={h.id}
                         type="button"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setActiveHotspot(h);
                           setIsPlayingSimulation(false);
                         }}
                         className={`h-1.5 rounded-full transition-all ${
                           isActive
-                            ? 'bg-amber-400 shadow-[0_0_6px_#fbbf24]'
-                            : 'bg-stone-700 hover:bg-stone-600'
+                            ? 'bg-amber-400 shadow-[0_0_8px_#fbbf24]'
+                            : 'bg-stone-800 hover:bg-stone-700'
                         }`}
                         title={h.title}
                       />
@@ -426,7 +480,7 @@ export const SupplyChain3DHero: React.FC = () => {
 
                 <div className="flex items-center justify-between gap-2 mb-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono uppercase tracking-wider text-stone-400 font-bold">
+                    <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 font-bold">
                       {activeHotspot.category}
                     </span>
                     <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${activeHotspot.badgeColor}`}>
@@ -446,9 +500,9 @@ export const SupplyChain3DHero: React.FC = () => {
                 </p>
 
                 {/* 3 Metrics Grid */}
-                <div className="grid grid-cols-3 gap-2 mt-3 pt-2.5 border-t border-stone-800/80">
+                <div className="grid grid-cols-3 gap-2 mt-3 pt-2.5 border-t border-white/10">
                   {activeHotspot.details.map((item, idx) => (
-                    <div key={idx} className="bg-stone-950/60 p-2 rounded-xl border border-stone-800">
+                    <div key={idx} className="bg-stone-900/80 p-2 rounded-xl border border-white/5">
                       <span className="text-[10px] text-stone-400 block truncate font-sans">
                         {item.label}
                       </span>
@@ -466,37 +520,37 @@ export const SupplyChain3DHero: React.FC = () => {
 
       {/* VIEW 2: LIVE MATCHING ENGINE ALGORITHM DATA CARD */}
       {activeTab === 'engine' && (
-        <div className="w-full max-w-md bg-white rounded-3xl border-2 border-emerald-900/15 p-6 shadow-elevated relative overflow-hidden text-left animate-in fade-in duration-300">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full -z-0 opacity-80" />
+        <div className="w-full max-w-md bg-stone-950/90 text-white rounded-3xl border border-white/15 p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden text-left animate-in fade-in duration-300">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-bl-full -z-0 opacity-80" />
 
-          <div className="relative z-10 flex items-center justify-between border-b border-stone-200 pb-4 mb-4">
+          <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-4 mb-4">
             <div className="flex items-center gap-2.5">
               <span className="flex h-2.5 w-2.5 relative">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-600"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
               </span>
-              <span className="text-xs font-mono font-bold tracking-tight text-stone-950 uppercase">
+              <span className="text-xs font-mono font-bold tracking-tight text-white uppercase">
                 Live Matching Engine
               </span>
             </div>
-            <span className="text-[10px] font-mono bg-amber-50 text-amber-900 px-2 py-0.5 rounded-full font-bold border border-amber-200">
+            <span className="text-[10px] font-mono bg-amber-400/20 text-amber-300 px-2 py-0.5 rounded-full font-bold border border-amber-400/30">
               Algoritma Multi-Kriteria
             </span>
           </div>
 
           <div className="relative z-10 space-y-3.5">
             {/* Permintaan Dapur */}
-            <div className="p-3.5 bg-stone-50 rounded-2xl border border-stone-200">
+            <div className="p-3.5 bg-stone-900/80 rounded-2xl border border-white/10">
               <div className="flex justify-between items-center text-xs">
-                <span className="font-semibold text-stone-700 flex items-center gap-1.5">
-                  <Building2 className="w-3.5 h-3.5 text-emerald-800" />
+                <span className="font-semibold text-stone-300 flex items-center gap-1.5">
+                  <Building2 className="w-3.5 h-3.5 text-emerald-400" />
                   Dapur Gizi Mandiri (DPR01)
                 </span>
-                <span className="font-mono text-emerald-900 font-bold">1.000 Porsi</span>
+                <span className="font-mono text-emerald-400 font-bold">1.000 Porsi</span>
               </div>
               <div className="mt-2 flex items-baseline justify-between">
-                <span className="text-sm font-bold text-stone-950 font-serif">Kebutuhan: Bayam Hijau</span>
-                <span className="text-sm font-mono font-extrabold text-emerald-900 bg-emerald-100 px-2.5 py-0.5 rounded-md">
+                <span className="text-sm font-bold text-white font-serif">Kebutuhan: Bayam Hijau</span>
+                <span className="text-sm font-mono font-extrabold text-emerald-300 bg-emerald-950/80 px-2.5 py-0.5 rounded-md border border-emerald-500/30">
                   69,0 kg
                 </span>
               </div>
@@ -504,50 +558,50 @@ export const SupplyChain3DHero: React.FC = () => {
 
             {/* Alokasi Multi-Pemasok */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-[11px] text-stone-500 font-mono">
+              <div className="flex items-center justify-between text-[11px] text-stone-400 font-mono">
                 <span>Alokasi Multi-Petani:</span>
                 <span>Maks 60% (41,4 kg)</span>
               </div>
 
-              <div className="p-3 bg-emerald-50/70 border border-emerald-200 rounded-xl flex items-center justify-between">
+              <div className="p-3 bg-emerald-950/40 border border-emerald-500/30 rounded-xl flex items-center justify-between">
                 <div>
-                  <div className="text-xs font-bold text-stone-950 flex items-center gap-1.5">
+                  <div className="text-xs font-bold text-white flex items-center gap-1.5">
                     <span>Kelompok Tani Makmur (S1)</span>
-                    <span className="text-[10px] font-mono bg-emerald-200 text-emerald-900 px-1.5 py-0.2 rounded font-bold">Skor 88,97</span>
+                    <span className="text-[10px] font-mono bg-emerald-500/20 text-emerald-300 px-1.5 py-0.2 rounded font-bold border border-emerald-500/30">Skor 88,97</span>
                   </div>
-                  <p className="text-[10px] font-mono text-stone-500 mt-0.5">
+                  <p className="text-[10px] font-mono text-stone-400 mt-0.5">
                     Radius 6 km • Mutu 88 • Panen H-1
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="font-mono text-xs font-bold text-emerald-950 block">40,0 kg</span>
-                  <span className="text-[10px] text-emerald-800 font-semibold">Rp 320.000</span>
+                  <span className="font-mono text-xs font-bold text-emerald-300 block">40,0 kg</span>
+                  <span className="text-[10px] text-emerald-400 font-semibold">Rp 320.000</span>
                 </div>
               </div>
 
-              <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-xl flex items-center justify-between">
+              <div className="p-3 bg-amber-950/30 border border-amber-500/30 rounded-xl flex items-center justify-between">
                 <div>
-                  <div className="text-xs font-bold text-stone-950 flex items-center gap-1.5">
+                  <div className="text-xs font-bold text-white flex items-center gap-1.5">
                     <span>Petani Organik Sari (S2)</span>
-                    <span className="text-[10px] font-mono bg-amber-200 text-amber-900 px-1.5 py-0.2 rounded font-bold">Skor 83,60</span>
+                    <span className="text-[10px] font-mono bg-amber-500/20 text-amber-300 px-1.5 py-0.2 rounded font-bold border border-amber-500/30">Skor 83,60</span>
                   </div>
-                  <p className="text-[10px] font-mono text-stone-500 mt-0.5">
+                  <p className="text-[10px] font-mono text-stone-400 mt-0.5">
                     Radius 14 km • Mutu 80 • Panen Hari-H
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="font-mono text-xs font-bold text-stone-950 block">29,0 kg</span>
-                  <span className="text-[10px] text-amber-800 font-semibold">Rp 217.500</span>
+                  <span className="font-mono text-xs font-bold text-white block">29,0 kg</span>
+                  <span className="text-[10px] text-amber-300 font-semibold">Rp 217.500</span>
                 </div>
               </div>
             </div>
 
-            <div className="pt-2 border-t border-stone-200 flex items-center justify-between text-[11px]">
-              <span className="text-stone-500 flex items-center gap-1">
-                <Lock className="w-3.5 h-3.5 text-emerald-700" />
+            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px]">
+              <span className="text-stone-400 flex items-center gap-1">
+                <Lock className="w-3.5 h-3.5 text-emerald-400" />
                 Pencadangan Rekening Escrow:
               </span>
-              <span className="font-mono font-bold text-emerald-900 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300">
+              <span className="font-mono font-bold text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-500/30">
                 Rp 537.500 [HOLD]
               </span>
             </div>
