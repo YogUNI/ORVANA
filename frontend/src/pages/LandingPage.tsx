@@ -258,23 +258,23 @@ export const LandingPage: React.FC = () => {
             </div>
           </Link>
 
-          {/* Nav Links dengan Sliding Pill Indicator Halus & Lega */}
+          {/* Nav Links: Bersih, Tanpa Shape Kotak Ganda, Elegan & Lega */}
           <nav
             ref={navContainerRef}
             onMouseLeave={() => setHoveredNav(null)}
-            className="hidden lg:flex items-center relative text-xs font-semibold text-stone-600 bg-stone-100/80 p-1 rounded-full border border-stone-200/80 shadow-2xs"
+            className="hidden lg:flex items-center relative text-xs font-medium text-stone-600 px-1 py-1"
           >
-            {/* Sliding Pill Background indicator */}
+            {/* Soft Organic Floating Highlight Pill (Glides smoothly without heavy contrast box) */}
             <div
-              className="absolute rounded-full transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none"
+              className="absolute rounded-full transition-all duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] pointer-events-none"
               style={{
                 left: pillStyle.left,
                 width: pillStyle.width,
                 top: pillStyle.top,
                 height: pillStyle.height,
                 opacity: pillStyle.opacity,
-                backgroundColor: pillStyle.isHovered ? '#143126' : '#1E3A2F',
-                boxShadow: pillStyle.opacity > 0 ? '0 2px 8px -2px rgba(20,49,38,0.35)' : 'none',
+                backgroundColor: 'rgba(20, 78, 55, 0.08)',
+                border: '1px solid rgba(20, 78, 55, 0.15)',
               }}
             />
 
@@ -298,20 +298,24 @@ export const LandingPage: React.FC = () => {
                   }}
                   href={`#${nav.id}`}
                   onMouseEnter={() => setHoveredNav(nav.id)}
-                  className={`relative z-10 px-3.5 py-1.5 rounded-full transition-colors duration-200 flex items-center gap-1.5 whitespace-nowrap ${
+                  className={`relative z-10 px-4 py-2 rounded-full transition-colors duration-200 flex items-center gap-1.5 whitespace-nowrap ${
                     isHighlighted
-                      ? 'text-white font-bold'
+                      ? 'text-emerald-950 font-bold'
                       : 'text-stone-600 hover:text-stone-900'
                   }`}
                 >
                   {nav.isAi && (
                     <Sparkles
                       className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                        isHighlighted ? 'text-amber-300 scale-110' : 'text-amber-600'
+                        isHighlighted ? 'text-amber-500 scale-110' : 'text-amber-600/70'
                       }`}
                     />
                   )}
                   <span>{nav.label}</span>
+                  {/* Subtle active dot underneath when active & not hovering another item */}
+                  {isCurrentActive && !hoveredNav && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-700 absolute bottom-0.5 left-1/2 -translate-x-1/2" />
+                  )}
                 </a>
               );
             })}
