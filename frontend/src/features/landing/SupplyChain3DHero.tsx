@@ -10,10 +10,7 @@ import {
   Play,
   Pause,
   Compass,
-  User,
-  QrCode,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 interface Hotspot {
   id: 'farm' | 'truck' | 'kitchen';
@@ -73,7 +70,6 @@ const HOTSPOTS: Hotspot[] = [
 
 export const SupplyChain3DHero: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'3d' | 'engine'>('3d');
-  const [modelMode, setModelMode] = useState<'character' | 'diorama'>('character');
   const [activeHotspot, setActiveHotspot] = useState<Hotspot | null>(HOTSPOTS[0]);
   const [showHotspots, setShowHotspots] = useState(true);
   const [isPlayingSimulation, setIsPlayingSimulation] = useState(true);
@@ -174,7 +170,7 @@ export const SupplyChain3DHero: React.FC = () => {
 
   // Automated cinematic simulation flow
   useEffect(() => {
-    if (!isPlayingSimulation || modelMode !== 'diorama') return;
+    if (!isPlayingSimulation || activeTab !== '3d') return;
     const interval = setInterval(() => {
       setActiveHotspot((prev) => {
         if (!prev) return HOTSPOTS[0];
@@ -185,7 +181,7 @@ export const SupplyChain3DHero: React.FC = () => {
     }, 4200);
 
     return () => clearInterval(interval);
-  }, [isPlayingSimulation, modelMode]);
+  }, [isPlayingSimulation, activeTab]);
 
   const scrollTiltX = Math.min((scrollYOffset / 500) * 8, 8);
   const scrollTranslateY = Math.min((scrollYOffset / 500) * 22, 22);
@@ -200,73 +196,53 @@ export const SupplyChain3DHero: React.FC = () => {
         <div className="inline-flex p-1 bg-stone-900/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xs">
           <button
             type="button"
-            onClick={() => {
-              setActiveTab('3d');
-              setModelMode('character');
-            }}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              activeTab === '3d' && modelMode === 'character'
+            onClick={() => setActiveTab('3d')}
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              activeTab === '3d'
                 ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40 shadow-xs'
                 : 'text-stone-400 hover:text-white'
             }`}
           >
-            <User className="w-3.5 h-3.5 text-emerald-400" />
-            <span>3D Avatar</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab('3d');
-              setModelMode('diorama');
-            }}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              activeTab === '3d' && modelMode === 'diorama'
-                ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40 shadow-xs'
-                : 'text-stone-400 hover:text-white'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>3D Diorama</span>
+            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+            <span>3D Diorama Alur</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('engine')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
               activeTab === 'engine'
                 ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40 shadow-xs'
                 : 'text-stone-400 hover:text-white'
             }`}
           >
             <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Engine</span>
+            <span>Engine Alokasi</span>
           </button>
         </div>
 
         {activeTab === '3d' && (
           <div className="flex items-center gap-2">
-            {modelMode === 'diorama' && (
-              <button
-                type="button"
-                onClick={() => setIsPlayingSimulation(!isPlayingSimulation)}
-                className={`text-[11px] font-mono flex items-center gap-1.5 font-semibold px-2.5 py-1.5 rounded-xl border transition-all ${
-                  isPlayingSimulation
-                    ? 'bg-emerald-900 text-white border-emerald-700 shadow-xs'
-                    : 'bg-stone-900/70 text-stone-300 border-white/10 hover:bg-stone-800'
-                }`}
-              >
-                {isPlayingSimulation ? (
-                  <>
-                    <Pause className="w-3 h-3 text-emerald-300" />
-                    <span>Jeda</span>
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-3 h-3 text-amber-400 fill-amber-400" />
-                    <span>Putar</span>
-                  </>
-                )}
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => setIsPlayingSimulation(!isPlayingSimulation)}
+              className={`text-[11px] font-mono flex items-center gap-1.5 font-semibold px-2.5 py-1.5 rounded-xl border transition-all ${
+                isPlayingSimulation
+                  ? 'bg-emerald-900 text-white border-emerald-700 shadow-xs'
+                  : 'bg-stone-900/70 text-stone-300 border-white/10 hover:bg-stone-800'
+              }`}
+            >
+              {isPlayingSimulation ? (
+                <>
+                  <Pause className="w-3 h-3 text-emerald-300" />
+                  <span>Jeda</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-3 h-3 text-amber-400 fill-amber-400" />
+                  <span>Putar</span>
+                </>
+              )}
+            </button>
 
             {dragOffset.x !== 0 || dragOffset.y !== 0 ? (
               <button
@@ -280,16 +256,14 @@ export const SupplyChain3DHero: React.FC = () => {
               </button>
             ) : null}
 
-            {modelMode === 'diorama' && (
-              <button
-                type="button"
-                onClick={() => setShowHotspots(!showHotspots)}
-                className="text-[11px] font-mono text-stone-300 hover:text-white flex items-center gap-1 font-semibold p-2 rounded-xl bg-stone-900/60 border border-white/10 transition-colors"
-                title="Toggle Hotspot Pins"
-              >
-                <Eye className="w-3 h-3 text-emerald-400" />
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => setShowHotspots(!showHotspots)}
+              className="text-[11px] font-mono text-stone-300 hover:text-white flex items-center gap-1 font-semibold p-2 rounded-xl bg-stone-900/60 border border-white/10 transition-colors"
+              title="Toggle Hotspot Pins"
+            >
+              <Eye className="w-3 h-3 text-emerald-400" />
+            </button>
           </div>
         )}
       </div>
@@ -338,60 +312,8 @@ export const SupplyChain3DHero: React.FC = () => {
             <div className="absolute bottom-3 left-3 w-3 h-3 border-b-2 border-l-2 border-emerald-400/80 pointer-events-none z-30" />
             <div className="absolute bottom-3 right-3 w-3 h-3 border-b-2 border-r-2 border-emerald-400/80 pointer-events-none z-30" />
 
-            {/* SUB-VIEW A: 3D CHARACTER AVATAR (MONCY.DEV STYLE) */}
-            {modelMode === 'character' && (
-              <div className="relative aspect-square w-full overflow-hidden bg-stone-950 flex items-center justify-center">
-                {/* Character Rim-Lighting Circle */}
-                <div className="absolute w-72 h-72 rounded-full bg-emerald-400/20 blur-2xl transform scale-110 pointer-events-none" />
-
-                <img
-                  src="/images/orvana-3d-character.jpg"
-                  alt="ORVANA 3D Agri-Tech Inspector Avatar"
-                  className="w-full h-full object-cover object-center animate-float-slow transform-gpu pointer-events-none select-none"
-                  loading="eager"
-                />
-
-                {/* Top Badge: Inspector Online */}
-                <div className="absolute top-4 left-4 z-20 flex items-center gap-2 bg-stone-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-emerald-500/40 text-[11px] font-mono shadow-lg">
-                  <span className="flex h-2 w-2 relative">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                  </span>
-                  <span className="text-emerald-400 font-bold uppercase tracking-wide">
-                    {isDragging ? 'ROTATING 3D AVATAR' : '3D AVATAR ACTIVE'}
-                  </span>
-                  <span className="text-stone-500">•</span>
-                  <span className="text-stone-300 text-[10px]">Klik & Drag untuk Orbit</span>
-                </div>
-
-                {/* Holographic Tablet Badge Link */}
-                <Link
-                  to="/trace/ORV-20260920-DPR01-0001"
-                  className="absolute bottom-4 left-4 right-4 z-20 bg-stone-900/90 backdrop-blur-xl p-3 rounded-2xl border border-emerald-500/40 hover:border-emerald-400 transition-all flex items-center justify-between shadow-2xl group/link"
-                >
-                  <div className="flex items-center gap-2.5 truncate text-left">
-                    <div className="p-2 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400">
-                      <QrCode className="w-4 h-4" />
-                    </div>
-                    <div className="truncate">
-                      <span className="text-[10px] font-mono text-emerald-400 block uppercase font-bold">
-                        Hologram QR Batch Terverifikasi
-                      </span>
-                      <span className="text-xs font-mono font-bold text-white group-hover/link:text-amber-400 transition-colors">
-                        #ORV-20260920-DPR01
-                      </span>
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-mono bg-emerald-500 text-stone-950 font-extrabold px-2.5 py-1 rounded-lg">
-                    SCAN PASS ➔
-                  </span>
-                </Link>
-              </div>
-            )}
-
-            {/* SUB-VIEW B: 3D DIORAMA ISLAND */}
-            {modelMode === 'diorama' && (
-              <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-900">
+            {/* 3D DIORAMA ISLAND SHOWCASE (ALUR PRODUKSI HULU HINGGA HILIR) */}
+            <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-900">
                 <img
                   src="/images/orvana-3d-diorama.jpg"
                   alt="ORVANA 3D Supply Chain Isometric Diorama"
@@ -484,7 +406,6 @@ export const SupplyChain3DHero: React.FC = () => {
                     );
                   })}
               </div>
-            )}
           </div>
         </div>
       )}
