@@ -8,7 +8,7 @@ import { Button } from '../components/ui/Button';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Logo } from '../components/ui/Logo';
 import { SupplyChain3DHero } from '../features/landing/SupplyChain3DHero';
-import { ScrollStorytellingActor } from '../features/landing/ScrollStorytellingActor';
+import { ScrollReveal } from '../components/ui/ScrollReveal';
 import {
   ShieldCheck,
   Truck,
@@ -458,409 +458,11 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* 3. INTERACTIVE 3D SCROLL-TELLING PRESENTATION DOCK (Peti Panen Meluncur Mengikuti Scroll) */}
-      <ScrollStorytellingActor />
+      
 
-      {/* 4. LIVE INTERACTIVE AI NLP SIMULATOR SANDBOX (Fitur Baru Pembeda Kelas Dunia) */}
-      <section id="nlp-demo" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-14">
-        <div className="bg-gradient-to-br from-emerald-950 via-pine-900 to-[#0B1A14] text-white rounded-3xl p-6 sm:p-10 shadow-elevated border border-emerald-800/80">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            
-            <div className="lg:col-span-6 space-y-4 text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-800/60 border border-emerald-500 text-xs font-mono font-bold text-emerald-200">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>Teknologi AI NLP Pertanian Indonesia</span>
-              </div>
-              <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight">
-                Coba Ketik Bahasa Petani Biasa. <br />
-                <span className="text-amber-400 italic">Sistem Memahaminya Seketika.</span>
-              </h2>
-              <p className="text-stone-300 text-xs sm:text-sm leading-relaxed">
-                Petani di desa tidak perlu pusing mengisi formulir rumit. Cukup ketik kalimat alami lewat WhatsApp atau aplikasi, mesin NLP kami (Naive Bayes + Normalizer Slang & Angka Terbilang) mengekstrak komoditas, bobot kg, dan harga secara akurat.
-              </p>
 
-              <div className="space-y-2 pt-2">
-                <span className="text-[11px] font-mono text-stone-400 block">Pilihan contoh kalimat petani:</span>
-                <div className="flex flex-wrap gap-2 text-xs font-mono">
-                  {[
-                    'besok ada panen cabai rawit dua kwintal harga 45rb sama bayam 50 kilo',
-                    'lusa siap kirim setengah ton beras lokal sama lele 30 kilo 25rb',
-                    'sy bsoq ad pnn cengek 100 kg harga 40 ribu siap setor',
-                  ].map((sentence, sIdx) => (
-                    <button
-                      key={sIdx}
-                      type="button"
-                      onClick={() => setNlpSampleText(sentence)}
-                      className="px-2.5 py-1 rounded-lg bg-emerald-900/60 hover:bg-emerald-800 text-[11px] border border-emerald-700/80 text-emerald-200 text-left transition-colors"
-                    >
-                      "{sentence.slice(0, 36)}..."
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Input & Live Response Box */}
-            <div className="lg:col-span-6 bg-white text-stone-900 rounded-2xl p-5 sm:p-6 shadow-2xl border border-emerald-300 space-y-4 text-left">
-              <div className="flex items-center justify-between border-b border-stone-200 pb-2">
-                <span className="text-xs font-mono font-bold text-emerald-950 uppercase">
-                  Interactive AI Parser Sandbox
-                </span>
-                <span className="text-[10px] font-mono bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded font-bold">
-                  FastAPI NLP Active
-                </span>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-semibold text-stone-600 block">
-                  Ketik kalimat Anda di sini:
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={nlpSampleText}
-                    onChange={(e) => setNlpSampleText(e.target.value)}
-                    placeholder="Contoh: besok panen 200 kg cabai rawit harga 45 ribu..."
-                    className="flex-1 px-3 py-2.5 border border-stone-300 rounded-xl text-xs bg-stone-50 text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-800 font-mono"
-                  />
-                  <Button
-                    type="button"
-                    onClick={handleTestNLP}
-                    disabled={nlpLoading}
-                    className="bg-emerald-900 hover:bg-emerald-950 text-white text-xs px-4 py-2.5 font-semibold rounded-xl flex items-center gap-1.5 shrink-0"
-                  >
-                    <Send className="w-3.5 h-3.5" />
-                    {nlpLoading ? 'Mengurai...' : 'Urai AI'}
-                  </Button>
-                </div>
-              </div>
-
-              {/* Hasil Parsing AI Realtime */}
-              <div className="p-3 bg-stone-50 rounded-xl border border-stone-200 space-y-2">
-                <span className="text-[11px] font-mono font-bold text-stone-600 block">
-                  Hasil Pemahaman Entitas (Multi-Commodity):
-                </span>
-                <div className="space-y-1.5">
-                  {(nlpParsed?.candidates || [
-                    { commodityName: 'Cabai rawit', quantityKg: 200, askingPrice: 45000, commodityCategory: 'SPICE' },
-                    { commodityName: 'Bayam', quantityKg: 50, askingPrice: null, commodityCategory: 'VEGETABLE' }
-                  ]).map((item: any, cIdx: number) => (
-                    <div
-                      key={cIdx}
-                      className="p-2.5 bg-white rounded-lg border border-emerald-200 text-xs flex justify-between items-center shadow-xs"
-                    >
-                      <div>
-                        <span className="font-bold text-stone-900 block">{item.commodityName}</span>
-                        <span className="text-[10px] text-stone-500 font-mono">
-                          Volume: <strong className="text-emerald-900">{item.quantityKg} kg</strong> | Harga: {item.askingPrice ? `Rp ${item.askingPrice.toLocaleString('id-ID')}/kg` : 'Standar Dinas'}
-                        </span>
-                      </div>
-                      <span className="text-[10px] font-mono bg-emerald-50 text-emerald-900 border border-emerald-300 px-2 py-0.5 rounded font-semibold">
-                        {item.commodityCategory}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* 5. METRIK DAMPAK DAERAH REAL-TIME */}
-      <section id="dampak" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="bg-white rounded-3xl border border-stone-200/90 p-6 sm:p-10 shadow-soft">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-stone-200 pb-5">
-            <div>
-              <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-emerald-900 mb-1">
-                <Sparkles className="w-4 h-4 text-amber-600" />
-                <span>Buku Besar Terbuka & Agregasi Dampak</span>
-              </div>
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-stone-950">
-                Transparansi Real-Time Ekonomi Lokal
-              </h2>
-              <p className="text-xs sm:text-sm text-stone-600 mt-0.5">
-                Data agregat langsung dari catatan transaksi append-only yang telah dituntaskan
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge color="accent">Audit Publik Terverifikasi</Badge>
-              <Link to="/auditor/dashboard">
-                <Button variant="ghost" size="sm" className="text-xs font-semibold text-emerald-900 hover:bg-emerald-50">
-                  <span>Portal Auditor</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6">
-            <div className="p-4 sm:p-5 bg-emerald-50/60 rounded-2xl border border-emerald-100 hover:border-emerald-300 transition-colors text-left">
-              <span className="text-xs text-emerald-900 flex items-center gap-1 font-semibold">
-                <DollarSign className="w-3.5 h-3.5 text-emerald-700" />
-                Perputaran Belanja Lokal
-              </span>
-              <p className="text-xl sm:text-2xl font-serif font-bold text-emerald-950 mt-2">
-                {isLoading ? <Skeleton className="h-7 w-20" /> : formatRupiah(impact?.localSpendingRupiah || 0)}
-              </p>
-              <span className="text-[10px] text-emerald-800/80 block mt-1">100% langsung diserap petani daerah</span>
-            </div>
-
-            <div className="p-4 sm:p-5 bg-blue-50/60 rounded-2xl border border-blue-100 hover:border-blue-300 transition-colors text-left">
-              <span className="text-xs text-blue-900 flex items-center gap-1 font-semibold">
-                <Users className="w-3.5 h-3.5 text-blue-700" />
-                Mitra Produsen Terlibat
-              </span>
-              <p className="text-xl sm:text-2xl font-serif font-bold text-stone-900 mt-2">
-                {isLoading ? <Skeleton className="h-7 w-12" /> : `${impact?.producersInvolved || 0} Produsen`}
-              </p>
-              <span className="text-[10px] text-stone-500 block mt-1">Kelompok tani, peternak & UMKM</span>
-            </div>
-
-            <div className="p-4 sm:p-5 bg-amber-50/60 rounded-2xl border border-amber-100 hover:border-amber-300 transition-colors text-left">
-              <span className="text-xs text-amber-900 flex items-center gap-1 font-semibold">
-                <CheckCircle2 className="w-3.5 h-3.5 text-amber-700" />
-                Total Pangan Terserap
-              </span>
-              <p className="text-xl sm:text-2xl font-mono font-bold text-stone-950 mt-2">
-                {isLoading ? <Skeleton className="h-7 w-16" /> : formatKg(impact?.totalDeliveredKg || 0)}
-              </p>
-              <span className="text-[10px] text-amber-900/80 block mt-1">Bahan segar bergizi tersalurkan</span>
-            </div>
-
-            <div className="p-4 sm:p-5 bg-purple-50/60 rounded-2xl border border-purple-100 hover:border-purple-300 transition-colors text-left">
-              <span className="text-xs text-purple-900 flex items-center gap-1 font-semibold">
-                <ShieldCheck className="w-3.5 h-3.5 text-purple-700" />
-                Tingkat Lolos Mutu QC
-              </span>
-              <p className="text-xl sm:text-2xl font-mono font-bold text-purple-950 mt-2">
-                {isLoading ? <Skeleton className="h-7 w-14" /> : `${impact?.qualityPassRatePct || 0}%`}
-              </p>
-              <span className="text-[10px] text-purple-900/80 block mt-1">Standar inspeksi ahli gizi</span>
-            </div>
-
-            <div className="p-4 sm:p-5 bg-stone-100/70 rounded-2xl border border-stone-200 col-span-2 md:col-span-1 text-left">
-              <span className="text-xs text-stone-700 flex items-center gap-1 font-semibold">
-                <MapPin className="w-3.5 h-3.5 text-amber-800" />
-                Rata-rata Radius Jarak
-              </span>
-              <p className="text-xl sm:text-2xl font-mono font-bold text-amber-900 mt-2">
-                {isLoading ? <Skeleton className="h-7 w-16" /> : `${impact?.avgDistanceKm || 0} km`}
-              </p>
-              <span className="text-[10px] text-stone-500 block mt-1">Rute pendek, emisi karbon rendah</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. TABEL PERBANDINGAN: ORVANA VS KONVENSIONAL */}
-      <section id="keunggulan" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-900 bg-emerald-100/70 px-3 py-1 rounded-full border border-emerald-300">
-            Perbandingan Transparan
-          </span>
-          <h2 className="font-serif text-3xl font-bold text-stone-950 mt-3">
-            Mengapa Ekosistem Pangan Memilih ORVANA?
-          </h2>
-          <p className="text-xs sm:text-sm text-stone-600 mt-2">
-            Perbedaan mendasar antara rantai pasok konvensional perantara dengan arsitektur digital ORVANA.
-          </p>
-        </div>
-
-        <div className="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-soft">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs sm:text-sm">
-              <thead>
-                <tr className="border-b border-stone-200 bg-stone-50">
-                  <th className="py-4 px-6 font-heading font-bold text-stone-700 w-1/3">Aspek Pengadaan</th>
-                  <th className="py-4 px-6 font-heading font-bold text-rose-800 bg-rose-50/50 w-1/3">
-                    Pengadaan Konvensional (Tengkulak)
-                  </th>
-                  <th className="py-4 px-6 font-heading font-bold text-emerald-950 bg-emerald-50/70 w-1/3">
-                    ORVANA Digital Rantai Pasok
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-200">
-                <tr>
-                  <td className="py-4 px-6 font-semibold text-stone-900">Perlindungan Harga Petani</td>
-                  <td className="py-4 px-6 text-stone-600 bg-rose-50/20">
-                    Harga ditekan sepihak, sering di bawah biaya produksi.
-                  </td>
-                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/40 flex items-center gap-2">
-                    <Check className="w-4 h-4 text-emerald-700 shrink-0" />
-                    <span>Otomatis tolak tawaran di bawah harga dasar wilayah.</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-6 font-semibold text-stone-900">Kepastian Serapan Panen</td>
-                  <td className="py-4 px-6 text-stone-600 bg-rose-50/20">
-                    Transaksi mendadak, risiko panen membusuk di kebun tinggi.
-                  </td>
-                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/40">
-                    <div className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-emerald-700 shrink-0" />
-                      <span>Terencana 1-2 minggu lebih awal dari menu dapur.</span>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-6 font-semibold text-stone-900">Pencegahan Monopoli Kuota</td>
-                  <td className="py-4 px-6 text-stone-600 bg-rose-50/20">
-                    Didominasi 1 distributor besar, petani kecil terpinggirkan.
-                  </td>
-                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/40">
-                    <div className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-emerald-700 shrink-0" />
-                      <span>Algoritma Greedy membatasi kuota maks 60% per petani.</span>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-6 font-semibold text-stone-900">Jaminan Keamanan Pembayaran</td>
-                  <td className="py-4 px-6 text-stone-600 bg-rose-50/20">
-                    Pembayaran mundur berminggu-minggu bahkan gagal bayar.
-                  </td>
-                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/40">
-                    <div className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-emerald-700 shrink-0" />
-                      <span>Dana [HOLD] di awal, langsung [RELEASE] begitu QC lolos.</span>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-6 font-semibold text-stone-900">Ketertelusuran Asal Pangan</td>
-                  <td className="py-4 px-6 text-stone-600 bg-rose-50/20">
-                    Asal muasal bahan tidak jelas, sulit dipertanggungjawabkan.
-                  </td>
-                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/40">
-                    <div className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-emerald-700 shrink-0" />
-                      <span>Paspor QR Code publik menampilkan riwayat desa, supir, & QC.</span>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. KALKULATOR KEBUTUHAN DAPUR INTERAKTIF */}
-      <section id="kalkulator" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="bg-emerald-950 text-white rounded-3xl p-6 sm:p-12 shadow-elevated border border-emerald-900">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            
-            <div className="lg:col-span-7 space-y-6 text-left">
-              <div>
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 bg-white/10 px-3 py-1 rounded-full border border-white/15 inline-block mb-3">
-                  Simulasi Formula Dapur Mandiri
-                </span>
-                <h2 className="font-serif text-2xl sm:text-4xl font-bold tracking-tight">
-                  Hitung Kebutuhan Bahan Sesuai Porsi Anak Sekolah
-                </h2>
-                <p className="text-emerald-200 text-xs sm:text-sm mt-2 leading-relaxed">
-                  Gunakan simulator di bawah untuk melihat bagaimana rumus matematis ORVANA menghitung kebutuhan bahan kotor (+persen susut masak) dan estimasi anggaran perlindungan petani.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between items-center text-xs font-mono mb-2">
-                    <span className="text-emerald-300">Jumlah Porsi Penerima Manfaat:</span>
-                    <span className="font-extrabold text-base text-amber-400">{calcPortions.toLocaleString('id-ID')} Porsi Anak</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="100"
-                    max="5000"
-                    step="100"
-                    value={calcPortions}
-                    onChange={(e) => setCalcPortions(parseInt(e.target.value))}
-                    className="w-full h-2.5 bg-emerald-900 rounded-lg appearance-none cursor-pointer accent-amber-400"
-                  />
-                  <div className="flex justify-between text-[10px] font-mono text-emerald-400 mt-1">
-                    <span>100 porsi</span>
-                    <span>1.000 porsi</span>
-                    <span>2.500 porsi</span>
-                    <span>5.000 porsi</span>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-xs font-mono text-emerald-300 block mb-2">
-                    Pilih Bahan Pokok Menu:
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {[
-                      { id: 'bayam', label: 'Bayam Hijau', desc: '+15% Susut' },
-                      { id: 'lele', label: 'Ikan Lele', desc: '+10% Susut' },
-                      { id: 'beras', label: 'Beras Lokal', desc: '+2% Susut' },
-                      { id: 'telur', label: 'Telur Ayam', desc: '+3% Susut' },
-                    ].map((item) => (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => setCalcCommodity(item.id as any)}
-                        className={`p-2.5 rounded-xl border text-left transition-all ${
-                          calcCommodity === item.id
-                            ? 'bg-amber-400 text-stone-950 border-amber-400 font-bold shadow-sm'
-                            : 'bg-white/10 text-white border-white/15 hover:bg-white/15 text-stone-200'
-                        }`}
-                      >
-                        <p className="text-xs leading-none">{item.label}</p>
-                        <p className="text-[10px] opacity-80 font-mono mt-1">{item.desc}</p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:col-span-5 bg-white text-stone-950 rounded-2xl p-6 shadow-2xl border-2 border-amber-400/50 space-y-4 text-left">
-              <div className="flex items-center justify-between border-b border-stone-200 pb-3">
-                <span className="text-xs font-mono font-bold text-stone-500 uppercase">
-                  Hasil Formula Demand Planner
-                </span>
-                <Badge color="success">Rumus Baku Resmi</Badge>
-              </div>
-
-              <div>
-                <p className="text-xs text-stone-500">Komoditas Terpilih:</p>
-                <p className="font-heading font-extrabold text-lg text-emerald-950">{calc.name}</p>
-              </div>
-
-              <div className="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200 space-y-2">
-                <div className="flex justify-between items-baseline text-xs">
-                  <span className="text-stone-600">Total Kebutuhan Kotor (+Susut {calc.wastePct}%):</span>
-                  <span className="font-mono text-xl font-bold text-emerald-950">{formatKg(calc.qtyKg)}</span>
-                </div>
-                <div className="flex justify-between items-baseline text-xs border-t border-emerald-200/60 pt-2">
-                  <span className="text-stone-600">Estimasi Anggaran Acuan Dinas:</span>
-                  <span className="font-mono text-xl font-bold text-emerald-950">{formatRupiah(calc.estCost)}</span>
-                </div>
-              </div>
-
-              <div className="text-[11px] font-mono text-stone-500 space-y-1">
-                <p>• Harga Dasar Acuan: {formatRupiah(calc.unitPrice)} / kg</p>
-                <p>• Dibulatkan ke atas kelipatan 0,1 kg sesuai aturan dinas</p>
-                <p>• Langsung siap dialokasikan otomatis ke multi-petani lokal</p>
-              </div>
-
-              <Link to="/register" className="block pt-2">
-                <Button variant="primary" size="md" className="w-full bg-emerald-900 hover:bg-emerald-950 font-bold text-white shadow-sm flex items-center justify-center gap-2 py-3 rounded-xl">
-                  <span>Mulai Pasok Dapur Sekarang</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* 8. ALUR KERJA 4 PERAN LAPANGAN (INTERACTIVE ROLE ECOSYSTEM) */}
+      <ScrollReveal animation="fade-up" delayMs={0}>
+        {/* 8. ALUR KERJA 4 PERAN LAPANGAN (INTERACTIVE ROLE ECOSYSTEM) */}
       <section id="alur" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-20">
         
         {/* Header Bagian */}
@@ -1142,8 +744,427 @@ export const LandingPage: React.FC = () => {
             )}
           </div>
       </section>
+      </ScrollReveal>
 
-      {/* 9. FAQ ACCORDION */}
+
+
+      <ScrollReveal animation="fade-up" delayMs={0}>
+        {/* 7. KALKULATOR KEBUTUHAN DAPUR INTERAKTIF */}
+      <section id="kalkulator" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div className="bg-emerald-950 text-white rounded-3xl p-6 sm:p-12 shadow-elevated border border-emerald-900">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div className="lg:col-span-7 space-y-6 text-left">
+              <div>
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 bg-white/10 px-3 py-1 rounded-full border border-white/15 inline-block mb-3">
+                  Simulasi Formula Dapur Mandiri
+                </span>
+                <h2 className="font-serif text-2xl sm:text-4xl font-bold tracking-tight">
+                  Hitung Kebutuhan Bahan Sesuai Porsi Anak Sekolah
+                </h2>
+                <p className="text-emerald-200 text-xs sm:text-sm mt-2 leading-relaxed">
+                  Gunakan simulator di bawah untuk melihat bagaimana rumus matematis ORVANA menghitung kebutuhan bahan kotor (+persen susut masak) dan estimasi anggaran perlindungan petani.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between items-center text-xs font-mono mb-2">
+                    <span className="text-emerald-300">Jumlah Porsi Penerima Manfaat:</span>
+                    <span className="font-extrabold text-base text-amber-400">{calcPortions.toLocaleString('id-ID')} Porsi Anak</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="100"
+                    max="5000"
+                    step="100"
+                    value={calcPortions}
+                    onChange={(e) => setCalcPortions(parseInt(e.target.value))}
+                    className="w-full h-2.5 bg-emerald-900 rounded-lg appearance-none cursor-pointer accent-amber-400"
+                  />
+                  <div className="flex justify-between text-[10px] font-mono text-emerald-400 mt-1">
+                    <span>100 porsi</span>
+                    <span>1.000 porsi</span>
+                    <span>2.500 porsi</span>
+                    <span>5.000 porsi</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-mono text-emerald-300 block mb-2">
+                    Pilih Bahan Pokok Menu:
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {[
+                      { id: 'bayam', label: 'Bayam Hijau', desc: '+15% Susut' },
+                      { id: 'lele', label: 'Ikan Lele', desc: '+10% Susut' },
+                      { id: 'beras', label: 'Beras Lokal', desc: '+2% Susut' },
+                      { id: 'telur', label: 'Telur Ayam', desc: '+3% Susut' },
+                    ].map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => setCalcCommodity(item.id as any)}
+                        className={`p-2.5 rounded-xl border text-left transition-all ${
+                          calcCommodity === item.id
+                            ? 'bg-amber-400 text-stone-950 border-amber-400 font-bold shadow-sm'
+                            : 'bg-white/10 text-white border-white/15 hover:bg-white/15 text-stone-200'
+                        }`}
+                      >
+                        <p className="text-xs leading-none">{item.label}</p>
+                        <p className="text-[10px] opacity-80 font-mono mt-1">{item.desc}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-5 bg-white text-stone-950 rounded-2xl p-6 shadow-2xl border-2 border-amber-400/50 space-y-4 text-left">
+              <div className="flex items-center justify-between border-b border-stone-200 pb-3">
+                <span className="text-xs font-mono font-bold text-stone-500 uppercase">
+                  Hasil Formula Demand Planner
+                </span>
+                <Badge color="success">Rumus Baku Resmi</Badge>
+              </div>
+
+              <div>
+                <p className="text-xs text-stone-500">Komoditas Terpilih:</p>
+                <p className="font-heading font-extrabold text-lg text-emerald-950">{calc.name}</p>
+              </div>
+
+              <div className="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200 space-y-2">
+                <div className="flex justify-between items-baseline text-xs">
+                  <span className="text-stone-600">Total Kebutuhan Kotor (+Susut {calc.wastePct}%):</span>
+                  <span className="font-mono text-xl font-bold text-emerald-950">{formatKg(calc.qtyKg)}</span>
+                </div>
+                <div className="flex justify-between items-baseline text-xs border-t border-emerald-200/60 pt-2">
+                  <span className="text-stone-600">Estimasi Anggaran Acuan Dinas:</span>
+                  <span className="font-mono text-xl font-bold text-emerald-950">{formatRupiah(calc.estCost)}</span>
+                </div>
+              </div>
+
+              <div className="text-[11px] font-mono text-stone-500 space-y-1">
+                <p>• Harga Dasar Acuan: {formatRupiah(calc.unitPrice)} / kg</p>
+                <p>• Dibulatkan ke atas kelipatan 0,1 kg sesuai aturan dinas</p>
+                <p>• Langsung siap dialokasikan otomatis ke multi-petani lokal</p>
+              </div>
+
+              <Link to="/register" className="block pt-2">
+                <Button variant="primary" size="md" className="w-full bg-emerald-900 hover:bg-emerald-950 font-bold text-white shadow-sm flex items-center justify-center gap-2 py-3 rounded-xl">
+                  <span>Mulai Pasok Dapur Sekarang</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
+            </div>
+
+          </div>
+        </div>
+      </section>
+      </ScrollReveal>
+
+
+
+      <ScrollReveal animation="fade-up" delayMs={0}>
+        {/* LIVE INTERACTIVE AI NLP SIMULATOR SANDBOX (Fitur Baru Pembeda Kelas Dunia) */}
+      <section id="nlp-demo" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-14">
+        <div className="bg-gradient-to-br from-emerald-950 via-pine-900 to-[#0B1A14] text-white rounded-3xl p-6 sm:p-10 shadow-elevated border border-emerald-800/80">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div className="lg:col-span-6 space-y-4 text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-800/60 border border-emerald-500 text-xs font-mono font-bold text-emerald-200">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Teknologi AI NLP Pertanian Indonesia</span>
+              </div>
+              <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight">
+                Coba Ketik Bahasa Petani Biasa. <br />
+                <span className="text-amber-400 italic">Sistem Memahaminya Seketika.</span>
+              </h2>
+              <p className="text-stone-300 text-xs sm:text-sm leading-relaxed">
+                Petani di desa tidak perlu pusing mengisi formulir rumit. Cukup ketik kalimat alami lewat WhatsApp atau aplikasi, mesin NLP kami (Naive Bayes + Normalizer Slang & Angka Terbilang) mengekstrak komoditas, bobot kg, dan harga secara akurat.
+              </p>
+
+              <div className="space-y-2 pt-2">
+                <span className="text-[11px] font-mono text-stone-400 block">Pilihan contoh kalimat petani:</span>
+                <div className="flex flex-wrap gap-2 text-xs font-mono">
+                  {[
+                    'besok ada panen cabai rawit dua kwintal harga 45rb sama bayam 50 kilo',
+                    'lusa siap kirim setengah ton beras lokal sama lele 30 kilo 25rb',
+                    'sy bsoq ad pnn cengek 100 kg harga 40 ribu siap setor',
+                  ].map((sentence, sIdx) => (
+                    <button
+                      key={sIdx}
+                      type="button"
+                      onClick={() => setNlpSampleText(sentence)}
+                      className="px-2.5 py-1 rounded-lg bg-emerald-900/60 hover:bg-emerald-800 text-[11px] border border-emerald-700/80 text-emerald-200 text-left transition-colors"
+                    >
+                      "{sentence.slice(0, 36)}..."
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Input & Live Response Box */}
+            <div className="lg:col-span-6 bg-white text-stone-900 rounded-2xl p-5 sm:p-6 shadow-2xl border border-emerald-300 space-y-4 text-left">
+              <div className="flex items-center justify-between border-b border-stone-200 pb-2">
+                <span className="text-xs font-mono font-bold text-emerald-950 uppercase">
+                  Interactive AI Parser Sandbox
+                </span>
+                <span className="text-[10px] font-mono bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded font-bold">
+                  FastAPI NLP Active
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-stone-600 block">
+                  Ketik kalimat Anda di sini:
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={nlpSampleText}
+                    onChange={(e) => setNlpSampleText(e.target.value)}
+                    placeholder="Contoh: besok panen 200 kg cabai rawit harga 45 ribu..."
+                    className="flex-1 px-3 py-2.5 border border-stone-300 rounded-xl text-xs bg-stone-50 text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-800 font-mono"
+                  />
+                  <Button
+                    type="button"
+                    onClick={handleTestNLP}
+                    disabled={nlpLoading}
+                    className="bg-emerald-900 hover:bg-emerald-950 text-white text-xs px-4 py-2.5 font-semibold rounded-xl flex items-center gap-1.5 shrink-0"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    {nlpLoading ? 'Mengurai...' : 'Urai AI'}
+                  </Button>
+                </div>
+              </div>
+
+              {/* Hasil Parsing AI Realtime */}
+              <div className="p-3 bg-stone-50 rounded-xl border border-stone-200 space-y-2">
+                <span className="text-[11px] font-mono font-bold text-stone-600 block">
+                  Hasil Pemahaman Entitas (Multi-Commodity):
+                </span>
+                <div className="space-y-1.5">
+                  {(nlpParsed?.candidates || [
+                    { commodityName: 'Cabai rawit', quantityKg: 200, askingPrice: 45000, commodityCategory: 'SPICE' },
+                    { commodityName: 'Bayam', quantityKg: 50, askingPrice: null, commodityCategory: 'VEGETABLE' }
+                  ]).map((item: any, cIdx: number) => (
+                    <div
+                      key={cIdx}
+                      className="p-2.5 bg-white rounded-lg border border-emerald-200 text-xs flex justify-between items-center shadow-xs"
+                    >
+                      <div>
+                        <span className="font-bold text-stone-900 block">{item.commodityName}</span>
+                        <span className="text-[10px] text-stone-500 font-mono">
+                          Volume: <strong className="text-emerald-900">{item.quantityKg} kg</strong> | Harga: {item.askingPrice ? `Rp ${item.askingPrice.toLocaleString('id-ID')}/kg` : 'Standar Dinas'}
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-mono bg-emerald-50 text-emerald-900 border border-emerald-300 px-2 py-0.5 rounded font-semibold">
+                        {item.commodityCategory}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+      </ScrollReveal>
+
+
+
+      <ScrollReveal animation="fade-up" delayMs={0}>
+        {/* 6. TABEL PERBANDINGAN: ORVANA VS KONVENSIONAL */}
+      <section id="keunggulan" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-900 bg-emerald-100/70 px-3 py-1 rounded-full border border-emerald-300">
+            Perbandingan Transparan
+          </span>
+          <h2 className="font-serif text-3xl font-bold text-stone-950 mt-3">
+            Mengapa Ekosistem Pangan Memilih ORVANA?
+          </h2>
+          <p className="text-xs sm:text-sm text-stone-600 mt-2">
+            Perbedaan mendasar antara rantai pasok konvensional perantara dengan arsitektur digital ORVANA.
+          </p>
+        </div>
+
+        <div className="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-soft">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs sm:text-sm">
+              <thead>
+                <tr className="border-b border-stone-200 bg-stone-50">
+                  <th className="py-4 px-6 font-heading font-bold text-stone-700 w-1/3">Aspek Pengadaan</th>
+                  <th className="py-4 px-6 font-heading font-bold text-rose-800 bg-rose-50/50 w-1/3">
+                    Pengadaan Konvensional (Tengkulak)
+                  </th>
+                  <th className="py-4 px-6 font-heading font-bold text-emerald-950 bg-emerald-50/70 w-1/3">
+                    ORVANA Digital Rantai Pasok
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-stone-200">
+                <tr>
+                  <td className="py-4 px-6 font-semibold text-stone-900">Perlindungan Harga Petani</td>
+                  <td className="py-4 px-6 text-stone-600 bg-rose-50/20">
+                    Harga ditekan sepihak, sering di bawah biaya produksi.
+                  </td>
+                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/40 flex items-center gap-2">
+                    <Check className="w-4 h-4 text-emerald-700 shrink-0" />
+                    <span>Otomatis tolak tawaran di bawah harga dasar wilayah.</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-semibold text-stone-900">Kepastian Serapan Panen</td>
+                  <td className="py-4 px-6 text-stone-600 bg-rose-50/20">
+                    Transaksi mendadak, risiko panen membusuk di kebun tinggi.
+                  </td>
+                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/40">
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-emerald-700 shrink-0" />
+                      <span>Terencana 1-2 minggu lebih awal dari menu dapur.</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-semibold text-stone-900">Pencegahan Monopoli Kuota</td>
+                  <td className="py-4 px-6 text-stone-600 bg-rose-50/20">
+                    Didominasi 1 distributor besar, petani kecil terpinggirkan.
+                  </td>
+                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/40">
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-emerald-700 shrink-0" />
+                      <span>Algoritma Greedy membatasi kuota maks 60% per petani.</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-semibold text-stone-900">Jaminan Keamanan Pembayaran</td>
+                  <td className="py-4 px-6 text-stone-600 bg-rose-50/20">
+                    Pembayaran mundur berminggu-minggu bahkan gagal bayar.
+                  </td>
+                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/40">
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-emerald-700 shrink-0" />
+                      <span>Dana [HOLD] di awal, langsung [RELEASE] begitu QC lolos.</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-semibold text-stone-900">Ketertelusuran Asal Pangan</td>
+                  <td className="py-4 px-6 text-stone-600 bg-rose-50/20">
+                    Asal muasal bahan tidak jelas, sulit dipertanggungjawabkan.
+                  </td>
+                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/40">
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-emerald-700 shrink-0" />
+                      <span>Paspor QR Code publik menampilkan riwayat desa, supir, & QC.</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      </ScrollReveal>
+
+
+
+      <ScrollReveal animation="fade-up" delayMs={0}>
+        {/* 5. METRIK DAMPAK DAERAH REAL-TIME */}
+      <section id="dampak" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div className="bg-white rounded-3xl border border-stone-200/90 p-6 sm:p-10 shadow-soft">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-stone-200 pb-5">
+            <div>
+              <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-emerald-900 mb-1">
+                <Sparkles className="w-4 h-4 text-amber-600" />
+                <span>Buku Besar Terbuka & Agregasi Dampak</span>
+              </div>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-stone-950">
+                Transparansi Real-Time Ekonomi Lokal
+              </h2>
+              <p className="text-xs sm:text-sm text-stone-600 mt-0.5">
+                Data agregat langsung dari catatan transaksi append-only yang telah dituntaskan
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge color="accent">Audit Publik Terverifikasi</Badge>
+              <Link to="/auditor/dashboard">
+                <Button variant="ghost" size="sm" className="text-xs font-semibold text-emerald-900 hover:bg-emerald-50">
+                  <span>Portal Auditor</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6">
+            <div className="p-4 sm:p-5 bg-emerald-50/60 rounded-2xl border border-emerald-100 hover:border-emerald-300 transition-colors text-left">
+              <span className="text-xs text-emerald-900 flex items-center gap-1 font-semibold">
+                <DollarSign className="w-3.5 h-3.5 text-emerald-700" />
+                Perputaran Belanja Lokal
+              </span>
+              <p className="text-xl sm:text-2xl font-serif font-bold text-emerald-950 mt-2">
+                {isLoading ? <Skeleton className="h-7 w-20" /> : formatRupiah(impact?.localSpendingRupiah || 0)}
+              </p>
+              <span className="text-[10px] text-emerald-800/80 block mt-1">100% langsung diserap petani daerah</span>
+            </div>
+
+            <div className="p-4 sm:p-5 bg-blue-50/60 rounded-2xl border border-blue-100 hover:border-blue-300 transition-colors text-left">
+              <span className="text-xs text-blue-900 flex items-center gap-1 font-semibold">
+                <Users className="w-3.5 h-3.5 text-blue-700" />
+                Mitra Produsen Terlibat
+              </span>
+              <p className="text-xl sm:text-2xl font-serif font-bold text-stone-900 mt-2">
+                {isLoading ? <Skeleton className="h-7 w-12" /> : `${impact?.producersInvolved || 0} Produsen`}
+              </p>
+              <span className="text-[10px] text-stone-500 block mt-1">Kelompok tani, peternak & UMKM</span>
+            </div>
+
+            <div className="p-4 sm:p-5 bg-amber-50/60 rounded-2xl border border-amber-100 hover:border-amber-300 transition-colors text-left">
+              <span className="text-xs text-amber-900 flex items-center gap-1 font-semibold">
+                <CheckCircle2 className="w-3.5 h-3.5 text-amber-700" />
+                Total Pangan Terserap
+              </span>
+              <p className="text-xl sm:text-2xl font-mono font-bold text-stone-950 mt-2">
+                {isLoading ? <Skeleton className="h-7 w-16" /> : formatKg(impact?.totalDeliveredKg || 0)}
+              </p>
+              <span className="text-[10px] text-amber-900/80 block mt-1">Bahan segar bergizi tersalurkan</span>
+            </div>
+
+            <div className="p-4 sm:p-5 bg-purple-50/60 rounded-2xl border border-purple-100 hover:border-purple-300 transition-colors text-left">
+              <span className="text-xs text-purple-900 flex items-center gap-1 font-semibold">
+                <ShieldCheck className="w-3.5 h-3.5 text-purple-700" />
+                Tingkat Lolos Mutu QC
+              </span>
+              <p className="text-xl sm:text-2xl font-mono font-bold text-purple-950 mt-2">
+                {isLoading ? <Skeleton className="h-7 w-14" /> : `${impact?.qualityPassRatePct || 0}%`}
+              </p>
+              <span className="text-[10px] text-purple-900/80 block mt-1">Standar inspeksi ahli gizi</span>
+            </div>
+
+            <div className="p-4 sm:p-5 bg-stone-100/70 rounded-2xl border border-stone-200 col-span-2 md:col-span-1 text-left">
+              <span className="text-xs text-stone-700 flex items-center gap-1 font-semibold">
+                <MapPin className="w-3.5 h-3.5 text-amber-800" />
+                Rata-rata Radius Jarak
+              </span>
+              <p className="text-xl sm:text-2xl font-mono font-bold text-amber-900 mt-2">
+                {isLoading ? <Skeleton className="h-7 w-16" /> : `${impact?.avgDistanceKm || 0} km`}
+              </p>
+              <span className="text-[10px] text-stone-500 block mt-1">Rute pendek, emisi karbon rendah</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      </ScrollReveal>
+
+
+
+      <ScrollReveal animation="fade-up" delayMs={0}>
+        {/* 9. FAQ ACCORDION */}
       <section id="faq" className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-12">
         <div className="text-center mb-8">
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-900 bg-emerald-100/70 px-3 py-1 rounded-full border border-emerald-300">
@@ -1222,6 +1243,7 @@ export const LandingPage: React.FC = () => {
           </div>
         </div>
       </section>
+      </ScrollReveal>
 
       {/* 11. FOOTER FORMAL & MINIMALIS */}
       <footer className="border-t border-stone-200 bg-white py-12 relative z-10">
