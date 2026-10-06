@@ -929,75 +929,117 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* 8. ALUR KERJA 4 PERAN LAPANGAN */}
-      <section id="alur" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="bg-stone-100/70 rounded-3xl border border-stone-200 p-6 sm:p-10">
-          <div className="text-center max-w-xl mx-auto mb-8">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-900 bg-emerald-100/80 px-3 py-1 rounded-full border border-emerald-300">
-              Alur Terpadu Multi-Peran
+      {/* 8. ALUR KERJA 4 PERAN LAPANGAN (INTERACTIVE ROLE ECOSYSTEM) */}
+      <section id="alur" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16">
+        <div className="bg-gradient-to-b from-stone-100/90 to-stone-100/40 rounded-3xl border border-stone-200/90 p-6 sm:p-12 shadow-sm">
+          
+          {/* Header Bagian */}
+          <div className="text-center max-w-2xl mx-auto mb-10 space-y-3">
+            <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-emerald-900 bg-emerald-100/80 px-3.5 py-1.5 rounded-full border border-emerald-300/80 shadow-2xs">
+              <Users className="w-3.5 h-3.5 text-emerald-800" />
+              <span>Sinergi Ekosistem 4 Peran Lapangan</span>
             </span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-stone-950 mt-3">
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-stone-950 tracking-tight">
               Bagaimana Alur Kerja 4 Peran Lapangan?
             </h2>
-            <p className="text-xs sm:text-sm text-stone-600 mt-1">
-              Pilih peran pengguna di bawah untuk melihat simulasi interface dan tanggung jawab masing-masing
+            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
+              Jelajahi simulasi tanggung jawab dan tampilan interaksi setiap aktor pengadaan dari dapur gizi hingga petani lokal dalam satu siklus terpadu.
             </p>
+          </div>
 
-            <div className="inline-flex p-1.5 bg-white rounded-xl border border-stone-200 shadow-xs mt-6 gap-1 flex-wrap justify-center">
+          {/* Stepper Navigation Pills */}
+          <div className="max-w-4xl mx-auto mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 p-1.5 bg-white/80 backdrop-blur-md rounded-2xl border border-stone-200/90 shadow-xs">
               {[
-                { id: 'kitchen', label: '1. Pengelola Dapur', icon: Building2 },
-                { id: 'farmer', label: '2. Petani / Nelayan', icon: Leaf },
-                { id: 'coordinator', label: '3. Koordinator', icon: Truck },
-                { id: 'inspector', label: '4. Pengawas Mutu', icon: ShieldCheck },
+                { id: 'kitchen', step: '01', label: 'Pengelola Dapur', roleDesc: 'Perencana Menu & Kebutuhan', icon: Building2 },
+                { id: 'farmer', step: '02', label: 'Petani / Nelayan', roleDesc: 'Penyedia Panen & Pasokan', icon: Leaf },
+                { id: 'coordinator', step: '03', label: 'Koordinator', roleDesc: 'Konsolidasi & Logistik', icon: Truck },
+                { id: 'inspector', step: '04', label: 'Pengawas Mutu', roleDesc: 'Inspeksi QC & Escrow', icon: ShieldCheck },
               ].map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTabRole === tab.id;
                 return (
                   <button
                     key={tab.id}
+                    type="button"
                     onClick={() => setActiveTabRole(tab.id as any)}
-                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all ${
+                    className={`flex items-start gap-3 p-3 rounded-xl text-left transition-all duration-200 ${
                       isActive
-                        ? 'bg-emerald-900 text-white shadow-xs'
-                        : 'text-stone-600 hover:text-stone-900 hover:bg-stone-50'
+                        ? 'bg-emerald-950 text-white shadow-md shadow-emerald-950/20 ring-1 ring-emerald-800'
+                        : 'text-stone-600 hover:text-stone-950 hover:bg-stone-50'
                     }`}
                   >
-                    <Icon className="w-3.5 h-3.5" />
-                    <span>{tab.label}</span>
+                    <div className={`p-2 rounded-lg shrink-0 ${isActive ? 'bg-emerald-800/80 text-amber-300' : 'bg-stone-100 text-stone-500'}`}>
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <span className={`text-[10px] font-mono font-bold ${isActive ? 'text-amber-400' : 'text-stone-400'}`}>
+                          {tab.step}
+                        </span>
+                        <p className="text-xs font-bold truncate leading-tight">{tab.label}</p>
+                      </div>
+                      <p className={`text-[10px] mt-0.5 truncate ${isActive ? 'text-emerald-200' : 'text-stone-400'}`}>
+                        {tab.roleDesc}
+                      </p>
+                    </div>
                   </button>
                 );
               })}
             </div>
           </div>
 
-          <div className="max-w-4xl mx-auto bg-white rounded-2xl border border-stone-200 p-6 sm:p-8 shadow-card text-left">
+          {/* Interactive Role Showcase Container */}
+          <div className="max-w-4xl mx-auto bg-white rounded-3xl border border-stone-200 p-6 sm:p-10 shadow-lg shadow-stone-900/5">
             {activeTabRole === 'kitchen' && (
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                <div className="md:col-span-7 space-y-3">
-                  <span className="text-xs font-mono font-bold text-emerald-900 uppercase tracking-wider">
-                    Langkah 1: Perencanaan Menu & Kebutuhan
-                  </span>
-                  <h3 className="font-serif text-xl font-bold text-stone-950">
-                    Dapur Menyusun Menu Mingguan
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div className="lg:col-span-7 space-y-4">
+                  <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-900 text-xs font-mono font-bold border border-emerald-200">
+                    <span>LANGKAH 01</span>
+                    <span>•</span>
+                    <span>DEMAND PLANNING & FORECASTING</span>
+                  </div>
+                  <h3 className="font-serif text-2xl font-bold text-stone-950">
+                    Dapur Menyusun Rencana Menu Terjadwal
                   </h3>
                   <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-                    Pengelola dapur memasukkan rencana menu (mis. Resep R1 untuk 1.000 porsi). Algoritma ORVANA otomatis menghitung kebutuhan bahan bersih + estimasi susut standar (contoh bayam 69 kg, lele 77 kg).
+                    Pengelola dapur memasukkan rencana menu bergizi massal 1–2 minggu sebelum jadwal masak (mis. Resep R1 untuk 1.000 porsi penerima manfaat). Sistem ORVANA secara matematis mengonversi resep menjadi kebutuhan bahan baku kotor lengkap dengan toleransi susut masak.
                   </p>
-                  <div className="pt-2">
-                    <span className="text-[11px] font-mono font-semibold text-emerald-900 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200 inline-block">
-                      Otomatisasi Kebutuhan Resep Baku R1–R5
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    <span className="text-[11px] font-mono font-semibold text-emerald-900 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-200">
+                      ✓ Formula Baku Resep R1–R5
+                    </span>
+                    <span className="text-[11px] font-mono font-semibold text-stone-700 bg-stone-100 px-3 py-1 rounded-lg border border-stone-200">
+                      ✓ Toleransi Susut Otomatis (+15%)
                     </span>
                   </div>
                 </div>
-                <div className="md:col-span-5 space-y-3">
-                  <div className="p-4 bg-stone-50 rounded-xl border border-stone-200 space-y-2 text-xs font-mono">
-                    <div className="flex justify-between">
-                      <span className="text-stone-500">Menu R1 (1.000 Anak):</span>
-                      <span className="font-bold text-stone-950">69,0 kg Bayam</span>
+                
+                {/* Visual Simulation Card */}
+                <div className="lg:col-span-5 bg-stone-900 text-white rounded-2xl p-5 shadow-xl border border-stone-800 space-y-3 font-mono text-xs">
+                  <div className="flex items-center justify-between border-b border-stone-800 pb-2.5 text-stone-400 text-[11px]">
+                    <span className="flex items-center gap-1.5 text-emerald-400">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      DEMAND GENERATED
+                    </span>
+                    <span>DAPUR-01</span>
+                  </div>
+                  <div className="space-y-2 pt-1">
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-stone-400">Target Menu:</span>
+                      <span className="font-bold text-white">Resep R1 (1.000 Porsi)</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-stone-500">Batas Harga:</span>
-                      <span className="text-emerald-800 font-bold">Rp 10.000 / kg</span>
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-stone-400">Kebutuhan Bayam:</span>
+                      <span className="font-bold text-amber-400 text-sm">69,0 kg (+15% susut)</span>
+                    </div>
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-stone-400">Batas Harga Acuan:</span>
+                      <span className="font-bold text-emerald-400">Rp 10.000 / kg</span>
+                    </div>
+                    <div className="flex justify-between items-baseline border-t border-stone-800 pt-2 text-[11px]">
+                      <span className="text-stone-400">Status Alokasi:</span>
+                      <span className="text-emerald-400">Mencocokkan Panen Lokal...</span>
                     </div>
                   </div>
                 </div>
@@ -1005,32 +1047,54 @@ export const LandingPage: React.FC = () => {
             )}
 
             {activeTabRole === 'farmer' && (
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                <div className="md:col-span-7 space-y-3">
-                  <span className="text-xs font-mono font-bold text-amber-800 uppercase tracking-wider">
-                    Langkah 2: Kepastian Pasar & Alokasi Kuota
-                  </span>
-                  <h3 className="font-serif text-xl font-bold text-stone-950">
-                    Petani Menerima Notifikasi Tawaran Pasti
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div className="lg:col-span-7 space-y-4">
+                  <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-amber-50 text-amber-900 text-xs font-mono font-bold border border-amber-200">
+                    <span>LANGKAH 02</span>
+                    <span>•</span>
+                    <span>GUARANTEED CONTRACT & SMART ESCROW</span>
+                  </div>
+                  <h3 className="font-serif text-2xl font-bold text-stone-950">
+                    Petani Menerima Alokasi Kuota & Jaminan Pasar
                   </h3>
                   <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-                    Petani menerima pesanan teralokasi langsung di HP mereka. Begitu disanggupi, dana pesanan langsung dicadangkan [HOLD] di rekening penampung sehingga petani tidak khawatir tidak dibayar.
+                    Petani dan nelayan lokal di pedesaan menerima kuota pesanan pasti langsung melalui notifikasi. Begitu tawaran disanggupi, dana pesanan langsung dicadangkan [HOLD] ke rekening penampung resmi (*escrow*) sehingga produsen terlindungi dari risiko gagal bayar.
                   </p>
-                  <div className="pt-2">
-                    <span className="text-[11px] font-mono font-semibold text-amber-900 bg-amber-50 px-2.5 py-1 rounded border border-amber-200 inline-block">
-                      Batas Waktu Jawab 12 Jam & Alokasi Cadangan
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    <span className="text-[11px] font-mono font-semibold text-amber-900 bg-amber-50 px-3 py-1 rounded-lg border border-amber-200">
+                      ✓ Batas Waktu Respon 12 Jam
+                    </span>
+                    <span className="text-[11px] font-mono font-semibold text-emerald-900 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-200">
+                      ✓ Dana Terkunci Aman [HOLD]
                     </span>
                   </div>
                 </div>
-                <div className="md:col-span-5 space-y-3">
-                  <div className="p-4 bg-stone-50 rounded-xl border border-stone-200 space-y-2 text-xs font-mono">
-                    <div className="flex justify-between">
-                      <span className="text-stone-500">Tawaran S1:</span>
-                      <span className="text-emerald-900 font-bold">40,0 kg (@ Rp 8.000)</span>
+
+                {/* Visual Simulation Card */}
+                <div className="lg:col-span-5 bg-stone-900 text-white rounded-2xl p-5 shadow-xl border border-stone-800 space-y-3 font-mono text-xs">
+                  <div className="flex items-center justify-between border-b border-stone-800 pb-2.5 text-stone-400 text-[11px]">
+                    <span className="flex items-center gap-1.5 text-amber-400">
+                      <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                      ORDER ALLOCATED
+                    </span>
+                    <span>FARMER-S1</span>
+                  </div>
+                  <div className="space-y-2 pt-1">
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-stone-400">Nama Produsen:</span>
+                      <span className="font-bold text-white">Pak Sugeng (Poktan Makmur)</span>
                     </div>
-                    <div className="flex justify-between text-emerald-800 font-bold">
-                      <span>Dana Dicadangkan:</span>
-                      <span>Rp 320.000 [HOLD]</span>
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-stone-400">Alokasi Pasokan:</span>
+                      <span className="font-bold text-amber-400 text-sm">40,0 kg @ Rp 8.000</span>
+                    </div>
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-stone-400">Total Nilai Hak:</span>
+                      <span className="font-bold text-white">Rp 320.000</span>
+                    </div>
+                    <div className="flex justify-between items-baseline border-t border-stone-800 pt-2 text-[11px]">
+                      <span className="text-stone-400">Status Saldo Escrow:</span>
+                      <span className="text-amber-400 font-bold">DICADANGKAN [HOLD]</span>
                     </div>
                   </div>
                 </div>
@@ -1038,32 +1102,54 @@ export const LandingPage: React.FC = () => {
             )}
 
             {activeTabRole === 'coordinator' && (
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                <div className="md:col-span-7 space-y-3">
-                  <span className="text-xs font-mono font-bold text-blue-900 uppercase tracking-wider">
-                    Langkah 3: Konsolidasi & Distribusi
-                  </span>
-                  <h3 className="font-serif text-xl font-bold text-stone-950">
-                    Penjemputan Bahan & Pembuatan Batch
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div className="lg:col-span-7 space-y-4">
+                  <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-blue-50 text-blue-900 text-xs font-mono font-bold border border-blue-200">
+                    <span>LANGKAH 03</span>
+                    <span>•</span>
+                    <span>CONSOLIDATION & QR TRACEABILITY</span>
+                  </div>
+                  <h3 className="font-serif text-2xl font-bold text-stone-950">
+                    Koordinator Mengonsolidasi & Memberi Label Batch
                   </h3>
                   <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-                    Koordinator pengepul mengambil hasil panen dari beberapa titik desa, mengelompokkannya ke satu pengiriman armada, dan sistem menghasilkan kode batch unik ketertelusuran pangan.
+                    Koordinator wilayah menjemput panen dari kelompok tani dalam radius pendek (&lt; 25 km), mencatat timbangan susut transit secara digital, dan menerbitkan kode batch QR resmi yang menghubungkan data produsen desa dengan dapur penerima.
                   </p>
-                  <div className="pt-2">
-                    <span className="text-[11px] font-mono font-semibold text-blue-900 bg-blue-50 px-2.5 py-1 rounded border border-blue-200 inline-block">
-                      Pembuatan Kode Batch & Penimbangan Susut
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    <span className="text-[11px] font-mono font-semibold text-blue-900 bg-blue-50 px-3 py-1 rounded-lg border border-blue-200">
+                      ✓ Penimbangan Digital Anti-Kecurangan
+                    </span>
+                    <span className="text-[11px] font-mono font-semibold text-stone-700 bg-stone-100 px-3 py-1 rounded-lg border border-stone-200">
+                      ✓ Cetak Paspor Batch QR Otomatis
                     </span>
                   </div>
                 </div>
-                <div className="md:col-span-5 space-y-3">
-                  <div className="p-4 bg-stone-50 rounded-xl border border-stone-200 space-y-2 text-xs font-mono">
-                    <div className="flex justify-between">
-                      <span className="text-stone-500">Kode Batch:</span>
-                      <span className="text-blue-900 font-bold">ORV-20261014-DPR01-0001</span>
+
+                {/* Visual Simulation Card */}
+                <div className="lg:col-span-5 bg-stone-900 text-white rounded-2xl p-5 shadow-xl border border-stone-800 space-y-3 font-mono text-xs">
+                  <div className="flex items-center justify-between border-b border-stone-800 pb-2.5 text-stone-400 text-[11px]">
+                    <span className="flex items-center gap-1.5 text-blue-400">
+                      <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+                      LOGISTICS IN TRANSIT
+                    </span>
+                    <span>EXP-JKT-01</span>
+                  </div>
+                  <div className="space-y-2 pt-1">
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-stone-400">Nomor Batch:</span>
+                      <span className="font-bold text-blue-300">ORV-20261014-DPR01-0001</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-stone-500">Muatan Konsolidasi:</span>
-                      <span className="font-bold">69,0 kg</span>
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-stone-400">Total Muatan:</span>
+                      <span className="font-bold text-white text-sm">69,0 kg (2 Titik Desa)</span>
+                    </div>
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-stone-400">Radius Jarak:</span>
+                      <span className="font-bold text-white">8,57 km</span>
+                    </div>
+                    <div className="flex justify-between items-baseline border-t border-stone-800 pt-2 text-[11px]">
+                      <span className="text-stone-400">Sertifikasi Batch:</span>
+                      <span className="text-blue-400">QR Paspor Siap Di-scan</span>
                     </div>
                   </div>
                 </div>
@@ -1071,38 +1157,61 @@ export const LandingPage: React.FC = () => {
             )}
 
             {activeTabRole === 'inspector' && (
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                <div className="md:col-span-7 space-y-3">
-                  <span className="text-xs font-mono font-bold text-purple-900 uppercase tracking-wider">
-                    Langkah 4: Pemeriksaan Mutu & Pembayaran
-                  </span>
-                  <h3 className="font-serif text-xl font-bold text-stone-950">
-                    Inspeksi Checklist Mutu & Pencairan Dana
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div className="lg:col-span-7 space-y-4">
+                  <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-purple-50 text-purple-900 text-xs font-mono font-bold border border-purple-200">
+                    <span>LANGKAH 04</span>
+                    <span>•</span>
+                    <span>QC INSPECTION & AUTOMATIC SETTLEMENT</span>
+                  </div>
+                  <h3 className="font-serif text-2xl font-bold text-stone-950">
+                    Inspeksi Ahli Gizi & Pencairan Dana Seketika
                   </h3>
                   <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-                    Pengawas mutu memeriksa kesegaran, kebersihan, dan kondisi fisik bahan. Hasil QC yang lolos otomatis mencairkan dana [RELEASE] ke saldo petani tanpa menunggu berhari-hari.
+                    Pengawas mutu dan ahli gizi memeriksa bahan pangan yang tiba di dapur menggunakan instrumen checklist standar dinas. Begitu status mutu dinyatakan Lolos Prima [PASS], sistem otomatis mengeksekusi pencairan saldo [RELEASE] langsung ke rekening petani secara transparan.
                   </p>
-                  <div className="pt-2">
-                    <span className="text-[11px] font-mono font-semibold text-purple-900 bg-purple-50 px-2.5 py-1 rounded border border-purple-200 inline-block">
-                      Hasil: PASS, PARTIAL, atau FAIL Transparan
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    <span className="text-[11px] font-mono font-semibold text-purple-900 bg-purple-50 px-3 py-1 rounded-lg border border-purple-200">
+                      ✓ Audit Mutu PASS / PARTIAL / FAIL
+                    </span>
+                    <span className="text-[11px] font-mono font-semibold text-emerald-900 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-200">
+                      ✓ Pencairan Dana Tuntas [RELEASE]
                     </span>
                   </div>
                 </div>
-                <div className="md:col-span-5 space-y-3">
-                  <div className="p-4 bg-stone-50 rounded-xl border border-stone-200 space-y-2 text-xs font-mono">
-                    <div className="flex justify-between">
-                      <span className="text-stone-500">Skor Mutu QC:</span>
-                      <span className="text-emerald-800 font-bold">90 / 100 [PASS]</span>
+
+                {/* Visual Simulation Card */}
+                <div className="lg:col-span-5 bg-stone-900 text-white rounded-2xl p-5 shadow-xl border border-stone-800 space-y-3 font-mono text-xs">
+                  <div className="flex items-center justify-between border-b border-stone-800 pb-2.5 text-stone-400 text-[11px]">
+                    <span className="flex items-center gap-1.5 text-emerald-400">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      QC VERIFIED & SETTLED
+                    </span>
+                    <span>INSPECTOR-01</span>
+                  </div>
+                  <div className="space-y-2 pt-1">
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-stone-400">Skor Mutu Uji Fisik:</span>
+                      <span className="font-bold text-emerald-400 text-sm">90 / 100 [PASS]</span>
                     </div>
-                    <div className="flex justify-between text-emerald-800 font-bold">
-                      <span>Pencairan Dana:</span>
-                      <span>Rp 320.000 [RELEASE]</span>
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-stone-400">Kondisi Bahan:</span>
+                      <span className="font-bold text-white">Segar, Bersih, Higienis</span>
+                    </div>
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-stone-400">Tindakan Pembayaran:</span>
+                      <span className="font-bold text-white">Rp 320.000 [RELEASE]</span>
+                    </div>
+                    <div className="flex justify-between items-baseline border-t border-stone-800 pt-2 text-[11px]">
+                      <span className="text-stone-400">Buku Besar Audit:</span>
+                      <span className="text-emerald-400 font-bold">TERCATAT APPEND-ONLY</span>
                     </div>
                   </div>
                 </div>
               </div>
             )}
           </div>
+
         </div>
       </section>
 
