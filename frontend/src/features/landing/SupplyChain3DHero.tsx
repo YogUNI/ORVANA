@@ -1,155 +1,126 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
-  Sparkles,
+  Leaf,
+  Truck,
   Building2,
   TrendingUp,
-  Truck,
-  Leaf,
-  Play,
-  Pause,
-  Compass,
+  Sparkles,
   ArrowRight,
   CheckCircle2,
   Lock,
+  Pause,
+  Play,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-interface StageNode {
+interface StageConfig {
   id: 'farm' | 'truck' | 'kitchen';
   stepNum: string;
   role: string;
   title: string;
   badge: string;
   badgeColor: string;
-  coords: { x: number; y: number }; // percentage on island
-  icon: React.ReactNode;
   summary: string;
-  metricLabel: string;
-  metricValue: string;
-  metricSub: string;
+  statLabel: string;
+  statValue: string;
+  statSub: string;
+  pinCoord: { x: number; y: number };
+  activeGlow: string;
 }
 
-const STAGES: StageNode[] = [
+const STAGES: StageConfig[] = [
   {
     id: 'farm',
     stepNum: '01',
     role: 'HULU PRODUKSI',
-    title: 'Panen Petani Lokal',
+    title: 'Panen Petani Desa',
     badge: 'Cap Anti-Monopoli 60%',
     badgeColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
-    coords: { x: 26, y: 44 },
-    icon: <Leaf className="w-4 h-4 text-emerald-400" />,
-    summary: 'Petik pagi hari terintegrasi jadwal panen desa dengan jaminan kepastian harga acuan.',
-    metricLabel: 'Alokasi Bayam Hijau',
-    metricValue: '40,0 kg',
-    metricSub: 'Rp 8.000/kg • 2 Jam Pasca Petik',
+    summary: 'Petik sayur segar pagi hari terhubung otomatis dengan kuota harian dapur gizi.',
+    statLabel: 'Alokasi Bayam',
+    statValue: '40,0 kg',
+    statSub: 'Rp 8.000 / kg • Panen H-1',
+    pinCoord: { x: 26, y: 42 },
+    activeGlow: 'rgba(16, 185, 129, 0.45)',
   },
   {
     id: 'truck',
     stepNum: '02',
-    role: 'LOGISTIK TERSEGEL',
-    title: 'Kurir & Pengepul Dingin',
+    role: 'LOGISTIK TRANSIT',
+    title: 'Kurir Dingin Tersegel',
     badge: 'Suhu +4°C Terkunci',
     badgeColor: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
-    coords: { x: 48, y: 62 },
-    icon: <Truck className="w-4 h-4 text-amber-400" />,
-    summary: 'Konsolidasi radius dekat (<25 km) dengan armada dingin dan segel QR paspor digital.',
-    metricLabel: 'Status Distribusi',
-    metricValue: 'Transit 6,2 km',
-    metricSub: '+4,2°C Optimal • GPS Live',
+    summary: 'Armada berpendingin jemput kebun radius <25 km. Paspor batch QR tersegel anti-tukar.',
+    statLabel: 'Suhu & Jarak',
+    statValue: '+4,2°C • 6,2 km',
+    statSub: 'Transit 18 Menit • GPS Live',
+    pinCoord: { x: 48, y: 62 },
+    activeGlow: 'rgba(245, 158, 11, 0.45)',
   },
   {
     id: 'kitchen',
     stepNum: '03',
     role: 'HILIR KONSUMSI',
-    title: 'Dapur Gizi & Uji Lab QC',
+    title: 'Dapur Gizi & Lab QC',
     badge: 'Escrow Auto-Release',
     badgeColor: 'bg-sky-500/20 text-sky-400 border-sky-500/30',
-    coords: { x: 74, y: 38 },
-    icon: <Building2 className="w-4 h-4 text-sky-400" />,
-    summary: 'Diterima ahli gizi dapur, uji organoleptik 100%. Begitu lulus QC, kas petani cair instan.',
-    metricLabel: 'Pencairan Otomatis',
-    metricValue: 'Rp 537.500',
-    metricSub: 'Grade A 100% • 1.000 Porsi',
+    summary: 'Uji mutu organoleptik 100%. Begitu checklist QC lulus, dana kas petani cair otomatis.',
+    statLabel: 'Pencairan Otomatis',
+    statValue: 'Rp 537.500',
+    statSub: 'Skor Mutu 100% • 1.000 Porsi',
+    pinCoord: { x: 74, y: 38 },
+    activeGlow: 'rgba(14, 165, 233, 0.45)',
   },
 ];
 
 export const SupplyChain3DHero: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'3d' | 'engine'>('3d');
-  const [activeStepId, setActiveStepId] = useState<'farm' | 'truck' | 'kitchen'>('farm');
+  const [activeTab, setActiveTab] = useState<'visual' | 'engine'>('visual');
+  const [activeStageId, setActiveStageId] = useState<'farm' | 'truck' | 'kitchen'>('farm');
   const [isPlaying, setIsPlaying] = useState(true);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [tilt, setTilt] = useState({ rx: 6, ry: -8, isHovered: false });
 
-  // Parallax Gyro & Drag Orbit
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [tilt, setTilt] = useState({ rotateX: 6, rotateY: -8, isHovered: false });
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const startDragPos = useRef({ x: 0, y: 0 });
-
-  // Auto-play timeline step
+  // Auto-progress stages on timer
   useEffect(() => {
-    if (!isPlaying) return;
+    if (!isPlaying || activeTab !== 'visual') return;
     const interval = setInterval(() => {
-      setActiveStepId((prev) => {
+      setActiveStageId((prev) => {
         if (prev === 'farm') return 'truck';
         if (prev === 'truck') return 'kitchen';
         return 'farm';
       });
     }, 4500);
     return () => clearInterval(interval);
-  }, [isPlaying]);
+  }, [isPlaying, activeTab]);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    startDragPos.current = { x: e.clientX - dragOffset.x, y: e.clientY - dragOffset.y };
-  };
-
+  // Subtle 3D mouse parallax
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isDragging) {
-      const newX = e.clientX - startDragPos.current.x;
-      const newY = e.clientY - startDragPos.current.y;
-      setDragOffset({
-        x: Math.max(-25, Math.min(25, newX * 0.15)),
-        y: Math.max(-18, Math.min(18, newY * 0.15)),
-      });
-      return;
-    }
-
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
+    if (!stageRef.current) return;
+    const rect = stageRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
 
-    const rotX = -(y / (rect.height / 2)) * 12 + 6;
-    const rotY = (x / (rect.width / 2)) * 14 - 8;
-
-    setTilt({
-      rotateX: Number(rotX.toFixed(2)),
-      rotateY: Number(rotY.toFixed(2)),
-      isHovered: true,
-    });
+    const rx = -(y / (rect.height / 2)) * 10 + 6;
+    const ry = (x / (rect.width / 2)) * 12 - 8;
+    setTilt({ rx, ry, isHovered: true });
   };
 
-  const handleMouseUp = () => setIsDragging(false);
   const handleMouseLeave = () => {
-    setIsDragging(false);
-    setTilt({ rotateX: 6, rotateY: -8, isHovered: false });
+    setTilt({ rx: 6, ry: -8, isHovered: false });
   };
 
-  const currentStep = STAGES.find((s) => s.id === activeStepId) || STAGES[0];
-  const finalRotX = tilt.rotateX - dragOffset.y;
-  const finalRotY = tilt.rotateY + dragOffset.x;
+  const currentStage = STAGES.find((s) => s.id === activeStageId) || STAGES[0];
 
   return (
     <div className="w-full flex flex-col items-center select-none">
-      {/* 1. TOP TOGGLE DOCK */}
-      <div className="flex items-center justify-between w-full max-w-xl mb-3 px-1 gap-2">
+      {/* 1. TOP SEGMENTED CONTROL BAR */}
+      <div className="flex items-center justify-between w-full max-w-lg mb-3 px-1 gap-2">
         <div className="inline-flex p-1 bg-stone-900/90 backdrop-blur-xl rounded-2xl border border-stone-700/80 shadow-md">
           <button
             type="button"
-            onClick={() => setActiveTab('3d')}
+            onClick={() => setActiveTab('visual')}
             className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              activeTab === '3d'
+              activeTab === 'visual'
                 ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40 shadow-xs'
                 : 'text-stone-400 hover:text-white'
             }`}
@@ -171,8 +142,8 @@ export const SupplyChain3DHero: React.FC = () => {
           </button>
         </div>
 
-        {activeTab === '3d' && (
-          <div className="flex items-center gap-2">
+        {activeTab === 'visual' && (
+          <div className="flex items-center gap-1.5">
             <button
               type="button"
               onClick={() => setIsPlaying(!isPlaying)}
@@ -185,85 +156,107 @@ export const SupplyChain3DHero: React.FC = () => {
               {isPlaying ? (
                 <>
                   <Pause className="w-3 h-3 text-emerald-400" />
-                  <span>Jeda Alur</span>
+                  <span>Jeda</span>
                 </>
               ) : (
                 <>
                   <Play className="w-3 h-3 text-amber-400 fill-amber-400" />
-                  <span>Putar Alur</span>
+                  <span>Putar</span>
                 </>
               )}
             </button>
-
-            {(dragOffset.x !== 0 || dragOffset.y !== 0) && (
-              <button
-                type="button"
-                onClick={() => setDragOffset({ x: 0, y: 0 })}
-                className="text-[11px] font-mono text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold px-2 py-1.5 rounded-xl bg-stone-900/80 border border-amber-500/30"
-                title="Reset Sudut"
-              >
-                <Compass className="w-3 h-3 animate-spin" />
-                <span>Reset</span>
-              </button>
-            )}
           </div>
         )}
       </div>
 
-      {/* 2. MAIN 3D SHOWCASE (ISOLATED FLOATING ISLAND WITHOUT SQUARE BOX) */}
-      {activeTab === '3d' && (
-        <div className="w-full max-w-xl flex flex-col items-center">
-          {/* THE 3D CANVAS STAGE */}
+      {/* 2. THE COMPACT 3D LIVING STAGE */}
+      {activeTab === 'visual' && (
+        <div
+          ref={stageRef}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          className="relative w-full max-w-lg aspect-[1.18/1] flex flex-col justify-between p-4 rounded-3xl bg-gradient-to-b from-stone-900/90 via-stone-900/80 to-stone-950/95 border border-stone-800/90 shadow-2xl backdrop-blur-2xl overflow-hidden transition-all duration-300"
+          style={{
+            perspective: '1000px',
+            boxShadow: `0 20px 40px -15px ${currentStage.activeGlow}`,
+          }}
+        >
+          {/* AMBIENT RADIAL LIGHTING GLOW */}
           <div
-            ref={containerRef}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseLeave}
-            className={`relative w-full aspect-[4/3] flex items-center justify-center will-change-transform ${
-              isDragging ? 'cursor-grabbing' : 'cursor-grab'
-            }`}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full blur-3xl pointer-events-none opacity-40 transition-colors duration-1000"
+            style={{ backgroundColor: currentStage.activeGlow }}
+          />
+
+          {/* DUAL BACKGROUND ORBITAL CIRCLES (MONCY.DEV STYLE) */}
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] h-[85%] rounded-full border border-dashed border-emerald-400/20 pointer-events-none"
             style={{
-              perspective: '1200px',
+              transform: 'rotateX(60deg) rotateZ(15deg)',
+              animation: 'spin 40s linear infinite',
+            }}
+          />
+
+          {/* TOP STEP SELECTOR PILLS (TAHAP 01 -> TAHAP 02 -> TAHAP 03) */}
+          <div className="relative z-20 flex items-center justify-between gap-2 bg-stone-950/70 backdrop-blur-md p-1.5 rounded-2xl border border-stone-800">
+            {STAGES.map((st) => {
+              const isActive = st.id === activeStageId;
+              return (
+                <button
+                  key={st.id}
+                  onClick={() => {
+                    setActiveStageId(st.id);
+                    setIsPlaying(false);
+                  }}
+                  className={`flex-1 py-1.5 px-2 rounded-xl text-left transition-all duration-300 flex items-center justify-between ${
+                    isActive
+                      ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/50 shadow-sm'
+                      : 'text-stone-400 hover:text-stone-200'
+                  }`}
+                >
+                  <div className="truncate">
+                    <span className="text-[9px] font-mono block uppercase font-bold text-stone-400">
+                      Tahap {st.stepNum}
+                    </span>
+                    <span className="text-xs font-bold truncate block text-stone-100">
+                      {st.title.split(' ')[0]} {st.title.split(' ')[1] || ''}
+                    </span>
+                  </div>
+                  <span
+                    className={`w-2 h-2 rounded-full shrink-0 ${
+                      isActive ? 'bg-emerald-400 animate-pulse' : 'bg-stone-700'
+                    }`}
+                  />
+                </button>
+              );
+            })}
+          </div>
+
+          {/* CENTER 3D FLOATING ISLAND (PRISTINE TRANSPARENT CUTOUT WITH MOVING ELEMENTS) */}
+          <div
+            className="relative w-full flex-1 flex items-center justify-center my-1 transition-transform duration-300 ease-out will-change-transform"
+            style={{
+              transformStyle: 'preserve-3d',
+              transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) scale(${
+                tilt.isHovered ? 1.03 : 1
+              })`,
             }}
           >
-            {/* Ambient Background Glow Circles (Moncy.dev aesthetic) */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none -z-10 animate-pulse" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-amber-500/10 blur-2xl pointer-events-none -z-10" />
-
-            {/* DUAL ORBITAL RINGS SURROUNDING ISLAND */}
-            <div
-              className="absolute w-[88%] h-[88%] rounded-full border border-dashed border-emerald-400/25 opacity-60 pointer-events-none"
-              style={{
-                transform: 'rotateX(65deg) rotateZ(20deg)',
-                animation: 'spin 35s linear infinite',
-              }}
-            />
-
-            {/* 3D FLOATING ISLAND (PRISTINE CUTOUT, NO SQUARE BORDER!) */}
-            <div
-              className="relative w-full h-full flex items-center justify-center transition-transform duration-300 ease-out will-change-transform"
-              style={{
-                transformStyle: 'preserve-3d',
-                transform: `rotateX(${finalRotX}deg) rotateY(${finalRotY}deg) scale(${
-                  tilt.isHovered ? 1.02 : 1
-                })`,
-              }}
-            >
+            {/* ISLAND CUTOUT IMAGE */}
+            <div className="relative w-[92%] h-auto flex items-center justify-center animate-bounce-gentle">
               <img
                 src="/images/orvana-island-floating.png"
                 alt="Miniatur Pulau Rantai Pasok Pangan ORVANA"
-                className="w-[95%] h-auto object-contain filter drop-shadow-[0_25px_35px_rgba(0,0,0,0.35)] select-none pointer-events-none"
+                className="w-full h-auto object-contain filter drop-shadow-[0_20px_30px_rgba(0,0,0,0.65)] select-none pointer-events-none"
               />
 
-              {/* FLOW CONNECTION LASER / ARROWS (Petani -> Kurir -> Dapur) */}
+              {/* FLOWING CONNECTION LASER PATH */}
               <svg
                 className="absolute inset-0 w-full h-full pointer-events-none z-10"
                 viewBox="0 0 100 100"
                 preserveAspectRatio="none"
               >
                 <defs>
-                  <linearGradient id="flowLaser" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <linearGradient id="islandLaser" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#10B981" />
                     <stop offset="50%" stopColor="#F59E0B" />
                     <stop offset="100%" stopColor="#0EA5E9" />
@@ -272,62 +265,62 @@ export const SupplyChain3DHero: React.FC = () => {
                 <path
                   d="M 28 46 Q 38 56, 48 64 T 74 40"
                   fill="none"
-                  stroke="url(#flowLaser)"
+                  stroke="url(#islandLaser)"
                   strokeWidth="1.2"
                   strokeDasharray="4 3"
                   className="animate-laser-flow"
                 />
               </svg>
 
-              {/* INTERACTIVE HOTSPOT PINS DIRECTLY ON ISLAND */}
+              {/* DYNAMIC MOVING COLD-CHAIN TRUCK ANIMATION ON THE ROAD */}
+              <div
+                className="absolute pointer-events-none z-20"
+                style={{
+                  top: '60%',
+                  left: '46%',
+                  animation: 'float-slow 3s ease-in-out infinite',
+                }}
+              >
+                {/* Truck Pulse Marker */}
+                <span className="flex h-3 w-3 relative">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500 border border-white"></span>
+                </span>
+              </div>
+
+              {/* STEAM PARTICLE ON KITCHEN ROOF */}
+              <div
+                className="absolute top-[28%] right-[24%] pointer-events-none z-10 opacity-60"
+                style={{ animation: 'pulse 2s infinite' }}
+              >
+                <span className="block w-2.5 h-2.5 rounded-full bg-sky-300 blur-xs animate-ping" />
+              </div>
+
+              {/* PINS ON THE 3 KEY LOCATIONS */}
               {STAGES.map((st) => {
-                const isActive = st.id === activeStepId;
+                const isActive = st.id === activeStageId;
                 return (
                   <button
                     key={st.id}
                     onClick={() => {
-                      setActiveStepId(st.id);
+                      setActiveStageId(st.id);
                       setIsPlaying(false);
                     }}
-                    style={{ left: `${st.coords.x}%`, top: `${st.coords.y}%` }}
-                    className={`absolute -translate-x-1/2 -translate-y-1/2 z-20 group flex items-center justify-center transition-transform duration-300 ${
+                    style={{ left: `${st.pinCoord.x}%`, top: `${st.pinCoord.y}%` }}
+                    className={`absolute -translate-x-1/2 -translate-y-1/2 z-30 transition-transform duration-300 ${
                       isActive ? 'scale-125' : 'scale-90 hover:scale-110'
                     }`}
-                    title={st.title}
                   >
-                    {/* Pulsing ring */}
                     <span
-                      className={`absolute -inset-2 rounded-full blur-xs transition-opacity duration-300 ${
-                        isActive ? 'opacity-100 animate-ping' : 'opacity-0'
-                      } ${
-                        st.id === 'farm'
-                          ? 'bg-emerald-400'
-                          : st.id === 'truck'
-                          ? 'bg-amber-400'
-                          : 'bg-sky-400'
-                      }`}
-                    />
-
-                    {/* Pin Circle */}
-                    <span
-                      className={`relative w-8 h-8 rounded-full border-2 flex items-center justify-center shadow-lg transition-all ${
+                      className={`relative flex items-center justify-center w-7 h-7 rounded-full border-2 shadow-lg transition-all ${
                         isActive
-                          ? 'bg-stone-900 border-white text-white shadow-emerald-500/50'
-                          : 'bg-stone-900/80 border-stone-400 text-stone-300 hover:border-white'
+                          ? 'bg-stone-900 border-white text-white shadow-emerald-500/60'
+                          : 'bg-stone-900/80 border-stone-500 text-stone-300'
                       }`}
                     >
-                      {st.icon}
-                    </span>
-
-                    {/* Step tag */}
-                    <span
-                      className={`absolute -bottom-5 left-1/2 -translate-x-1/2 text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-full whitespace-nowrap shadow-xs transition-all ${
-                        isActive
-                          ? 'bg-stone-900 text-white border border-stone-700'
-                          : 'bg-stone-900/70 text-stone-300 opacity-0 group-hover:opacity-100'
-                      }`}
-                    >
-                      {st.stepNum}
+                      {st.id === 'farm' && <Leaf className="w-3.5 h-3.5 text-emerald-400" />}
+                      {st.id === 'truck' && <Truck className="w-3.5 h-3.5 text-amber-400" />}
+                      {st.id === 'kitchen' && <Building2 className="w-3.5 h-3.5 text-sky-400" />}
                     </span>
                   </button>
                 );
@@ -335,105 +328,49 @@ export const SupplyChain3DHero: React.FC = () => {
             </div>
           </div>
 
-          {/* 3. STEPPER PROGRESS TABS (PETANI -> KURIR/PENGEPUL -> DAPUR/LAB) */}
-          <div className="grid grid-cols-3 gap-2 w-full mt-1 mb-3">
-            {STAGES.map((st) => {
-              const isActive = st.id === activeStepId;
-              return (
-                <button
-                  key={st.id}
-                  onClick={() => {
-                    setActiveStepId(st.id);
-                    setIsPlaying(false);
-                  }}
-                  className={`p-2.5 rounded-2xl border text-left transition-all duration-300 ${
-                    isActive
-                      ? 'bg-stone-900 text-white border-emerald-500 shadow-md shadow-emerald-950/20'
-                      : 'bg-white/80 hover:bg-white text-stone-700 border-stone-200/90'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span
-                      className={`text-[9px] font-mono font-extrabold ${
-                        isActive ? 'text-emerald-400' : 'text-stone-400'
-                      }`}
-                    >
-                      TAHAP {st.stepNum}
-                    </span>
-                    <span
-                      className={`w-2 h-2 rounded-full ${
-                        isActive ? 'bg-emerald-400 animate-pulse' : 'bg-stone-300'
-                      }`}
-                    />
-                  </div>
-                  <p className="text-xs font-bold truncate leading-tight">{st.title}</p>
-                  <span
-                    className={`text-[10px] font-mono block truncate mt-0.5 ${
-                      isActive ? 'text-stone-300' : 'text-stone-500'
-                    }`}
-                  >
-                    {st.metricValue}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* 4. CURRENT ACTIVE STEP DETAIL CARD (CLEAN & INFORMATIVE) */}
-          <div className="w-full bg-white/95 backdrop-blur-xl border border-stone-200/90 rounded-2xl p-4 shadow-card text-stone-900 transition-all duration-300">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-stone-100">
+          {/* BOTTOM COMPACT FLOATING GLASS HUD CAPSULE (DIRECTLY INTEGRATED) */}
+          <div className="relative z-20 bg-stone-950/90 backdrop-blur-xl border border-stone-700/80 rounded-2xl p-3 shadow-xl transition-all duration-300">
+            <div className="flex items-center justify-between pb-2 border-b border-stone-800">
               <div className="flex items-center gap-2">
-                <span className="p-1.5 rounded-xl bg-stone-100 text-stone-900">
-                  {currentStep.icon}
+                <span
+                  className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border ${currentStage.badgeColor}`}
+                >
+                  {currentStage.badge}
                 </span>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono font-bold text-stone-500 tracking-wider">
-                      {currentStep.role}
-                    </span>
-                    <span
-                      className={`text-[10px] font-mono font-bold px-2 py-0.2 rounded-full border ${currentStep.badgeColor}`}
-                    >
-                      {currentStep.badge}
-                    </span>
-                  </div>
-                  <h4 className="text-sm font-bold font-heading text-stone-950">
-                    {currentStep.title}
-                  </h4>
-                </div>
+                <span className="text-xs font-bold text-stone-100 font-heading">
+                  {currentStage.title}
+                </span>
               </div>
 
               <Link
                 to={
-                  currentStep.id === 'farm'
+                  currentStage.id === 'farm'
                     ? '/kalkulator'
-                    : currentStep.id === 'truck'
+                    : currentStage.id === 'truck'
                     ? '/trace/ORV-20260920-DPR01-0001'
                     : '/trace/ORV-20260920-DPR01-0001'
                 }
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 hover:text-emerald-950 self-start sm:self-auto"
+                className="text-[11px] font-mono text-emerald-400 hover:text-emerald-300 flex items-center gap-1 font-semibold"
               >
-                <span>Lihat Alur</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <span>Detail</span>
+                <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 items-center">
-              <p className="text-xs text-stone-600 leading-relaxed">
-                {currentStep.summary}
+            <div className="flex items-center justify-between pt-2 text-xs">
+              <p className="text-[11px] text-stone-300 leading-snug max-w-[58%]">
+                {currentStage.summary}
               </p>
 
-              <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-200/60 flex items-center justify-between">
-                <div>
-                  <span className="text-[10px] font-mono text-stone-500 uppercase block">
-                    {currentStep.metricLabel}
-                  </span>
-                  <span className="text-sm font-mono font-bold text-emerald-900">
-                    {currentStep.metricValue}
-                  </span>
-                </div>
-                <span className="text-[11px] font-mono text-stone-500 text-right">
-                  {currentStep.metricSub}
+              <div className="p-2 rounded-xl bg-stone-900 border border-stone-800 text-right">
+                <span className="text-[9px] font-mono text-stone-400 uppercase block">
+                  {currentStage.statLabel}
+                </span>
+                <span className="text-xs font-mono font-bold text-emerald-400 block">
+                  {currentStage.statValue}
+                </span>
+                <span className="text-[9px] font-mono text-stone-400 block">
+                  {currentStage.statSub}
                 </span>
               </div>
             </div>
@@ -441,9 +378,9 @@ export const SupplyChain3DHero: React.FC = () => {
         </div>
       )}
 
-      {/* 5. VIEW 2: LIVE MATCHING ENGINE ALGORITHM DATA CARD */}
+      {/* 3. VIEW 2: LIVE MATCHING ENGINE ALGORITHM DATA CARD */}
       {activeTab === 'engine' && (
-        <div className="w-full max-w-md bg-stone-950/90 text-white rounded-3xl border border-white/15 p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden text-left animate-in fade-in duration-300">
+        <div className="w-full max-w-lg bg-stone-950/90 text-white rounded-3xl border border-white/15 p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden text-left animate-in fade-in duration-300">
           <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-bl-full -z-0 opacity-80" />
 
           <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-4 mb-4">
