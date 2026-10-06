@@ -3,7 +3,6 @@ import {
   Sparkles,
   Lock,
   Building2,
-  CheckCircle2,
   TrendingUp,
   Truck,
   Leaf,
@@ -11,7 +10,10 @@ import {
   Play,
   Pause,
   Compass,
+  User,
+  QrCode,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface Hotspot {
   id: 'farm' | 'truck' | 'kitchen';
@@ -20,7 +22,7 @@ interface Hotspot {
   badge: string;
   badgeColor: string;
   desc: string;
-  coords: { x: number; y: number }; // percentage position on image
+  coords: { x: number; y: number };
   details: { label: string; value: string }[];
 }
 
@@ -71,6 +73,7 @@ const HOTSPOTS: Hotspot[] = [
 
 export const SupplyChain3DHero: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'3d' | 'engine'>('3d');
+  const [modelMode, setModelMode] = useState<'character' | 'diorama'>('character');
   const [activeHotspot, setActiveHotspot] = useState<Hotspot | null>(HOTSPOTS[0]);
   const [showHotspots, setShowHotspots] = useState(true);
   const [isPlayingSimulation, setIsPlayingSimulation] = useState(true);
@@ -119,10 +122,9 @@ export const SupplyChain3DHero: React.FC = () => {
     if (isDragging) {
       const newX = e.clientX - startDragPos.current.x;
       const newY = e.clientY - startDragPos.current.y;
-      // Clamp drag rotation angles (-24 to +24 deg)
       setDragOffset({
-        x: Math.max(-24, Math.min(24, newX * 0.15)),
-        y: Math.max(-18, Math.min(18, newY * 0.15)),
+        x: Math.max(-28, Math.min(28, newX * 0.16)),
+        y: Math.max(-20, Math.min(20, newY * 0.16)),
       });
       return;
     }
@@ -135,8 +137,8 @@ export const SupplyChain3DHero: React.FC = () => {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const rotateX = -((y - centerY) / centerY) * 10;
-    const rotateY = ((x - centerX) / centerX) * 12;
+    const rotateX = -((y - centerY) / centerY) * 11;
+    const rotateY = ((x - centerX) / centerX) * 13;
 
     const glareX = (x / rect.width) * 100;
     const glareY = (y / rect.height) * 100;
@@ -165,15 +167,14 @@ export const SupplyChain3DHero: React.FC = () => {
     });
   };
 
-  // Reset angle to default
   const handleResetOrbit = (e: React.MouseEvent) => {
     e.stopPropagation();
     setDragOffset({ x: 0, y: 0 });
   };
 
-  // Automated cinematic simulation flow (Living video simulation)
+  // Automated cinematic simulation flow
   useEffect(() => {
-    if (!isPlayingSimulation) return;
+    if (!isPlayingSimulation || modelMode !== 'diorama') return;
     const interval = setInterval(() => {
       setActiveHotspot((prev) => {
         if (!prev) return HOTSPOTS[0];
@@ -184,32 +185,48 @@ export const SupplyChain3DHero: React.FC = () => {
     }, 4200);
 
     return () => clearInterval(interval);
-  }, [isPlayingSimulation]);
+  }, [isPlayingSimulation, modelMode]);
 
-  // Scroll camera calculations
   const scrollTiltX = Math.min((scrollYOffset / 500) * 8, 8);
   const scrollTranslateY = Math.min((scrollYOffset / 500) * 22, 22);
 
-  // Combined rotation (Tilt + Drag + Scroll)
   const finalRotateX = tilt.rotateX - dragOffset.y - scrollTiltX;
   const finalRotateY = tilt.rotateY + dragOffset.x;
 
   return (
     <div className="w-full max-w-lg lg:max-w-none flex flex-col items-center select-none">
-      {/* Top Controls Bar: Tab Switcher & Video Simulation Controls */}
+      {/* Top Controls Bar: Model Switcher & Simulation Controls */}
       <div className="flex flex-wrap items-center justify-between w-full max-w-md mb-3 px-1 gap-2">
-        <div className="inline-flex p-1 bg-stone-900/60 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xs">
+        <div className="inline-flex p-1 bg-stone-900/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xs">
           <button
             type="button"
-            onClick={() => setActiveTab('3d')}
+            onClick={() => {
+              setActiveTab('3d');
+              setModelMode('character');
+            }}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              activeTab === '3d'
+              activeTab === '3d' && modelMode === 'character'
+                ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40 shadow-xs'
+                : 'text-stone-400 hover:text-white'
+            }`}
+          >
+            <User className="w-3.5 h-3.5 text-emerald-400" />
+            <span>3D Avatar</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab('3d');
+              setModelMode('diorama');
+            }}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              activeTab === '3d' && modelMode === 'diorama'
                 ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40 shadow-xs'
                 : 'text-stone-400 hover:text-white'
             }`}
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>3D Interactive Orbit</span>
+            <span>3D Diorama</span>
           </button>
           <button
             type="button"
@@ -221,33 +238,35 @@ export const SupplyChain3DHero: React.FC = () => {
             }`}
           >
             <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Matching Engine</span>
+            <span>Engine</span>
           </button>
         </div>
 
         {activeTab === '3d' && (
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setIsPlayingSimulation(!isPlayingSimulation)}
-              className={`text-[11px] font-mono flex items-center gap-1.5 font-semibold px-2.5 py-1.5 rounded-xl border transition-all ${
-                isPlayingSimulation
-                  ? 'bg-emerald-900 text-white border-emerald-700 shadow-xs'
-                  : 'bg-stone-900/70 text-stone-300 border-white/10 hover:bg-stone-800'
-              }`}
-            >
-              {isPlayingSimulation ? (
-                <>
-                  <Pause className="w-3 h-3 text-emerald-300" />
-                  <span>Jeda</span>
-                </>
-              ) : (
-                <>
-                  <Play className="w-3 h-3 text-amber-400 fill-amber-400" />
-                  <span>Putar</span>
-                </>
-              )}
-            </button>
+            {modelMode === 'diorama' && (
+              <button
+                type="button"
+                onClick={() => setIsPlayingSimulation(!isPlayingSimulation)}
+                className={`text-[11px] font-mono flex items-center gap-1.5 font-semibold px-2.5 py-1.5 rounded-xl border transition-all ${
+                  isPlayingSimulation
+                    ? 'bg-emerald-900 text-white border-emerald-700 shadow-xs'
+                    : 'bg-stone-900/70 text-stone-300 border-white/10 hover:bg-stone-800'
+                }`}
+              >
+                {isPlayingSimulation ? (
+                  <>
+                    <Pause className="w-3 h-3 text-emerald-300" />
+                    <span>Jeda</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-3 h-3 text-amber-400 fill-amber-400" />
+                    <span>Putar</span>
+                  </>
+                )}
+              </button>
+            )}
 
             {dragOffset.x !== 0 || dragOffset.y !== 0 ? (
               <button
@@ -261,21 +280,28 @@ export const SupplyChain3DHero: React.FC = () => {
               </button>
             ) : null}
 
-            <button
-              type="button"
-              onClick={() => setShowHotspots(!showHotspots)}
-              className="text-[11px] font-mono text-stone-300 hover:text-white flex items-center gap-1 font-semibold p-2 rounded-xl bg-stone-900/60 border border-white/10 transition-colors"
-              title="Toggle Hotspot Pins"
-            >
-              <Eye className="w-3 h-3 text-emerald-400" />
-            </button>
+            {modelMode === 'diorama' && (
+              <button
+                type="button"
+                onClick={() => setShowHotspots(!showHotspots)}
+                className="text-[11px] font-mono text-stone-300 hover:text-white flex items-center gap-1 font-semibold p-2 rounded-xl bg-stone-900/60 border border-white/10 transition-colors"
+                title="Toggle Hotspot Pins"
+              >
+                <Eye className="w-3 h-3 text-emerald-400" />
+              </button>
+            )}
           </div>
         )}
       </div>
 
-      {/* VIEW 1: 3D LIVING VIDEO & ISOMETRIC DIORAMA SHOWCASE */}
+      {/* VIEW 1: 3D LIVING STAGE (Moncy.dev Inspired Stage with Lighting Circles) */}
       {activeTab === '3d' && (
         <div className="w-full relative perspective-1200">
+          {/* Moncy.dev Background Orbit Circles (.landing-circle1 & .landing-circle2) */}
+          <div className="absolute -top-10 -left-10 w-72 h-72 rounded-full bg-emerald-500/25 blur-3xl pointer-events-none animate-pulse" />
+          <div className="absolute -bottom-10 -right-10 w-64 h-64 rounded-full bg-amber-500/20 blur-3xl pointer-events-none animate-pulse" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-teal-400/10 blur-2xl pointer-events-none" />
+
           <div
             ref={containerRef}
             onMouseDown={handleMouseDown}
@@ -303,215 +329,160 @@ export const SupplyChain3DHero: React.FC = () => {
               }}
             />
 
-            {/* Sweep Sunbeam Light (Ambient Cinematic Video Effect) */}
+            {/* Sweep Sunbeam Light */}
             <div className="absolute inset-0 w-[40%] h-full bg-gradient-to-r from-transparent via-amber-200/20 to-transparent pointer-events-none z-20 animate-sunbeam-sweep" />
 
-            {/* Base 3D Render Image with Continuous Ken Burns Camera Panning */}
-            <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-900">
-              <img
-                src="/images/orvana-3d-diorama.jpg"
-                alt="ORVANA 3D Supply Chain Isometric Diorama"
-                className="w-full h-full object-cover object-center animate-ken-burns transform-gpu pointer-events-none"
-                loading="eager"
-              />
+            {/* Sci-Fi Tech L-Corners (Moncy.dev aesthetic) */}
+            <div className="absolute top-3 left-3 w-3 h-3 border-t-2 border-l-2 border-emerald-400/80 pointer-events-none z-30" />
+            <div className="absolute top-3 right-3 w-3 h-3 border-t-2 border-r-2 border-emerald-400/80 pointer-events-none z-30" />
+            <div className="absolute bottom-3 left-3 w-3 h-3 border-b-2 border-l-2 border-emerald-400/80 pointer-events-none z-30" />
+            <div className="absolute bottom-3 right-3 w-3 h-3 border-b-2 border-r-2 border-emerald-400/80 pointer-events-none z-30" />
 
-              {/* Animated Glowing Laser Route (Supply Chain Path from Farm -> Truck -> Kitchen) */}
-              <svg
-                className="absolute inset-0 w-full h-full pointer-events-none z-10"
-                viewBox="0 0 100 100"
-                preserveAspectRatio="none"
-              >
-                <defs>
-                  <linearGradient id="laserGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#34D399" stopOpacity="0.9" />
-                    <stop offset="50%" stopColor="#FBBF24" stopOpacity="0.9" />
-                    <stop offset="100%" stopColor="#38BDF8" stopOpacity="0.9" />
-                  </linearGradient>
-                  <filter id="laserGlow">
-                    <feGaussianBlur stdDeviation="1" result="coloredBlur" />
-                    <feMerge>
-                      <feMergeNode in="coloredBlur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </defs>
+            {/* SUB-VIEW A: 3D CHARACTER AVATAR (MONCY.DEV STYLE) */}
+            {modelMode === 'character' && (
+              <div className="relative aspect-square w-full overflow-hidden bg-stone-950 flex items-center justify-center">
+                {/* Character Rim-Lighting Circle */}
+                <div className="absolute w-72 h-72 rounded-full bg-emerald-400/20 blur-2xl transform scale-110 pointer-events-none" />
 
-                <path
-                  d="M 26 40 Q 38 48, 48 56 T 74 36"
-                  fill="none"
-                  stroke="url(#laserGrad)"
-                  strokeWidth="0.8"
-                  strokeDasharray="3 3"
-                  className="animate-laser-flow"
-                  filter="url(#laserGlow)"
+                <img
+                  src="/images/orvana-3d-character.jpg"
+                  alt="ORVANA 3D Agri-Tech Inspector Avatar"
+                  className="w-full h-full object-cover object-center animate-float-slow transform-gpu pointer-events-none select-none"
+                  loading="eager"
                 />
-              </svg>
 
-              {/* Rising Agritech Particles (Kunang-kunang / Pollen Desa) */}
-              <div className="absolute bottom-16 left-28 w-1.5 h-1.5 rounded-full bg-emerald-400/80 shadow-[0_0_8px_#34d399] animate-particle-rise pointer-events-none z-10" />
-              <div
-                className="absolute bottom-20 left-48 w-2 h-2 rounded-full bg-amber-400/80 shadow-[0_0_10px_#fbbf24] animate-particle-rise pointer-events-none z-10"
-                style={{ animationDelay: '1.2s' }}
-              />
-              <div
-                className="absolute bottom-28 right-24 w-1.5 h-1.5 rounded-full bg-sky-400/80 shadow-[0_0_8px_#38bdf8] animate-particle-rise pointer-events-none z-10"
-                style={{ animationDelay: '2.1s' }}
-              />
-
-              {/* Subtle Ambient Vignette */}
-              <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-transparent to-stone-950/30 pointer-events-none" />
-
-              {/* Top Live Video HUD Pill (Moncy.dev style) */}
-              <div className="absolute top-3.5 left-3.5 z-20 flex items-center gap-2 bg-stone-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15 text-[11px] font-mono shadow-lg">
-                <span className="flex h-2 w-2 relative">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <span className="text-emerald-400 font-bold uppercase tracking-wide">
-                  {isDragging ? 'DRAGGING 3D ORBIT' : isPlayingSimulation ? '3D LIVING SIMULATION' : 'ORBIT PAUSED'}
-                </span>
-                <span className="text-stone-500">•</span>
-                <span className="text-stone-300 text-[10px]">Klik & Drag untuk Putar</span>
-              </div>
-
-              {/* Interactive AR Hotspots */}
-              {showHotspots &&
-                HOTSPOTS.map((hotspot) => {
-                  const isSelected = activeHotspot?.id === hotspot.id;
-                  return (
-                    <div
-                      key={hotspot.id}
-                      style={{
-                        top: `${hotspot.coords.y}%`,
-                        left: `${hotspot.coords.x}%`,
-                      }}
-                      className="absolute z-20 -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
-                    >
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setActiveHotspot(hotspot);
-                          setIsPlayingSimulation(false);
-                        }}
-                        className="relative group/pin p-2 focus:outline-none"
-                        aria-label={hotspot.title}
-                      >
-                        <span
-                          className={`absolute inset-0 rounded-full animate-radar-ring ${
-                            hotspot.id === 'farm'
-                              ? 'bg-emerald-400'
-                              : hotspot.id === 'truck'
-                              ? 'bg-amber-400'
-                              : 'bg-sky-400'
-                          }`}
-                        />
-                        <span
-                          className={`relative flex items-center justify-center w-8 h-8 rounded-full shadow-lg border-2 transition-transform duration-200 ${
-                            isSelected ? 'scale-125 ring-4 ring-white/50' : 'hover:scale-110'
-                          } ${
-                            hotspot.id === 'farm'
-                              ? 'bg-emerald-600 border-white text-white'
-                              : hotspot.id === 'truck'
-                              ? 'bg-amber-500 border-white text-white'
-                              : 'bg-sky-600 border-white text-white'
-                          }`}
-                        >
-                          {hotspot.id === 'farm' && <Leaf className="w-4 h-4" />}
-                          {hotspot.id === 'truck' && <Truck className="w-4 h-4" />}
-                          {hotspot.id === 'kitchen' && <Building2 className="w-4 h-4" />}
-                        </span>
-                      </button>
-                    </div>
-                  );
-                })}
-
-              {/* Floating Mini Escrow HUD Pill Bottom Left */}
-              <div
-                style={{
-                  transform: `translateY(${-scrollYOffset * 0.05}px)`,
-                }}
-                className="absolute bottom-3 left-3 z-20 hidden sm:flex items-center gap-2 bg-stone-900/85 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/10 text-[10.5px] font-mono shadow-xl animate-float-slow transition-transform"
-              >
-                <Lock className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-stone-300">Escrow Protected:</span>
-                <span className="text-emerald-400 font-bold">Rp 537.500 [SAFE]</span>
-              </div>
-
-              {/* Floating Mini QR Batch HUD Pill Bottom Right */}
-              <div
-                style={{
-                  transform: `translateY(${-scrollYOffset * 0.07}px)`,
-                }}
-                className="absolute bottom-3 right-3 z-20 hidden sm:flex items-center gap-2 bg-stone-900/85 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/10 text-[10.5px] font-mono shadow-xl animate-float-reverse transition-transform"
-              >
-                <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
-                <span className="text-stone-300">Batch:</span>
-                <span className="text-amber-300 font-bold">#ORV-20260920</span>
-              </div>
-            </div>
-
-            {/* Bottom Interactive Inspection Detail Card & Simulation Timeline */}
-            {activeHotspot && (
-              <div className="p-4 bg-stone-950/95 backdrop-blur-xl border-t border-white/10 text-left relative z-20">
-                {/* Simulation Timeline Progress Bar */}
-                <div className="grid grid-cols-3 gap-1.5 mb-2.5">
-                  {HOTSPOTS.map((h) => {
-                    const isActive = activeHotspot.id === h.id;
-                    return (
-                      <button
-                        key={h.id}
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setActiveHotspot(h);
-                          setIsPlayingSimulation(false);
-                        }}
-                        className={`h-1.5 rounded-full transition-all ${
-                          isActive
-                            ? 'bg-amber-400 shadow-[0_0_8px_#fbbf24]'
-                            : 'bg-stone-800 hover:bg-stone-700'
-                        }`}
-                        title={h.title}
-                      />
-                    );
-                  })}
+                {/* Top Badge: Inspector Online */}
+                <div className="absolute top-4 left-4 z-20 flex items-center gap-2 bg-stone-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-emerald-500/40 text-[11px] font-mono shadow-lg">
+                  <span className="flex h-2 w-2 relative">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  <span className="text-emerald-400 font-bold uppercase tracking-wide">
+                    {isDragging ? 'ROTATING 3D AVATAR' : '3D AVATAR ACTIVE'}
+                  </span>
+                  <span className="text-stone-500">•</span>
+                  <span className="text-stone-300 text-[10px]">Klik & Drag untuk Orbit</span>
                 </div>
 
-                <div className="flex items-center justify-between gap-2 mb-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 font-bold">
-                      {activeHotspot.category}
-                    </span>
-                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${activeHotspot.badgeColor}`}>
-                      {activeHotspot.badge}
-                    </span>
+                {/* Holographic Tablet Badge Link */}
+                <Link
+                  to="/trace/ORV-20260920-DPR01-0001"
+                  className="absolute bottom-4 left-4 right-4 z-20 bg-stone-900/90 backdrop-blur-xl p-3 rounded-2xl border border-emerald-500/40 hover:border-emerald-400 transition-all flex items-center justify-between shadow-2xl group/link"
+                >
+                  <div className="flex items-center gap-2.5 truncate text-left">
+                    <div className="p-2 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400">
+                      <QrCode className="w-4 h-4" />
+                    </div>
+                    <div className="truncate">
+                      <span className="text-[10px] font-mono text-emerald-400 block uppercase font-bold">
+                        Hologram QR Batch Terverifikasi
+                      </span>
+                      <span className="text-xs font-mono font-bold text-white group-hover/link:text-amber-400 transition-colors">
+                        #ORV-20260920-DPR01
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-[10px] font-mono text-stone-500">
-                    Fase {HOTSPOTS.findIndex((h) => h.id === activeHotspot.id) + 1} / 3
+                  <span className="text-[10px] font-mono bg-emerald-500 text-stone-950 font-extrabold px-2.5 py-1 rounded-lg">
+                    SCAN PASS ➔
+                  </span>
+                </Link>
+              </div>
+            )}
+
+            {/* SUB-VIEW B: 3D DIORAMA ISLAND */}
+            {modelMode === 'diorama' && (
+              <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-900">
+                <img
+                  src="/images/orvana-3d-diorama.jpg"
+                  alt="ORVANA 3D Supply Chain Isometric Diorama"
+                  className="w-full h-full object-cover object-center animate-ken-burns transform-gpu pointer-events-none"
+                  loading="eager"
+                />
+
+                <svg
+                  className="absolute inset-0 w-full h-full pointer-events-none z-10"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                >
+                  <defs>
+                    <linearGradient id="laserGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#34D399" stopOpacity="0.9" />
+                      <stop offset="50%" stopColor="#FBBF24" stopOpacity="0.9" />
+                      <stop offset="100%" stopColor="#38BDF8" stopOpacity="0.9" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M 26 40 Q 38 48, 48 56 T 74 36"
+                    fill="none"
+                    stroke="url(#laserGrad)"
+                    strokeWidth="0.8"
+                    strokeDasharray="3 3"
+                    className="animate-laser-flow"
+                  />
+                </svg>
+
+                {/* Top Live Video HUD Pill */}
+                <div className="absolute top-3.5 left-3.5 z-20 flex items-center gap-2 bg-stone-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15 text-[11px] font-mono shadow-lg">
+                  <span className="flex h-2 w-2 relative">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  <span className="text-emerald-400 font-bold uppercase tracking-wide">
+                    {isDragging ? 'DRAGGING 3D ORBIT' : isPlayingSimulation ? '3D LIVING SIMULATION' : 'ORBIT PAUSED'}
                   </span>
                 </div>
 
-                <h4 className="font-serif font-bold text-base text-white flex items-center gap-1.5">
-                  {activeHotspot.title}
-                </h4>
-                <p className="text-stone-300 text-xs mt-1 leading-relaxed">
-                  {activeHotspot.desc}
-                </p>
-
-                {/* 3 Metrics Grid */}
-                <div className="grid grid-cols-3 gap-2 mt-3 pt-2.5 border-t border-white/10">
-                  {activeHotspot.details.map((item, idx) => (
-                    <div key={idx} className="bg-stone-900/80 p-2 rounded-xl border border-white/5">
-                      <span className="text-[10px] text-stone-400 block truncate font-sans">
-                        {item.label}
-                      </span>
-                      <span className="text-xs font-mono font-bold text-amber-400 block truncate mt-0.5">
-                        {item.value}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                {/* Interactive Hotspots */}
+                {showHotspots &&
+                  HOTSPOTS.map((hotspot) => {
+                    const isSelected = activeHotspot?.id === hotspot.id;
+                    return (
+                      <div
+                        key={hotspot.id}
+                        style={{
+                          top: `${hotspot.coords.y}%`,
+                          left: `${hotspot.coords.x}%`,
+                        }}
+                        className="absolute z-20 -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
+                      >
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveHotspot(hotspot);
+                            setIsPlayingSimulation(false);
+                          }}
+                          className="relative group/pin p-2 focus:outline-none"
+                          aria-label={hotspot.title}
+                        >
+                          <span
+                            className={`absolute inset-0 rounded-full animate-radar-ring ${
+                              hotspot.id === 'farm'
+                                ? 'bg-emerald-400'
+                                : hotspot.id === 'truck'
+                                ? 'bg-amber-400'
+                                : 'bg-sky-400'
+                            }`}
+                          />
+                          <span
+                            className={`relative flex items-center justify-center w-8 h-8 rounded-full shadow-lg border-2 transition-transform duration-200 ${
+                              isSelected ? 'scale-125 ring-4 ring-white/50' : 'hover:scale-110'
+                            } ${
+                              hotspot.id === 'farm'
+                                ? 'bg-emerald-600 border-white text-white'
+                                : hotspot.id === 'truck'
+                                ? 'bg-amber-500 border-white text-white'
+                                : 'bg-sky-600 border-white text-white'
+                            }`}
+                          >
+                            {hotspot.id === 'farm' && <Leaf className="w-4 h-4" />}
+                            {hotspot.id === 'truck' && <Truck className="w-4 h-4" />}
+                            {hotspot.id === 'kitchen' && <Building2 className="w-4 h-4" />}
+                          </span>
+                        </button>
+                      </div>
+                    );
+                  })}
               </div>
             )}
           </div>
@@ -539,7 +510,6 @@ export const SupplyChain3DHero: React.FC = () => {
           </div>
 
           <div className="relative z-10 space-y-3.5">
-            {/* Permintaan Dapur */}
             <div className="p-3.5 bg-stone-900/80 rounded-2xl border border-white/10">
               <div className="flex justify-between items-center text-xs">
                 <span className="font-semibold text-stone-300 flex items-center gap-1.5">
@@ -556,7 +526,6 @@ export const SupplyChain3DHero: React.FC = () => {
               </div>
             </div>
 
-            {/* Alokasi Multi-Pemasok */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-[11px] text-stone-400 font-mono">
                 <span>Alokasi Multi-Petani:</span>

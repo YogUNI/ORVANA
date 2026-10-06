@@ -11,6 +11,8 @@ import { SupplyChain3DHero } from '../features/landing/SupplyChain3DHero';
 import { ScrollReveal } from '../components/ui/ScrollReveal';
 import { InteractiveParticleCanvas } from '../features/landing/InteractiveParticleCanvas';
 import { InteractiveSpotlightCursor } from '../features/landing/InteractiveSpotlightCursor';
+import { MoncyCustomCursor } from '../features/landing/MoncyCustomCursor';
+import { TechBalls } from '../features/landing/TechBalls';
 import {
   ShieldCheck,
   Truck,
@@ -216,9 +218,10 @@ export const LandingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-stone-900 selection:bg-emerald-800/20 selection:text-emerald-950 font-sans antialiased relative overflow-x-hidden">
-      {/* Moncy.dev Style: Interactive Background Particle Field & Mouse Spotlight Follower */}
+      {/* Moncy.dev Style: Interactive Background Particle Field, Mouse Spotlight Follower, and Custom Cursor */}
       <InteractiveParticleCanvas />
       <InteractiveSpotlightCursor />
+      <MoncyCustomCursor />
 
       {/* FLOATING GLASS DOCK / ISLAND NAVBAR */}
       <header className="sticky top-0 z-40 w-full px-4 sm:px-6 lg:px-8 py-3 transition-all duration-300 pointer-events-none">
@@ -463,8 +466,8 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      
-
+      {/* 7b. INTERACTIVE 3D COMMODITY TECHBALLS PHYSICS (MONCY.DEV PHYSICS ENGINE) */}
+      <TechBalls />
 
       <ScrollReveal animation="fade-up" delayMs={0}>
         {/* 8. ALUR KERJA 4 PERAN LAPANGAN (INTERACTIVE ROLE ECOSYSTEM) */}
