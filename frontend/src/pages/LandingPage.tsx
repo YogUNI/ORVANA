@@ -7,6 +7,7 @@ import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Logo } from '../components/ui/Logo';
+import { SupplyChain3DHero } from '../features/landing/SupplyChain3DHero';
 import {
   ShieldCheck,
   Truck,
@@ -331,20 +332,20 @@ export const LandingPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             
             {/* Sisi Kiri Hero: Value Proposition & Search Bar */}
-            <div className="lg:col-span-7 space-y-6 text-left">
+            <div className="lg:col-span-6 space-y-6 text-left">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-300/80 text-xs font-bold text-emerald-950 shadow-xs">
                 <Sparkles className="w-3.5 h-3.5 text-amber-600" />
                 <span>Inovasi Rantai Pasok Pangan Bergizi Massal & Mandiri</span>
               </div>
 
-              <h1 className="font-serif text-4xl sm:text-6xl lg:text-[64px] font-bold text-stone-950 tracking-tight leading-[1.08]">
+              <h1 className="font-serif text-4xl sm:text-5xl lg:text-[56px] font-bold text-stone-950 tracking-tight leading-[1.1]">
                 Mencocokkan Menu Dapur dengan <br className="hidden sm:inline" />
                 <span className="text-emerald-900 italic font-medium relative underline decoration-amber-500/80 decoration-wavy decoration-2">
                   Panen Petani Lokal.
                 </span>
               </h1>
 
-              <p className="text-base sm:text-lg text-stone-700 leading-relaxed max-w-2xl">
+              <p className="text-base sm:text-lg text-stone-700 leading-relaxed max-w-xl">
                 Infrastruktur digital berkeadilan yang menghubungkan ribuan porsi gizi harian dengan petani dan nelayan desa: algoritma pencocokan multi-kriteria anti-monopoli (cap 60%), kepastian harga dasar, jaminan dana escrow otomatis, dan paspor ketertelusuran QR publik.
               </p>
 
@@ -407,95 +408,9 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Sisi Kanan Hero: Visual Interactive Matching Engine Card */}
-            <div className="lg:col-span-5 flex justify-center">
-              <div className="w-full max-w-md bg-white rounded-3xl border-2 border-emerald-900/15 p-6 shadow-elevated relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full -z-0 opacity-80" />
-
-                <div className="relative z-10 flex items-center justify-between border-b border-stone-200 pb-4 mb-4">
-                  <div className="flex items-center gap-2.5">
-                    <span className="flex h-2.5 w-2.5 relative">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-600"></span>
-                    </span>
-                    <span className="text-xs font-mono font-bold tracking-tight text-stone-950 uppercase">
-                      Live Matching Engine
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-mono bg-amber-50 text-amber-900 px-2 py-0.5 rounded-full font-bold border border-amber-200">
-                    Algoritma Aktif
-                  </span>
-                </div>
-
-                <div className="relative z-10 space-y-3.5 text-left">
-                  {/* Permintaan Dapur */}
-                  <div className="p-3.5 bg-stone-50 rounded-2xl border border-stone-200">
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="font-semibold text-stone-700 flex items-center gap-1.5">
-                        <Building2 className="w-3.5 h-3.5 text-emerald-800" />
-                        Dapur Gizi Mandiri (DPR01)
-                      </span>
-                      <span className="font-mono text-emerald-900 font-bold">1.000 Porsi</span>
-                    </div>
-                    <div className="mt-2 flex items-baseline justify-between">
-                      <span className="text-sm font-bold text-stone-950 font-serif">Kebutuhan: Bayam Hijau</span>
-                      <span className="text-sm font-mono font-extrabold text-emerald-900 bg-emerald-100 px-2.5 py-0.5 rounded-md">
-                        69,0 kg
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Alokasi Multi-Pemasok */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-[11px] text-stone-500 font-mono">
-                      <span>Alokasi Multi-Petani:</span>
-                      <span>Maks 60% (41,4 kg)</span>
-                    </div>
-
-                    <div className="p-3 bg-emerald-50/70 border border-emerald-200 rounded-xl flex items-center justify-between">
-                      <div>
-                        <div className="text-xs font-bold text-stone-950 flex items-center gap-1.5">
-                          <span>Kelompok Tani Makmur (S1)</span>
-                          <span className="text-[10px] font-mono bg-emerald-200 text-emerald-900 px-1.5 py-0.2 rounded font-bold">Skor 88,97</span>
-                        </div>
-                        <p className="text-[10px] font-mono text-stone-500 mt-0.5">
-                          Radius 6 km • Mutu 88 • Panen H-1
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <span className="font-mono text-xs font-bold text-emerald-950 block">40,0 kg</span>
-                        <span className="text-[10px] text-emerald-800 font-semibold">Rp 320.000</span>
-                      </div>
-                    </div>
-
-                    <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-xl flex items-center justify-between">
-                      <div>
-                        <div className="text-xs font-bold text-stone-950 flex items-center gap-1.5">
-                          <span>Petani Organik Sari (S2)</span>
-                          <span className="text-[10px] font-mono bg-amber-200 text-amber-900 px-1.5 py-0.2 rounded font-bold">Skor 83,60</span>
-                        </div>
-                        <p className="text-[10px] font-mono text-stone-500 mt-0.5">
-                          Radius 14 km • Mutu 80 • Panen Hari-H
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <span className="font-mono text-xs font-bold text-stone-950 block">29,0 kg</span>
-                        <span className="text-[10px] text-amber-800 font-semibold">Rp 217.500</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-2 border-t border-stone-200 flex items-center justify-between text-[11px]">
-                    <span className="text-stone-500 flex items-center gap-1">
-                      <Lock className="w-3.5 h-3.5 text-emerald-700" />
-                      Pencadangan Rekening Escrow:
-                    </span>
-                    <span className="font-mono font-bold text-emerald-900 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300">
-                      Rp 537.500 [HOLD]
-                    </span>
-                  </div>
-                </div>
-              </div>
+            {/* Sisi Kanan Hero: Visual Interactive 3D Supply Chain Showcase & Engine */}
+            <div className="lg:col-span-6 flex justify-center items-center w-full">
+              <SupplyChain3DHero />
             </div>
 
           </div>
