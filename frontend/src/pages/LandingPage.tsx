@@ -23,7 +23,6 @@ import {
   QrCode,
   Check,
   ChevronDown,
-  ArrowUpRight,
   Send,
   Scale,
   Lock,
@@ -99,7 +98,7 @@ export const LandingPage: React.FC = () => {
   }, [hoveredNav, activeSection]);
 
   React.useEffect(() => {
-    const sections = ['dampak', 'keunggulan', 'kalkulator', 'nlp-demo', 'alur', 'faq'];
+    const sections = ['alur', 'kalkulator', 'nlp-demo', 'dampak'];
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setIsScrolled(currentScrollY > 20);
@@ -214,29 +213,7 @@ export const LandingPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-stone-900 selection:bg-emerald-800/20 selection:text-emerald-950 font-sans antialiased relative">
       
-      {/* 1. TOP ANNOUNCEMENT TICKER */}
-      <div className="bg-[#0B1A14] text-white text-[11px] font-mono py-2.5 px-4 border-b border-emerald-950/80">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span className="text-emerald-400 font-bold uppercase tracking-wider">ORVANA PRODUCTION PROTOCOL</span>
-            <span className="text-stone-600 hidden sm:inline">•</span>
-            <span className="text-stone-300">Rantai Pasok Pangan Lokal Dapur Gizi Massal Generasi Emas</span>
-          </div>
-          <Link
-            to="/trace/ORV-20260920-DPR01-0001"
-            className="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold transition-colors group"
-          >
-            <span>Periksa Paspor Digital Batch #ORV-20260920-DPR01-0001</span>
-            <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-          </Link>
-        </div>
-      </div>
-
-      {/* 2. FLOATING GLASS DOCK / ISLAND NAVBAR */}
+      {/* FLOATING GLASS DOCK / ISLAND NAVBAR */}
       <header className="sticky top-0 z-40 w-full px-4 sm:px-6 lg:px-8 py-3 transition-all duration-300 pointer-events-none">
         <div
           className={`max-w-7xl mx-auto rounded-2xl sm:rounded-full px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4 pointer-events-auto transition-all duration-300 ${
@@ -258,13 +235,13 @@ export const LandingPage: React.FC = () => {
             </div>
           </Link>
 
-          {/* Nav Links: Bersih, Tanpa Shape Kotak Ganda, Elegan & Lega */}
+          {/* Nav Links: Ramping, Bersih, Lega dengan highlight pill halus */}
           <nav
             ref={navContainerRef}
             onMouseLeave={() => setHoveredNav(null)}
             className="hidden lg:flex items-center relative text-xs font-medium text-stone-600 px-1 py-1"
           >
-            {/* Soft Organic Floating Highlight Pill (Glides smoothly without heavy contrast box) */}
+            {/* Soft Organic Floating Highlight Pill */}
             <div
               className="absolute rounded-full transition-all duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] pointer-events-none"
               style={{
@@ -279,12 +256,10 @@ export const LandingPage: React.FC = () => {
             />
 
             {[
-              { id: 'dampak', label: 'Buku Besar Dampak' },
-              { id: 'keunggulan', label: 'Nilai Tambah' },
-              { id: 'kalkulator', label: 'Simulasi Kebutuhan' },
+              { id: 'alur', label: 'Alur Kerja' },
+              { id: 'kalkulator', label: 'Kalkulator' },
               { id: 'nlp-demo', label: 'Asisten AI', isAi: true },
-              { id: 'alur', label: 'Alur 4 Peran' },
-              { id: 'faq', label: 'FAQ' },
+              { id: 'dampak', label: 'Dampak' },
             ].map((nav) => {
               const isCurrentActive = activeSection === nav.id;
               const isCurrentHovered = hoveredNav === nav.id;
@@ -317,30 +292,27 @@ export const LandingPage: React.FC = () => {
             })}
           </nav>
 
-          {/* Quick Actions (Cek Batch, Masuk, Daftar) */}
-          <div className="flex items-center gap-2.5 shrink-0">
-            <Link to="/trace" className="hidden sm:block">
-              <span className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-emerald-900 bg-emerald-50 hover:bg-emerald-100/90 px-3 py-2 rounded-xl border border-emerald-200/90 transition-all shadow-2xs">
-                <QrCode className="w-3.5 h-3.5 text-emerald-700" />
-                <span>Cek Batch</span>
-              </span>
+          {/* Quick Actions (Cek Batch, Masuk, Daftar) - Bersih & Rapi */}
+          <div className="flex items-center gap-2 shrink-0">
+            <Link
+              to="/trace"
+              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-900/90 hover:text-emerald-950 px-3 py-1.5 rounded-full hover:bg-emerald-100/60 transition-colors"
+            >
+              <QrCode className="w-3.5 h-3.5 text-emerald-700" />
+              <span>Cek Batch</span>
             </Link>
 
-            <div className="h-5 w-px bg-stone-200 hidden sm:block mx-0.5" />
-
-            <Link to="/login">
-              <button
-                type="button"
-                className="px-3.5 py-2 text-xs font-semibold rounded-xl border border-stone-300 text-stone-800 hover:bg-stone-50 hover:text-stone-950 hover:border-stone-400 transition-all"
-              >
-                Masuk Sistem
-              </button>
+            <Link
+              to="/login"
+              className="text-xs font-semibold text-stone-700 hover:text-stone-950 px-3 py-1.5 rounded-full hover:bg-stone-100 transition-colors"
+            >
+              Masuk
             </Link>
 
             <Link to="/register">
               <button
                 type="button"
-                className="px-4 py-2 text-xs font-semibold rounded-xl bg-emerald-900 hover:bg-emerald-950 text-white shadow-xs hover:shadow-sm transition-all"
+                className="px-4 py-2 text-xs font-semibold rounded-full bg-emerald-900 hover:bg-emerald-950 text-white shadow-xs hover:shadow-sm transition-all active:scale-[0.98]"
               >
                 Daftar Mitra
               </button>
