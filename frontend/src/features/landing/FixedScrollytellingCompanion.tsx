@@ -244,7 +244,7 @@ export const FixedScrollytellingCompanion: React.FC = () => {
 
         {/* REAL-TIME 3D THREE.JS CHARACTER (EYES, HEAD & TORSO TRACK CURSOR 100% IN REAL-TIME) */}
         <div className="relative flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-          <Interactive3DInspectorCanvas size={160} />
+          <Interactive3DInspectorCanvas size={190} />
         </div>
 
         {/* Badge Pill Click Indicator */}

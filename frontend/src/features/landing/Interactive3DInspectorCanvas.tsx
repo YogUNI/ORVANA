@@ -6,7 +6,7 @@ interface Interactive3DInspectorCanvasProps {
 }
 
 export const Interactive3DInspectorCanvas: React.FC<Interactive3DInspectorCanvasProps> = ({
-  size = 170,
+  size = 200,
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
@@ -16,291 +16,321 @@ export const Interactive3DInspectorCanvas: React.FC<Interactive3DInspectorCanvas
 
     // SCENE, CAMERA, RENDERER
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.set(0, 0, 7.5);
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+    // Adjusted camera distance to capture full character with head, arms, and legs
+    camera.position.set(0, 0, 7.8);
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setSize(size, size);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
     mount.appendChild(renderer.domElement);
 
-    // LIGHTING
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+    // STUDIO LIGHTING
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight(0x10b981, 2.8);
-    mainLight.position.set(5, 5, 5);
-    scene.add(mainLight);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.0);
+    keyLight.position.set(4, 5, 5);
+    scene.add(keyLight);
 
-    const rimLight = new THREE.PointLight(0xf59e0b, 2.5, 10);
-    rimLight.position.set(-4, 3, -2);
-    scene.add(rimLight);
+    const emeraldRim = new THREE.PointLight(0x10b981, 3.5, 12);
+    emeraldRim.position.set(-3.5, 2.5, -2);
+    scene.add(emeraldRim);
 
-    const softFillLight = new THREE.PointLight(0x38bdf8, 2.0, 10);
-    softFillLight.position.set(2, -3, 3);
-    scene.add(softFillLight);
+    const warmAccent = new THREE.PointLight(0xf59e0b, 2.0, 10);
+    warmAccent.position.set(3, -2, 2);
+    scene.add(warmAccent);
 
     // ROOT HIERARCHY
     const rootGroup = new THREE.Group();
+    // Center character vertically in camera frame
+    rootGroup.position.y = -0.15;
     scene.add(rootGroup);
 
-    // 1. TORSO / BODY (Vest with badges)
-    const bodyGroup = new THREE.Group();
-    rootGroup.add(bodyGroup);
-
-    // Inner tech hoodie
-    const hoodieGeo = new THREE.CylinderGeometry(0.85, 0.95, 1.4, 32);
-    const hoodieMat = new THREE.MeshStandardMaterial({
-      color: 0x1c1917,
-      roughness: 0.5,
-      metalness: 0.2,
+    // MATERIALS
+    const skinMat = new THREE.MeshStandardMaterial({
+      color: 0xfcc79b,
+      roughness: 0.35,
+      metalness: 0.05,
     });
-    const hoodie = new THREE.Mesh(hoodieGeo, hoodieMat);
-    hoodie.position.y = -0.6;
-    bodyGroup.add(hoodie);
-
-    // Tech vest (Emerald green with orange straps)
-    const vestGeo = new THREE.CylinderGeometry(0.92, 1.0, 1.2, 32);
     const vestMat = new THREE.MeshStandardMaterial({
       color: 0x065f46,
       roughness: 0.3,
-      metalness: 0.4,
+      metalness: 0.2,
     });
-    const vest = new THREE.Mesh(vestGeo, vestMat);
-    vest.position.y = -0.55;
-    bodyGroup.add(vest);
-
-    // Vest zipper / stripe
-    const zipperGeo = new THREE.BoxGeometry(0.12, 1.22, 0.2);
-    const zipperMat = new THREE.MeshStandardMaterial({
+    const darkClothMat = new THREE.MeshStandardMaterial({
+      color: 0x1c1917,
+      roughness: 0.5,
+    });
+    const goldMat = new THREE.MeshStandardMaterial({
       color: 0xf59e0b,
-      emissive: 0xd97706,
-      emissiveIntensity: 0.3,
+      roughness: 0.2,
+      metalness: 0.6,
     });
-    const zipper = new THREE.Mesh(zipperGeo, zipperMat);
-    zipper.position.set(0, -0.55, 0.92);
-    bodyGroup.add(zipper);
+    const hairMat = new THREE.MeshStandardMaterial({
+      color: 0x27170f,
+      roughness: 0.5,
+    });
 
-    // Inspector Chest Badge (Hologram shield)
-    const badgeGeo = new THREE.BoxGeometry(0.3, 0.3, 0.05);
+    // 1. TORSO & BODY
+    const bodyGroup = new THREE.Group();
+    rootGroup.add(bodyGroup);
+
+    // Upper chest/hoodie
+    const torsoGeo = new THREE.CylinderGeometry(0.55, 0.48, 1.1, 24);
+    const torso = new THREE.Mesh(torsoGeo, vestMat);
+    torso.position.y = -0.2;
+    bodyGroup.add(torso);
+
+    // Orange safety vest stripes
+    const stripeGeo = new THREE.BoxGeometry(0.08, 1.05, 0.1);
+    const stripeL = new THREE.Mesh(stripeGeo, goldMat);
+    stripeL.position.set(-0.25, -0.2, 0.5);
+    const stripeR = new THREE.Mesh(stripeGeo, goldMat);
+    stripeR.position.set(0.25, -0.2, 0.5);
+    bodyGroup.add(stripeL, stripeR);
+
+    // Smart Badge on Chest
+    const badgeGeo = new THREE.BoxGeometry(0.2, 0.18, 0.04);
     const badgeMat = new THREE.MeshStandardMaterial({
       color: 0x34d399,
       emissive: 0x10b981,
       emissiveIntensity: 0.8,
     });
-    const chestBadge = new THREE.Mesh(badgeGeo, badgeMat);
-    chestBadge.position.set(0.45, -0.4, 0.93);
-    chestBadge.rotation.y = -0.2;
-    bodyGroup.add(chestBadge);
+    const badge = new THREE.Mesh(badgeGeo, badgeMat);
+    badge.position.set(0.26, -0.05, 0.52);
+    bodyGroup.add(badge);
 
-    // 2. NECK & HEAD GROUP (Can rotate and look at mouse)
+    // 2. LEGS & BOOTS (Punya Kaki yang bergerak saat floating!)
+    const leftLegGroup = new THREE.Group();
+    leftLegGroup.position.set(-0.28, -0.75, 0);
+    const rightLegGroup = new THREE.Group();
+    rightLegGroup.position.set(0.28, -0.75, 0);
+    rootGroup.add(leftLegGroup, rightLegGroup);
+
+    const legGeo = new THREE.CylinderGeometry(0.18, 0.16, 0.9, 16);
+    const leftLeg = new THREE.Mesh(legGeo, darkClothMat);
+    leftLeg.position.y = -0.45;
+    leftLegGroup.add(leftLeg);
+
+    const rightLeg = new THREE.Mesh(legGeo, darkClothMat);
+    rightLeg.position.y = -0.45;
+    rightLegGroup.add(rightLeg);
+
+    // Tech sneakers
+    const bootGeo = new THREE.BoxGeometry(0.26, 0.22, 0.45);
+    const bootMat = new THREE.MeshStandardMaterial({ color: 0x064e3b, roughness: 0.3 });
+    const leftBoot = new THREE.Mesh(bootGeo, bootMat);
+    leftBoot.position.set(0, -0.92, 0.08);
+    leftLegGroup.add(leftBoot);
+
+    const rightBoot = new THREE.Mesh(bootGeo, bootMat);
+    rightBoot.position.set(0, -0.92, 0.08);
+    rightLegGroup.add(rightBoot);
+
+    // 3. ARMS (Tangan Kiri memegang Hologram Tablet, Tangan Kanan bisa melambai/garuk kepala!)
+    const leftArmGroup = new THREE.Group();
+    leftArmGroup.position.set(-0.62, 0.15, 0);
+    bodyGroup.add(leftArmGroup);
+
+    const armGeo = new THREE.CylinderGeometry(0.14, 0.12, 0.8, 16);
+    const leftArm = new THREE.Mesh(armGeo, vestMat);
+    leftArm.position.set(-0.15, -0.3, 0.2);
+    leftArm.rotation.set(0.6, 0, -0.4);
+    leftArmGroup.add(leftArm);
+
+    // Tablet in left hand
+    const tabletGeo = new THREE.BoxGeometry(0.7, 0.5, 0.03);
+    const tabMat = new THREE.MeshStandardMaterial({ color: 0x09090b, roughness: 0.2 });
+    const tablet = new THREE.Mesh(tabletGeo, tabMat);
+    tablet.position.set(-0.35, -0.45, 0.55);
+    tablet.rotation.set(0.4, 0.3, -0.2);
+    leftArmGroup.add(tablet);
+
+    const screenGeo = new THREE.PlaneGeometry(0.64, 0.44);
+    const screenMat = new THREE.MeshBasicMaterial({ color: 0x10b981 });
+    const screen = new THREE.Mesh(screenGeo, screenMat);
+    screen.position.set(-0.35, -0.45, 0.57);
+    screen.rotation.copy(tablet.rotation);
+    leftArmGroup.add(screen);
+
+    // Right Arm (Interactive: bisa melambai ke arah cursor atau garuk kepala!)
+    const rightArmGroup = new THREE.Group();
+    rightArmGroup.position.set(0.62, 0.15, 0);
+    bodyGroup.add(rightArmGroup);
+
+    const rightArm = new THREE.Mesh(armGeo, vestMat);
+    rightArm.position.set(0.12, -0.3, 0.1);
+    rightArm.rotation.set(0.2, 0, 0.2);
+    rightArmGroup.add(rightArm);
+
+    const rightHandGeo = new THREE.SphereGeometry(0.12, 16, 16);
+    const rightHand = new THREE.Mesh(rightHandGeo, skinMat);
+    rightHand.position.set(0.18, -0.7, 0.2);
+    rightArmGroup.add(rightHand);
+
+    // 4. HEAD, EYES & MOUTH (Menoleh langsung ke kursor mouse & mulut bisa berbicara!)
     const headGroup = new THREE.Group();
-    headGroup.position.set(0, 0.4, 0);
+    headGroup.position.set(0, 0.6, 0);
     rootGroup.add(headGroup);
 
-    // Face / Head mesh (Stylized 3D)
-    const headGeo = new THREE.SphereGeometry(0.85, 32, 32);
-    const skinMat = new THREE.MeshStandardMaterial({
-      color: 0xfbd0b0, // warm anime/pixar skin tone
-      roughness: 0.4,
-    });
+    const headGeo = new THREE.SphereGeometry(0.62, 32, 32);
     const head = new THREE.Mesh(headGeo, skinMat);
-    head.scale.set(0.95, 1.05, 0.95);
     headGroup.add(head);
 
-    // Hair (Stylized modern quiff/tuft)
-    const hairGroup = new THREE.Group();
-    const hairMat = new THREE.MeshStandardMaterial({
-      color: 0x3e2723, // deep rich brown hair
-      roughness: 0.6,
-    });
-    const mainHairGeo = new THREE.SphereGeometry(0.9, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.55);
-    const mainHair = new THREE.Mesh(mainHairGeo, hairMat);
-    mainHair.position.set(0, 0.15, -0.05);
-    hairGroup.add(mainHair);
+    // Hair
+    const hairCapGeo = new THREE.SphereGeometry(0.66, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.52);
+    const hairCap = new THREE.Mesh(hairCapGeo, hairMat);
+    hairCap.position.set(0, 0.08, -0.04);
+    headGroup.add(hairCap);
 
-    // Front hair tuft
-    const tuftGeo = new THREE.ConeGeometry(0.35, 0.7, 16);
-    const tuft = new THREE.Mesh(tuftGeo, hairMat);
-    tuft.position.set(0.2, 0.9, 0.5);
-    tuft.rotation.set(-0.4, 0.2, -0.5);
-    hairGroup.add(tuft);
-    headGroup.add(hairGroup);
+    // Cute modern hairstyle bang
+    const bangGeo = new THREE.ConeGeometry(0.26, 0.55, 16);
+    const bang = new THREE.Mesh(bangGeo, hairMat);
+    bang.position.set(0.18, 0.6, 0.38);
+    bang.rotation.set(-0.3, 0.15, -0.4);
+    headGroup.add(bang);
 
-    // Headset / Comm Ear-piece with glowing LED
-    const earComGeo = new THREE.CylinderGeometry(0.2, 0.2, 0.15, 16);
-    const earComMat = new THREE.MeshStandardMaterial({
-      color: 0x0f172a,
-      metalness: 0.8,
-      roughness: 0.2,
-    });
-    const earCom = new THREE.Mesh(earComGeo, earComMat);
-    earCom.position.set(0.88, 0, 0);
-    earCom.rotation.z = Math.PI / 2;
-    headGroup.add(earCom);
+    // Comm headset
+    const headsetGeo = new THREE.CylinderGeometry(0.15, 0.15, 0.1, 16);
+    const headsetMat = new THREE.MeshStandardMaterial({ color: 0x18181b, metalness: 0.8 });
+    const headset = new THREE.Mesh(headsetGeo, headsetMat);
+    headset.position.set(0.64, 0, 0);
+    headset.rotation.z = Math.PI / 2;
+    headGroup.add(headset);
 
-    const ledGeo = new THREE.SphereGeometry(0.06, 16, 16);
+    const headsetLedGeo = new THREE.SphereGeometry(0.05, 12, 12);
     const ledMat = new THREE.MeshBasicMaterial({ color: 0x10b981 });
-    const earLed = new THREE.Mesh(ledGeo, ledMat);
-    earLed.position.set(0.98, 0, 0.05);
-    headGroup.add(earLed);
+    const led = new THREE.Mesh(headsetLedGeo, ledMat);
+    led.position.set(0.7, 0, 0.04);
+    headGroup.add(led);
 
-    // Mic boom
-    const micGeo = new THREE.CylinderGeometry(0.02, 0.02, 0.45);
-    const mic = new THREE.Mesh(micGeo, earComMat);
-    mic.position.set(0.7, -0.15, 0.35);
-    mic.rotation.set(0.8, 0.2, 0.6);
-    headGroup.add(mic);
-
-    // 3. EYES (EYE GROUP WITH PUPILS THAT ACTIVELY TRACK CURSOR)
-    const eyeGroup = new THREE.Group();
-    headGroup.add(eyeGroup);
-
-    const eyeWhiteGeo = new THREE.SphereGeometry(0.18, 16, 16);
+    // 5. EYES & PUPILS
+    const eyeWhiteGeo = new THREE.SphereGeometry(0.14, 16, 16);
     const eyeWhiteMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
 
-    // Left Eye
-    const leftEyeWhite = new THREE.Mesh(eyeWhiteGeo, eyeWhiteMat);
-    leftEyeWhite.position.set(-0.28, 0.08, 0.74);
-    eyeGroup.add(leftEyeWhite);
+    const leftEye = new THREE.Mesh(eyeWhiteGeo, eyeWhiteMat);
+    leftEye.position.set(-0.2, 0.05, 0.54);
+    const rightEye = new THREE.Mesh(eyeWhiteGeo, eyeWhiteMat);
+    rightEye.position.set(0.2, 0.05, 0.54);
+    headGroup.add(leftEye, rightEye);
 
-    // Right Eye
-    const rightEyeWhite = new THREE.Mesh(eyeWhiteGeo, eyeWhiteMat);
-    rightEyeWhite.position.set(0.28, 0.08, 0.74);
-    eyeGroup.add(rightEyeWhite);
+    // Vibrant Glowing Green Pupils
+    const pupilGeo = new THREE.SphereGeometry(0.08, 16, 16);
+    const pupilMat = new THREE.MeshBasicMaterial({ color: 0x059669 });
 
-    // Pupils / Iris (Glowing Emerald Stylized Eyes)
-    const irisGeo = new THREE.SphereGeometry(0.1, 16, 16);
-    const irisMat = new THREE.MeshStandardMaterial({
-      color: 0x047857,
-      emissive: 0x10b981,
-      emissiveIntensity: 0.5,
-    });
+    const leftPupil = new THREE.Mesh(pupilGeo, pupilMat);
+    leftPupil.position.set(-0.2, 0.05, 0.62);
+    const rightPupil = new THREE.Mesh(pupilGeo, pupilMat);
+    rightPupil.position.set(0.2, 0.05, 0.62);
+    headGroup.add(leftPupil, rightPupil);
 
-    const leftIris = new THREE.Mesh(irisGeo, irisMat);
-    leftIris.position.set(-0.28, 0.08, 0.84);
-    eyeGroup.add(leftIris);
+    // Specular Highlight Dots
+    const shineGeo = new THREE.SphereGeometry(0.028, 8, 8);
+    const shineMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const leftShine = new THREE.Mesh(shineGeo, shineMat);
+    leftShine.position.set(-0.17, 0.08, 0.67);
+    const rightShine = new THREE.Mesh(shineGeo, shineMat);
+    rightShine.position.set(0.23, 0.08, 0.67);
+    headGroup.add(leftShine, rightShine);
 
-    const rightIris = new THREE.Mesh(irisGeo, irisMat);
-    rightIris.position.set(0.28, 0.08, 0.84);
-    eyeGroup.add(rightIris);
+    // 6. MOUTH (Talking & Smiling Animation)
+    const mouthGeo = new THREE.TorusGeometry(0.09, 0.022, 12, 16, Math.PI);
+    const mouthMat = new THREE.MeshBasicMaterial({ color: 0x9f1239 });
+    const mouth = new THREE.Mesh(mouthGeo, mouthMat);
+    mouth.position.set(0, -0.22, 0.58);
+    mouth.rotation.set(0.2, 0, Math.PI);
+    headGroup.add(mouth);
 
-    // Cute Eye Specular Highlights
-    const highlightGeo = new THREE.SphereGeometry(0.035, 8, 8);
-    const highlightMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    const leftHighlight = new THREE.Mesh(highlightGeo, highlightMat);
-    leftHighlight.position.set(-0.25, 0.12, 0.91);
-    eyeGroup.add(leftHighlight);
-
-    const rightHighlight = new THREE.Mesh(highlightGeo, highlightMat);
-    rightHighlight.position.set(0.31, 0.12, 0.91);
-    eyeGroup.add(rightHighlight);
-
-    // Friendly smile
-    const smileCurve = new THREE.QuadraticBezierCurve3(
-      new THREE.Vector3(-0.18, -0.25, 0.8),
-      new THREE.Vector3(0, -0.32, 0.85),
-      new THREE.Vector3(0.18, -0.25, 0.8)
-    );
-    const smileGeo = new THREE.TubeGeometry(smileCurve, 16, 0.02, 8, false);
-    const smileMat = new THREE.MeshBasicMaterial({ color: 0x881337 });
-    const smile = new THREE.Mesh(smileGeo, smileMat);
-    headGroup.add(smile);
-
-    // 4. FLOATING HOLOGRAPHIC CYBER-TABLET (QR SCANNER)
-    const tabletGroup = new THREE.Group();
-    tabletGroup.position.set(-1.1, -0.2, 1.1);
-    tabletGroup.rotation.set(0.2, 0.4, -0.15);
-    rootGroup.add(tabletGroup);
-
-    // Tablet body
-    const tabBodyGeo = new THREE.BoxGeometry(1.0, 0.7, 0.04);
-    const tabBodyMat = new THREE.MeshStandardMaterial({
-      color: 0x0f172a,
-      metalness: 0.8,
-      roughness: 0.2,
-    });
-    const tabletBody = new THREE.Mesh(tabBodyGeo, tabBodyMat);
-    tabletGroup.add(tabletBody);
-
-    // Glowing Hologram Screen
-    const screenGeo = new THREE.PlaneGeometry(0.92, 0.62);
-    const screenMat = new THREE.MeshStandardMaterial({
-      color: 0x059669,
-      emissive: 0x10b981,
-      emissiveIntensity: 0.7,
-      roughness: 0.1,
-    });
-    const screen = new THREE.Mesh(screenGeo, screenMat);
-    screen.position.z = 0.025;
-    tabletGroup.add(screen);
-
-    // 5. ORBITING PARTICLES / RINGS AROUND INSPECTOR
-    const ringGeo = new THREE.TorusGeometry(1.6, 0.02, 16, 64);
-    const ringMat = new THREE.MeshBasicMaterial({
+    // 7. ORBITING HALO
+    const haloGeo = new THREE.TorusGeometry(1.4, 0.015, 12, 48);
+    const haloMat = new THREE.MeshBasicMaterial({
       color: 0x34d399,
       transparent: true,
-      opacity: 0.6,
+      opacity: 0.5,
     });
-    const haloRing = new THREE.Mesh(ringGeo, ringMat);
-    haloRing.rotation.x = Math.PI / 2.3;
-    rootGroup.add(haloRing);
+    const halo = new THREE.Mesh(haloGeo, haloMat);
+    halo.rotation.x = Math.PI / 2.2;
+    rootGroup.add(halo);
 
-    // MOUSE TRACKING STATE (LERP SMOOTHING)
+    // PRECISE REAL-TIME MOUSE TRACKING COMPUTATION
     const targetLook = { x: 0, y: 0 };
     const currentLook = { x: 0, y: 0 };
 
     const handleWindowMouseMove = (e: MouseEvent) => {
-      // Get position relative to screen center
-      const ndcX = (e.clientX / window.innerWidth) * 2 - 1;
-      const ndcY = -(e.clientY / window.innerHeight) * 2 + 1;
+      if (!mountRef.current) return;
+      const rect = mountRef.current.getBoundingClientRect();
+      const charCenterX = rect.left + rect.width / 2;
+      const charCenterY = rect.top + rect.height / 2;
 
-      targetLook.x = ndcX;
-      targetLook.y = ndcY;
+      // Vector pointing directly from character's center on screen to mouse cursor
+      const dx = (e.clientX - charCenterX) / (window.innerWidth * 0.5);
+      const dy = (e.clientY - charCenterY) / (window.innerHeight * 0.5);
+
+      // Clamp to realistic human head turn angles
+      targetLook.x = Math.max(-1.4, Math.min(1.4, dx));
+      targetLook.y = Math.max(-1.2, Math.min(1.2, dy));
     };
 
     window.addEventListener('mousemove', handleWindowMouseMove);
 
-    // ANIMATION LOOP (RUNS 60FPS AT ENGINE LEVEL)
+    // ANIMATION ENGINE LOOP (60FPS)
     let animationFrameId: number;
     let clock = new THREE.Clock();
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
-      const elapsedTime = clock.getElapsedTime();
+      const time = clock.getElapsedTime();
 
-      // Smooth Lerp tracking for eyes and head
-      currentLook.x += (targetLook.x - currentLook.x) * 0.08;
-      currentLook.y += (targetLook.y - currentLook.y) * 0.08;
+      // Smooth Lerp tracking
+      currentLook.x += (targetLook.x - currentLook.x) * 0.1;
+      currentLook.y += (targetLook.y - currentLook.y) * 0.1;
 
-      // HEAD TURNS DIRECTLY TOWARDS MOUSE
-      headGroup.rotation.y = currentLook.x * 0.65;
-      headGroup.rotation.x = -currentLook.y * 0.45;
+      // HEAD TURNS ACCURATELY TOWARDS CURSOR
+      headGroup.rotation.y = currentLook.x * 0.75;
+      headGroup.rotation.x = currentLook.y * 0.5;
 
-      // EYES LOOK EVEN FURTHER IN MOUSE DIRECTION (Active gaze!)
-      const eyeOffsetX = currentLook.x * 0.06;
-      const eyeOffsetY = currentLook.y * 0.04;
-      leftIris.position.x = -0.28 + eyeOffsetX;
-      leftIris.position.y = 0.08 + eyeOffsetY;
-      rightIris.position.x = 0.28 + eyeOffsetX;
-      rightIris.position.y = 0.08 + eyeOffsetY;
+      // EYES LEAD THE GAZE FURTHER IN CURSOR DIRECTION
+      const eyeDx = currentLook.x * 0.05;
+      const eyeDy = -currentLook.y * 0.04;
+      leftPupil.position.x = -0.2 + eyeDx;
+      leftPupil.position.y = 0.05 + eyeDy;
+      rightPupil.position.x = 0.2 + eyeDx;
+      rightPupil.position.y = 0.05 + eyeDy;
 
-      leftHighlight.position.x = -0.25 + eyeOffsetX;
-      leftHighlight.position.y = 0.12 + eyeOffsetY;
-      rightHighlight.position.x = 0.31 + eyeOffsetX;
-      rightHighlight.position.y = 0.12 + eyeOffsetY;
+      leftShine.position.x = -0.17 + eyeDx;
+      leftShine.position.y = 0.08 + eyeDy;
+      rightShine.position.x = 0.23 + eyeDx;
+      rightShine.position.y = 0.08 + eyeDy;
 
-      // BODY SLIGHTLY TURNS
+      // TORSO LEANS SLIGHTLY TOWARDS CURSOR
       bodyGroup.rotation.y = currentLook.x * 0.25;
 
-      // WHOLE CHARACTER FLOATS / LEVITATES (Breathe motion)
-      rootGroup.position.y = Math.sin(elapsedTime * 2.5) * 0.15;
-      haloRing.rotation.z = elapsedTime * 0.6;
+      // MOUTH TALKING ANIMATION (Subtle animated chatter)
+      const talkScale = 1 + Math.sin(time * 6) * 0.25;
+      mouth.scale.set(talkScale, talkScale, 1);
 
-      // TABLET FLOATS GENTLY
-      tabletGroup.position.y = -0.2 + Math.cos(elapsedTime * 3) * 0.08;
-      tabletGroup.rotation.z = -0.15 + Math.sin(elapsedTime * 2) * 0.05;
+      // IDLE BEHAVIOR: GESTURE EVERY 6-8 SECONDS (Garuk kepala / Melambai / Cek tablet)
+      const cycleTime = time % 8;
+      if (cycleTime > 4.5 && cycleTime < 7.0) {
+        // GESTURE: Garuk kepala / sentuh headset!
+        const gestureProgress = (cycleTime - 4.5) / 2.5;
+        const wave = Math.sin(gestureProgress * Math.PI);
+        rightArmGroup.rotation.z = wave * 1.5;
+        rightArmGroup.rotation.x = wave * 0.8;
+      } else {
+        // Idle gentle breathing arm swing
+        rightArmGroup.rotation.z = Math.sin(time * 2) * 0.08;
+        rightArmGroup.rotation.x = Math.cos(time * 1.5) * 0.06;
+      }
+
+      // LEGS SWAY WHILE FLOATING
+      leftLegGroup.rotation.x = Math.sin(time * 2.2) * 0.15;
+      rightLegGroup.rotation.x = -Math.sin(time * 2.2) * 0.15;
+
+      // OVERALL LEVITATION BREATHING
+      rootGroup.position.y = -0.15 + Math.sin(time * 2.5) * 0.12;
+      halo.rotation.z = time * 0.5;
 
       renderer.render(scene, camera);
     };
@@ -320,7 +350,7 @@ export const Interactive3DInspectorCanvas: React.FC<Interactive3DInspectorCanvas
   return (
     <div
       ref={mountRef}
-      className="relative flex items-center justify-center pointer-events-none select-none"
+      className="relative flex items-center justify-center pointer-events-none select-none overflow-visible"
       style={{ width: `${size}px`, height: `${size}px` }}
     />
   );
