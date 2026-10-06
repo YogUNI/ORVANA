@@ -10,7 +10,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { AliveRiggedInspector } from './AliveRiggedInspector';
+import { AliveAvatar } from './AliveAvatar';
 
 interface SectionTip {
   title: string;
@@ -242,9 +242,9 @@ export const FixedScrollytellingCompanion: React.FC = () => {
           }}
         />
 
-        {/* 2.5D RIGGED HIGH-DETAIL CARTOON INSPECTOR (EYE TRACKING, HEAD NOD, BLINK & TALK) */}
+        {/* PRISTINE 3D CARTOON AVATAR WITH NATURAL 3D PERSPECTIVE GAZE */}
         <div className="relative flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-          <AliveRiggedInspector size={175} />
+          <AliveAvatar size={150} />
         </div>
 
         {/* Badge Pill Click Indicator */}
