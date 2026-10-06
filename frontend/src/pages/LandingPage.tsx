@@ -224,13 +224,13 @@ export const LandingPage: React.FC = () => {
       <MoncyCustomCursor />
       <SmartFloatingConcierge />
 
-      {/* FLOATING GLASS DOCK / ISLAND NAVBAR */}
-      <header className="sticky top-0 z-40 w-full px-4 sm:px-6 lg:px-8 py-3 transition-all duration-300 pointer-events-none">
+      {/* FLOATING GLASS DOCK / ISLAND NAVBAR (ALWAYS VISIBLE FIXED TOP) */}
+      <header className="fixed top-0 left-0 right-0 z-50 w-full px-4 sm:px-6 lg:px-8 py-3 transition-all duration-300 pointer-events-none">
         <div
           className={`max-w-7xl mx-auto rounded-2xl sm:rounded-full px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4 pointer-events-auto transition-all duration-300 ${
             isScrolled
-              ? 'bg-white/85 backdrop-blur-xl border border-stone-200/90 shadow-lg shadow-stone-900/5'
-              : 'bg-white/60 backdrop-blur-md border border-stone-200/60 shadow-xs'
+              ? 'bg-white/90 backdrop-blur-2xl border border-stone-200/95 shadow-lg shadow-stone-900/10'
+              : 'bg-white/70 backdrop-blur-md border border-stone-200/60 shadow-xs'
           }`}
         >
           {/* Logo Brand */}
@@ -333,7 +333,7 @@ export const LandingPage: React.FC = () => {
       </header>
 
       {/* HERO SECTION ULTRA-CREATIVE DENGAN SPLIT DESIGN & FLOATING DOCK */}
-      <section className="relative z-10 pt-4 sm:pt-7 pb-20 overflow-hidden border-b border-stone-200/80">
+      <section className="relative z-10 pt-24 sm:pt-28 pb-20 overflow-hidden border-b border-stone-200/80">
         {/* Soft Background Accents */}
         <div className="absolute top-0 right-0 w-[550px] h-[550px] bg-emerald-100/40 rounded-full blur-3xl pointer-events-none -z-10" />
         <div className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-amber-100/40 rounded-full blur-3xl pointer-events-none -z-10" />
