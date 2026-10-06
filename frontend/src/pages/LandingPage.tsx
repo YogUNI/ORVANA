@@ -312,10 +312,6 @@ export const LandingPage: React.FC = () => {
                     />
                   )}
                   <span>{nav.label}</span>
-                  {/* Subtle active dot underneath when active & not hovering another item */}
-                  {isCurrentActive && !hoveredNav && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-700 absolute bottom-0.5 left-1/2 -translate-x-1/2" />
-                  )}
                 </a>
               );
             })}
