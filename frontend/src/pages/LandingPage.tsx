@@ -55,6 +55,47 @@ export const LandingPage: React.FC = () => {
 
   // Scroll Spy Active Section State
   const [activeSection, setActiveSection] = useState<string>('');
+  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
+
+  // Refs for smooth animated sliding pill indicator
+  const navContainerRef = React.useRef<HTMLDivElement | null>(null);
+  const navItemRefs = React.useRef<{ [key: string]: HTMLAnchorElement | null }>({});
+  const [pillStyle, setPillStyle] = useState<{
+    left: number;
+    width: number;
+    top: number;
+    height: number;
+    opacity: number;
+    isHovered: boolean;
+  }>({
+    left: 0,
+    width: 0,
+    top: 0,
+    height: 0,
+    opacity: 0,
+    isHovered: false,
+  });
+
+  // Update animated sliding pill position based on hovered link or active section
+  React.useEffect(() => {
+    const targetKey = hoveredNav || activeSection;
+    if (targetKey && navItemRefs.current[targetKey] && navContainerRef.current) {
+      const targetEl = navItemRefs.current[targetKey]!;
+      const containerRect = navContainerRef.current.getBoundingClientRect();
+      const targetRect = targetEl.getBoundingClientRect();
+
+      setPillStyle({
+        left: targetRect.left - containerRect.left,
+        width: targetRect.width,
+        top: targetRect.top - containerRect.top,
+        height: targetRect.height,
+        opacity: 1,
+        isHovered: !!hoveredNav,
+      });
+    } else {
+      setPillStyle((prev) => ({ ...prev, opacity: 0 }));
+    }
+  }, [hoveredNav, activeSection]);
 
   React.useEffect(() => {
     const sections = ['dampak', 'keunggulan', 'kalkulator', 'nlp-demo', 'alur', 'faq'];
@@ -208,8 +249,26 @@ export const LandingPage: React.FC = () => {
             </div>
           </Link>
 
-          {/* Nav Links dengan Indikator Scroll Aktif & Hover Halus */}
-          <nav className="hidden xl:flex items-center gap-1.5 text-xs font-semibold text-stone-600 bg-stone-100/70 p-1.5 rounded-full border border-stone-200/80">
+          {/* Nav Links dengan Sliding Pill Indicator Halus & Responsif */}
+          <nav
+            ref={navContainerRef}
+            onMouseLeave={() => setHoveredNav(null)}
+            className="hidden xl:flex items-center relative text-xs font-semibold text-stone-600 bg-stone-100/80 p-1.5 rounded-full border border-stone-200/90 shadow-inner"
+          >
+            {/* Sliding Pill Background indicator */}
+            <div
+              className="absolute rounded-full transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none"
+              style={{
+                left: pillStyle.left,
+                width: pillStyle.width,
+                top: pillStyle.top,
+                height: pillStyle.height,
+                opacity: pillStyle.opacity,
+                backgroundColor: pillStyle.isHovered ? '#143126' : '#1E3A2F',
+                boxShadow: pillStyle.opacity > 0 ? '0 2px 8px -2px rgba(20,49,38,0.35)' : 'none',
+              }}
+            />
+
             {[
               { id: 'dampak', label: 'Buku Besar Dampak' },
               { id: 'keunggulan', label: 'Nilai Tambah' },
@@ -218,19 +277,30 @@ export const LandingPage: React.FC = () => {
               { id: 'alur', label: 'Alur 4 Peran' },
               { id: 'faq', label: 'FAQ' },
             ].map((nav) => {
-              const isActive = activeSection === nav.id;
+              const isCurrentActive = activeSection === nav.id;
+              const isCurrentHovered = hoveredNav === nav.id;
+              const isHighlighted = isCurrentHovered || (!hoveredNav && isCurrentActive);
+
               return (
                 <a
                   key={nav.id}
+                  ref={(el) => {
+                    navItemRefs.current[nav.id] = el;
+                  }}
                   href={`#${nav.id}`}
-                  className={`px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1.5 whitespace-nowrap ${
-                    isActive
-                      ? 'bg-emerald-900 text-white font-bold shadow-xs'
-                      : 'hover:text-stone-950 hover:bg-white/80'
+                  onMouseEnter={() => setHoveredNav(nav.id)}
+                  className={`relative z-10 px-3.5 py-1.5 rounded-full transition-colors duration-200 flex items-center gap-1.5 whitespace-nowrap ${
+                    isHighlighted
+                      ? 'text-white font-bold'
+                      : 'text-stone-600 hover:text-stone-900'
                   }`}
                 >
                   {nav.isAi && (
-                    <Sparkles className={`w-3.5 h-3.5 ${isActive ? 'text-amber-300' : 'text-amber-600'}`} />
+                    <Sparkles
+                      className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                        isHighlighted ? 'text-amber-300 scale-110' : 'text-amber-600'
+                      }`}
+                    />
                   )}
                   <span>{nav.label}</span>
                 </a>
