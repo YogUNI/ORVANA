@@ -10,7 +10,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Interactive3DInspectorCanvas } from './Interactive3DInspectorCanvas';
+import { AliveRiggedInspector } from './AliveRiggedInspector';
 
 interface SectionTip {
   title: string;
@@ -242,9 +242,9 @@ export const FixedScrollytellingCompanion: React.FC = () => {
           }}
         />
 
-        {/* REAL-TIME 3D THREE.JS CHARACTER (EYES, HEAD & TORSO TRACK CURSOR 100% IN REAL-TIME) */}
+        {/* 2.5D RIGGED HIGH-DETAIL CARTOON INSPECTOR (EYE TRACKING, HEAD NOD, BLINK & TALK) */}
         <div className="relative flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-          <Interactive3DInspectorCanvas size={190} />
+          <AliveRiggedInspector size={175} />
         </div>
 
         {/* Badge Pill Click Indicator */}
