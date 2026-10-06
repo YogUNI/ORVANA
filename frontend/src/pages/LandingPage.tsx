@@ -930,11 +930,10 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* 8. ALUR KERJA 4 PERAN LAPANGAN (INTERACTIVE ROLE ECOSYSTEM) */}
-      <section id="alur" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16">
-        <div className="bg-gradient-to-b from-stone-100/90 to-stone-100/40 rounded-3xl border border-stone-200/90 p-6 sm:p-12 shadow-sm">
-          
-          {/* Header Bagian */}
-          <div className="text-center max-w-2xl mx-auto mb-10 space-y-3">
+      <section id="alur" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-20">
+        
+        {/* Header Bagian */}
+        <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
             <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-emerald-900 bg-emerald-100/80 px-3.5 py-1.5 rounded-full border border-emerald-300/80 shadow-2xs">
               <Users className="w-3.5 h-3.5 text-emerald-800" />
               <span>Sinergi Ekosistem 4 Peran Lapangan</span>
@@ -1211,8 +1210,6 @@ export const LandingPage: React.FC = () => {
               </div>
             )}
           </div>
-
-        </div>
       </section>
 
       {/* 9. FAQ ACCORDION */}
