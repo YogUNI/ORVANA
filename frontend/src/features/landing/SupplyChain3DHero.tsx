@@ -1,199 +1,150 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   Sparkles,
-  Lock,
   Building2,
   TrendingUp,
   Truck,
   Leaf,
-  Eye,
   Play,
   Pause,
   Compass,
+  ArrowRight,
+  CheckCircle2,
+  Lock,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-interface Hotspot {
+interface StageNode {
   id: 'farm' | 'truck' | 'kitchen';
+  stepNum: string;
+  role: string;
   title: string;
-  category: string;
   badge: string;
   badgeColor: string;
-  desc: string;
-  coords: { x: number; y: number };
-  details: { label: string; value: string }[];
+  coords: { x: number; y: number }; // percentage on island
+  icon: React.ReactNode;
+  summary: string;
+  metricLabel: string;
+  metricValue: string;
+  metricSub: string;
 }
 
-const HOTSPOTS: Hotspot[] = [
+const STAGES: StageNode[] = [
   {
     id: 'farm',
-    title: 'Lahan Petani Lokal Desa',
-    category: 'Hulu Produksi',
-    badge: 'Panen Terjadwal',
-    badgeColor: 'bg-emerald-100 text-emerald-900 border-emerald-300',
-    desc: 'Bayam hijau & sayur segar dipetik pagi hari. Kuota dialokasikan adil maksimal 60% mencegah monopoli tengkulak.',
-    coords: { x: 26, y: 38 },
-    details: [
-      { label: 'Komoditas', value: 'Bayam Hijau Subur' },
-      { label: 'Kepastian Harga', value: 'Rp 8.000 / kg' },
-      { label: 'Batas Alokasi', value: 'Maks 60% (40 kg)' },
-    ],
+    stepNum: '01',
+    role: 'HULU PRODUKSI',
+    title: 'Panen Petani Lokal',
+    badge: 'Cap Anti-Monopoli 60%',
+    badgeColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+    coords: { x: 26, y: 44 },
+    icon: <Leaf className="w-4 h-4 text-emerald-400" />,
+    summary: 'Petik pagi hari terintegrasi jadwal panen desa dengan jaminan kepastian harga acuan.',
+    metricLabel: 'Alokasi Bayam Hijau',
+    metricValue: '40,0 kg',
+    metricSub: 'Rp 8.000/kg • 2 Jam Pasca Petik',
   },
   {
     id: 'truck',
-    title: 'Logistik Rantai Dingin Tersegel',
-    category: 'Distribusi & Transit',
-    badge: 'Suhu +4°C Terpantau',
-    badgeColor: 'bg-amber-100 text-amber-900 border-amber-300',
-    desc: 'Armada logistik berpendingin desa dengan pelacakan GPS live & segel paspor digital QR tahan manipulasi.',
-    coords: { x: 48, y: 56 },
-    details: [
-      { label: 'Jarak Tempuh', value: '6,2 km (18 menit)' },
-      { label: 'Suhu Kargo', value: '+4,2°C (Optimal)' },
-      { label: 'Paspor Batch', value: '#ORV-20260920' },
-    ],
+    stepNum: '02',
+    role: 'LOGISTIK TERSEGEL',
+    title: 'Kurir & Pengepul Dingin',
+    badge: 'Suhu +4°C Terkunci',
+    badgeColor: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+    coords: { x: 48, y: 62 },
+    icon: <Truck className="w-4 h-4 text-amber-400" />,
+    summary: 'Konsolidasi radius dekat (<25 km) dengan armada dingin dan segel QR paspor digital.',
+    metricLabel: 'Status Distribusi',
+    metricValue: 'Transit 6,2 km',
+    metricSub: '+4,2°C Optimal • GPS Live',
   },
   {
     id: 'kitchen',
-    title: 'Dapur Gizi Massal & Lab QC',
-    category: 'Hilir Konsumsi',
-    badge: 'HACCP & QC Lulus',
-    badgeColor: 'bg-sky-100 text-sky-900 border-sky-300',
-    desc: 'Penerimaan bahan gizi massal, inspeksi mutu ahli gizi digital. Begitu QC dinyatakan Lulus, dana escrow cair seketika.',
-    coords: { x: 74, y: 34 },
-    details: [
-      { label: 'Target Porsi', value: '1.000 Porsi / Hari' },
-      { label: 'Skor Mutu QC', value: '100% (Grade A)' },
-      { label: 'Pencairan Escrow', value: 'Rp 537.500 Otomatis' },
-    ],
+    stepNum: '03',
+    role: 'HILIR KONSUMSI',
+    title: 'Dapur Gizi & Uji Lab QC',
+    badge: 'Escrow Auto-Release',
+    badgeColor: 'bg-sky-500/20 text-sky-400 border-sky-500/30',
+    coords: { x: 74, y: 38 },
+    icon: <Building2 className="w-4 h-4 text-sky-400" />,
+    summary: 'Diterima ahli gizi dapur, uji organoleptik 100%. Begitu lulus QC, kas petani cair instan.',
+    metricLabel: 'Pencairan Otomatis',
+    metricValue: 'Rp 537.500',
+    metricSub: 'Grade A 100% • 1.000 Porsi',
   },
 ];
 
 export const SupplyChain3DHero: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'3d' | 'engine'>('3d');
-  const [activeHotspot, setActiveHotspot] = useState<Hotspot | null>(HOTSPOTS[0]);
-  const [showHotspots, setShowHotspots] = useState(true);
-  const [isPlayingSimulation, setIsPlayingSimulation] = useState(true);
+  const [activeStepId, setActiveStepId] = useState<'farm' | 'truck' | 'kitchen'>('farm');
+  const [isPlaying, setIsPlaying] = useState(true);
 
-  // Scroll-driven camera parallax
-  const [scrollYOffset, setScrollYOffset] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const offset = window.scrollY;
-      if (offset < 1000) {
-        setScrollYOffset(offset);
-      }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // 3D Interactive Orbit & Drag Physics (Inspired by moncy.dev)
+  // Parallax Gyro & Drag Orbit
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [tilt, setTilt] = useState<{
-    rotateX: number;
-    rotateY: number;
-    glareX: number;
-    glareY: number;
-    isHovered: boolean;
-  }>({
-    rotateX: 0,
-    rotateY: 0,
-    glareX: 50,
-    glareY: 50,
-    isHovered: false,
-  });
-
-  // Interactive Drag-to-Rotate State
-  const [isDragging, setIsDragging] = useState(false);
+  const [tilt, setTilt] = useState({ rotateX: 6, rotateY: -8, isHovered: false });
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
   const startDragPos = useRef({ x: 0, y: 0 });
+
+  // Auto-play timeline step
+  useEffect(() => {
+    if (!isPlaying) return;
+    const interval = setInterval(() => {
+      setActiveStepId((prev) => {
+        if (prev === 'farm') return 'truck';
+        if (prev === 'truck') return 'kitchen';
+        return 'farm';
+      });
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [isPlaying]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     startDragPos.current = { x: e.clientX - dragOffset.x, y: e.clientY - dragOffset.y };
   };
 
-  const handleMouseMoveGlobal = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isDragging) {
       const newX = e.clientX - startDragPos.current.x;
       const newY = e.clientY - startDragPos.current.y;
       setDragOffset({
-        x: Math.max(-28, Math.min(28, newX * 0.16)),
-        y: Math.max(-20, Math.min(20, newY * 0.16)),
+        x: Math.max(-25, Math.min(25, newX * 0.15)),
+        y: Math.max(-18, Math.min(18, newY * 0.15)),
       });
       return;
     }
 
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
 
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rotateX = -((y - centerY) / centerY) * 11;
-    const rotateY = ((x - centerX) / centerX) * 13;
-
-    const glareX = (x / rect.width) * 100;
-    const glareY = (y / rect.height) * 100;
+    const rotX = -(y / (rect.height / 2)) * 12 + 6;
+    const rotY = (x / (rect.width / 2)) * 14 - 8;
 
     setTilt({
-      rotateX: Number(rotateX.toFixed(2)),
-      rotateY: Number(rotateY.toFixed(2)),
-      glareX: Number(glareX.toFixed(1)),
-      glareY: Number(glareY.toFixed(1)),
+      rotateX: Number(rotX.toFixed(2)),
+      rotateY: Number(rotY.toFixed(2)),
       isHovered: true,
     });
   };
 
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
+  const handleMouseUp = () => setIsDragging(false);
   const handleMouseLeave = () => {
     setIsDragging(false);
-    setTilt({
-      rotateX: 0,
-      rotateY: 0,
-      glareX: 50,
-      glareY: 50,
-      isHovered: false,
-    });
+    setTilt({ rotateX: 6, rotateY: -8, isHovered: false });
   };
 
-  const handleResetOrbit = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setDragOffset({ x: 0, y: 0 });
-  };
-
-  // Automated cinematic simulation flow
-  useEffect(() => {
-    if (!isPlayingSimulation || activeTab !== '3d') return;
-    const interval = setInterval(() => {
-      setActiveHotspot((prev) => {
-        if (!prev) return HOTSPOTS[0];
-        const currentIndex = HOTSPOTS.findIndex((h) => h.id === prev.id);
-        const nextIndex = (currentIndex + 1) % HOTSPOTS.length;
-        return HOTSPOTS[nextIndex];
-      });
-    }, 4200);
-
-    return () => clearInterval(interval);
-  }, [isPlayingSimulation, activeTab]);
-
-  const scrollTiltX = Math.min((scrollYOffset / 500) * 8, 8);
-  const scrollTranslateY = Math.min((scrollYOffset / 500) * 22, 22);
-
-  const finalRotateX = tilt.rotateX - dragOffset.y - scrollTiltX;
-  const finalRotateY = tilt.rotateY + dragOffset.x;
+  const currentStep = STAGES.find((s) => s.id === activeStepId) || STAGES[0];
+  const finalRotX = tilt.rotateX - dragOffset.y;
+  const finalRotY = tilt.rotateY + dragOffset.x;
 
   return (
-    <div className="w-full max-w-lg lg:max-w-none flex flex-col items-center select-none">
-      {/* Top Controls Bar: Model Switcher & Simulation Controls */}
-      <div className="flex flex-wrap items-center justify-between w-full max-w-md mb-3 px-1 gap-2">
-        <div className="inline-flex p-1 bg-stone-900/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xs">
+    <div className="w-full flex flex-col items-center select-none">
+      {/* 1. TOP TOGGLE DOCK */}
+      <div className="flex items-center justify-between w-full max-w-xl mb-3 px-1 gap-2">
+        <div className="inline-flex p-1 bg-stone-900/90 backdrop-blur-xl rounded-2xl border border-stone-700/80 shadow-md">
           <button
             type="button"
             onClick={() => setActiveTab('3d')}
@@ -204,7 +155,7 @@ export const SupplyChain3DHero: React.FC = () => {
             }`}
           >
             <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span>3D Diorama Alur</span>
+            <span>Alur Rantai Pasok 3D</span>
           </button>
           <button
             type="button"
@@ -224,193 +175,273 @@ export const SupplyChain3DHero: React.FC = () => {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => setIsPlayingSimulation(!isPlayingSimulation)}
+              onClick={() => setIsPlaying(!isPlaying)}
               className={`text-[11px] font-mono flex items-center gap-1.5 font-semibold px-2.5 py-1.5 rounded-xl border transition-all ${
-                isPlayingSimulation
-                  ? 'bg-emerald-900 text-white border-emerald-700 shadow-xs'
-                  : 'bg-stone-900/70 text-stone-300 border-white/10 hover:bg-stone-800'
+                isPlaying
+                  ? 'bg-emerald-950/80 text-emerald-300 border-emerald-600/40'
+                  : 'bg-stone-900/70 text-stone-300 border-stone-700 hover:bg-stone-800'
               }`}
             >
-              {isPlayingSimulation ? (
+              {isPlaying ? (
                 <>
-                  <Pause className="w-3 h-3 text-emerald-300" />
-                  <span>Jeda</span>
+                  <Pause className="w-3 h-3 text-emerald-400" />
+                  <span>Jeda Alur</span>
                 </>
               ) : (
                 <>
                   <Play className="w-3 h-3 text-amber-400 fill-amber-400" />
-                  <span>Putar</span>
+                  <span>Putar Alur</span>
                 </>
               )}
             </button>
 
-            {dragOffset.x !== 0 || dragOffset.y !== 0 ? (
+            {(dragOffset.x !== 0 || dragOffset.y !== 0) && (
               <button
                 type="button"
-                onClick={handleResetOrbit}
-                className="text-[11px] font-mono text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold px-2 py-1.5 rounded-xl bg-stone-900/70 border border-amber-500/30 transition-colors"
-                title="Reset Posisi Sudut 3D"
+                onClick={() => setDragOffset({ x: 0, y: 0 })}
+                className="text-[11px] font-mono text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold px-2 py-1.5 rounded-xl bg-stone-900/80 border border-amber-500/30"
+                title="Reset Sudut"
               >
                 <Compass className="w-3 h-3 animate-spin" />
                 <span>Reset</span>
               </button>
-            ) : null}
-
-            <button
-              type="button"
-              onClick={() => setShowHotspots(!showHotspots)}
-              className="text-[11px] font-mono text-stone-300 hover:text-white flex items-center gap-1 font-semibold p-2 rounded-xl bg-stone-900/60 border border-white/10 transition-colors"
-              title="Toggle Hotspot Pins"
-            >
-              <Eye className="w-3 h-3 text-emerald-400" />
-            </button>
+            )}
           </div>
         )}
       </div>
 
-      {/* VIEW 1: 3D LIVING STAGE (Moncy.dev Inspired Stage with Lighting Circles) */}
+      {/* 2. MAIN 3D SHOWCASE (ISOLATED FLOATING ISLAND WITHOUT SQUARE BOX) */}
       {activeTab === '3d' && (
-        <div className="w-full relative perspective-1200">
-          {/* Moncy.dev Background Orbit Circles (.landing-circle1 & .landing-circle2) */}
-          <div className="absolute -top-10 -left-10 w-72 h-72 rounded-full bg-emerald-500/25 blur-3xl pointer-events-none animate-pulse" />
-          <div className="absolute -bottom-10 -right-10 w-64 h-64 rounded-full bg-amber-500/20 blur-3xl pointer-events-none animate-pulse" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-teal-400/10 blur-2xl pointer-events-none" />
-
+        <div className="w-full max-w-xl flex flex-col items-center">
+          {/* THE 3D CANVAS STAGE */}
           <div
             ref={containerRef}
             onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMoveGlobal}
+            onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseLeave}
-            style={{
-              transform: `rotateX(${finalRotateX}deg) rotateY(${finalRotateY}deg) translateY(${scrollTranslateY}px)`,
-              transition: isDragging
-                ? 'none'
-                : tilt.isHovered
-                ? 'transform 0.08s ease-out'
-                : 'transform 0.6s cubic-bezier(0.2,0.8,0.2,1)',
-            }}
-            className={`relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-stone-950 text-white transform-style-3d group ${
+            className={`relative w-full aspect-[4/3] flex items-center justify-center will-change-transform ${
               isDragging ? 'cursor-grabbing' : 'cursor-grab'
             }`}
+            style={{
+              perspective: '1200px',
+            }}
           >
-            {/* Dynamic Light Sheen / Specular Flare Overlay */}
+            {/* Ambient Background Glow Circles (Moncy.dev aesthetic) */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none -z-10 animate-pulse" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-amber-500/10 blur-2xl pointer-events-none -z-10" />
+
+            {/* DUAL ORBITAL RINGS SURROUNDING ISLAND */}
             <div
-              className="absolute inset-0 pointer-events-none z-30 transition-opacity duration-300"
+              className="absolute w-[88%] h-[88%] rounded-full border border-dashed border-emerald-400/25 opacity-60 pointer-events-none"
               style={{
-                opacity: tilt.isHovered ? 0.35 : 0,
-                background: `radial-gradient(circle 340px at ${tilt.glareX}% ${tilt.glareY}%, rgba(255,255,255,0.7), transparent 80%)`,
+                transform: 'rotateX(65deg) rotateZ(20deg)',
+                animation: 'spin 35s linear infinite',
               }}
             />
 
-            {/* Sweep Sunbeam Light */}
-            <div className="absolute inset-0 w-[40%] h-full bg-gradient-to-r from-transparent via-amber-200/20 to-transparent pointer-events-none z-20 animate-sunbeam-sweep" />
+            {/* 3D FLOATING ISLAND (PRISTINE CUTOUT, NO SQUARE BORDER!) */}
+            <div
+              className="relative w-full h-full flex items-center justify-center transition-transform duration-300 ease-out will-change-transform"
+              style={{
+                transformStyle: 'preserve-3d',
+                transform: `rotateX(${finalRotX}deg) rotateY(${finalRotY}deg) scale(${
+                  tilt.isHovered ? 1.02 : 1
+                })`,
+              }}
+            >
+              <img
+                src="/images/orvana-island-floating.png"
+                alt="Miniatur Pulau Rantai Pasok Pangan ORVANA"
+                className="w-[95%] h-auto object-contain filter drop-shadow-[0_25px_35px_rgba(0,0,0,0.35)] select-none pointer-events-none"
+              />
 
-            {/* Sci-Fi Tech L-Corners (Moncy.dev aesthetic) */}
-            <div className="absolute top-3 left-3 w-3 h-3 border-t-2 border-l-2 border-emerald-400/80 pointer-events-none z-30" />
-            <div className="absolute top-3 right-3 w-3 h-3 border-t-2 border-r-2 border-emerald-400/80 pointer-events-none z-30" />
-            <div className="absolute bottom-3 left-3 w-3 h-3 border-b-2 border-l-2 border-emerald-400/80 pointer-events-none z-30" />
-            <div className="absolute bottom-3 right-3 w-3 h-3 border-b-2 border-r-2 border-emerald-400/80 pointer-events-none z-30" />
-
-            {/* 3D DIORAMA ISLAND SHOWCASE (ALUR PRODUKSI HULU HINGGA HILIR) */}
-            <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-900">
-                <img
-                  src="/images/orvana-3d-diorama.jpg"
-                  alt="ORVANA 3D Supply Chain Isometric Diorama"
-                  className="w-full h-full object-cover object-center animate-ken-burns transform-gpu pointer-events-none"
-                  loading="eager"
+              {/* FLOW CONNECTION LASER / ARROWS (Petani -> Kurir -> Dapur) */}
+              <svg
+                className="absolute inset-0 w-full h-full pointer-events-none z-10"
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
+              >
+                <defs>
+                  <linearGradient id="flowLaser" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#10B981" />
+                    <stop offset="50%" stopColor="#F59E0B" />
+                    <stop offset="100%" stopColor="#0EA5E9" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M 28 46 Q 38 56, 48 64 T 74 40"
+                  fill="none"
+                  stroke="url(#flowLaser)"
+                  strokeWidth="1.2"
+                  strokeDasharray="4 3"
+                  className="animate-laser-flow"
                 />
+              </svg>
 
-                <svg
-                  className="absolute inset-0 w-full h-full pointer-events-none z-10"
-                  viewBox="0 0 100 100"
-                  preserveAspectRatio="none"
+              {/* INTERACTIVE HOTSPOT PINS DIRECTLY ON ISLAND */}
+              {STAGES.map((st) => {
+                const isActive = st.id === activeStepId;
+                return (
+                  <button
+                    key={st.id}
+                    onClick={() => {
+                      setActiveStepId(st.id);
+                      setIsPlaying(false);
+                    }}
+                    style={{ left: `${st.coords.x}%`, top: `${st.coords.y}%` }}
+                    className={`absolute -translate-x-1/2 -translate-y-1/2 z-20 group flex items-center justify-center transition-transform duration-300 ${
+                      isActive ? 'scale-125' : 'scale-90 hover:scale-110'
+                    }`}
+                    title={st.title}
+                  >
+                    {/* Pulsing ring */}
+                    <span
+                      className={`absolute -inset-2 rounded-full blur-xs transition-opacity duration-300 ${
+                        isActive ? 'opacity-100 animate-ping' : 'opacity-0'
+                      } ${
+                        st.id === 'farm'
+                          ? 'bg-emerald-400'
+                          : st.id === 'truck'
+                          ? 'bg-amber-400'
+                          : 'bg-sky-400'
+                      }`}
+                    />
+
+                    {/* Pin Circle */}
+                    <span
+                      className={`relative w-8 h-8 rounded-full border-2 flex items-center justify-center shadow-lg transition-all ${
+                        isActive
+                          ? 'bg-stone-900 border-white text-white shadow-emerald-500/50'
+                          : 'bg-stone-900/80 border-stone-400 text-stone-300 hover:border-white'
+                      }`}
+                    >
+                      {st.icon}
+                    </span>
+
+                    {/* Step tag */}
+                    <span
+                      className={`absolute -bottom-5 left-1/2 -translate-x-1/2 text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-full whitespace-nowrap shadow-xs transition-all ${
+                        isActive
+                          ? 'bg-stone-900 text-white border border-stone-700'
+                          : 'bg-stone-900/70 text-stone-300 opacity-0 group-hover:opacity-100'
+                      }`}
+                    >
+                      {st.stepNum}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 3. STEPPER PROGRESS TABS (PETANI -> KURIR/PENGEPUL -> DAPUR/LAB) */}
+          <div className="grid grid-cols-3 gap-2 w-full mt-1 mb-3">
+            {STAGES.map((st) => {
+              const isActive = st.id === activeStepId;
+              return (
+                <button
+                  key={st.id}
+                  onClick={() => {
+                    setActiveStepId(st.id);
+                    setIsPlaying(false);
+                  }}
+                  className={`p-2.5 rounded-2xl border text-left transition-all duration-300 ${
+                    isActive
+                      ? 'bg-stone-900 text-white border-emerald-500 shadow-md shadow-emerald-950/20'
+                      : 'bg-white/80 hover:bg-white text-stone-700 border-stone-200/90'
+                  }`}
                 >
-                  <defs>
-                    <linearGradient id="laserGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#34D399" stopOpacity="0.9" />
-                      <stop offset="50%" stopColor="#FBBF24" stopOpacity="0.9" />
-                      <stop offset="100%" stopColor="#38BDF8" stopOpacity="0.9" />
-                    </linearGradient>
-                  </defs>
-                  <path
-                    d="M 26 40 Q 38 48, 48 56 T 74 36"
-                    fill="none"
-                    stroke="url(#laserGrad)"
-                    strokeWidth="0.8"
-                    strokeDasharray="3 3"
-                    className="animate-laser-flow"
-                  />
-                </svg>
-
-                {/* Top Live Video HUD Pill */}
-                <div className="absolute top-3.5 left-3.5 z-20 flex items-center gap-2 bg-stone-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15 text-[11px] font-mono shadow-lg">
-                  <span className="flex h-2 w-2 relative">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  <div className="flex items-center justify-between mb-1">
+                    <span
+                      className={`text-[9px] font-mono font-extrabold ${
+                        isActive ? 'text-emerald-400' : 'text-stone-400'
+                      }`}
+                    >
+                      TAHAP {st.stepNum}
+                    </span>
+                    <span
+                      className={`w-2 h-2 rounded-full ${
+                        isActive ? 'bg-emerald-400 animate-pulse' : 'bg-stone-300'
+                      }`}
+                    />
+                  </div>
+                  <p className="text-xs font-bold truncate leading-tight">{st.title}</p>
+                  <span
+                    className={`text-[10px] font-mono block truncate mt-0.5 ${
+                      isActive ? 'text-stone-300' : 'text-stone-500'
+                    }`}
+                  >
+                    {st.metricValue}
                   </span>
-                  <span className="text-emerald-400 font-bold uppercase tracking-wide">
-                    {isDragging ? 'DRAGGING 3D ORBIT' : isPlayingSimulation ? '3D LIVING SIMULATION' : 'ORBIT PAUSED'}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* 4. CURRENT ACTIVE STEP DETAIL CARD (CLEAN & INFORMATIVE) */}
+          <div className="w-full bg-white/95 backdrop-blur-xl border border-stone-200/90 rounded-2xl p-4 shadow-card text-stone-900 transition-all duration-300">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-stone-100">
+              <div className="flex items-center gap-2">
+                <span className="p-1.5 rounded-xl bg-stone-100 text-stone-900">
+                  {currentStep.icon}
+                </span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-mono font-bold text-stone-500 tracking-wider">
+                      {currentStep.role}
+                    </span>
+                    <span
+                      className={`text-[10px] font-mono font-bold px-2 py-0.2 rounded-full border ${currentStep.badgeColor}`}
+                    >
+                      {currentStep.badge}
+                    </span>
+                  </div>
+                  <h4 className="text-sm font-bold font-heading text-stone-950">
+                    {currentStep.title}
+                  </h4>
+                </div>
+              </div>
+
+              <Link
+                to={
+                  currentStep.id === 'farm'
+                    ? '/kalkulator'
+                    : currentStep.id === 'truck'
+                    ? '/trace/ORV-20260920-DPR01-0001'
+                    : '/trace/ORV-20260920-DPR01-0001'
+                }
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 hover:text-emerald-950 self-start sm:self-auto"
+              >
+                <span>Lihat Alur</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 items-center">
+              <p className="text-xs text-stone-600 leading-relaxed">
+                {currentStep.summary}
+              </p>
+
+              <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-200/60 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-mono text-stone-500 uppercase block">
+                    {currentStep.metricLabel}
+                  </span>
+                  <span className="text-sm font-mono font-bold text-emerald-900">
+                    {currentStep.metricValue}
                   </span>
                 </div>
-
-                {/* Interactive Hotspots */}
-                {showHotspots &&
-                  HOTSPOTS.map((hotspot) => {
-                    const isSelected = activeHotspot?.id === hotspot.id;
-                    return (
-                      <div
-                        key={hotspot.id}
-                        style={{
-                          top: `${hotspot.coords.y}%`,
-                          left: `${hotspot.coords.x}%`,
-                        }}
-                        className="absolute z-20 -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
-                      >
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveHotspot(hotspot);
-                            setIsPlayingSimulation(false);
-                          }}
-                          className="relative group/pin p-2 focus:outline-none"
-                          aria-label={hotspot.title}
-                        >
-                          <span
-                            className={`absolute inset-0 rounded-full animate-radar-ring ${
-                              hotspot.id === 'farm'
-                                ? 'bg-emerald-400'
-                                : hotspot.id === 'truck'
-                                ? 'bg-amber-400'
-                                : 'bg-sky-400'
-                            }`}
-                          />
-                          <span
-                            className={`relative flex items-center justify-center w-8 h-8 rounded-full shadow-lg border-2 transition-transform duration-200 ${
-                              isSelected ? 'scale-125 ring-4 ring-white/50' : 'hover:scale-110'
-                            } ${
-                              hotspot.id === 'farm'
-                                ? 'bg-emerald-600 border-white text-white'
-                                : hotspot.id === 'truck'
-                                ? 'bg-amber-500 border-white text-white'
-                                : 'bg-sky-600 border-white text-white'
-                            }`}
-                          >
-                            {hotspot.id === 'farm' && <Leaf className="w-4 h-4" />}
-                            {hotspot.id === 'truck' && <Truck className="w-4 h-4" />}
-                            {hotspot.id === 'kitchen' && <Building2 className="w-4 h-4" />}
-                          </span>
-                        </button>
-                      </div>
-                    );
-                  })}
+                <span className="text-[11px] font-mono text-stone-500 text-right">
+                  {currentStep.metricSub}
+                </span>
               </div>
+            </div>
           </div>
         </div>
       )}
 
-      {/* VIEW 2: LIVE MATCHING ENGINE ALGORITHM DATA CARD */}
+      {/* 5. VIEW 2: LIVE MATCHING ENGINE ALGORITHM DATA CARD */}
       {activeTab === 'engine' && (
         <div className="w-full max-w-md bg-stone-950/90 text-white rounded-3xl border border-white/15 p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden text-left animate-in fade-in duration-300">
           <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-bl-full -z-0 opacity-80" />
@@ -472,27 +503,28 @@ export const SupplyChain3DHero: React.FC = () => {
               <div className="p-3 bg-amber-950/30 border border-amber-500/30 rounded-xl flex items-center justify-between">
                 <div>
                   <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                    <span>Petani Organik Sari (S2)</span>
-                    <span className="text-[10px] font-mono bg-amber-500/20 text-amber-300 px-1.5 py-0.2 rounded font-bold border border-amber-500/30">Skor 83,60</span>
+                    <span>Gapoktan Sumber Berkah (S2)</span>
+                    <span className="text-[10px] font-mono bg-amber-500/20 text-amber-300 px-1.5 py-0.2 rounded font-bold border border-amber-500/30">Skor 84,20</span>
                   </div>
                   <p className="text-[10px] font-mono text-stone-400 mt-0.5">
-                    Radius 14 km • Mutu 80 • Panen Hari-H
+                    Radius 9 km • Mutu 90 • Panen H-0
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="font-mono text-xs font-bold text-white block">29,0 kg</span>
-                  <span className="text-[10px] text-amber-300 font-semibold">Rp 217.500</span>
+                  <span className="font-mono text-xs font-bold text-amber-300 block">29,0 kg</span>
+                  <span className="text-[10px] text-amber-400 font-semibold">Rp 232.000</span>
                 </div>
               </div>
             </div>
 
-            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px]">
-              <span className="text-stone-400 flex items-center gap-1">
-                <Lock className="w-3.5 h-3.5 text-emerald-400" />
-                Pencadangan Rekening Escrow:
+            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
+              <span className="text-stone-400 flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                Terpenuhi 100%
               </span>
-              <span className="font-mono font-bold text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-500/30">
-                Rp 537.500 [HOLD]
+              <span className="text-emerald-400 font-mono font-bold flex items-center gap-1">
+                <Lock className="w-3.5 h-3.5 text-emerald-400" />
+                Total Escrow: Rp 552.000
               </span>
             </div>
           </div>
