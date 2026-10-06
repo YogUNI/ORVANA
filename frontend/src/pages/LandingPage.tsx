@@ -167,7 +167,7 @@ export const LandingPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-stone-900 selection:bg-emerald-800/20 selection:text-emerald-950 font-sans antialiased overflow-x-hidden">
+    <div className="min-h-screen bg-[#FAF8F5] text-stone-900 selection:bg-emerald-800/20 selection:text-emerald-950 font-sans antialiased relative">
       
       {/* 1. TOP ANNOUNCEMENT TICKER */}
       <div className="bg-[#0B1A14] text-white text-[11px] font-mono py-2.5 px-4 border-b border-emerald-950/80">
