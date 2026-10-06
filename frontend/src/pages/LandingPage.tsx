@@ -321,8 +321,8 @@ export const LandingPage: React.FC = () => {
         </div>
       </header>
 
-      {/* 3. HERO SECTION ULTRA-CREATIVE DENGAN SPLIT DESIGN & FLOATING DOCK */}
-      <section className="relative z-10 pt-12 sm:pt-20 pb-20 overflow-hidden border-b border-stone-200/80">
+      {/* HERO SECTION ULTRA-CREATIVE DENGAN SPLIT DESIGN & FLOATING DOCK */}
+      <section className="relative z-10 pt-4 sm:pt-7 pb-20 overflow-hidden border-b border-stone-200/80">
         {/* Soft Background Accents */}
         <div className="absolute top-0 right-0 w-[550px] h-[550px] bg-emerald-100/40 rounded-full blur-3xl pointer-events-none -z-10" />
         <div className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-amber-100/40 rounded-full blur-3xl pointer-events-none -z-10" />
