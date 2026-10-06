@@ -95,6 +95,8 @@ export const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showDemoPills, setShowDemoPills] = useState(true);
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -121,20 +123,31 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-surface flex flex-col justify-between">
-      {/* Top Simple Bar */}
-      <header className="border-b border-surface-border/80 bg-white/80 backdrop-blur-sm sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="inline-flex items-center gap-2 hover:opacity-95 transition-opacity">
-            <Logo size="sm" withText={true} />
+    <div className="min-h-screen bg-[#FAF8F5] text-stone-900 selection:bg-emerald-800/20 selection:text-emerald-950 font-sans antialiased flex flex-col justify-between">
+      {/* Header Floating Glass Island yang Lega */}
+      <header className="sticky top-0 z-30 w-full px-4 sm:px-6 lg:px-8 py-4 transition-all duration-300 pointer-events-none">
+        <div className="max-w-7xl mx-auto rounded-2xl sm:rounded-full px-5 sm:px-8 py-3.5 flex items-center justify-between gap-4 pointer-events-auto bg-white/90 backdrop-blur-xl border border-stone-200/90 shadow-md shadow-stone-900/5">
+          <Link to="/" className="flex items-center gap-3.5 group">
+            <Logo size="md" />
+            <div className="flex flex-col">
+              <span className="font-heading font-extrabold text-xl sm:text-2xl text-stone-950 tracking-tight block leading-none group-hover:text-emerald-900 transition-colors">
+                ORVANA
+              </span>
+              <span className="text-[10.5px] uppercase font-mono tracking-widest text-emerald-800 font-bold mt-1">
+                Portal Masuk Sistem
+              </span>
+            </div>
           </Link>
 
           <div className="flex items-center gap-3">
             <span className="text-xs text-stone-500 hidden sm:inline">Belum memiliki akun?</span>
             <Link to="/register">
-              <Button variant="outline" size="sm" className="text-xs font-semibold">
-                Daftar Mitra
-              </Button>
+              <button
+                type="button"
+                className="px-4 py-2 text-xs font-semibold rounded-xl border border-stone-300 bg-white hover:bg-stone-50 hover:border-stone-400 text-stone-800 transition-all shadow-2xs"
+              >
+                Daftar Kemitraan
+              </button>
             </Link>
           </div>
         </div>
@@ -142,10 +155,10 @@ export const LoginPage: React.FC = () => {
 
       {/* Main Split Layout */}
       <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-12">
-        <div className="w-full max-w-5xl bg-white rounded-3xl shadow-card border border-surface-border overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[640px]">
+        <div className="w-full max-w-5xl bg-white rounded-3xl shadow-xl border border-stone-200/90 overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[640px]">
           
           {/* Kolom Kiri: Visual Branding & Hero Story */}
-          <div className="lg:col-span-5 bg-gradient-to-br from-pine-950 via-pine-900 to-pine-950 text-white p-6 sm:p-10 flex flex-col justify-between relative overflow-hidden">
+          <div className="lg:col-span-5 bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-950 text-white p-6 sm:p-10 flex flex-col justify-between relative overflow-hidden">
             {/* Background Texture & Photo with subtle dark overlay */}
             <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-luminosity">
               <img
@@ -154,17 +167,17 @@ export const LoginPage: React.FC = () => {
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-pine-950 via-pine-950/70 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-emerald-950 via-emerald-950/70 to-transparent pointer-events-none" />
 
             {/* Top Tagline */}
             <div className="relative z-10 space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-mono text-emerald-200">
-                <Sparkles className="w-3.5 h-3.5 text-harvest-gold" />
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 <span>Portal Resmi Rantai Pasok Pangan</span>
               </div>
 
               <h2 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-white leading-tight">
-                Menghubungkan <span className="text-harvest-gold italic">Petani Lokal</span> dengan Dapur Gizi Massal.
+                Menghubungkan <span className="text-amber-400 italic">Petani Lokal</span> dengan Dapur Gizi Massal.
               </h2>
 
               <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed font-sans">
@@ -174,7 +187,7 @@ export const LoginPage: React.FC = () => {
 
             {/* Middle Feature Highlights */}
             <div className="relative z-10 my-8 space-y-3">
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white/5 border border-white/10">
                 <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center shrink-0 mt-0.5">
                   <ShieldCheck className="w-4 h-4 text-emerald-300" />
                 </div>
@@ -186,9 +199,9 @@ export const LoginPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-                <div className="w-8 h-8 rounded-lg bg-harvest-gold/20 border border-harvest-gold/30 flex items-center justify-center shrink-0 mt-0.5">
-                  <Lock className="w-4 h-4 text-harvest-gold" />
+              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white/5 border border-white/10">
+                <div className="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-400/30 flex items-center justify-center shrink-0 mt-0.5">
+                  <Lock className="w-4 h-4 text-amber-400" />
                 </div>
                 <div>
                   <h4 className="text-xs font-semibold text-white font-heading">Passport Mutu & Audit Trail</h4>
@@ -215,10 +228,10 @@ export const LoginPage: React.FC = () => {
               
               {/* Header Title */}
               <div>
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-brand bg-brand-soft px-2.5 py-1 rounded border border-brand/20">
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-900 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200">
                   Autentikasi Akun
                 </span>
-                <h1 className="font-serif text-2xl sm:text-3xl font-bold text-pine-950 mt-2">
+                <h1 className="font-serif text-2xl sm:text-3xl font-bold text-stone-950 mt-2">
                   Selamat Datang Kembali
                 </h1>
                 <p className="text-xs sm:text-sm text-stone-500 mt-1">
@@ -246,7 +259,7 @@ export const LoginPage: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-3.5 py-2.5 min-h-[44px] text-sm bg-stone-50/50 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand focus:bg-white transition-all text-stone-900 placeholder:text-stone-400"
+                    className="w-full px-3.5 py-2.5 min-h-[44px] text-sm bg-stone-50/50 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-800 focus:border-emerald-800 focus:bg-white transition-all text-stone-900 placeholder:text-stone-400"
                   />
                 </div>
 
@@ -259,20 +272,29 @@ export const LoginPage: React.FC = () => {
                       Sandi: Demo1234!
                     </span>
                   </div>
-                  <input
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="w-full px-3.5 py-2.5 min-h-[44px] text-sm bg-stone-50/50 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand focus:bg-white transition-all text-stone-900 placeholder:text-stone-400"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="w-full pl-3.5 pr-10 py-2.5 min-h-[44px] text-sm bg-stone-50/50 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-800 focus:border-emerald-800 focus:bg-white transition-all text-stone-900 placeholder:text-stone-400"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 transition-colors p-1"
+                    >
+                      <Eye className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
 
                 <Button
                   type="submit"
                   variant="primary"
-                  className="w-full min-h-[46px] rounded-xl font-heading font-semibold text-sm shadow-sm hover:shadow transition-all flex items-center justify-center gap-2"
+                  className="w-full min-h-[46px] rounded-xl font-heading font-semibold text-sm shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 bg-emerald-900 hover:bg-emerald-950 text-white"
                   isLoading={isLoading}
                 >
                   <span>Masuk ke Dashboard</span>

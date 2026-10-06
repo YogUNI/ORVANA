@@ -161,20 +161,31 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-surface flex flex-col justify-between">
-      {/* Top Header */}
-      <header className="border-b border-surface-border/80 bg-white/80 backdrop-blur-sm sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="inline-flex items-center gap-2 hover:opacity-95 transition-opacity">
-            <Logo size="sm" withText={true} />
+    <div className="min-h-screen bg-[#FAF8F5] text-stone-900 selection:bg-emerald-800/20 selection:text-emerald-950 font-sans antialiased flex flex-col justify-between">
+      {/* Header Floating Glass Island yang Lega */}
+      <header className="sticky top-0 z-30 w-full px-4 sm:px-6 lg:px-8 py-4 transition-all duration-300 pointer-events-none">
+        <div className="max-w-7xl mx-auto rounded-2xl sm:rounded-full px-5 sm:px-8 py-3.5 flex items-center justify-between gap-4 pointer-events-auto bg-white/90 backdrop-blur-xl border border-stone-200/90 shadow-md shadow-stone-900/5">
+          <Link to="/" className="flex items-center gap-3.5 group">
+            <Logo size="md" />
+            <div className="flex flex-col">
+              <span className="font-heading font-extrabold text-xl sm:text-2xl text-stone-950 tracking-tight block leading-none group-hover:text-emerald-900 transition-colors">
+                ORVANA
+              </span>
+              <span className="text-[10.5px] uppercase font-mono tracking-widest text-emerald-800 font-bold mt-1">
+                Pendaftaran Kemitraan
+              </span>
+            </div>
           </Link>
 
           <div className="flex items-center gap-3">
             <span className="text-xs text-stone-500 hidden sm:inline">Sudah memiliki akun?</span>
             <Link to="/login">
-              <Button variant="outline" size="sm" className="text-xs font-semibold">
+              <button
+                type="button"
+                className="px-4 py-2 text-xs font-semibold rounded-xl border border-stone-300 bg-white hover:bg-stone-50 hover:border-stone-400 text-stone-800 transition-all shadow-2xs"
+              >
                 Masuk ke Portal
-              </Button>
+              </button>
             </Link>
           </div>
         </div>
@@ -184,12 +195,12 @@ export const RegisterPage: React.FC = () => {
       <main className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 py-8 sm:py-12">
         {/* Header Intro */}
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-soft border border-brand/20 text-xs font-semibold text-brand">
-            <Sparkles className="w-3.5 h-3.5 text-harvest-gold" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-300/80 text-xs font-semibold text-emerald-950">
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
             <span>Pendaftaran Kemitraan Rantai Pasok Pangan</span>
           </div>
 
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-pine-950 tracking-tight">
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-stone-950 tracking-tight">
             Bergabung dengan Ekosistem ORVANA
           </h1>
 
