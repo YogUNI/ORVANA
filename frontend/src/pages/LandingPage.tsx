@@ -236,16 +236,15 @@ export const LandingPage: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. STICKY NAVBAR DENGAN DYNAMIC FROSTED GLASS (BLUR & TRANSPARAN SAAT SCROLL) */}
-      <header
-        className={`sticky top-0 z-40 transition-all duration-300 ease-in-out ${
-          isScrolled
-            ? 'bg-[#FAF8F5]/80 backdrop-blur-xl border-b border-stone-200/80 shadow-xs h-18'
-            : 'bg-transparent border-b border-transparent h-20'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
-          
+      {/* 2. FLOATING GLASS DOCK / ISLAND NAVBAR */}
+      <header className="sticky top-0 z-40 w-full px-4 sm:px-6 lg:px-8 py-3 transition-all duration-300 pointer-events-none">
+        <div
+          className={`max-w-7xl mx-auto rounded-2xl sm:rounded-full px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4 pointer-events-auto transition-all duration-300 ${
+            isScrolled
+              ? 'bg-white/85 backdrop-blur-xl border border-stone-200/90 shadow-lg shadow-stone-900/5'
+              : 'bg-white/60 backdrop-blur-md border border-stone-200/60 shadow-xs'
+          }`}
+        >
           {/* Logo Brand */}
           <Link to="/" className="flex items-center gap-3 shrink-0 group">
             <Logo size="md" />
@@ -259,15 +258,11 @@ export const LandingPage: React.FC = () => {
             </div>
           </Link>
 
-          {/* Nav Links dengan Sliding Pill Indicator Halus & Responsif */}
+          {/* Nav Links dengan Sliding Pill Indicator Halus & Lega */}
           <nav
             ref={navContainerRef}
             onMouseLeave={() => setHoveredNav(null)}
-            className={`hidden xl:flex items-center relative text-xs font-semibold text-stone-600 p-1.5 rounded-full transition-all duration-300 ${
-              isScrolled
-                ? 'bg-stone-100/90 border border-stone-200/90 shadow-2xs'
-                : 'bg-stone-200/50 backdrop-blur-md border border-stone-300/40'
-            }`}
+            className="hidden lg:flex items-center relative text-xs font-semibold text-stone-600 bg-stone-100/80 p-1 rounded-full border border-stone-200/80 shadow-2xs"
           >
             {/* Sliding Pill Background indicator */}
             <div
