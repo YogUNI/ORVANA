@@ -342,33 +342,44 @@ export const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             
-            {/* Sisi Kiri Hero: Value Proposition & Search Bar */}
+            {/* Sisi Kiri Hero: Value Proposition & Live Agritech Command Bar */}
             <div className="lg:col-span-6 space-y-6 text-left">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-300/80 text-xs font-bold text-emerald-950 shadow-xs">
-                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-                <span>Inovasi Rantai Pasok Pangan Bergizi Massal & Mandiri</span>
+              {/* Bespoke Impact Badge with Live Heartbeat */}
+              <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/90 border border-emerald-600/20 text-xs font-medium text-stone-800 shadow-xs backdrop-blur-md">
+                <span className="flex h-2 w-2 relative">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
+                </span>
+                <span className="font-mono text-[11px] font-bold text-emerald-950 uppercase tracking-wider">
+                  Protokol Pangan Bergizi Massal
+                </span>
+                <span className="text-stone-300">|</span>
+                <span className="text-stone-600 text-[11px]">Mitra Petani & Dapur Mandiri</span>
               </div>
 
-              <h1 className="font-serif text-4xl sm:text-5xl lg:text-[56px] font-bold text-stone-950 tracking-tight leading-[1.1]">
-                Mencocokkan Menu Dapur dengan <br className="hidden sm:inline" />
-                <span className="text-emerald-900 italic font-medium relative underline decoration-amber-500/80 decoration-wavy decoration-2">
+              {/* Editorial High-Impact Headline */}
+              <h1 className="font-serif text-4xl sm:text-5xl lg:text-[54px] font-bold text-stone-950 tracking-tight leading-[1.08]">
+                Mencocokkan Menu Dapur dengan{' '}
+                <span className="text-emerald-900 italic font-medium relative underline decoration-amber-500/70 decoration-wavy decoration-2">
                   Panen Petani Lokal.
                 </span>
               </h1>
 
-              <p className="text-base sm:text-lg text-stone-700 leading-relaxed max-w-xl">
-                Infrastruktur digital berkeadilan yang menghubungkan ribuan porsi gizi harian dengan petani dan nelayan desa: algoritma pencocokan multi-kriteria anti-monopoli (cap 60%), kepastian harga dasar, jaminan dana escrow otomatis, dan paspor ketertelusuran QR publik.
+              <p className="text-base sm:text-lg text-stone-600 leading-relaxed max-w-xl font-normal">
+                Infrastruktur digital berkeadilan yang menghubungkan ribuan porsi gizi harian langsung ke petani desa: algoritma alokasi anti-monopoli (cap 60%), kepastian harga panen, dan paspor ketertelusuran QR publik.
               </p>
 
-              {/* Kotak Lacak Batch & Asisten AI */}
-              <div className="pt-2 max-w-xl space-y-3">
-                <div className="p-2 bg-white rounded-2xl shadow-card border-2 border-emerald-900/15 hover:border-emerald-900/40 focus-within:border-emerald-900 transition-all">
+              {/* Command Console: Search Batch Passport with Scanner Shortcut */}
+              <div className="pt-1 max-w-xl space-y-3">
+                <div className="p-1.5 sm:p-2 bg-white rounded-2xl shadow-xl shadow-stone-900/5 border-2 border-emerald-900/20 focus-within:border-emerald-900 focus-within:ring-4 focus-within:ring-emerald-900/10 transition-all">
                   <form onSubmit={handleTraceSubmit} className="flex flex-col sm:flex-row items-center gap-2">
-                    <div className="flex items-center gap-2.5 px-3 py-2 flex-1 w-full">
-                      <Search className="w-4 h-4 text-emerald-800 shrink-0" />
+                    <div className="flex items-center gap-3 px-3 py-2 flex-1 w-full">
+                      <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-900 shrink-0">
+                        <Search className="w-4 h-4" />
+                      </div>
                       <input
                         type="text"
-                        placeholder="Ketik kode batch: misal ORV-20260920-DPR01-0001"
+                        placeholder="Ketik atau tempel kode batch pangan..."
                         value={batchCodeInput}
                         onChange={(e) => setBatchCodeInput(e.target.value)}
                         className="w-full text-xs sm:text-sm text-stone-950 placeholder-stone-400 focus:outline-none font-mono"
@@ -378,43 +389,58 @@ export const LandingPage: React.FC = () => {
                       type="submit"
                       variant="primary"
                       size="md"
-                      className="w-full sm:w-auto shrink-0 bg-emerald-900 hover:bg-emerald-950 text-white font-semibold text-xs flex items-center justify-center gap-2 px-5 py-3 rounded-xl shadow-xs"
+                      className="w-full sm:w-auto shrink-0 bg-emerald-900 hover:bg-emerald-950 text-white font-semibold text-xs flex items-center justify-center gap-2 px-5 py-3 rounded-xl shadow-xs transition-all hover:scale-[1.02] active:scale-[0.98]"
                     >
-                      <span>Lacak Bahan</span>
+                      <span>Lacak Paspor</span>
                       <ArrowRight className="w-4 h-4" />
                     </Button>
                   </form>
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between gap-2 px-1">
+                <div className="flex flex-wrap items-center justify-between gap-2 px-1 text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-mono text-stone-500">Contoh paspor:</span>
-                    <Link
-                      to="/trace/ORV-20260920-DPR01-0001"
+                    <span className="text-[11px] font-mono text-stone-500">Contoh batch aktif:</span>
+                    <button
+                      type="button"
+                      onClick={() => setBatchCodeInput('ORV-20260920-DPR01-0001')}
                       className="text-[11px] font-mono font-bold text-emerald-900 underline hover:text-emerald-700 transition-colors"
                     >
                       ORV-20260920-DPR01-0001
-                    </Link>
+                    </button>
                   </div>
-                  <span className="text-[11px] font-mono text-emerald-900 bg-emerald-100/60 px-2.5 py-0.5 rounded-full border border-emerald-200 font-bold">
-                    Escrow & QC Verified
+                  <span className="text-[10px] font-mono text-emerald-900 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-300/80 font-bold">
+                    Escrow & QC 100% Lolos
                   </span>
                 </div>
               </div>
 
-              {/* 3 Keunggulan Nilai */}
-              <div className="pt-2 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-stone-700 font-medium">
-                <div className="flex items-center gap-2 p-2.5 bg-white/80 rounded-xl border border-stone-200 shadow-xs">
-                  <Scale className="w-4 h-4 text-emerald-700 shrink-0" />
-                  <span>Anti Monopoli (Batas Cap 60%)</span>
+              {/* Bespoke Agritech Metrics Row (Menggantikan 3 kotak template membosankan) */}
+              <div className="pt-2 grid grid-cols-3 gap-3 border-t border-stone-200/80">
+                <div className="space-y-0.5">
+                  <div className="flex items-center gap-1.5 text-stone-500 text-[11px] font-medium">
+                    <Scale className="w-3.5 h-3.5 text-emerald-800" />
+                    <span>Anti Monopoli</span>
+                  </div>
+                  <p className="text-lg font-bold font-mono text-stone-950">Maks 60%</p>
+                  <p className="text-[10px] text-stone-500 leading-tight">Batas alokasi multi-petani</p>
                 </div>
-                <div className="flex items-center gap-2 p-2.5 bg-white/80 rounded-xl border border-stone-200 shadow-xs">
-                  <Lock className="w-4 h-4 text-emerald-700 shrink-0" />
-                  <span>Escrow Auto-Hold & Release</span>
+
+                <div className="space-y-0.5 border-l border-stone-200 pl-3">
+                  <div className="flex items-center gap-1.5 text-stone-500 text-[11px] font-medium">
+                    <Lock className="w-3.5 h-3.5 text-emerald-800" />
+                    <span>Smart Escrow</span>
+                  </div>
+                  <p className="text-lg font-bold font-mono text-stone-950">Auto-Release</p>
+                  <p className="text-[10px] text-stone-500 leading-tight">Cair instan saat lolos QC</p>
                 </div>
-                <div className="flex items-center gap-2 p-2.5 bg-white/80 rounded-xl border border-stone-200 shadow-xs">
-                  <QrCode className="w-4 h-4 text-emerald-700 shrink-0" />
-                  <span>Paspor Mutu QR Tanpa Login</span>
+
+                <div className="space-y-0.5 border-l border-stone-200 pl-3">
+                  <div className="flex items-center gap-1.5 text-stone-500 text-[11px] font-medium">
+                    <QrCode className="w-3.5 h-3.5 text-emerald-800" />
+                    <span>Paspor Mutu</span>
+                  </div>
+                  <p className="text-lg font-bold font-mono text-stone-950">Publik 100%</p>
+                  <p className="text-[10px] text-stone-500 leading-tight">Tanpa perlu akun / login</p>
                 </div>
               </div>
             </div>
