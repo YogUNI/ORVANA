@@ -12,9 +12,9 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white w-full max-w-lg rounded-card shadow-xl overflow-hidden border border-gray-100">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/50 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white w-full max-w-lg max-h-[90vh] flex flex-col rounded-card shadow-xl overflow-hidden border border-gray-100">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
           <h3 className="font-heading font-bold text-lg text-gray-900">{title}</h3>
           <button
             onClick={onClose}
@@ -23,7 +23,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
             <X className="w-5 h-5" />
           </button>
         </div>
-        <div className="p-6">{children}</div>
+        <div className="p-6 overflow-y-auto flex-1">{children}</div>
       </div>
     </div>
   );
