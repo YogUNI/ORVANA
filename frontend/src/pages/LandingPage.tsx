@@ -8,6 +8,7 @@ import { Button } from '../components/ui/Button';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Logo } from '../components/ui/Logo';
 import { SupplyChain3DHero } from '../features/landing/SupplyChain3DHero';
+import { ScrollStorytellingActor } from '../features/landing/ScrollStorytellingActor';
 import {
   ShieldCheck,
   Truck,
@@ -456,6 +457,9 @@ export const LandingPage: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* 3. INTERACTIVE 3D SCROLL-TELLING PRESENTATION DOCK (Peti Panen Meluncur Mengikuti Scroll) */}
+      <ScrollStorytellingActor />
 
       {/* 4. LIVE INTERACTIVE AI NLP SIMULATOR SANDBOX (Fitur Baru Pembeda Kelas Dunia) */}
       <section id="nlp-demo" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-14">
