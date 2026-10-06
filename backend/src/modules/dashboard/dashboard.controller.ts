@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { DashboardService } from './dashboard.service';
 import { OrdersService } from '../orders/orders.service';
@@ -40,6 +40,33 @@ export class DashboardController {
   async getPublicImpactSummary() {
     const data = await this.dashboardService.getPublicImpactSummary();
     return { data };
+  }
+
+  @Post('public/parse-text')
+  @ApiOperation({ summary: 'Sandbox publik NLP AI untuk demonstrasi di landing page' })
+  async parsePublicNlpText(@Body('text') text: string) {
+    const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:8000';
+    try {
+      const response = await fetch(`${aiServiceUrl}/ai/parse-text`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text || '' }),
+      });
+      if (!response.ok) {
+        throw new Error(`AI service responded with status ${response.status}`);
+      }
+      const data = await response.json();
+      return { data };
+    } catch (err: any) {
+      return {
+        data: {
+          candidates: [
+            { commodityName: 'Cabai rawit', quantityKg: 200, askingPrice: 45000, commodityCategory: 'SPICE' },
+          ],
+          warning: err.message,
+        },
+      };
+    }
   }
 
   @Get('dashboard/impact')

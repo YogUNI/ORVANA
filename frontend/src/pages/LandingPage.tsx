@@ -145,7 +145,7 @@ export const LandingPage: React.FC = () => {
     if (!nlpSampleText.trim()) return;
     setNlpLoading(true);
     try {
-      const res: any = await apiClient.post('/demand-requests/parse-text', { text: nlpSampleText.trim() });
+      const res: any = await apiClient.post('/public/parse-text', { text: nlpSampleText.trim() });
       setNlpParsed(res?.data || null);
     } catch (err) {
       // Mock fallback if python service offline
