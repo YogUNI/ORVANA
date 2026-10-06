@@ -228,8 +228,8 @@ export const LandingPage: React.FC = () => {
               Platform agritech terintegrasi yang menjembatani dapur gizi massal sekolah dengan produsen lokal: alokasi cerdas multi-kriteria, proteksi harga dasar, penjaminan dana escrow, dan passport digital bahan makanan anak bangsa.
             </p>
 
-            {/* Kotak Pencarian Batch Interaktif */}
-            <div className="pt-2 max-w-xl">
+            {/* Kotak Pencarian Batch Interaktif & Coba Fitur NLP */}
+            <div className="pt-2 max-w-xl space-y-3">
               <div className="p-2 bg-white rounded-2xl shadow-card border-2 border-brand/20 hover:border-brand/40 focus-within:border-brand transition-all">
                 <form onSubmit={handleTraceSubmit} className="flex flex-col sm:flex-row items-center gap-2">
                   <div className="flex items-center gap-2.5 px-3 py-2 flex-1 w-full">
@@ -253,14 +253,22 @@ export const LandingPage: React.FC = () => {
                   </Button>
                 </form>
               </div>
-              <div className="flex items-center gap-2 mt-2 px-1">
-                <span className="text-[11px] font-mono text-gray-500">Contoh siap lacak:</span>
-                <Link
-                  to="/trace/ORV-20260920-DPR01-0001"
-                  className="text-[11px] font-mono font-semibold text-brand underline hover:text-emerald-700 transition-colors"
-                >
-                  ORV-20260920-DPR01-0001
-                </Link>
+              
+              <div className="flex flex-wrap items-center justify-between gap-2 px-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[11px] font-mono text-gray-500">Contoh batch publik:</span>
+                  <Link
+                    to="/trace/ORV-20260920-DPR01-0001"
+                    className="text-[11px] font-mono font-semibold text-brand underline hover:text-emerald-700 transition-colors"
+                  >
+                    ORV-20260920-DPR01-0001
+                  </Link>
+                </div>
+
+                <div className="flex items-center gap-1.5 text-[11px] font-mono text-pine-900 bg-emerald-50/90 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                  <Sparkles className="w-3 h-3 text-brand" />
+                  <span>Didukung AI NLP & Escrow Otomatis</span>
+                </div>
               </div>
             </div>
 
@@ -276,7 +284,7 @@ export const LandingPage: React.FC = () => {
               </div>
               <div className="flex items-center gap-1.5">
                 <Check className="w-4 h-4 text-status-success font-bold" />
-                <span>Sertifikat Mutu QR Terbuka</span>
+                <span>Passport Mutu QR Terbuka</span>
               </div>
             </div>
           </div>
