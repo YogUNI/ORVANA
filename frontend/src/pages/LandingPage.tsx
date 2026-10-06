@@ -13,7 +13,7 @@ import { InteractiveParticleCanvas } from '../features/landing/InteractivePartic
 import { InteractiveSpotlightCursor } from '../features/landing/InteractiveSpotlightCursor';
 import { MoncyCustomCursor } from '../features/landing/MoncyCustomCursor';
 import { TechBalls } from '../features/landing/TechBalls';
-import { FixedScrollytellingCompanion } from '../features/landing/FixedScrollytellingCompanion';
+import { SmartFloatingConcierge } from '../features/landing/SmartFloatingConcierge';
 import {
   ShieldCheck,
   Truck,
@@ -223,7 +223,7 @@ export const LandingPage: React.FC = () => {
       <InteractiveParticleCanvas />
       <InteractiveSpotlightCursor />
       <MoncyCustomCursor />
-      <FixedScrollytellingCompanion />
+      <SmartFloatingConcierge />
 
       {/* FLOATING GLASS DOCK / ISLAND NAVBAR */}
       <header className="sticky top-0 z-40 w-full px-4 sm:px-6 lg:px-8 py-3 transition-all duration-300 pointer-events-none">
