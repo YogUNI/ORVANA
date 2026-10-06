@@ -49,6 +49,7 @@ export const AppRouter: React.FC = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/trace" element={<BatchTracePage />} />
         <Route path="/trace/:batchCode" element={<BatchTracePage />} />
 
         {/* Halaman Akun Pending */}

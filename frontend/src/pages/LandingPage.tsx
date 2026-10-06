@@ -319,7 +319,7 @@ export const LandingPage: React.FC = () => {
 
           {/* Quick Actions (Cek Batch, Masuk, Daftar) */}
           <div className="flex items-center gap-2.5 shrink-0">
-            <Link to="/trace/ORV-20260920-DPR01-0001" className="hidden sm:block">
+            <Link to="/trace" className="hidden sm:block">
               <span className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-emerald-900 bg-emerald-50 hover:bg-emerald-100/90 px-3 py-2 rounded-xl border border-emerald-200/90 transition-all shadow-2xs">
                 <QrCode className="w-3.5 h-3.5 text-emerald-700" />
                 <span>Cek Batch</span>
