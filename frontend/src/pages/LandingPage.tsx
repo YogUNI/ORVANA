@@ -109,20 +109,25 @@ export const LandingPage: React.FC = () => {
       const currentScrollY = window.scrollY;
       setIsScrolled(currentScrollY > 20);
 
-      const scrollY = currentScrollY + 120;
+      // Robust viewport intersection detection
+      let currentSection = '';
+      const triggerLine = window.innerHeight * 0.35; // 35% from top of screen
+
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);
         if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollY >= top && scrollY < top + height) {
-            setActiveSection(sectionId);
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= triggerLine && rect.bottom >= triggerLine) {
+            currentSection = sectionId;
             break;
           }
         }
       }
-      if (currentScrollY < 200) {
+
+      if (currentScrollY < 250) {
         setActiveSection('');
+      } else if (currentSection) {
+        setActiveSection(currentSection);
       }
     };
 
