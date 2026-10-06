@@ -10,6 +10,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Interactive3DInspectorCanvas } from './Interactive3DInspectorCanvas';
 
 interface SectionTip {
   title: string;
@@ -20,7 +21,6 @@ interface SectionTip {
 
 export const FixedScrollytellingCompanion: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
   const [currentTip, setCurrentTip] = useState<SectionTip>({
     title: 'Inspektur Digital',
     badge: 'Online 24/7',
@@ -85,24 +85,6 @@ export const FixedScrollytellingCompanion: React.FC = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Subtle mouse tilt for the character
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const charCenterX = rect.left + rect.width / 2;
-      const charCenterY = rect.top + rect.height / 2;
-
-      const deltaX = Math.max(-1, Math.min(1, (e.clientX - charCenterX) / 400));
-      const deltaY = Math.max(-1, Math.min(1, (e.clientY - charCenterY) / 400));
-
-      setMouseOffset({ x: deltaX * 12, y: deltaY * 12 });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   const scrollToSection = (id: string) => {
@@ -260,22 +242,9 @@ export const FixedScrollytellingCompanion: React.FC = () => {
           }}
         />
 
-        {/* 3D Character Model with Interactive Parallax Tilt */}
-        <div
-          className="relative w-28 h-36 sm:w-32 sm:h-40 flex items-center justify-center transition-transform duration-300 group-hover:scale-105"
-          style={{
-            perspective: '800px',
-            transform: `rotateY(${mouseOffset.x}deg) rotateX(${-mouseOffset.y}deg)`,
-          }}
-        >
-          <img
-            src="/images/orvana-character-cutout.png"
-            alt="Virtual 3D Inspector"
-            className="w-full h-full object-contain filter drop-shadow-[0_12px_20px_rgba(0,0,0,0.5)] transition-all duration-300"
-          />
-
-          {/* Hologram Scanner Glow on Tablet */}
-          <div className="absolute top-[48%] left-[40%] -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-emerald-400/20 rounded-full blur-md animate-pulse pointer-events-none" />
+        {/* REAL-TIME 3D THREE.JS CHARACTER (EYES, HEAD & TORSO TRACK CURSOR 100% IN REAL-TIME) */}
+        <div className="relative flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+          <Interactive3DInspectorCanvas size={160} />
         </div>
 
         {/* Badge Pill Click Indicator */}
