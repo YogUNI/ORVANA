@@ -33,74 +33,82 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
   impact,
   isLoading,
 }) => {
-  // page 0: Lembar 1 (Kas) & Lembar 2 (Produsen)
-  // page 1: Lembar 3 (Logistik) & Lembar 4 (Mutu)
-  // page 2: Lembar 5 (Paspor QR) & Lembar 6 (Audit Sah)
-  const [pageIndex, setPageIndex] = useState<number>(0);
-  const [flipState, setFlipState] = useState<'idle' | 'flipping-next' | 'flipping-prev'>('idle');
-  const [dragOffset, setDragOffset] = useState<number>(0);
+  // activeSpread: 0 (Lembar 1 & 2), 1 (Lembar 3 & 4), 2 (Lembar 5 & 6)
+  const [activeSpread, setActiveSpread] = useState<number>(0);
+  const [animating, setAnimating] = useState<boolean>(false);
+  const [turnDirection, setTurnDirection] = useState<'next' | 'prev' | null>(null);
+  const [dragProgress, setDragProgress] = useState<number>(0); // 0 to 1
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
   const startXRef = useRef<number | null>(null);
-  const totalPages = 3;
+  const totalSpreads = 3;
 
-  const turnNext = () => {
-    if (flipState !== 'idle' || pageIndex >= totalPages - 1) return;
-    setFlipState('flipping-next');
+  const triggerNext = () => {
+    if (animating || activeSpread >= totalSpreads - 1) return;
+    setTurnDirection('next');
+    setAnimating(true);
     setTimeout(() => {
-      setPageIndex((prev) => prev + 1);
-      setFlipState('idle');
-      setDragOffset(0);
-    }, 600);
+      setActiveSpread((prev) => prev + 1);
+      setAnimating(false);
+      setTurnDirection(null);
+      setDragProgress(0);
+    }, 650);
   };
 
-  const turnPrev = () => {
-    if (flipState !== 'idle' || pageIndex <= 0) return;
-    setFlipState('flipping-prev');
+  const triggerPrev = () => {
+    if (animating || activeSpread <= 0) return;
+    setTurnDirection('prev');
+    setAnimating(true);
     setTimeout(() => {
-      setPageIndex((prev) => prev - 1);
-      setFlipState('idle');
-      setDragOffset(0);
-    }, 600);
+      setActiveSpread((prev) => prev - 1);
+      setAnimating(false);
+      setTurnDirection(null);
+      setDragProgress(0);
+    }, 650);
   };
 
-  // Mouse / Touch Dragging to flip page like real paper
+  // Pointer drag handling for authentic tactile touch & mouse dragging
   const handlePointerDown = (e: React.PointerEvent) => {
+    if (animating) return;
     startXRef.current = e.clientX;
     setIsDragging(true);
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
-    if (!isDragging || startXRef.current === null) return;
+    if (!isDragging || startXRef.current === null || animating) return;
     const diff = e.clientX - startXRef.current;
-    // Limit drag bounds
-    if (diff < 0 && pageIndex < totalPages - 1) {
-      setDragOffset(Math.max(diff, -160));
-    } else if (diff > 0 && pageIndex > 0) {
-      setDragOffset(Math.min(diff, 160));
+
+    if (diff < 0 && activeSpread < totalSpreads - 1) {
+      // Dragging left (turning next page)
+      const progress = Math.min(Math.abs(diff) / 240, 0.95);
+      setDragProgress(progress);
+    } else if (diff > 0 && activeSpread > 0) {
+      // Dragging right (turning prev page)
+      const progress = Math.min(diff / 240, 0.95);
+      setDragProgress(-progress);
     }
   };
 
   const handlePointerUp = () => {
     if (!isDragging) return;
     setIsDragging(false);
-    if (dragOffset < -60) {
-      turnNext();
-    } else if (dragOffset > 60) {
-      turnPrev();
+    if (dragProgress > 0.22 && activeSpread < totalSpreads - 1) {
+      triggerNext();
+    } else if (dragProgress < -0.22 && activeSpread > 0) {
+      triggerPrev();
     } else {
-      setDragOffset(0);
+      setDragProgress(0);
     }
     startXRef.current = null;
   };
 
-  // Render Content for Page Left & Page Right based on pageIndex
-  const renderLeftPageContent = (idx: number) => {
-    if (idx === 0) {
+  // Content for left pages (Halaman 1, 3, 5)
+  const renderLeftPage = (spreadIndex: number) => {
+    if (spreadIndex === 0) {
       return (
         <div className="h-full flex flex-col justify-between">
           <div>
-            <div className="flex items-start justify-between border-b-2 border-stone-300 pb-3 mb-4">
+            <div className="flex items-start justify-between border-b-2 border-stone-300/90 pb-3 mb-4">
               <div>
                 <span className="text-[10px] font-mono font-extrabold text-stone-500 uppercase tracking-widest block">
                   LEMBAR #01 • KEUANGAN DESA
@@ -109,7 +117,7 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
                   Arus Kas Petani & Nelayan
                 </h3>
               </div>
-              <div className="border border-emerald-700/50 rounded-lg px-2 py-0.5 rotate-[-2deg] bg-emerald-50">
+              <div className="border border-emerald-700/60 rounded-lg px-2 py-0.5 rotate-[-2deg] bg-emerald-50">
                 <span className="text-[9px] font-serif font-black text-emerald-800 flex items-center gap-0.5">
                   <Check className="w-3 h-3 text-emerald-700" />
                   AUDIT SAH
@@ -131,11 +139,11 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
                 {isLoading ? <Skeleton className="h-8 w-36" /> : formatRupiah(impact?.localSpendingRupiah || 0)}
               </div>
               <p className="text-[11px] text-stone-600 font-sans leading-relaxed pt-1 border-t border-stone-200/60">
-                Dana dibayarkan langsung tanpa potongan perantara begitu bahan lolos uji mutu dapur.
+                Dana dibayarkan langsung tanpa potongan calo begitu bahan lolos uji mutu dapur.
               </p>
             </div>
 
-            <div className="p-3 rounded-xl bg-white/60 border border-stone-200 text-xs font-mono space-y-1">
+            <div className="p-3 rounded-xl bg-white/70 border border-stone-200 text-xs font-mono space-y-1">
               <div className="flex justify-between text-stone-700">
                 <span>Potongan Calo:</span>
                 <strong className="text-emerald-700">Rp 0 (Tanpa Makelar)</strong>
@@ -153,11 +161,11 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
           </div>
         </div>
       );
-    } else if (idx === 1) {
+    } else if (spreadIndex === 1) {
       return (
         <div className="h-full flex flex-col justify-between">
           <div>
-            <div className="flex items-start justify-between border-b-2 border-stone-300 pb-3 mb-4">
+            <div className="flex items-start justify-between border-b-2 border-stone-300/90 pb-3 mb-4">
               <div>
                 <span className="text-[10px] font-mono font-extrabold text-stone-500 uppercase tracking-widest block">
                   LEMBAR #03 • TIMBANGAN PANEN
@@ -186,7 +194,7 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
               </p>
             </div>
 
-            <div className="p-3 rounded-xl bg-white/60 border border-stone-200 flex items-center justify-between text-xs">
+            <div className="p-3 rounded-xl bg-white/70 border border-stone-200 flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-emerald-800" />
                 <div>
@@ -210,7 +218,7 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
       return (
         <div className="h-full flex flex-col justify-between">
           <div>
-            <div className="flex items-start justify-between border-b-2 border-stone-300 pb-3 mb-4">
+            <div className="flex items-start justify-between border-b-2 border-stone-300/90 pb-3 mb-4">
               <div>
                 <span className="text-[10px] font-mono font-extrabold text-stone-500 uppercase tracking-widest block">
                   LEMBAR #05 • PASPOR PANEN
@@ -258,12 +266,13 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
     }
   };
 
-  const renderRightPageContent = (idx: number) => {
-    if (idx === 0) {
+  // Content for right pages (Halaman 2, 4, 6)
+  const renderRightPage = (spreadIndex: number) => {
+    if (spreadIndex === 0) {
       return (
         <div className="h-full flex flex-col justify-between">
           <div>
-            <div className="flex items-start justify-between border-b-2 border-stone-300 pb-3 mb-4">
+            <div className="flex items-start justify-between border-b-2 border-stone-300/90 pb-3 mb-4">
               <div>
                 <span className="text-[10px] font-mono font-extrabold text-stone-500 uppercase tracking-widest block">
                   LEMBAR #02 • MITRA DAERAH
@@ -295,17 +304,18 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
               ))}
             </div>
 
-            {/* Corner Page Curl / Flip Visual Guide */}
-            <div
-              onClick={turnNext}
-              className="group p-2.5 rounded-xl bg-amber-50 hover:bg-amber-100/90 border border-amber-200 text-amber-900 text-xs font-mono font-bold flex items-center justify-between cursor-pointer transition-all shadow-2xs"
+            {/* Turn Page Button / Click Hint */}
+            <button
+              type="button"
+              onClick={triggerNext}
+              className="w-full group p-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 text-xs font-mono font-bold flex items-center justify-between cursor-pointer transition-colors shadow-2xs"
             >
               <span className="flex items-center gap-1.5">
                 <Hand className="w-3.5 h-3.5 text-amber-700 group-hover:translate-x-1 transition-transform" />
                 <span>Usap / Klik untuk Buka Lembar 2</span>
               </span>
               <ArrowRight className="w-3.5 h-3.5" />
-            </div>
+            </button>
           </div>
 
           <div className="pt-3 border-t border-stone-200/80 flex items-center justify-between text-[10px] font-mono text-stone-500">
@@ -314,11 +324,11 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
           </div>
         </div>
       );
-    } else if (idx === 1) {
+    } else if (spreadIndex === 1) {
       return (
         <div className="h-full flex flex-col justify-between">
           <div>
-            <div className="flex items-start justify-between border-b-2 border-stone-300 pb-3 mb-4">
+            <div className="flex items-start justify-between border-b-2 border-stone-300/90 pb-3 mb-4">
               <div>
                 <span className="text-[10px] font-mono font-extrabold text-stone-500 uppercase tracking-widest block">
                   LEMBAR #04 • INSPEKSI MUTU GIZI
@@ -347,16 +357,17 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
               </p>
             </div>
 
-            <div
-              onClick={turnNext}
-              className="group p-2.5 rounded-xl bg-purple-50 hover:bg-purple-100/90 border border-purple-200 text-purple-950 text-xs font-mono font-bold flex items-center justify-between cursor-pointer transition-all shadow-2xs"
+            <button
+              type="button"
+              onClick={triggerNext}
+              className="w-full group p-2.5 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-950 text-xs font-mono font-bold flex items-center justify-between cursor-pointer transition-colors shadow-2xs"
             >
               <span className="flex items-center gap-1.5">
                 <Hand className="w-3.5 h-3.5 text-purple-700 group-hover:translate-x-1 transition-transform" />
                 <span>Usap / Klik untuk Lembar 3</span>
               </span>
               <ArrowRight className="w-3.5 h-3.5" />
-            </div>
+            </button>
           </div>
 
           <div className="pt-3 border-t border-stone-200/80 flex items-center justify-between text-[10px] font-mono text-stone-500">
@@ -369,7 +380,7 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
       return (
         <div className="h-full flex flex-col justify-between">
           <div>
-            <div className="flex items-start justify-between border-b-2 border-stone-300 pb-3 mb-4">
+            <div className="flex items-start justify-between border-b-2 border-stone-300/90 pb-3 mb-4">
               <div>
                 <span className="text-[10px] font-mono font-extrabold text-stone-500 uppercase tracking-widest block">
                   LEMBAR #06 • AUDIT PUBLIK
@@ -410,14 +421,25 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
     }
   };
 
+  // Rotation angle calculation
+  const leafRotation = animating
+    ? turnDirection === 'next'
+      ? -180
+      : 0
+    : dragProgress > 0
+    ? -dragProgress * 180
+    : dragProgress < 0
+    ? (1 + dragProgress) * -180
+    : 0;
+
   return (
     <div className="relative select-none">
       
-      {/* Top Subtle Ledger Controller */}
+      {/* Top Ledger Controller */}
       <div className="flex items-center justify-between gap-2 mb-4 px-2">
         <div className="flex items-center gap-2 text-xs font-mono text-stone-600">
           <Hand className="w-4 h-4 text-emerald-700 animate-pulse" />
-          <span className="hidden sm:inline">Usap / Tarik lembar buku ke samping untuk membalik halaman</span>
+          <span className="hidden sm:inline">Usap atau seret lembaran buku ke samping untuk membalik halaman</span>
           <span className="sm:hidden">Usap untuk membalik lembar buku</span>
         </div>
 
@@ -425,21 +447,21 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
         <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-stone-200 shadow-2xs text-xs font-mono">
           <button
             type="button"
-            onClick={turnPrev}
-            disabled={pageIndex === 0 || flipState !== 'idle'}
-            className="p-1.5 rounded-lg hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-stone-800"
+            onClick={triggerPrev}
+            disabled={activeSpread === 0 || animating}
+            className="p-1.5 rounded-lg hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-stone-800 cursor-pointer"
             title="Balik ke Lembar Sebelumnya"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
           <span className="px-2 font-bold text-stone-800 text-[11px]">
-            Lembar {pageIndex + 1} dari {totalPages}
+            Lembar {activeSpread + 1} dari {totalSpreads}
           </span>
           <button
             type="button"
-            onClick={turnNext}
-            disabled={pageIndex >= totalPages - 1 || flipState !== 'idle'}
-            className="p-1.5 rounded-lg hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-stone-800"
+            onClick={triggerNext}
+            disabled={activeSpread >= totalSpreads - 1 || animating}
+            className="p-1.5 rounded-lg hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-stone-800 cursor-pointer"
             title="Balik ke Lembar Berikutnya"
           >
             <ChevronRight className="w-4 h-4" />
@@ -453,72 +475,91 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
-        className="relative [perspective:1800px] cursor-grab active:cursor-grabbing touch-pan-y"
+        className="relative [perspective:2200px] cursor-grab active:cursor-grabbing touch-pan-y"
       >
-        {/* Outer Hardcover Frame with Realistic Depth */}
+        {/* Outer Hardcover Frame with Depth */}
         <div className="relative rounded-3xl bg-[#EDE7DD] p-3 sm:p-5 shadow-elevated border border-stone-300">
           
           {/* Main Book Shell */}
-          <div className="relative rounded-2xl bg-[#F8F5EE] border border-[#DDD5C5] shadow-2xl overflow-hidden min-h-[460px]">
+          <div className="relative rounded-2xl bg-[#F8F5EE] border border-[#DDD5C5] shadow-2xl overflow-hidden min-h-[470px]">
             
-            {/* Top Red-Gold Silk Ribbon */}
+            {/* Top Red-Gold Silk Bookmark Ribbon */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center pointer-events-none">
               <div className="w-8 h-12 bg-gradient-to-b from-amber-600 via-amber-500 to-amber-700 shadow-md flex items-end justify-center pb-1">
                 <div className="w-0 h-0 border-l-[16px] border-l-transparent border-r-[16px] border-r-transparent border-b-[8px] border-b-[#F8F5EE]" />
               </div>
             </div>
 
-            {/* Central Book Spine Fold Crease & Shadow */}
+            {/* Central Spine Fold Crease & Shadow */}
             <div className="hidden lg:block absolute inset-y-0 left-1/2 -translate-x-1/2 w-8 bg-gradient-to-r from-stone-400/20 via-stone-500/35 to-stone-400/20 z-20 pointer-events-none shadow-inner" />
             <div className="hidden lg:block absolute inset-y-0 left-1/2 -translate-x-1/2 w-[1px] bg-stone-300 z-25 pointer-events-none" />
 
             {/* ======================================================== */}
-            {/* TWO-PAGE SPREAD WITH 3D REALISTIC PAGE FLIP ANIMATION    */}
+            {/* 3D TRUE BOOK PAGE SPREAD ARCHITECTURE                    */}
             {/* ======================================================== */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-stone-300/80 relative z-10 min-h-[460px]">
+            <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-stone-300/80 relative z-10 min-h-[470px]">
               
-              {/* HALAMAN KIRI (STATIC / TARGET) */}
+              {/* STATIC BASE LEFT PAGE */}
               <div className="p-6 sm:p-8 bg-gradient-to-r from-[#FAF7F0] via-[#FAF6EE] to-[#F5F0E6] relative overflow-hidden">
-                {renderLeftPageContent(pageIndex)}
+                {renderLeftPage(
+                  animating && turnDirection === 'next'
+                    ? activeSpread + 1
+                    : activeSpread
+                )}
               </div>
 
-              {/* HALAMAN KANAN (FLIPPABLE 3D LEAF) */}
-              <div className="p-6 sm:p-8 bg-gradient-to-l from-[#FAF7F0] via-[#FAF6EE] to-[#F5F0E6] relative overflow-hidden [transform-style:preserve-3d]">
-                
-                {/* Visual Leaf Page Content */}
-                <div
-                  style={{
-                    transformOrigin: 'left center',
-                    transform:
-                      flipState === 'flipping-next'
-                        ? 'rotateY(-180deg)'
-                        : flipState === 'flipping-prev'
-                        ? 'rotateY(0deg)'
-                        : `rotateY(${dragOffset * 0.4}deg)`,
-                    transition: isDragging ? 'none' : 'transform 600ms cubic-bezier(0.4, 0, 0.2, 1)',
-                  }}
-                  className="h-full w-full relative [transform-style:preserve-3d]"
-                >
-                  {/* Front Side of Right Page */}
-                  <div className="h-full w-full [backface-visibility:hidden]">
-                    {renderRightPageContent(pageIndex)}
-                  </div>
-
-                  {/* Back Side of Flipping Page (Shadow & Blank Paper Texture during turn) */}
-                  <div className="absolute inset-0 bg-[#EFE9DC] [transform:rotateY(180deg)] [backface-visibility:hidden] p-6 flex items-center justify-center border-r border-stone-300 shadow-2xl">
-                    <div className="text-center opacity-40 font-serif italic text-stone-600">
-                      Membalik lembaran buku...
-                    </div>
-                  </div>
-                </div>
-
-                {/* Animated Page Flip Shadow Gradient */}
-                {flipState === 'flipping-next' && (
-                  <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-stone-900/30 to-transparent pointer-events-none animate-pulse" />
+              {/* STATIC BASE RIGHT PAGE (Revealed underneath during page turn) */}
+              <div className="p-6 sm:p-8 bg-gradient-to-l from-[#FAF7F0] via-[#FAF6EE] to-[#F5F0E6] relative overflow-hidden">
+                {renderRightPage(
+                  animating && turnDirection === 'next'
+                    ? activeSpread + 1
+                    : activeSpread
                 )}
               </div>
 
             </div>
+
+            {/* ======================================================== */}
+            {/* THE FLIPPING LEAF (TRANSITIONS FROM RIGHT TO LEFT)       */}
+            {/* ======================================================== */}
+            {(animating || isDragging) && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  right: 0,
+                  width: '50%',
+                  transformOrigin: 'left center',
+                  transform: `rotateY(${leafRotation}deg)`,
+                  transformStyle: 'preserve-3d',
+                  transition: isDragging ? 'none' : 'transform 650ms cubic-bezier(0.35, 0, 0.25, 1)',
+                  zIndex: 35,
+                }}
+                className="hidden lg:block pointer-events-none"
+              >
+                {/* Front of the turning leaf (Current Right Page) */}
+                <div
+                  className="absolute inset-0 p-6 sm:p-8 bg-gradient-to-l from-[#FAF7F0] via-[#FAF6EE] to-[#F5F0E6] border-l border-stone-300 shadow-2xl [backface-visibility:hidden] overflow-hidden"
+                >
+                  {renderRightPage(activeSpread)}
+                </div>
+
+                {/* Back of the turning leaf (Next Left Page, inverted) */}
+                <div
+                  style={{
+                    transform: 'rotateY(180deg)',
+                  }}
+                  className="absolute inset-0 p-6 sm:p-8 bg-gradient-to-r from-[#FAF7F0] via-[#FAF6EE] to-[#F5F0E6] border-r border-stone-300 shadow-2xl [backface-visibility:hidden] overflow-hidden"
+                >
+                  {renderLeftPage(
+                    turnDirection === 'next'
+                      ? activeSpread + 1
+                      : activeSpread - 1
+                  )}
+                </div>
+              </div>
+            )}
 
           </div>
 
