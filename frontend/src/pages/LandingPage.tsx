@@ -1150,14 +1150,14 @@ export const LandingPage: React.FC = () => {
         <div className="text-center max-w-2xl mx-auto mb-10 space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/90 text-emerald-900 text-[11px] font-mono font-bold tracking-wider border border-emerald-300 shadow-2xs">
             <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            <span>ORVANA NEURAL PARSER v1.0</span>
+            <span>ASISTEN PINTAR BAHASA PETANI</span>
           </div>
           <h2 className="font-serif text-2xl sm:text-4xl font-bold text-stone-950 tracking-tight leading-tight">
             Ketik Bahasa Sehari-hari Petani. <br className="hidden sm:inline" />
-            <span className="italic font-normal text-emerald-850">AI Mengekstrak Pesanan Seketika.</span>
+            <span className="italic font-normal text-emerald-850">Sistem Otomatis Mencatat Hasil Panen.</span>
           </h2>
           <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
-            Petani di pedesaan cukup mengirim pesan WhatsApp tanpa formulir rumit. Mesin NLP cerdas kami menormalisasi bahasa gaul daerah, satuan terbilang ("dua kwintal"), dan memetakannya ke kontrak resmi.
+            Petani di desa cukup kirim pesan seperti di WhatsApp biasa tanpa isi formulir yang membingungkan. Sistem cerdas kami langsung mengenali sebutan daerah, satuan timbangan ("dua kwintal"), dan mencatatnya ke pesanan resmi.
           </p>
         </div>
 
@@ -1172,11 +1172,11 @@ export const LandingPage: React.FC = () => {
             <div className="flex items-center gap-2 text-stone-700">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span className="font-bold uppercase tracking-wider text-stone-900">
-                FASTAPI NLP ENGINE • LATENSI ~42MS • NAIVE BAYES + SLANG NORMALIZER
+                PENCATAT PANEN OTOMATIS • RESPON INSTAN KILAT • PAHAM SINGKATAN & DIALEK DESA
               </span>
             </div>
             <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-              ● STATUS: ONLINE & READY
+              ● SISTEM AKTIF & SIAP TERIMA PESAN
             </span>
           </div>
 
@@ -1191,14 +1191,14 @@ export const LandingPage: React.FC = () => {
                   <div className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-[10px] font-mono font-bold text-stone-500 uppercase tracking-wider">
-                      INTERAKTIF NLP SANDBOX
+                      UJI COBA PESAN CHAT
                     </span>
                   </div>
                   <h3 className="text-sm font-bold text-stone-900 font-serif">
-                    Ketik Kalimat Bebas Bahasa Petani:
+                    Ketik Kalimat Bebas Seperti Chat WhatsApp:
                   </h3>
                   <p className="text-[11px] text-stone-500 font-sans">
-                    Coba ketik bahasa gaul desa, angka terbilang, atau harga singkatan.
+                    Bisa pakai singkatan ketikan cepat, sebutan takaran lokal, atau harga pasar.
                   </p>
                 </div>
 
@@ -1226,32 +1226,32 @@ export const LandingPage: React.FC = () => {
                     className="bg-emerald-950 hover:bg-emerald-900 text-white text-xs px-5 py-3 font-bold rounded-xl flex items-center gap-1.5 transition-all cursor-pointer shrink-0 shadow-sm"
                   >
                     <Send className="w-3.5 h-3.5" />
-                    <span>{nlpLoading ? 'Mengurai...' : 'Urai AI'}</span>
+                    <span>{nlpLoading ? 'Membaca...' : 'Urai Pesan'}</span>
                   </Button>
                 </div>
                 <div className="flex justify-between items-center text-[10px] font-mono text-stone-600 px-1">
-                  <span>Tekan Enter untuk memproses otomatis</span>
-                  <span className="text-emerald-800">Support: WhatsApp & SMS API</span>
+                  <span>Tekan Enter di keyboard untuk kirim pesan</span>
+                  <span className="text-emerald-800">Terkoneksi: WhatsApp & Jalur SMS Petani</span>
                 </div>
               </div>
 
               {/* Quick 1-Click Tap Prompts */}
               <div className="space-y-2 pt-1">
                 <span className="text-[10px] font-mono text-stone-600 block">
-                  Atau klik contoh bahasa lapangan riil:
+                  Atau klik contoh kalimat pesan di lapangan:
                 </span>
                 <div className="flex flex-col gap-1.5">
                   {[
                     {
-                      label: 'Kata Terbilang ("dua kwintal"):',
+                      label: 'Pakai Kata Satuan ("dua kwintal"):',
                       text: 'besok ada panen cabai rawit dua kwintal harga 45rb sama bayam 50 kilo',
                     },
                     {
-                      label: 'Multi-Komoditas ("setengah ton"):',
+                      label: 'Banyak Komoditas ("setengah ton"):',
                       text: 'lusa siap kirim setengah ton beras lokal sama lele 30 kilo 25rb',
                     },
                     {
-                      label: 'Slang Gaul Desa ("sy bsoq ad pnn"):',
+                      label: 'Singkatan Cepat Petani ("sy bsoq ad pnn"):',
                       text: 'sy bsoq ad pnn cengek 100 kg harga 40 ribu siap setor',
                     },
                   ].map((preset, pIdx) => (
@@ -1287,23 +1287,23 @@ export const LandingPage: React.FC = () => {
               <div className="flex items-center justify-between pb-3 border-b border-stone-100">
                 <div>
                   <span className="text-[9px] font-mono font-bold text-stone-500 uppercase tracking-wider block">
-                    HASIL PEMAHAMAN STRUKTURAL
+                    REKAP OTOMATIS SISTEM
                   </span>
                   <h3 className="text-sm font-bold text-stone-950 font-serif">
-                    Entitas Rantai Pasok Teridentifikasi
+                    Rincian Panen yang Berhasil Dicatat
                   </h3>
                 </div>
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[9px] font-mono font-bold border border-emerald-200">
                   <BadgeCheck className="w-2.5 h-2.5 text-emerald-600" />
-                  CONFIDENCE 98.4%
+                  TINGKAT AKURASI 98.4% (SANGAT TEPAT)
                 </span>
               </div>
 
               {/* Extracted Entity Cards */}
               <div className="space-y-2.5">
                 {(nlpParsed?.candidates || [
-                  { commodityName: 'Cabai rawit', quantityKg: 200, askingPrice: 45000, commodityCategory: 'SPICE' },
-                  { commodityName: 'Bayam', quantityKg: 50, askingPrice: null, commodityCategory: 'VEGETABLE' }
+                  { commodityName: 'Cabai rawit', quantityKg: 200, askingPrice: 45000, commodityCategory: 'BUMBU & REMPAH' },
+                  { commodityName: 'Bayam', quantityKg: 50, askingPrice: null, commodityCategory: 'SAYURAN' }
                 ]).map((item: any, cIdx: number) => (
                   <div
                     key={cIdx}
@@ -1327,7 +1327,7 @@ export const LandingPage: React.FC = () => {
 
                     <div className="grid grid-cols-2 gap-2 text-xs font-mono pt-1">
                       <div className="p-2 rounded-lg bg-white border border-stone-200/60">
-                        <span className="text-[9px] text-stone-600 block uppercase">Volume Baku:</span>
+                        <span className="text-[9px] text-stone-600 block uppercase">Jumlah Timbangan:</span>
                         <strong className="text-sm text-emerald-950 font-extrabold">
                           {item.quantityKg} kg
                         </strong>
@@ -1335,7 +1335,7 @@ export const LandingPage: React.FC = () => {
                       <div className="p-2 rounded-lg bg-white border border-stone-200/60">
                         <span className="text-[9px] text-stone-600 block uppercase">Harga Tawaran:</span>
                         <strong className="text-sm text-stone-900 font-extrabold">
-                          {item.askingPrice ? `Rp ${item.askingPrice.toLocaleString('id-ID')}/kg` : 'Standar Dinas'}
+                          {item.askingPrice ? `Rp ${item.askingPrice.toLocaleString('id-ID')}/kg` : 'Sesuai Standar Dinas'}
                         </strong>
                       </div>
                     </div>
@@ -1346,16 +1346,16 @@ export const LandingPage: React.FC = () => {
               {/* Instant Verification Telemetry */}
               <div className="p-3 rounded-xl bg-stone-50 border border-stone-200/70 space-y-1.5 text-[11px] font-mono text-stone-600">
                 <div className="flex justify-between items-center">
-                  <span>Normalisasi Kata Angka:</span>
+                  <span>Penerjemahan Sebutan Berat:</span>
                   <strong className="text-emerald-800">"dua kwintal" ➔ 200 kg ✓</strong>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span>Normalisasi Harga Slang:</span>
+                  <span>Penerjemahan Singkatan Harga:</span>
                   <strong className="text-emerald-800">"45rb" ➔ Rp 45.000 ✓</strong>
                 </div>
                 <div className="flex justify-between items-center pt-1 border-t border-stone-200/60 text-[10px] text-stone-600">
-                  <span>Status Ekstraksi:</span>
-                  <span className="text-emerald-800 font-bold">Siap Konversi ke Smart Contract</span>
+                  <span>Status Data:</span>
+                  <span className="text-emerald-800 font-bold">Siap Dijadikan Kontrak Resmi Pasokan</span>
                 </div>
               </div>
 

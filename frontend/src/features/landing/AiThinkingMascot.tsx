@@ -22,11 +22,11 @@ export const AiThinkingMascot: React.FC<AiThinkingMascotProps> = ({ status, size
 
   useEffect(() => {
     if (status === 'thinking') {
-      setBubbleText('Hmm... menganalisis entitas...');
+      setBubbleText('Hmm... sedang membaca pesan...');
     } else if (status === 'wow') {
-      setBubbleText('Wow! Ekstraksi 100% Cocok!');
+      setBubbleText('Wah, datanya langsung tercatat!');
     } else {
-      setBubbleText('Coba ketik bahasa petani...');
+      setBubbleText('Ketik pesan panen Anda...');
     }
   }, [status]);
 
