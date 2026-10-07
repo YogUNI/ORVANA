@@ -42,14 +42,13 @@ Memastikan Asisten AI ORVANA:
 
 ---
 
-### FASE 3: Pengujian Persona, Gaya Bahasa & Evaluasi Pengguna (Akan Datang)
-- [ ] **T-AI-05: Blind Test & Variasi Persona (Tone Matching)**
-  - Menguji 5 gaya bahasa input:
-    1. *Gaya Santai/Gen-Z*: "bro ini ornava apaan dah, jelasin singkat dong" -> Respon santai, analogis, dan ringkas.
-    2. *Gaya Pejabat/Dinas*: "Mohon penjelasan terkait mekanisme kepatuhan kuota serapan lokal 60 persen" -> Respon formal, data regulasi, dan akuntabel.
-    3. *Gaya Petani*: "Saya petani cabe di desa, gimana cara jual hasil panen kesini dan kapan uangnya cair?" -> Respon hangat, jelas soal DP 30% dan bantuan koordinator.
-    4. *Gaya Auditor/Inspektur*: "Bagaimana rantai pasok ini membuktikan integritas catatan kas dan sertifikat batch?" -> Respon berfokus pada ledger append-only dan QR paspor mutu.
-    5. *Pertanyaan Out-of-Scope*: "Rekomendasikan resep masakan luar negeri untuk makan malam" -> Menolak halus dan mengarahkan kembali ke ekosistem pangan lokal ORVANA.
+### FASE 3: Pengujian Persona, Gaya Bahasa & Evaluasi Pengguna (Selesai ✅)
+- [x] **T-AI-05: Blind Test & Variasi Persona (Tone Matching & Boundary Guard)**
+  - [x] *P-01 (Gaya Santai/Gen-Z)*: "bro ini ornava apaan dah, jelasin singkat dong" -> Respon santai, analogis, dan ringkas.
+  - [x] *P-02 (Gaya Pejabat/Dinas)*: "Mohon penjelasan terkait mekanisme kepatuhan kuota serapan lokal 60 persen" -> Respon formal, data regulasi, dan akuntabel.
+  - [x] *P-03 (Gaya Petani)*: "Saya petani cabe di desa, gimana cara jual hasil panen kesini dan kapan uangnya cair?" -> Respon hangat, jelas soal DP 30% dan bantuan koordinator.
+  - [x] *P-04 (Gaya Auditor/Inspektur)*: "Bagaimana rantai pasok ini membuktikan integritas catatan kas dan sertifikat batch?" -> Respon berfokus pada ledger append-only dan QR paspor mutu.
+  - [x] *P-05 (Boundary Guard Out-of-Scope)*: "Bisa buatin kode Python machine learning untuk citra satelit NASA?" -> Menolak halus dan mengarahkan kembali ke ekosistem pangan lokal ORVANA.
 
 ---
 
