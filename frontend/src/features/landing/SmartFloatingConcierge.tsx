@@ -380,12 +380,20 @@ export const SmartFloatingConcierge: React.FC = () => {
       <div className="fixed bottom-6 right-6 z-40 select-none pointer-events-auto">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="group relative flex items-center gap-2.5 px-4.5 py-3 rounded-full bg-[#11231B] hover:bg-black text-white shadow-2xl hover:shadow-emerald-950/40 border border-emerald-800/40 transition-all duration-300 hover:scale-[1.03] active:scale-95 cursor-pointer ring-4 ring-emerald-950/10"
+          className="group relative inline-flex items-center gap-3 px-5 py-3 rounded-full bg-[#11231B] hover:bg-black text-white shadow-2xl hover:shadow-emerald-950/40 border border-emerald-700/50 transition-all duration-300 hover:scale-[1.03] active:scale-95 cursor-pointer ring-4 ring-emerald-950/10"
           aria-label="Buka Asisten AI Orvana"
         >
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-xs" />
-          <MessageSquare className="w-4 h-4 text-emerald-300 group-hover:rotate-6 transition-transform" />
-          <span className="text-xs font-bold font-sans tracking-wide">
+          {/* Status Dot Terpusat */}
+          <span className="relative flex h-2.5 w-2.5 shrink-0 items-center justify-center">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400" />
+          </span>
+
+          {/* Ikon Chat */}
+          <MessageSquare className="w-4 h-4 text-emerald-300 shrink-0 group-hover:rotate-6 transition-transform" />
+
+          {/* Label Teks dengan Padding Kanan Lega */}
+          <span className="text-xs font-bold font-sans tracking-wide pr-1 whitespace-nowrap">
             {isOpen ? 'Tutup Konsol AI' : 'Asisten AI ORVANA'}
           </span>
         </button>
