@@ -41,7 +41,6 @@ import {
   Calculator,
   Clock,
   BookOpen,
-  HelpCircle,
   MessageSquare,
   ExternalLink,
 } from 'lucide-react';
@@ -236,30 +235,44 @@ export const LandingPage: React.FC = () => {
     {
       category: 'dapur',
       tag: 'MODEL PENGADAAN',
-      role: 'Untuk Pengelola Dapur & Dinas',
-      q: 'Apa bedanya ORVANA dengan marketplace produk pertanian biasa?',
-      a: 'Marketplace biasa berbasis jual-beli bebas sewaktu-waktu tanpa kepastian serapan. ORVANA adalah sistem pengadaan terencana: jadwal menu dapur gizi massal dicocokkan 1–2 minggu sebelumnya dengan jadwal panen kelompok tani lokal. Dilengkapi aturan batas kuota maksimal 60% per pemasok agar tidak dimonopoli distributor besar, jaminan harga dasar resmi daerah, serta paspor pelacakan QR terbuka untuk masyarakat.',
+      role: 'Pengelola Dapur & Dinas',
+      q: 'Apa perbedaan mendasar ORVANA dengan marketplace produk pertanian biasa?',
+      a: 'Marketplace umum beroperasi secara spot market tanpa jaminan serapan dan kuota terencana. ORVANA adalah sistem pencocokan terstruktur: jadwal menu gizi 10 hingga 14 hari ke depan dipetakan langsung ke kalender panen produsen lokal. Sistem menerapkan aturan kuota maksimal 60% per pemasok untuk mencegah monopoli pedagang besar, menetapkan harga acuan resmi dinas, serta menerbitkan paspor pelacakan batch terbuka bagi publik.',
     },
     {
       category: 'petani',
       tag: 'KEAMANAN PEMBAYARAN',
-      role: 'Untuk Petani & Pemasok',
-      q: 'Bagaimana petani kecil terjamin menerima pembayaran tepat waktu tanpa potongan tengkulak?',
-      a: 'ORVANA menggunakan sistem dompet jaminan otomatis: begitu pesanan bahan dikonfirmasi oleh dapur, anggaran belanja langsung diamankan di sistem. Ketika ahli gizi di dapur memeriksa dan meloloskan uji mutu bahan, dana otomatis langsung dicairkan tanpa potongan perantara ke rekening petani desa dalam hitungan jam.',
+      role: 'Petani & Kelompok Ternak',
+      q: 'Bagaimana kepastian pembayaran petani terlindungi tanpa risiko gagal bayar?',
+      a: 'Setiap pesanan yang disepakati langsung mengunci saldo alokasi belanja dapur ke rekening penampung resmi. Begitu petugas pemeriksa mutu meloloskan bahan pangan saat tiba di dapur, pencatatan buku besar digital (ledger) terpicu otomatis dan dana langsung dicairkan penuh ke rekening petani tanpa potongan tengkulak.',
     },
     {
       category: 'petani',
       tag: 'LOGISTIK & KESEGARAN',
-      role: 'Untuk Koordinator & Distribusi',
-      q: 'Bagaimana peran koordinator logistik menjaga mutu kesegaran bahan pangan?',
-      a: 'Koordinator menjemput dan mengonsolidasi panen dalam radius pendek (< 25 km) menggunakan rute armada tercepat. Petugas mencatat penimbangan bobot secara presisi serta menempelkan kode batch identitas asal desa sebelum bahan diserahkan ke dapur penerima demi mencegah bahan layu di perjalanan.',
+      role: 'Koordinator Distribusi Wilayah',
+      q: 'Bagaimana koordinator memastikan bahan pangan tiba dalam kondisi segar?',
+      a: 'Sistem mengelompokkan titik jemput panen dalam radius pendek (di bawah 25 km). Koordinator menimbang muatan secara presisi dengan verifikasi timbang di lokasi, menempelkan label QR batch asal desa, dan memonitor waktu tempuh armada agar sayuran daun dan protein segar tiba di dapur kurang dari 4 jam setelah dipanen.',
+    },
+    {
+      category: 'dapur',
+      tag: 'STANDAR MUTU & GIZI',
+      role: 'Pengawas Mutu & Ahli Gizi',
+      q: 'Bagaimana prosedur penanganan jika bahan pangan yang dikirim tidak memenuhi spesifikasi?',
+      a: 'Petugas pemeriksa mutu melakukan uji organoleptik dengan checklist standar gizi terukur. Jika terdapat komoditas di bawah ambang mutu (misalnya skor di bawah 70 atau susut fisik melebihi toleransi), sistem mencatat status tolak atau terima sebagian. Pembayaran hanya dihitung untuk kuantitas yang lolos mutu dan pesanan pengganti langsung ditugaskan ke pemasok cadangan terdekat.',
     },
     {
       category: 'publik',
-      tag: 'KONTROL GIZI ANAK',
-      role: 'Untuk Publik & Orang Tua Santri',
-      q: 'Apakah orang tua murid dan masyarakat umum bisa memeriksa asal muasal makanan anak mereka?',
-      a: 'Sangat bisa. Setiap sajian makanan di dapur memiliki paspor digital QR Code publik yang bisa dipindai lewat kamera HP tanpa perlu login. Menampilkan nama kelompok tani desa asal bahan, tanggal panen, skor kelayakan gizi dari inspektur ahli, hingga nama pengemudi logistik.',
+      tag: 'TRANSPARANSI PUBLIK',
+      role: 'Orang Tua & Masyarakat Umum',
+      q: 'Apakah orang tua murid dapat memeriksa asal muasal bahan makanan yang dikonsumsi anak?',
+      a: 'Ya, seluruh data rantai pasok bersifat transparan. Siapa pun dapat memindai kode QR batch pada menu harian atau memasukkan kode batch di portal publik tanpa harus membuat akun. Informasi yang disajikan mencakup nama kelompok tani asal, tanggal panen, sertifikat uji kelayakan gizi, serta riwayat rute distribusi logistik.',
+    },
+    {
+      category: 'dapur',
+      tag: 'KEBIJAKAN HARGA',
+      role: 'Dinas Ketahanan Pangan',
+      q: 'Bagaimana sistem menjaga stabilitas harga agar dapur tidak terkena lonjakan inflasi mendadak?',
+      a: 'ORVANA menggunakan batas toleransi harga acuan daerah yang diperbarui berkala oleh dinas terkait. Kontrak pengadaan berbasis jadwal panen mengunci kesepakatan harga wajar bagi petani sekaligus memberi kepastian plafon anggaran bagi pengelola dapur gizi massal sepanjang periode semester.',
     },
   ];
 
@@ -1594,191 +1607,180 @@ export const LandingPage: React.FC = () => {
 
 
       <ScrollReveal animation="fade-up" delayMs={0}>
-        {/* 9. THE INTERACTIVE AGRITECH KNOWLEDGE HUB (FAQ 2-COLUMN ASYMMETRIC) */}
-      <section id="faq" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16">
-        
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-100/90 text-emerald-900 text-[11px] font-mono font-bold uppercase tracking-wider border border-emerald-300 shadow-2xs">
-            <HelpCircle className="w-3.5 h-3.5 text-emerald-800" />
-            <span>PUSAT PENGETAHUAN & REGULASI SISTEM</span>
-          </div>
-          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-stone-950 tracking-tight leading-tight">
-            Klarifikasi Sistem & <br className="hidden sm:inline" />
-            <span className="italic font-normal text-emerald-850">Tata Kelola Rantai Pasok Pangan</span>
-          </h2>
-          <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
-            Transparansi penuh mengenai kepastian pembayaran petani, seleksi mutu ahli gizi, dan perlindungan harga daerah.
-          </p>
-        </div>
-
-        {/* 2-Column Asymmetric Console Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* 9. THE EDITORIAL AGRITECH DIRECTORY & ACCORDION (WORLD-CLASS CRAFT) */}
+        <section id="faq" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
           
-          {/* SISI KIRI: BRAND HELP CARD & DIRECT SUPPORT ANCHOR (4 COLS) */}
-          <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4">
+          {/* Section Header with Refined Typography & Spacing */}
+          <div className="max-w-3xl mb-12 lg:mb-16">
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200/80 inline-block mb-3">
+              Pusat Pengetahuan & Regulasi
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-stone-950 tracking-tight leading-[1.15]">
+              Transparansi Tata Kelola & <br className="hidden sm:inline" />
+              <span className="italic font-normal text-emerald-900">Operasional Rantai Pasok Pangan</span>
+            </h2>
+            <p className="text-sm sm:text-base text-stone-600 mt-4 leading-relaxed font-sans max-w-2xl">
+              Prinsip kerja, mekanisme proteksi harga petani lokal, standar kontrol mutu dapur gizi, serta keterbukaan penelusuran batch bahan bagi publik.
+            </p>
+          </div>
+
+          {/* 2-Column Asymmetric Editorial Architecture */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
             
-            <div className="rounded-3xl bg-gradient-to-br from-[#1E3A2F] via-[#162C24] to-[#0D1C16] text-white p-6 sm:p-7 shadow-elevated border-2 border-emerald-800/60 relative overflow-hidden">
-              {/* Subtle Ambient Glow */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none" />
-
-              <div className="space-y-4 relative z-10">
-                <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-amber-300 shadow-inner">
-                  <Sparkles className="w-6 h-6" />
+            {/* SISI KIRI: CURATED AUDIENCE DIRECTORY & CONCIERGE ACCESS (4 COLS) */}
+            <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
+              
+              {/* Segmented Category Filter Navigation */}
+              <div className="bg-white rounded-2xl p-2 border border-stone-200/80 shadow-xs">
+                <div className="text-[11px] font-mono font-medium text-stone-400 uppercase tracking-wider px-3 pt-2 pb-1.5">
+                  Kategori Pembaca
                 </div>
+                <div className="flex flex-col gap-1">
+                  {[
+                    { id: 'all', label: 'Semua Pertanyaan', count: faqs.length },
+                    { id: 'dapur', label: 'Dapur & Pengelola Gizi', count: faqs.filter(f => f.category === 'dapur').length },
+                    { id: 'petani', label: 'Petani & Logistik Daerah', count: faqs.filter(f => f.category === 'petani').length },
+                    { id: 'publik', label: 'Orang Tua & Publik', count: faqs.filter(f => f.category === 'publik').length },
+                  ].map((cat) => {
+                    const isActive = faqCategory === cat.id;
+                    return (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => {
+                          setFaqCategory(cat.id as any);
+                          setExpandedFaq(null);
+                        }}
+                        className={`w-full py-2.5 px-3.5 rounded-xl text-left text-xs font-medium transition-all duration-200 flex items-center justify-between cursor-pointer ${
+                          isActive
+                            ? 'bg-emerald-950 text-white font-semibold shadow-xs'
+                            : 'text-stone-700 hover:bg-stone-100/80 hover:text-stone-900'
+                        }`}
+                      >
+                        <span>{cat.label}</span>
+                        <span
+                          className={`text-[11px] font-mono px-2 py-0.5 rounded-md ${
+                            isActive
+                              ? 'bg-emerald-800 text-emerald-100'
+                              : 'bg-stone-100 text-stone-500'
+                          }`}
+                        >
+                          {cat.count}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
-                <div>
-                  <span className="text-[10px] font-mono font-bold text-emerald-300 uppercase tracking-widest block">
-                    BANTUAN & KONSULTASI
+              {/* Minimalist Assistance Anchor Card */}
+              <div className="rounded-2xl bg-white p-5 sm:p-6 border border-stone-200/80 shadow-xs space-y-4">
+                <div className="space-y-1">
+                  <span className="text-[11px] font-mono font-medium text-emerald-800 uppercase tracking-wider">
+                    Pusat Asistensi
                   </span>
-                  <h3 className="text-lg sm:text-xl font-serif font-bold text-white mt-1">
-                    Punya Kasus Khusus di Wilayah Anda?
+                  <h3 className="font-serif text-base font-bold text-stone-900 leading-snug">
+                    Butuh pendampingan verifikasi wilayah Anda?
                   </h3>
-                  <p className="text-xs text-emerald-100/80 mt-2 leading-relaxed font-sans">
-                    Tim dinas dan teknis kami siap memandu integrasi kalender panen dan verifikasi akun dapur gizi Anda.
+                  <p className="text-xs text-stone-600 leading-relaxed pt-1">
+                    Pelajari alur operasional melalui simulasi interaktif atau konsultasi langsung dengan asisten petani.
                   </p>
                 </div>
 
-                <div className="pt-2 space-y-2">
+                <div className="pt-2 space-y-2 font-sans">
                   <a
                     href="#nlp-demo"
-                    className="w-full py-2.5 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-xs flex items-center justify-between transition-colors shadow-xs"
+                    className="w-full py-2.5 px-3.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-medium text-xs flex items-center justify-between transition-colors shadow-2xs"
                   >
                     <span className="flex items-center gap-2">
-                      <MessageSquare className="w-3.5 h-3.5" />
-                      <span>Coba Chat Asisten AI Petani</span>
+                      <MessageSquare className="w-3.5 h-3.5 text-stone-300" />
+                      <span>Uji Coba Asisten Digital</span>
                     </span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
                   </a>
 
                   <Link
                     to="/trace/ORV-20260920-DPR01-0001"
-                    className="w-full py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs flex items-center justify-between border border-white/20 transition-colors"
+                    className="w-full py-2.5 px-3.5 rounded-xl bg-stone-50 hover:bg-stone-100 text-stone-800 font-medium text-xs flex items-center justify-between border border-stone-200 transition-colors"
                   >
                     <span className="flex items-center gap-2">
-                      <QrCode className="w-3.5 h-3.5 text-emerald-300" />
-                      <span>Simulasi Scan Paspor QR</span>
+                      <QrCode className="w-3.5 h-3.5 text-stone-600" />
+                      <span>Buka Paspor Batch Publik</span>
                     </span>
-                    <ExternalLink className="w-3.5 h-3.5" />
+                    <ExternalLink className="w-3.5 h-3.5 text-stone-400" />
                   </Link>
                 </div>
 
-                <div className="pt-3 border-t border-white/15 flex items-center justify-between text-[10px] font-mono text-emerald-200/70">
-                  <span>Layanan Posko: 24/7 Digital</span>
-                  <span className="text-emerald-400">● Sistem Aktif</span>
+                <div className="pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] font-mono text-stone-500">
+                  <span>Keterbukaan Data</span>
+                  <span className="text-emerald-700 font-medium">Terverifikasi Publik</span>
                 </div>
               </div>
+
             </div>
 
-            {/* Quick Filter Tabs By Role */}
-            <div className="p-4 rounded-2xl bg-white border border-stone-200/90 shadow-2xs space-y-2">
-              <span className="text-[10px] font-mono font-bold text-stone-500 uppercase tracking-wider block">
-                Filter Pertanyaan Sesuai Peran:
-              </span>
-              <div className="grid grid-cols-2 gap-1.5 text-xs font-mono font-bold">
-                {[
-                  { id: 'all', label: 'Semua Topik' },
-                  { id: 'petani', label: 'Petani & Kurir' },
-                  { id: 'dapur', label: 'Dapur & Dinas' },
-                  { id: 'publik', label: 'Publik & Ortu' },
-                ].map((cat) => (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => {
-                      setFaqCategory(cat.id as any);
-                      setExpandedFaq(0);
-                    }}
-                    className={`py-2 px-3 rounded-xl transition-all text-left text-[11px] cursor-pointer border ${
-                      faqCategory === cat.id
-                        ? 'bg-emerald-950 text-white border-emerald-950 shadow-2xs'
-                        : 'bg-stone-50 text-stone-700 border-stone-200/70 hover:bg-stone-100'
-                    }`}
-                  >
-                    {cat.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-          </div>
-
-          {/* SISI KANAN: ACCORDION LIST BERKUALITAS EDITORIAL TINGGI (8 COLS) */}
-          <div className="lg:col-span-8 space-y-3.5">
-            {filteredFaqs.map((faq, index) => {
-              const isExpanded = expandedFaq === index;
-              return (
-                <div
-                  key={index}
-                  className={`rounded-2xl transition-all duration-300 overflow-hidden border ${
-                    isExpanded
-                      ? 'bg-gradient-to-b from-white via-white to-emerald-50/20 border-emerald-400 shadow-elevated ring-1 ring-emerald-500/20'
-                      : 'bg-white border-stone-200/90 shadow-2xs hover:border-emerald-300 hover:shadow-xs'
-                  }`}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setExpandedFaq(isExpanded ? null : index)}
-                    className="w-full p-5 sm:p-6 text-left flex items-start justify-between gap-4 cursor-pointer group"
-                  >
-                    <div className="flex items-start gap-3.5 flex-1">
-                      {/* Numeric Indicator */}
-                      <span
-                        className={`w-7 h-7 rounded-xl flex items-center justify-center font-mono font-bold text-xs shrink-0 transition-colors mt-0.5 ${
-                          isExpanded
-                            ? 'bg-emerald-950 text-emerald-300 shadow-2xs'
-                            : 'bg-stone-100 text-stone-600 group-hover:bg-emerald-100 group-hover:text-emerald-900'
-                        }`}
-                      >
-                        0{index + 1}
-                      </span>
-
-                      <div className="space-y-1 flex-1">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="text-[9px] font-mono font-bold text-emerald-900 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300">
+            {/* SISI KANAN: REFINED HAIRLINE ACCORDION (8 COLS) */}
+            <div className="lg:col-span-8 divide-y divide-stone-200/90 border-t border-b border-stone-200/90">
+              {filteredFaqs.map((faq, index) => {
+                const isExpanded = expandedFaq === index;
+                return (
+                  <div key={faq.q} className="transition-colors">
+                    <button
+                      type="button"
+                      onClick={() => setExpandedFaq(isExpanded ? null : index)}
+                      className="w-full py-6 text-left flex items-start justify-between gap-6 cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-800 rounded-lg"
+                      aria-expanded={isExpanded}
+                    >
+                      <div className="flex-1 space-y-2">
+                        {/* Eyebrow & Target Context */}
+                        <div className="flex flex-wrap items-center gap-2 text-xs">
+                          <span className="font-mono text-[11px] font-semibold text-emerald-900 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/70">
                             {faq.tag}
                           </span>
-                          <span className="text-[10px] font-mono text-stone-500">
+                          <span className="text-stone-300 font-mono text-xs">/</span>
+                          <span className="text-stone-500 font-mono text-[11px]">
                             {faq.role}
                           </span>
                         </div>
+
+                        {/* Question Title */}
                         <h4
-                          className={`font-serif text-sm sm:text-base font-bold transition-colors ${
-                            isExpanded ? 'text-stone-950' : 'text-stone-900 group-hover:text-emerald-950'
+                          className={`font-serif text-base sm:text-lg font-bold transition-colors leading-snug ${
+                            isExpanded ? 'text-emerald-950' : 'text-stone-900 group-hover:text-emerald-900'
                           }`}
                         >
                           {faq.q}
                         </h4>
                       </div>
-                    </div>
 
-                    <div
-                      className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 border transition-all duration-300 ${
-                        isExpanded
-                          ? 'bg-emerald-950 text-white border-emerald-950 rotate-180'
-                          : 'bg-stone-100 text-stone-600 border-stone-200 group-hover:border-emerald-400 group-hover:bg-emerald-50'
-                      }`}
-                    >
-                      <ChevronDown className="w-4 h-4" />
-                    </div>
-                  </button>
-
-                  {isExpanded && (
-                    <div className="px-5 sm:px-6 pb-6 pt-1 text-xs sm:text-sm text-stone-700 leading-relaxed font-sans border-t border-stone-100/90 pl-14 sm:pl-16">
-                      <div className="p-4 rounded-xl bg-stone-50/80 border border-stone-200/70 text-stone-700 relative">
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-600 rounded-l-xl" />
-                        <p>{faq.a}</p>
+                      {/* Tactile Toggle Button */}
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border transition-all duration-200 mt-1 ${
+                          isExpanded
+                            ? 'bg-emerald-950 text-white border-emerald-950 rotate-180'
+                            : 'bg-white text-stone-500 border-stone-200 group-hover:border-stone-400 group-hover:text-stone-900'
+                        }`}
+                      >
+                        <ChevronDown className="w-4 h-4" />
                       </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                    </button>
+
+                    {/* Smooth Expanded Answer Content */}
+                    {isExpanded && (
+                      <div className="pb-6 pt-1 text-sm sm:text-base text-stone-700 leading-relaxed font-sans max-w-3xl animate-in fade-in duration-200">
+                        <div className="bg-stone-50/70 rounded-xl p-5 border border-stone-200/60 text-stone-700 text-sm leading-relaxed">
+                          <p>{faq.a}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
           </div>
 
-        </div>
-
-      </section>
+        </section>
       </ScrollReveal>
 
       {/* 10. CALL TO ACTION (WARM AGRITECH) */}
