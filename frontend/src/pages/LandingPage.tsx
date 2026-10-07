@@ -1186,8 +1186,8 @@ export const LandingPage: React.FC = () => {
             <div className="lg:col-span-6 space-y-5">
               
               {/* Reactive Mascot Stage - Integrated Clean Cockpit */}
-              <div className="flex items-center justify-between p-4 rounded-2xl bg-white border border-stone-200/90 shadow-2xs gap-4 relative overflow-hidden">
-                <div className="space-y-1.5 flex-1 min-w-0">
+              <div className="flex items-center justify-between p-4 pt-5 rounded-2xl bg-white border border-stone-200/90 shadow-2xs gap-4 relative">
+                <div className="space-y-1.5 flex-1 min-w-0 pr-2">
                   <div className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-[10px] font-mono font-bold text-stone-500 uppercase tracking-wider">
@@ -1206,7 +1206,9 @@ export const LandingPage: React.FC = () => {
                   </p>
                 </div>
                 {/* 2D Living Vector Mascot */}
-                <AiThinkingMascot status={mascotStatus} size={70} />
+                <div className="shrink-0 flex justify-end">
+                  <AiThinkingMascot status={mascotStatus} size={70} />
+                </div>
               </div>
 
               {/* Chat-Style Input Bar with clean padding and clear separation */}

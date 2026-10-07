@@ -31,30 +31,30 @@ export const AiThinkingMascot: React.FC<AiThinkingMascotProps> = ({ status, size
   }, [status]);
 
   return (
-    <div className="relative flex flex-col items-center select-none shrink-0" style={{ width: `${size}px` }}>
+    <div className="relative flex flex-col items-center select-none shrink-0" style={{ width: '120px' }}>
       {/* Speech / Thought Bubble with arrow */}
       <div
-        className={`relative mb-1.5 px-2.5 py-1 rounded-xl text-[10px] font-mono font-bold shadow-xs transition-all duration-300 text-center ${
+        className={`relative mb-2 px-3 py-1.5 rounded-xl text-[10px] font-mono font-bold shadow-xs transition-all duration-300 text-center whitespace-nowrap z-10 ${
           status === 'thinking'
             ? 'bg-amber-400 text-stone-950 border border-amber-300 animate-pulse'
             : status === 'wow'
             ? 'bg-emerald-950 text-emerald-300 border border-emerald-500'
-            : 'bg-white text-stone-700 border border-stone-200'
+            : 'bg-stone-100 text-stone-700 border border-stone-200'
         }`}
       >
-        <div className="flex items-center justify-center gap-1">
-          {status === 'thinking' && <span className="w-1.5 h-1.5 rounded-full bg-stone-900 animate-ping shrink-0" />}
+        <div className="flex items-center justify-center gap-1.5">
+          {status === 'thinking' && <span className="w-1.5 h-1.5 rounded-full bg-stone-950 animate-ping shrink-0" />}
           {status === 'wow' && <span className="text-amber-300 text-[10px]">✨</span>}
-          <span className="truncate max-w-[110px]">{bubbleText}</span>
+          <span>{bubbleText}</span>
         </div>
-        {/* Little bubble tail arrow pointing to mascot */}
+        {/* Little bubble tail arrow pointing down to head */}
         <div
           className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 border-r border-b ${
             status === 'thinking'
               ? 'bg-amber-400 border-amber-300'
               : status === 'wow'
               ? 'bg-emerald-950 border-emerald-500'
-              : 'bg-white border-stone-200'
+              : 'bg-stone-100 border-stone-200'
           }`}
         />
       </div>
