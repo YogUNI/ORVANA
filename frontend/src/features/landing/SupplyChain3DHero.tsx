@@ -3,8 +3,6 @@ import {
   TrendingUp,
   RotateCw,
   ExternalLink,
-  Building2,
-  CheckCircle2,
   Lock,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -82,103 +80,76 @@ export const SupplyChain3DHero: React.FC = () => {
             </button>
           </div>
 
-          {/* ================= BACK SIDE: LIVE MATCHING ENGINE ALGORITHM CARD (EXACT SAME 340PX HEIGHT) ================= */}
+          {/* ================= BACK SIDE: 3D CYBER-DATA GREENHOUSE & ENGINE LAB (BORDERLESS & SEAMLESS BLEND) ================= */}
           <div
-            className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-stone-950 text-white rounded-3xl border border-stone-800/80 p-5 shadow-2xl backdrop-blur-2xl flex flex-col justify-between overflow-hidden text-left"
+            className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] flex flex-col items-center justify-center p-0"
           >
-            <div className="absolute top-0 right-0 w-36 h-36 bg-emerald-500/10 rounded-bl-full pointer-events-none" />
+            {/* FLOATING AMBIENT GLOW BACKDROP (CYBER EMERALD & CYAN) */}
+            <div className="absolute inset-8 rounded-full bg-gradient-to-tr from-cyan-500/10 via-emerald-500/15 to-amber-400/10 blur-3xl opacity-80 pointer-events-none -z-10" />
 
-            {/* Header Card */}
-            <div>
-              <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-2.5">
-                <div className="flex items-center gap-2">
-                  <span className="flex h-2 w-2 relative">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                  </span>
-                  <span className="text-xs font-mono font-bold tracking-tight text-white uppercase">
-                    Live Matching Engine
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-bold border border-emerald-500/30">
-                    Cap 60%
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setIsFlipped(false)}
-                    className="p-1 text-stone-400 hover:text-white transition-colors"
-                    title="Balik ke Animasi"
-                  >
-                    <RotateCw className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
+            {/* SEAMLESS BLENDED VIDEO CONTAINER (ELIMINATES ALL RECTANGULAR EDGES) */}
+            <div
+              className="relative w-[110%] h-[110%] flex items-center justify-center pointer-events-none"
+              style={{
+                filter: 'contrast(1.12) brightness(1.08)',
+                mixBlendMode: 'multiply',
+                maskImage: 'radial-gradient(circle at 50% 50%, black 35%, transparent 72%)',
+                WebkitMaskImage: 'radial-gradient(circle at 50% 50%, black 35%, transparent 72%)',
+              }}
+            >
+              <video
+                src="/videos/hero-engine-allocation.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-contain scale-110"
+              />
+            </div>
 
-              {/* Requirement Summary */}
-              <div className="p-3 bg-stone-900/80 rounded-xl border border-white/10 mb-2">
-                <div className="flex justify-between items-center text-[11px]">
-                  <span className="font-semibold text-stone-300 flex items-center gap-1.5">
-                    <Building2 className="w-3.5 h-3.5 text-emerald-400" />
-                    Dapur Gizi Mandiri (DPR01)
-                  </span>
-                  <span className="font-mono text-emerald-400 font-bold">1.000 Porsi</span>
-                </div>
-                <div className="mt-1 flex items-baseline justify-between">
-                  <span className="text-xs font-bold text-white">Bahan: Bayam Hijau</span>
-                  <span className="text-xs font-mono font-extrabold text-emerald-300 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-500/30">
-                    69,0 kg
-                  </span>
-                </div>
-              </div>
-
-              {/* Allocation List */}
-              <div className="space-y-1.5">
-                <div className="p-2 bg-emerald-950/40 border border-emerald-500/30 rounded-xl flex items-center justify-between">
-                  <div>
-                    <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                      <span>Kelompok Tani Makmur (S1)</span>
-                      <span className="text-[9px] font-mono bg-emerald-500/20 text-emerald-300 px-1 rounded border border-emerald-500/30">Skor 88,97</span>
-                    </div>
-                    <p className="text-[10px] font-mono text-stone-400">
-                      Radius 6 km • Mutu 88 • Panen H-1
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <span className="font-mono text-xs font-bold text-emerald-300 block">40,0 kg</span>
-                    <span className="text-[10px] text-emerald-400 font-semibold">Rp 320.000</span>
-                  </div>
-                </div>
-
-                <div className="p-2 bg-amber-950/30 border border-amber-500/30 rounded-xl flex items-center justify-between">
-                  <div>
-                    <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                      <span>Gapoktan Sumber Berkah (S2)</span>
-                      <span className="text-[9px] font-mono bg-amber-500/20 text-amber-300 px-1 rounded border border-amber-500/30">Skor 84,20</span>
-                    </div>
-                    <p className="text-[10px] font-mono text-stone-400">
-                      Radius 9 km • Mutu 90 • Panen H-0
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <span className="font-mono text-xs font-bold text-amber-300 block">29,0 kg</span>
-                    <span className="text-[10px] text-amber-400 font-semibold">Rp 232.000</span>
-                  </div>
-                </div>
+            {/* FLOATING HUD BADGE TOP-LEFT (LIVE ENGINE STATUS) */}
+            <div className="absolute top-2 left-2 flex items-center gap-2 bg-stone-900/80 hover:bg-stone-900 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/10 shadow-lg transition-all pointer-events-auto">
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <div className="flex flex-col text-left">
+                <span className="text-[10px] font-mono font-bold tracking-tight text-white uppercase leading-none">
+                  Cyber Engine Lab
+                </span>
+                <span className="text-[9px] font-mono text-emerald-400 leading-tight mt-0.5">
+                  Fair Split Cap 60%
+                </span>
               </div>
             </div>
 
-            {/* Footer Status */}
-            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px]">
-              <span className="text-stone-300 flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                Alokasi Terpenuhi 100%
-              </span>
-              <span className="text-emerald-400 font-mono font-bold flex items-center gap-1">
-                <Lock className="w-3.5 h-3.5 text-emerald-400" />
-                Escrow: Rp 552.000
-              </span>
+            {/* FLOATING HUD BADGE TOP-RIGHT (SMART ESCROW STATUS) */}
+            <div className="absolute top-2 right-2 flex items-center gap-1.5 bg-stone-900/80 backdrop-blur-md px-2.5 py-1.5 rounded-2xl border border-white/10 shadow-lg text-[10px] font-mono text-emerald-300 pointer-events-auto">
+              <Lock className="w-3 h-3 text-amber-400" />
+              <span>Escrow: Rp 552.000</span>
             </div>
+
+            {/* FLOATING HUD BADGE BOTTOM-LEFT (ALLOCATION STATS) */}
+            <div className="absolute bottom-2 left-2 bg-stone-900/85 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/10 shadow-lg text-left pointer-events-auto max-w-[200px]">
+              <div className="flex items-center justify-between text-[10px] font-bold text-white mb-0.5">
+                <span>Alokasi Petani</span>
+                <span className="text-emerald-400 font-mono">100%</span>
+              </div>
+              <p className="text-[9px] text-stone-300 font-mono leading-tight">
+                S1 Makmur: 40 kg (58%)<br />
+                S2 Berkah: 29 kg (42%)
+              </p>
+            </div>
+
+            {/* QUICK FLIP BACK TO ISLAND */}
+            <button
+              type="button"
+              onClick={() => setIsFlipped(false)}
+              className="absolute bottom-2 right-2 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-stone-900/70 hover:bg-stone-900 backdrop-blur-md text-[11px] font-mono text-white/90 border border-white/10 shadow-sm transition-all hover:scale-105 active:scale-95 pointer-events-auto"
+            >
+              <RotateCw className="w-3 h-3 text-emerald-400" />
+              <span>Balik ke Pulau 3D</span>
+            </button>
           </div>
         </div>
       </div>
@@ -188,16 +159,18 @@ export const SupplyChain3DHero: React.FC = () => {
         <span className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="font-medium text-stone-700">
-            Alur Rantai Pasok Terintegrasi:
+            {isFlipped ? 'Cyber Engine Lab:' : 'Alur Rantai Pasok Terintegrasi:'}
           </span>
-          <span className="hidden sm:inline">Lahan Petani ➔ Dapur Gizi Massal</span>
+          <span className="hidden sm:inline">
+            {isFlipped ? 'Hologram AI Alokasi Kuota & Brankas Escrow' : 'Lahan Petani ➔ Dapur Gizi Massal'}
+          </span>
         </span>
         <button
           type="button"
           onClick={() => setIsFlipped(!isFlipped)}
           className="font-mono text-[11px] text-emerald-800 hover:text-emerald-950 underline font-semibold transition-colors"
         >
-          {isFlipped ? 'Lihat Animasi' : 'Buka Detail Engine'}
+          {isFlipped ? 'Lihat Pulau 3D' : 'Lihat Lab Engine'}
         </button>
       </div>
     </div>
