@@ -14,4 +14,14 @@ export class ChatbotQueryDto {
     role: 'user' | 'model';
     text: string;
   }>;
+
+  @ApiProperty({
+    description: 'Preferensi model AI yang dipilih pengguna (flash, pro, atau auto)',
+    enum: ['flash', 'pro', 'auto'],
+    required: false,
+    default: 'auto',
+  })
+  @IsOptional()
+  @IsString()
+  modelPreference?: 'flash' | 'pro' | 'auto';
 }

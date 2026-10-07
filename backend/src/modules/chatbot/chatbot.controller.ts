@@ -20,7 +20,12 @@ export class ChatbotController {
     @Body() dto: ChatbotQueryDto,
     @Ip() ipAddress: string,
   ): Promise<{ data: ChatbotResponse }> {
-    const data = await this.chatbotService.processQuery(dto.message, dto.history, ipAddress);
+    const data = await this.chatbotService.processQuery(
+      dto.message,
+      dto.history,
+      ipAddress,
+      dto.modelPreference,
+    );
     return { data };
   }
 

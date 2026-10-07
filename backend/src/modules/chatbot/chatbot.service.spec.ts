@@ -68,7 +68,7 @@ describe('ChatbotService & ChatbotController - AI Agent Suite (T-AI-04)', () => 
     expect(res.answer.length).toBeGreaterThan(15);
     expect(res.suggestedFollowUps).toBeDefined();
     expect(res.suggestedFollowUps?.length).toBeGreaterThan(0);
-  }, 20000);
+  }, 30000);
 
   it('TC-02: harus toleran terhadap typo ekstrem ("ornava" -> ORVANA)', async () => {
     const res = await service.processQuery('apa sih keunggulan ornavaaa dibanding platform konvensional?');
@@ -77,7 +77,7 @@ describe('ChatbotService & ChatbotController - AI Agent Suite (T-AI-04)', () => 
     // Harus memahami konteks ORVANA
     const textLower = res.answer.toLowerCase();
     expect(textLower.includes('orvana') || textLower.includes('dapur') || textLower.includes('petani')).toBe(true);
-  }, 20000);
+  }, 30000);
 
   it('TC-03: harus grounded pada aturan kuota lokal 60%', async () => {
     const res = await service.processQuery('jelasin aturan kuota serapan lokal 60%');
@@ -85,7 +85,7 @@ describe('ChatbotService & ChatbotController - AI Agent Suite (T-AI-04)', () => 
     expect(res.answer).toBeDefined();
     const textLower = res.answer.toLowerCase();
     expect(textLower.includes('60%') || textLower.includes('60 persen') || textLower.includes('lokal')).toBe(true);
-  }, 20000);
+  }, 30000);
 
   it('TC-04: harus grounded pada skema pembayaran DP 30% dan pelunasan 70%', async () => {
     const res = await service.processQuery('kapan dan bagaimana skema pembayaran diterima petani?');
@@ -93,7 +93,7 @@ describe('ChatbotService & ChatbotController - AI Agent Suite (T-AI-04)', () => 
     expect(res.answer).toBeDefined();
     const textLower = res.answer.toLowerCase();
     expect(textLower.includes('30%') || textLower.includes('70%') || textLower.includes('dp') || textLower.includes('qc')).toBe(true);
-  }, 20000);
+  }, 30000);
 
   it('TC-05: harus mendukung multi-turn conversation history', async () => {
     const history = [
@@ -103,7 +103,7 @@ describe('ChatbotService & ChatbotController - AI Agent Suite (T-AI-04)', () => 
     const res = await service.processQuery('jelasin lebih dalam alurnya dong', history);
     expect(res).toBeDefined();
     expect(res.answer.length).toBeGreaterThan(20);
-  }, 20000);
+  }, 30000);
 
   it('TC-06: harus menyediakan fallback adaptif jika terjadi blackout jaringan atau API offline', async () => {
     // Paksa instance service tanpa API key untuk menguji resiliensi fallback offline
@@ -126,7 +126,7 @@ describe('ChatbotService & ChatbotController - AI Agent Suite (T-AI-04)', () => 
     expect(result).toBeDefined();
     expect(result.data).toBeDefined();
     expect(result.data.answer).toBeDefined();
-  }, 20000);
+  }, 30000);
 
   it('TC-08: harus dapat mencatat umpan balik feedback (👍 / 👎) dari pengguna', async () => {
     const result = await controller.feedback({
@@ -148,4 +148,18 @@ describe('ChatbotService & ChatbotController - AI Agent Suite (T-AI-04)', () => 
     expect(telemetry.data.stats.totalChats).toBe(10);
     expect(telemetry.data.activeKnowledge.length).toBe(1);
   });
+
+  it('TC-10: ChatbotController dan Service harus mendukung modelPreference flash, pro, dan auto', async () => {
+    const resFlash = await controller.query(
+      { message: 'apa itu kuota 60%?', modelPreference: 'flash' },
+      '127.0.0.1',
+    );
+    expect(resFlash.data).toBeDefined();
+
+    const resPro = await controller.query(
+      { message: 'bagaimana alur pencatatan ledger kas?', modelPreference: 'pro' },
+      '127.0.0.1',
+    );
+    expect(resPro.data).toBeDefined();
+  }, 30000);
 });

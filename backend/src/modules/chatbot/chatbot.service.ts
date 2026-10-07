@@ -91,9 +91,10 @@ export class ChatbotService {
     message: string,
     history?: Array<{ role: 'user' | 'model'; text: string }>,
     ipAddress?: string,
+    modelPreference?: 'flash' | 'pro' | 'auto',
   ): Promise<ChatbotResponse> {
     const trimmed = message.trim();
-    const cacheKey = trimmed.toLowerCase();
+    const cacheKey = `${modelPreference || 'auto'}:${trimmed.toLowerCase()}`;
     const startTime = Date.now();
 
     // Cek cache untuk pertanyaan single-turn tanpa history
@@ -106,10 +107,10 @@ export class ChatbotService {
 
     let result: ChatbotResponse;
 
-    // 1. Coba panggil Gemini API dengan model generasi cepat
+    // 1. Coba panggil Gemini API sesuai preferensi model pengguna
     if (this.geminiApiKey) {
       try {
-        const response = await this.callGeminiApi(trimmed, history);
+        const response = await this.callGeminiApi(trimmed, history, modelPreference);
         if (response) {
           result = response;
         } else {
@@ -219,17 +220,40 @@ export class ChatbotService {
   private async callGeminiApi(
     userMessage: string,
     history?: Array<{ role: 'user' | 'model'; text: string }>,
+    modelPreference?: 'flash' | 'pro' | 'auto',
   ): Promise<ChatbotResponse | null> {
-    // Model sequence: prioritaskan model aktif dan berlatensi sangat rendah
-    const candidateModels = [
-      'gemini-flash-lite-latest',
-      'gemini-flash-latest',
-      'gemini-2.5-flash-lite',
-      'gemini-3.5-flash-lite',
-      'gemini-3.1-flash-lite',
-      'gemini-3.8-flash',
-      'gemini-pro-latest',
-    ];
+    // Model sequence: sesuaikan urutan prioritas berdasarkan pilihan model pengguna
+    let candidateModels: string[];
+
+    if (modelPreference === 'pro') {
+      // Prioritaskan model Pro untuk penalaran dan analisis regulasi mendalam
+      candidateModels = [
+        'gemini-pro-latest',
+        'gemini-3.8-flash',
+        'gemini-3.1-pro-preview',
+        'gemini-flash-lite-latest',
+        'gemini-flash-latest',
+      ];
+    } else if (modelPreference === 'flash') {
+      // Prioritaskan model Flash Lite berlatensi instan
+      candidateModels = [
+        'gemini-flash-lite-latest',
+        'gemini-flash-latest',
+        'gemini-2.5-flash-lite',
+        'gemini-3.5-flash-lite',
+        'gemini-3.1-flash-lite',
+      ];
+    } else {
+      // Auto: Seimbangkan kecepatan dan kecerdasan dengan fallback mulus
+      candidateModels = [
+        'gemini-flash-lite-latest',
+        'gemini-flash-latest',
+        'gemini-2.5-flash-lite',
+        'gemini-pro-latest',
+        'gemini-3.8-flash',
+        'gemini-3.5-flash-lite',
+      ];
+    }
 
     const contents: any[] = [];
 
