@@ -125,7 +125,7 @@ export class ChatbotService {
             generationConfig: {
               temperature: 0.7,
               topP: 0.95,
-              maxOutputTokens: 800,
+              maxOutputTokens: 2048,
             },
           }),
         });
@@ -138,7 +138,8 @@ export class ChatbotService {
 
         const data: any = await fetchRes.json();
         const candidate = data.candidates?.[0];
-        const rawReply = candidate?.content?.parts?.[0]?.text;
+        const rawParts = candidate?.content?.parts || [];
+        const rawReply = rawParts.map((p: any) => p.text || '').join('').trim();
 
         if (rawReply) {
           return this.parseGeminiOutput(rawReply, model);
