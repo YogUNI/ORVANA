@@ -1,0 +1,239 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+
+export interface ChatbotResponse {
+  answer: string;
+  category: string;
+  actionLink?: string;
+  suggestedFollowUps?: string[];
+  modelUsed: string;
+}
+
+const SYSTEM_KNOWLEDGE_PROMPT = `
+Anda adalah "ORVANA Agritech AI Assistant" — asisten kecerdasan buatan resmi untuk platform ORVANA (Sistem Rantai Pasok Pangan Lokal Dapur Gizi Massal / Program Makan Bergizi Gratis).
+
+SIFAT DAN GAYA KOMUNIKASI ANDA:
+1. SANGAT ADAPTIF, RAMAH, DAN NATURAL: Pahami maksud pengguna secara luwes seperti ChatGPT atau Gemini. Jika pengguna santai/gaul ("bro", "min", "gan", "halo gan"), balas dengan nada hangat, akrab, dan bersahabat. Jika pengguna formal atau pejabat dinas, gunakan bahasa Indonesia yang elegan dan profesional. JANGAN PERNAH memberikan jawaban kaku template yang sama berulang-ulang. Formulasikan kalimat baru yang kontekstual dan mengalir!
+2. CERDAS DAN NYAMBUNG: Jawab langsung apa inti pertanyaan pengguna. Jangan berbelit-belit. Variasikan kosakata dan pembukaan Anda.
+3. GROUNDED (BERDASARKAN FAKTA RESMI ORVANA): Semua pengetahuan faktual Anda didasarkan pada data dan regulasi ORVANA berikut ini:
+   - APA ITU ORVANA: Platform digital multi-peran yang menghubungkan kebutuhan terencana dapur gizi massal (SPPG/dapur umum) dengan petani, peternak, dan nelayan lokal. Mengotomatisasi jadwal kebutuhan (demand), ketersediaan panen (supply), kontrol mutu (QC), logistik koordinator, pembayaran bertahap (ledger), dan ketertelusuran transparan (/trace/:batchCode).
+   - ATURAN KUOTA LOKAL 60%: Minimal 60% pasokan bahan pangan wajib diserap dari petani/produsen lokal dalam radius operasional terdekat guna mendongkrak ekonomi rakyat dan kedaulatan pangan wilayah. Maksimal 40% diperbolehkan dari agregator/distributor luar jika darurat.
+   - SKEMA PEMBAYARAN BERTAHAP (TWO-STAGE ESCROW):
+     * DP 30% ditransfer di awal (saat Purchase Order disepakati) untuk modal petik, panen, packing, dan bahan bakar logistik produsen.
+     * Pelunasan 70% cair otomatis maksimal 24 jam setelah bahan lolos inspeksi mutu (QC PASSED) di dapur gizi.
+   - SISTEM QUALITY CONTROL (QC):
+     * Bahan dicek saat serah terima oleh Ahli Gizi / Quality Inspector.
+     * Status QC: PASSED (Lolos penuh), CONDITIONALLY_ACCEPTED (Lolos bersyarat dengan penyesuaian harga), REJECTED (Ditolak).
+     * Toleransi susut berat maksimal 2-5% tergantung komoditas. Jika grade reject, sistem membuka opsi retur atau sengketa adil.
+   - TRANSPARANSI & PASPOR QR CODE (/trace/:batchCode):
+     * Setiap keranjang/batch pasokan memiliki QR Code unik.
+     * Siapa pun (termasuk masyarakat umum, orang tua siswa penerima makan, atau auditor dinas) dapat memindai QR Code untuk melihat sertifikat digital: nama petani asal, tanggal panen, skor kesegaran, foto saat QC, hingga status pembayaran petani.
+   - 6 PERAN PENGGUNA (ROLES):
+     1. ADMIN: Dinas ketahanan pangan, mengatur master komoditas, plafon harga, dan pantau regional.
+     2. KITCHEN_MANAGER: Pengelola dapur gizi, susun menu mingguan, ajukan PO, terima bahan.
+     3. SUPPLIER: Petani, peternak, nelayan lokal yang input kapasitas panen & terima DP/pelunasan.
+     4. COORDINATOR: Pengepul/kurir agregasi yang mengatur pengelompokan muatan & rute kirim.
+     5. QUALITY_INSPECTOR: Ahli gizi atau petugas laboratorium pemeriksa kesegaran & standar higienis.
+     6. AUDITOR: Auditor independen/publik yang memantau aliran kas dan kepatuhan kuota tanpa hak ubah.
+   - TOLERANSI TYPO & SLANG:
+     * Jika user mengetik "ornava", maksudnya adalah ORVANA.
+     * Jika user menyapa singkat ("halo", "pagi bro", "siang"), sambut dengan hangat dan beritahu Anda siap membantu menjelaskan sistem ORVANA.
+4. ATURAN OUTPUT:
+   - Jawab dalam Bahasa Indonesia yang lancar, alami, dan informatif.
+   - Sertakan rekomendasi link jika relevan (misal #kuota, #alur-kerja, #trace, #peran, /trace/DEMO-BCH-2026).
+   - Di baris paling akhir respons, sediakan 2 sampai 3 saran pertanyaan lanjutan singkat yang relevan dalam format tag spesial:
+     [FOLLOW_UPS: Pertanyaan 1 | Pertanyaan 2 | Pertanyaan 3]
+`;
+
+@Injectable()
+export class ChatbotService {
+  private readonly logger = new Logger(ChatbotService.name);
+  private readonly geminiApiKey: string | undefined;
+
+  constructor(private readonly configService: ConfigService) {
+    this.geminiApiKey =
+      this.configService.get<string>('GEMINI_API_KEY') ||
+      process.env.GEMINI_API_KEY ||
+      '';
+  }
+
+  async processQuery(
+    message: string,
+    history?: Array<{ role: 'user' | 'model'; text: string }>,
+  ): Promise<ChatbotResponse> {
+    const trimmed = message.trim();
+
+    // 1. Coba panggil Gemini API dengan model generasi cepat
+    if (this.geminiApiKey) {
+      try {
+        const response = await this.callGeminiApi(trimmed, history);
+        if (response) {
+          return response;
+        }
+      } catch (err: any) {
+        this.logger.warn(`Gemini API call failed, falling back to local intelligence: ${err.message}`);
+      }
+    }
+
+    // 2. Fallback cerdas adaptif jika API offline/limit
+    return this.fallbackAdaptiveIntelligence(trimmed);
+  }
+
+  private async callGeminiApi(
+    userMessage: string,
+    history?: Array<{ role: 'user' | 'model'; text: string }>,
+  ): Promise<ChatbotResponse | null> {
+    // Model fallback sequence
+    const candidateModels = [
+      'gemini-3.5-flash',
+      'gemini-3.1-flash-lite',
+      'gemini-3.7-flash',
+      'gemini-flash-latest',
+    ];
+
+    const contents: any[] = [];
+
+    // Sisipkan history jika ada
+    if (history && history.length > 0) {
+      const recent = history.slice(-6);
+      for (const h of recent) {
+        contents.push({
+          role: h.role === 'model' ? 'model' : 'user',
+          parts: [{ text: h.text }],
+        });
+      }
+    }
+
+    // Tambahkan pertanyaan saat ini
+    contents.push({
+      role: 'user',
+      parts: [{ text: userMessage }],
+    });
+
+    for (const model of candidateModels) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.geminiApiKey}`;
+
+      try {
+        const fetchRes = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system_instruction: {
+              parts: [{ text: SYSTEM_KNOWLEDGE_PROMPT }],
+            },
+            contents,
+            generationConfig: {
+              temperature: 0.7,
+              topP: 0.95,
+              maxOutputTokens: 800,
+            },
+          }),
+        });
+
+        if (!fetchRes.ok) {
+          const errText = await fetchRes.text();
+          this.logger.warn(`Model ${model} returned ${fetchRes.status}: ${errText}`);
+          continue;
+        }
+
+        const data: any = await fetchRes.json();
+        const candidate = data.candidates?.[0];
+        const rawReply = candidate?.content?.parts?.[0]?.text;
+
+        if (rawReply) {
+          return this.parseGeminiOutput(rawReply, model);
+        }
+      } catch (e: any) {
+        this.logger.warn(`Failed with model ${model}: ${e.message}`);
+      }
+    }
+
+    return null;
+  }
+
+  private parseGeminiOutput(rawReply: string, modelName: string): ChatbotResponse {
+    let cleanAnswer = rawReply.trim();
+    let followUps: string[] = [];
+
+    // Parse [FOLLOW_UPS: A | B | C]
+    const followUpMatch = cleanAnswer.match(/\[FOLLOW_UPS:\s*([^\]]+)\]/i);
+    if (followUpMatch) {
+      const items = followUpMatch[1]
+        .split('|')
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0);
+      if (items.length > 0) {
+        followUps = items.slice(0, 3);
+      }
+      cleanAnswer = cleanAnswer.replace(followUpMatch[0], '').trim();
+    }
+
+    // Tentukan kategori & link aksi otomatis
+    const lower = cleanAnswer.toLowerCase();
+    let category = 'KECERDASAN BUATAN ORVANA';
+    let actionLink: string | undefined = undefined;
+
+    if (lower.includes('kuota') || lower.includes('60%')) {
+      category = 'REGULASI KUOTA LOKAL';
+      actionLink = '#kuota';
+    } else if (lower.includes('dp') || lower.includes('pembayaran') || lower.includes('escrow') || lower.includes('70%')) {
+      category = 'SISTEM KEUANGAN & PEMBAYARAN';
+      actionLink = '#alur-kerja';
+    } else if (lower.includes('qc') || lower.includes('mutu') || lower.includes('inspeksi')) {
+      category = 'KONTROL MUTU & GIZI';
+      actionLink = '#alur-kerja';
+    } else if (lower.includes('qr') || lower.includes('trace') || lower.includes('lacak')) {
+      category = 'PENELUSURAN & PASPOR QR';
+      actionLink = '#trace';
+    } else if (lower.includes('dapur') || lower.includes('petani') || lower.includes('koordinator')) {
+      category = 'EKOSISTEM & PERAN';
+      actionLink = '#peran';
+    }
+
+    if (followUps.length === 0) {
+      followUps = [
+        'Bagaimana pembagian DP 30% dan 70%?',
+        'Mengapa kuota lokal dipatok 60%?',
+        'Apa peran koordinator di desa?',
+      ];
+    }
+
+    return {
+      answer: cleanAnswer,
+      category,
+      actionLink,
+      suggestedFollowUps: followUps,
+      modelUsed: `Google Gemini (${modelName})`,
+    };
+  }
+
+  private fallbackAdaptiveIntelligence(userMessage: string): ChatbotResponse {
+    const text = userMessage.toLowerCase();
+
+    if (text.includes('halo') || text.includes('pagi') || text.includes('siang') || text.includes('sore') || text.includes('malam') || text.includes('hai')) {
+      return {
+        answer: 'Halo! Salam hangat. Saya Asisten AI Resmi ORVANA. Saya siap membantu Anda memahami tata kelola rantai pasok pangan lokal, perhitungan kuota 60%, audit pembayaran petani, hingga penelusuran batch mutu. Ada hal menarik yang ingin Anda diskusikan hari ini?',
+        category: 'ASISTEN RESMI',
+        actionLink: '#alur-kerja',
+        suggestedFollowUps: [
+          'Bagaimana sistem ini membantu petani lokal?',
+          'Apa itu aturan kuota 60%?',
+          'Bagaimana cara kerja DP 30% dan pelunasan 70%?',
+        ],
+        modelUsed: 'ORVANA Adaptive Neural Fallback',
+      };
+    }
+
+    return {
+      answer: `Terima kasih atas pertanyaannya! Di ekosistem ORVANA, setiap alur dari peramalan kebutuhan dapur, pencocokan stok petani, jaminan DP 30%, QC mutu, hingga paspor QR pangan saling terhubung secara transparan dan akuntabel. Ada bagian spesifik yang ingin Anda ketahui lebih detail?`,
+      category: 'PUSAT INFORMASI ORVANA',
+      actionLink: '#alur-kerja',
+      suggestedFollowUps: [
+        'Jelaskan cara verifikasi mutu QC',
+        'Bagaimana cara mendaftar jadi pemasok?',
+        'Bisa lihat sertifikat penelusuran batch?',
+      ],
+      modelUsed: 'ORVANA Adaptive Neural Fallback',
+    };
+  }
+}

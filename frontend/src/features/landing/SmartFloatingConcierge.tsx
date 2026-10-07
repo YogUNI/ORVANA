@@ -10,6 +10,7 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import { queryOrvanaKnowledge, CopilotResponse } from './orvanaKnowledgeEngine';
+import { apiClient } from '../../lib/apiClient';
 
 interface ChatMessage {
   id: string;
@@ -52,7 +53,7 @@ export const SmartFloatingConcierge: React.FC = () => {
     }
   }, [messages, isOpen]);
 
-  const handleSendMessage = (textToSend?: string) => {
+  const handleSendMessage = async (textToSend?: string) => {
     const text = (textToSend || inputQuery).trim();
     if (!text) return;
 
@@ -67,10 +68,40 @@ export const SmartFloatingConcierge: React.FC = () => {
     setInputQuery('');
     setIsTyping(true);
 
-    // Realistic smart response delay
+    try {
+      // Siapkan history untuk multi-turn chat Gemini
+      const recentHistory = messages.slice(-4).map((m) => ({
+        role: (m.sender === 'bot' ? 'model' : 'user') as 'model' | 'user',
+        text: m.text,
+      }));
+
+      const res: any = await apiClient.post('/public/chatbot/query', {
+        message: text,
+        history: recentHistory,
+      });
+
+      const data = res?.data || res;
+      if (data && data.answer) {
+        const botReply: ChatMessage = {
+          id: `bot-${Date.now()}`,
+          sender: 'bot',
+          text: data.answer,
+          category: data.category || 'ORVANA AI ASSISTANT',
+          actionLink: data.actionLink,
+          suggestedFollowUps: data.suggestedFollowUps,
+          timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+        };
+        setMessages((prev) => [...prev, botReply]);
+        setIsTyping(false);
+        return;
+      }
+    } catch {
+      // Fallback ke local engine jika backend mati / offline
+    }
+
+    // Local Fallback
     setTimeout(() => {
       const result: CopilotResponse = queryOrvanaKnowledge(text);
-
       const botReply: ChatMessage = {
         id: `bot-${Date.now()}`,
         sender: 'bot',
@@ -80,10 +111,9 @@ export const SmartFloatingConcierge: React.FC = () => {
         suggestedFollowUps: result.suggestedFollowUps,
         timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
       };
-
       setMessages((prev) => [...prev, botReply]);
       setIsTyping(false);
-    }, 450);
+    }, 350);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

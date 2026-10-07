@@ -25,6 +25,7 @@ import { TraceModule } from './modules/trace/trace.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { DisputesModule } from './modules/disputes/disputes.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { ChatbotModule } from './modules/chatbot/chatbot.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     DashboardModule,
     DisputesModule,
     NotificationsModule,
+    ChatbotModule,
   ],
   controllers: [AppController],
   providers: [
