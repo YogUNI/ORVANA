@@ -1078,15 +1078,15 @@ export const LandingPage: React.FC = () => {
                 </div>
 
                 {/* 2. Estimasi Anggaran */}
-                <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/70 space-y-1">
+                <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/70 space-y-1 overflow-hidden">
                   <div className="text-[10px] font-mono text-amber-950 font-semibold flex items-center justify-between">
                     <span>Plafon Escrow:</span>
                     <span className="text-[9px] bg-amber-200/60 px-1 rounded font-bold">Resmi</span>
                   </div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono text-stone-950 leading-none py-0.5 truncate">
+                  <div className="text-lg sm:text-xl font-extrabold font-mono text-stone-950 leading-none py-0.5 tracking-tight whitespace-nowrap">
                     {formatRupiah(calc.estCost)}
                   </div>
-                  <div className="text-[10px] font-mono text-stone-500 truncate">
+                  <div className="text-[10px] font-mono text-stone-500 whitespace-nowrap">
                     @{formatRupiah(calc.unitPrice)}/kg
                   </div>
                 </div>
