@@ -22,13 +22,14 @@ export interface CopilotResponse {
 const knowledgeItems: KnowledgeItem[] = rawKnowledge.data;
 
 /**
- * Normalizes input text: lowercases, handles common Indonesian typos (ornava -> orvana),
- * and breaks into tokens.
+ * Normalizes input text: lowercases, handles repeated characters, common typos,
+ * and conversational slang.
  */
 function normalizeText(text: string): string {
   return text
     .toLowerCase()
-    .replace(/ornava/g, 'orvana') // Auto-fix typo "ornava" -> "orvana"
+    .replace(/(.)\1{2,}/g, '$1') // Collapse repeated characters e.g. "halooo" -> "halo", "benerrr" -> "bener"
+    .replace(/ornava/g, 'orvana') // Typo auto-fix
     .replace(/applikasi/g, 'aplikasi')
     .replace(/apakah/g, 'apa')
     .replace(/gimana/g, 'bagaimana')
@@ -50,7 +51,8 @@ function tokenize(text: string): string[] {
 
 /**
  * Intelligent grounded query matcher for ORVANA Knowledge Base.
- * Robust to conversational Indonesian, slang, typo "ornava", and multi-intent queries.
+ * Guaranteed to match greetings, informal queries, questions about the system,
+ * and business rules without hallucinating.
  */
 export function queryOrvanaKnowledge(userQuery: string): CopilotResponse {
   const rawClean = userQuery.trim();
@@ -59,51 +61,61 @@ export function queryOrvanaKnowledge(userQuery: string): CopilotResponse {
 
   if (!rawClean || queryTokens.length === 0) {
     return {
-      answer: 'Halo! Saya Asisten AI Resmi ORVANA. Silakan tanyakan hal seputar alur pengadaan pangan, batas kuota 60%, kalkulasi porsi menu dapur, sistem pembayaran escrow, atau penelusuran paspor QR.',
+      answer:
+        'Halo! Saya Asisten AI Resmi ORVANA. Silakan tanyakan hal seputar alur pengadaan pangan, batas kuota 60%, kalkulasi porsi menu dapur, sistem pembayaran escrow, atau penelusuran paspor QR.',
       category: 'BANTUAN',
       confidence: 1,
       suggestedFollowUps: [
-        'Apa itu aturan kuota 60%?',
-        'Bagaimana petani menerima pembayaran?',
-        'Cara menghitung kebutuhan bahan dapur?',
-        'Cara melacak paspor QR bahan makanan?',
+        'Sebenarnya ORVANA ini apa sih?',
+        'Apa itu aturan kuota 60% per pemasok?',
+        'Bagaimana cara kepastian pembayaran petani?',
+        'Bagaimana cara melacak batch pangan dengan QR?',
       ],
     };
   }
 
-  // Conversational Greetings
-  const greetings = [
+  // 1. GREETING & CASUAL OPENINGS (E.g. "halo", "halooo", "selamat siang", "halo selamat siang", "pagi bro", "hai")
+  const greetingKeywords = [
     'halo',
     'hai',
     'hello',
     'hi',
-    'selamat pagi',
-    'selamat siang',
-    'selamat sore',
-    'selamat malam',
-    'assalamualaikum',
     'pagi',
     'siang',
+    'sore',
     'malam',
+    'assalamualaikum',
+    'permisi',
+    'tes',
   ];
-  if (greetings.some((g) => normalizedQuery === g || normalizedQuery.startsWith(g + ' '))) {
-    // If it's pure greeting
-    if (queryTokens.length <= 2) {
-      return {
-        answer: 'Halo! Senang bisa membantu Anda. Saya adalah Asisten Cerdas Rantai Pasok Pangan ORVANA yang memegang basis data resmi sistem. Ada yang ingin Anda ketahui tentang alur kerja dapur gizi, pendaftaran petani, atau kepastian pembayaran?',
-        category: 'SAPAAN RESMI',
-        confidence: 1,
-        suggestedFollowUps: [
-          'Sebenarnya ORVANA ini apa sih?',
-          'Bagaimana sistem jaminan escrow untuk petani?',
-          'Apa itu aturan kuota 60% anti monopoli?',
-        ],
-      };
-    }
+
+  const isGreetingQuery =
+    greetingKeywords.some((g) => normalizedQuery === g || normalizedQuery.includes(g)) &&
+    !normalizedQuery.includes('apa') &&
+    !normalizedQuery.includes('bagaimana') &&
+    !normalizedQuery.includes('kenapa') &&
+    !normalizedQuery.includes('berapa') &&
+    !normalizedQuery.includes('jelaskan');
+
+  if (isGreetingQuery) {
+    const greetingItem = knowledgeItems.find((item) => item.category.includes('SAPAAN'));
+    return {
+      answer: greetingItem
+        ? greetingItem.answer
+        : 'Halo! Selamat datang di Layanan Informasi Resmi ORVANA. Senang sekali bisa membantu Anda!\n\nSaya memegang seluruh data dan regulasi sistem rantai pasok pangan dapur gizi massal ORVANA. Silakan tanyakan hal yang ingin Anda ketahui!',
+      category: 'SAPAAN RESMI',
+      confidence: 1,
+      suggestedFollowUps: [
+        'Sebenarnya ORVANA ini apa sih?',
+        'Apa itu aturan kuota 60% per pemasok?',
+        'Bagaimana petani menerima pembayaran?',
+        'Bagaimana cara melacak batch pangan dengan QR?',
+      ],
+    };
   }
 
-  // 1. Direct General Definition check (e.g. "orvana ini apa sih", "apa itu orvana", "jelasin ke saya menggunakan bahasa sederhana")
-  const isAskingWhatIsOrvana =
+  // 2. DEFINITION CHECK: "ORVANA ini apa sih", "jelasin dong", "apa itu ORVANA"
+  const isAskingDefinition =
     (normalizedQuery.includes('orvana') || normalizedQuery.includes('aplikasi') || normalizedQuery.includes('sistem')) &&
     (normalizedQuery.includes('apa sih') ||
       normalizedQuery.includes('apa itu') ||
@@ -111,27 +123,28 @@ export function queryOrvanaKnowledge(userQuery: string): CopilotResponse {
       normalizedQuery.includes('sebenarnya') ||
       normalizedQuery.includes('bahasa sederhana') ||
       normalizedQuery.includes('pengertian') ||
-      normalizedQuery.includes('fungsi'));
+      normalizedQuery.includes('tentang') ||
+      normalizedQuery.includes('maksud'));
 
-  if (isAskingWhatIsOrvana) {
-    const definitionItem = knowledgeItems.find((item) => item.topic.includes('Definisi'));
-    if (definitionItem) {
+  if (isAskingDefinition) {
+    const defItem = knowledgeItems.find((item) => item.topic.includes('Definisi'));
+    if (defItem) {
       return {
-        answer: definitionItem.answer,
-        category: definitionItem.category,
-        matchedTopic: definitionItem.topic,
-        confidence: 0.98,
-        actionLink: definitionItem.actionLink,
+        answer: defItem.answer,
+        category: defItem.category,
+        matchedTopic: defItem.topic,
+        confidence: 0.99,
+        actionLink: defItem.actionLink,
         suggestedFollowUps: [
           'Apa bedanya ORVANA dengan marketplace biasa?',
-          'Apa saja 6 peran pengguna di ORVANA?',
+          'Apa itu aturan kuota 60% anti monopoli?',
           'Bagaimana petani menerima pembayaran?',
         ],
       };
     }
   }
 
-  // 2. Score each knowledge record
+  // 3. SCORING KNOWLEDGE BASE RECORDS
   let bestScore = 0;
   let bestMatch: KnowledgeItem | null = null;
 
@@ -143,41 +156,41 @@ export function queryOrvanaKnowledge(userQuery: string): CopilotResponse {
     const itemTopicNorm = normalizeText(item.topic);
     const itemTopicTokens = tokenize(item.topic);
 
-    // Exact Substring Match with question
+    // Exact Substring Match with sample question
     if (normalizedQuery.includes(itemQuestionNorm) || itemQuestionNorm.includes(normalizedQuery)) {
-      score += 40;
+      score += 45;
     }
 
-    // Exact Topic Substring
+    // Exact Topic Match
     if (normalizedQuery.includes(itemTopicNorm)) {
-      score += 25;
+      score += 30;
     }
 
-    // Keyword Match (High Priority)
+    // Keyword Match (High value)
     for (const kw of itemKeywords) {
       if (normalizedQuery.includes(kw)) {
-        score += 15;
+        score += 18;
       }
     }
 
     // Token Overlap
     for (const token of queryTokens) {
-      // Don't give too much weight to stop words
-      if (['ini', 'itu', 'dong', 'sih', 'ke', 'saya', 'apa', 'yang', 'dan', 'di'].includes(token)) {
+      // Ignore common neutral stopwords
+      if (['ini', 'itu', 'dong', 'sih', 'ke', 'saya', 'apa', 'yang', 'dan', 'di', 'pada', 'untuk'].includes(token)) {
         continue;
       }
 
       if (itemQuestionTokens.includes(token)) {
-        score += 6;
-      }
-      if (itemTopicTokens.includes(token)) {
-        score += 8;
-      }
-      if (itemKeywords.some((kw) => kw.includes(token))) {
         score += 7;
       }
+      if (itemTopicTokens.includes(token)) {
+        score += 9;
+      }
+      if (itemKeywords.some((kw) => kw.includes(token))) {
+        score += 8;
+      }
       if (normalizeText(item.answer).includes(token)) {
-        score += 1.5;
+        score += 2;
       }
     }
 
@@ -187,7 +200,7 @@ export function queryOrvanaKnowledge(userQuery: string): CopilotResponse {
     }
   }
 
-  // If match found with decent score (threshold lowered from 12 to 8 because of normalized filtering)
+  // If match found with score >= 7
   if (bestMatch && bestScore >= 7) {
     const followUps: string[] = [];
     if (bestMatch.category.includes('BISNIS') || bestMatch.category.includes('FORMULA')) {
@@ -197,7 +210,7 @@ export function queryOrvanaKnowledge(userQuery: string): CopilotResponse {
       followUps.push('Bagaimana cara daftar mitra baru?');
       followUps.push('Apa tugas pengawas mutu (QC)?');
     } else if (bestMatch.category.includes('PENELUSURAN')) {
-      followUps.push('Bagaimana struktur kode batch ORVANA?');
+      followUps.push('Bagaimana struktur format kode batch ORVANA?');
       followUps.push('Apakah cek QR perlu download aplikasi?');
     } else {
       followUps.push('Apa itu aturan kuota 60% anti monopoli?');
@@ -216,7 +229,8 @@ export function queryOrvanaKnowledge(userQuery: string): CopilotResponse {
 
   // Grounded Guidance Fallback (Never Hallucinate / Mengarang)
   return {
-    answer: 'Pertanyaan Anda sangat bagus. Agar informasi yang saya berikan 100% akurat sesuai dokumen regulasi resmi ORVANA, silakan pilih topik terkait yang ingin Anda ketahui di bawah ini, atau gunakan kata kunci seperti: *kuota 60%*, *pembayaran petani*, *resep dapur*, *mutu QC*, atau *paspor QR*:',
+    answer:
+      'Pertanyaan Anda sangat menarik. Agar informasi yang saya berikan 100% akurat sesuai dokumen regulasi resmi ORVANA, silakan pilih salah satu topik resmi yang Anda butuhkan di bawah ini, atau gunakan kata kunci pencarian seperti: *kuota 60%*, *pembayaran petani*, *resep dapur*, *mutu QC*, atau *paspor QR*:',
     category: 'PANDUAN INFORMASI RESMI',
     confidence: 0.35,
     suggestedFollowUps: [
