@@ -175,11 +175,11 @@ export const SmartFloatingConcierge: React.FC = () => {
   return (
     <aside
       aria-label="Pusat Bantuan Asisten AI Resmi"
-      className="fixed bottom-6 right-6 z-40 select-none flex flex-col items-end pointer-events-auto"
+      className="fixed bottom-6 right-6 z-50 select-none flex flex-col items-end pointer-events-auto"
     >
       {/* CHAT COPILOT MODAL POPUP */}
       {isOpen && (
-        <div className="mb-3 w-[92vw] sm:w-[420px] max-h-[82vh] h-[580px] bg-white border border-stone-200/90 rounded-2xl shadow-2xl flex flex-col overflow-hidden text-stone-900 transition-all duration-300 animate-in fade-in zoom-in-95 slide-in-from-bottom-4 font-sans ring-1 ring-stone-900/5">
+        <div className="mb-3 w-[92vw] sm:w-[420px] max-h-[72vh] sm:max-h-[560px] h-[540px] bg-white border border-stone-200/90 rounded-2xl shadow-2xl flex flex-col overflow-hidden text-stone-900 transition-all duration-300 animate-in fade-in zoom-in-95 slide-in-from-bottom-4 font-sans ring-1 ring-stone-900/5">
           
           {/* Header Bar */}
           <div className="px-4 py-3.5 bg-gradient-to-r from-emerald-950 via-[#132A21] to-emerald-950 text-white flex items-center justify-between border-b border-emerald-900 shrink-0">
