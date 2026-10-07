@@ -1252,119 +1252,116 @@ export const LandingPage: React.FC = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
-            {/* SISI KIRI: THE WHATSAPP HARVEST TERMINAL (EYE-CATCHING & JELAS BISA DIKETIK) */}
+            {/* SISI KIRI: REALISTIC SMARTPHONE CHAT SCREEN (BESPOKE & ELEGAN) */}
             <div className="lg:col-span-6 space-y-4">
               
-              {/* Terminal Frame dengan Header Chat WhatsApp Resmi */}
-              <div className="rounded-2xl bg-gradient-to-b from-[#11231B] to-[#0A1611] border-2 border-emerald-500/40 p-4 sm:p-5 shadow-xl shadow-emerald-950/20 text-white relative overflow-hidden">
+              {/* Realistic Handheld Phone Mockup Frame */}
+              <div className="rounded-[28px] bg-[#1E2320] p-3 sm:p-4 shadow-xl shadow-stone-900/15 border border-stone-700/60 max-w-lg mx-auto lg:mx-0">
                 
-                {/* Background Ambient Glow */}
-                <div className="absolute top-0 right-0 w-36 h-36 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+                {/* Phone Speaker & Camera Notch */}
+                <div className="flex justify-center items-center pb-2">
+                  <div className="w-14 h-1.5 bg-stone-700 rounded-full" />
+                </div>
 
-                {/* Top Terminal Bar */}
-                <div className="flex items-center justify-between pb-3 mb-3 border-b border-emerald-800/40">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center shrink-0">
-                      <MessageSquare className="w-4 h-4 text-emerald-300" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-amber-50 font-sans flex items-center gap-1.5">
-                        <span>Terminal WA Bot Petani ORVANA</span>
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                {/* Inner Phone Screen (WhatsApp Warm Background) */}
+                <div className="rounded-2xl bg-[#EFEAE2] border border-stone-300 overflow-hidden text-stone-900 font-sans shadow-inner">
+                  
+                  {/* WhatsApp Native Top Bar */}
+                  <div className="bg-[#11231B] text-white px-3.5 py-2.5 flex items-center justify-between shadow-xs">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-emerald-600/30 border border-emerald-400/40 p-1 flex items-center justify-center shrink-0">
+                        <img src="/logo-192.png" alt="ORVANA" className="w-full h-full object-contain" />
                       </div>
-                      <div className="text-[10px] text-emerald-400 font-mono">Penerima Pesan Panen Lapangan</div>
+                      <div>
+                        <div className="text-xs font-bold leading-tight flex items-center gap-1.5">
+                          <span>Bot Panen ORVANA</span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                        </div>
+                        <div className="text-[10px] text-emerald-300 font-mono">online • resmi kementerian</div>
+                      </div>
+                    </div>
+
+                    {/* Maskot Avatar Mini di Pojok Bar */}
+                    <div className="shrink-0">
+                      <AiThinkingMascot status={mascotStatus} size={42} />
                     </div>
                   </div>
 
-                  {/* Maskot Pengamat Langsung */}
-                  <div className="shrink-0 -my-2">
-                    <AiThinkingMascot status={mascotStatus} size={60} />
+                  {/* Chat Area Wallpaper */}
+                  <div className="p-3.5 space-y-2.5 min-h-[170px] bg-[#EFEAE2] relative">
+                    
+                    {/* Bot System Welcome Bubble */}
+                    <div className="flex justify-start">
+                      <div className="max-w-[85%] bg-white rounded-2xl rounded-tl-xs p-2.5 shadow-2xs border border-stone-200/80 text-xs text-stone-800 leading-snug">
+                        <p className="text-[11px]">
+                          🌾 <strong>Halo Pak Tani / Nelayan!</strong> Ketik rencana panen Anda di bawah pakai bahasa sehari-hari. Saya catat otomatis ke dapur gizi.
+                        </p>
+                        <span className="text-[9px] text-stone-400 block text-right mt-1 font-mono">08:00</span>
+                      </div>
+                    </div>
+
+                    {/* User Sample Dynamic Preview Bubble (jika ada input) */}
+                    {nlpSampleText && (
+                      <div className="flex justify-end">
+                        <div className="max-w-[85%] bg-[#D9FDD3] rounded-2xl rounded-tr-xs p-2.5 shadow-2xs border border-emerald-200 text-xs text-stone-900 leading-snug">
+                          <p className="text-[11px] font-sans">{nlpSampleText}</p>
+                          <span className="text-[9px] text-emerald-800 block text-right mt-1 font-mono flex items-center justify-end gap-1">
+                            <span>Baru saja</span>
+                            <span className="text-sky-600 font-bold">✓✓</span>
+                          </span>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
 
-                {/* Callout Mengundang Mengetik */}
-                <div className="mb-3 px-3 py-1.5 rounded-lg bg-emerald-950/80 border border-emerald-500/30 flex items-center justify-between text-[11px] font-mono">
-                  <span className="text-emerald-300 flex items-center gap-1.5 font-bold">
-                    <span className="animate-ping inline-flex h-2 w-2 rounded-full bg-amber-400 opacity-75" />
-                    👉 Uji Ketik Pesan Panen di Sini:
-                  </span>
-                  <span className="text-stone-400 text-[10px]">Dialek & Singkatan Bebas</span>
-                </div>
-
-                {/* INPUT BAR MENONJOL: Mirip Input WhatsApp Asli Beraksen Hijau */}
-                <div className="relative group">
-                  <div className="flex items-center gap-2 p-1.5 rounded-xl bg-white border-2 border-emerald-400 shadow-md shadow-emerald-950/30 focus-within:ring-3 focus-within:ring-emerald-400/40 transition-all">
-                    <input
-                      type="text"
-                      value={nlpSampleText}
-                      onChange={(e) => handleInputChange(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleTestNLP()}
-                      placeholder="Ketik: besok ada panen 2 kwintal cabai..."
-                      className="flex-1 px-3 py-2 text-xs sm:text-sm bg-transparent text-stone-900 font-sans focus:outline-none placeholder:text-stone-400"
-                    />
+                  {/* WhatsApp Native Bottom Input Bar */}
+                  <div className="p-2.5 bg-[#F0F2F5] border-t border-stone-300 flex items-center gap-2">
+                    <div className="flex-1 bg-white rounded-full px-3.5 py-2 border border-stone-300 shadow-2xs flex items-center gap-2 focus-within:border-emerald-600 transition-colors">
+                      <input
+                        type="text"
+                        value={nlpSampleText}
+                        onChange={(e) => handleInputChange(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleTestNLP()}
+                        placeholder="Ketik panen Anda di sini..."
+                        className="flex-1 text-xs bg-transparent text-stone-900 focus:outline-none placeholder:text-stone-400"
+                      />
+                    </div>
                     <button
                       type="button"
                       onClick={handleTestNLP}
                       disabled={nlpLoading}
-                      className="px-4 py-2.5 rounded-lg bg-emerald-900 hover:bg-emerald-800 text-white font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95 disabled:opacity-50 shrink-0"
+                      className="w-9 h-9 rounded-full bg-[#11231B] hover:bg-black text-white flex items-center justify-center shrink-0 shadow-sm cursor-pointer active:scale-95 transition-transform disabled:opacity-50"
+                      title="Kirim pesan"
                     >
-                      <Send className="w-3.5 h-3.5 text-emerald-300" />
-                      <span>{nlpLoading ? 'Urai...' : 'Kirim'}</span>
+                      <Send className="w-4 h-4 text-emerald-400 ml-0.5" />
                     </button>
                   </div>
-                  <div className="flex justify-between items-center text-[10px] font-mono text-stone-400 mt-2 px-1">
-                    <span>Tekan Enter di keyboard untuk kirim</span>
-                    <span className="text-emerald-400">Paham sebutan: kwintal, ikat, ton, rb</span>
-                  </div>
+
                 </div>
 
               </div>
 
-              {/* QUICK CLICK BUBBLES: Bergaya Balon Chat Masuk Asli */}
-              <div className="space-y-2 pt-1">
-                <div className="flex items-center justify-between text-[10px] font-mono text-stone-600 px-1">
-                  <span>Atau klik contoh obrolan petani di bawah:</span>
-                  <span className="text-emerald-800 font-bold">👆 1x Klik untuk Tes</span>
-                </div>
-
-                <div className="flex flex-col gap-2">
+              {/* QUICK CHIPS: Contoh Kalimat Asli Lapangan (Sleek Pills) */}
+              <div className="space-y-1.5 pt-1">
+                <span className="text-[10px] font-mono text-stone-500 block">
+                  Coba 1-klik contoh pesan petani:
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
                   {[
-                    {
-                      role: 'Petani Cabai (Takaran Kwintal)',
-                      text: 'besok ada panen cabai rawit dua kwintal harga 45rb sama bayam 50 kilo',
-                      time: '08:14',
-                    },
-                    {
-                      role: 'Peternak & Petani (Satuan Ton & Ekor)',
-                      text: 'lusa siap kirim setengah ton beras lokal sama lele 30 kilo 25rb',
-                      time: '09:30',
-                    },
-                    {
-                      role: 'Singkatan WhatsApp Cepat Lapangan',
-                      text: 'sy bsoq ad pnn cengek 100 kg harga 40 ribu siap setor',
-                      time: '11:05',
-                    },
-                  ].map((preset, pIdx) => (
+                    { label: '2 Kwintal Cabai', text: 'besok ada panen cabai rawit dua kwintal harga 45rb sama bayam 50 kilo' },
+                    { label: 'Setengah Ton Beras', text: 'lusa siap kirim setengah ton beras lokal sama lele 30 kilo 25rb' },
+                    { label: 'Singkatan Petani', text: 'sy bsoq ad pnn cengek 100 kg harga 40 ribu siap setor' },
+                  ].map((preset, idx) => (
                     <button
-                      key={pIdx}
+                      key={idx}
                       type="button"
                       onClick={() => {
                         handleInputChange(preset.text);
                         setTimeout(() => handleTestNLP(), 100);
                       }}
-                      className="text-left p-3 rounded-2xl bg-white hover:bg-emerald-50/80 border border-stone-300 hover:border-emerald-500 shadow-2xs hover:shadow-sm transition-all cursor-pointer group relative"
+                      className="px-2.5 py-1.5 rounded-lg bg-white hover:bg-stone-50 border border-stone-300 text-stone-700 text-[11px] font-sans font-medium text-center truncate cursor-pointer shadow-2xs hover:border-emerald-600 transition-all"
                     >
-                      <div className="flex items-center justify-between text-[10px] font-mono mb-1">
-                        <span className="font-bold text-emerald-900 group-hover:text-emerald-950">
-                          💬 {preset.role}
-                        </span>
-                        <span className="text-stone-400 flex items-center gap-1">
-                          {preset.time} <span className="text-sky-600">✓✓</span>
-                        </span>
-                      </div>
-                      <div className="text-xs font-sans text-stone-800 italic group-hover:text-stone-950">
-                        "{preset.text}"
-                      </div>
+                      💡 {preset.label}
                     </button>
                   ))}
                 </div>
