@@ -30,14 +30,15 @@ Memastikan Asisten AI ORVANA:
 
 ---
 
-### FASE 2: Pengujian Otomatis & Verifikasi Logika (Sedang Berjalan)
-- [ ] **T-AI-04: Test Suite Otomatis Backend (`test/chatbot.e2e-spec.ts` & unit test)**
-  - [ ] **TC-01 (Kueri Dasar & Sapaan)**: Memverifikasi sapaan santai ("halo bro", "pagi gan") dibalas ramah tanpa error.
-  - [ ] **TC-02 (Toleransi Typo)**: Memverifikasi kueri dengan typo ("ornava", "brapaa kuotanyaa") tetap dipahami tepat sasaran.
-  - [ ] **TC-03 (Uji Grounding Kuota 60%)**: Memverifikasi AI menyebutkan angka persis minimal 60% kuota lokal dan maksimal 40% distributor luar.
-  - [ ] **TC-04 (Uji Two-Stage Escrow)**: Memverifikasi AI menjelaskan DP 30% di awal dan Pelunasan 70% cair dalam <= 24 jam setelah lulus QC.
-  - [ ] **TC-05 (Uji Multi-turn History)**: Memverifikasi kelanjutan konteks (misal: "jelasin lebih dalam" setelah pengenalan ORVANA).
-  - [ ] **TC-06 (Uji Resiliensi Fallback)**: Memverifikasi jika Gemini API disimulasikan offline, backend otomatis menyajikan respons lokal tanpa status HTTP 500.
+### FASE 2: Pengujian Otomatis & Verifikasi Logika (Selesai ✅)
+- [x] **T-AI-04: Test Suite Otomatis Backend (`test/chatbot.e2e-spec.ts` & unit test)**
+  - [x] **TC-01 (Kueri Dasar & Sapaan)**: Memverifikasi sapaan santai ("halo bro", "pagi gan") dibalas ramah tanpa error.
+  - [x] **TC-02 (Toleransi Typo)**: Memverifikasi kueri dengan typo ("ornava", "brapaa kuotanyaa") tetap dipahami tepat sasaran.
+  - [x] **TC-03 (Uji Grounding Kuota 60%)**: Memverifikasi AI menyebutkan angka persis minimal 60% kuota lokal dan maksimal 40% distributor luar.
+  - [x] **TC-04 (Uji Two-Stage Escrow)**: Memverifikasi AI menjelaskan DP 30% di awal dan Pelunasan 70% cair dalam <= 24 jam setelah lulus QC.
+  - [x] **TC-05 (Uji Multi-turn History)**: Memverifikasi kelanjutan konteks (misal: "jelasin lebih dalam" setelah pengenalan ORVANA).
+  - [x] **TC-06 (Uji Resiliensi Fallback)**: Memverifikasi jika Gemini API disimulasikan offline, backend otomatis menyajikan respons lokal tanpa status HTTP 500.
+  - [x] **TC-07 (Kontrak API Response Wrapper)**: Memverifikasi output terbungkus format standar `{ data }`.
 
 ---
 
