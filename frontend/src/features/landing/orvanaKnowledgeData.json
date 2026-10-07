@@ -1,0 +1,996 @@
+{
+  "version": "1.0.0",
+  "updatedAt": "2026-10-07",
+  "totalRecords": 65,
+  "topicsCount": 21,
+  "data": [
+    {
+      "id": "ORV-KB-0001",
+      "category": "UMUM & PRODUK",
+      "topic": "Definisi dan Tujuan ORVANA",
+      "question": "Apa itu ORVANA?",
+      "answer": "ORVANA adalah platform manajemen rantai pasok pangan lokal terintegrasi untuk dapur gizi massal (seperti program makan bergizi gratis, pesantren, dan asrama). Sistem ini mencocokkan jadwal menu makanan dapur dengan kalender panen petani/nelayan lokal secara otomatis, mengontrol mutu pangan dengan uji organoleptik, mencatat pembayaran bertahap di buku besar transparan, dan menyediakan paspor pelacakan batch berbasis QR Code untuk masyarakat.",
+      "keywords": "apa itu orvana;definisi;fungsi;tujuan;visi;misi;pengertian",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0002",
+      "category": "UMUM & PRODUK",
+      "topic": "Definisi dan Tujuan ORVANA",
+      "question": "Jelaskan apa itu aplikasi ORVANA",
+      "answer": "ORVANA adalah platform manajemen rantai pasok pangan lokal terintegrasi untuk dapur gizi massal (seperti program makan bergizi gratis, pesantren, dan asrama). Sistem ini mencocokkan jadwal menu makanan dapur dengan kalender panen petani/nelayan lokal secara otomatis, mengontrol mutu pangan dengan uji organoleptik, mencatat pembayaran bertahap di buku besar transparan, dan menyediakan paspor pelacakan batch berbasis QR Code untuk masyarakat.",
+      "keywords": "apa itu orvana;definisi;fungsi;tujuan;visi;misi;pengertian",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0003",
+      "category": "UMUM & PRODUK",
+      "topic": "Definisi dan Tujuan ORVANA",
+      "question": "Apa fungsi utama dari ORVANA?",
+      "answer": "ORVANA adalah platform manajemen rantai pasok pangan lokal terintegrasi untuk dapur gizi massal (seperti program makan bergizi gratis, pesantren, dan asrama). Sistem ini mencocokkan jadwal menu makanan dapur dengan kalender panen petani/nelayan lokal secara otomatis, mengontrol mutu pangan dengan uji organoleptik, mencatat pembayaran bertahap di buku besar transparan, dan menyediakan paspor pelacakan batch berbasis QR Code untuk masyarakat.",
+      "keywords": "apa itu orvana;definisi;fungsi;tujuan;visi;misi;pengertian",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0004",
+      "category": "UMUM & PRODUK",
+      "topic": "Definisi dan Tujuan ORVANA",
+      "question": "Untuk apa sistem ORVANA dibuat?",
+      "answer": "ORVANA adalah platform manajemen rantai pasok pangan lokal terintegrasi untuk dapur gizi massal (seperti program makan bergizi gratis, pesantren, dan asrama). Sistem ini mencocokkan jadwal menu makanan dapur dengan kalender panen petani/nelayan lokal secara otomatis, mengontrol mutu pangan dengan uji organoleptik, mencatat pembayaran bertahap di buku besar transparan, dan menyediakan paspor pelacakan batch berbasis QR Code untuk masyarakat.",
+      "keywords": "apa itu orvana;definisi;fungsi;tujuan;visi;misi;pengertian",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0005",
+      "category": "UMUM & PRODUK",
+      "topic": "Definisi dan Tujuan ORVANA",
+      "question": "Apa visi dan misi ORVANA?",
+      "answer": "ORVANA adalah platform manajemen rantai pasok pangan lokal terintegrasi untuk dapur gizi massal (seperti program makan bergizi gratis, pesantren, dan asrama). Sistem ini mencocokkan jadwal menu makanan dapur dengan kalender panen petani/nelayan lokal secara otomatis, mengontrol mutu pangan dengan uji organoleptik, mencatat pembayaran bertahap di buku besar transparan, dan menyediakan paspor pelacakan batch berbasis QR Code untuk masyarakat.",
+      "keywords": "apa itu orvana;definisi;fungsi;tujuan;visi;misi;pengertian",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0006",
+      "category": "UMUM & PRODUK",
+      "topic": "Masalah yang Diatasi",
+      "question": "Masalah apa yang diselesaikan oleh ORVANA?",
+      "answer": "ORVANA menyelesaikan tiga masalah utama: (1) Ketidakpastian pasokan bahan baku segar dan risiko monopoli distributor besar; (2) Keterlambatan dan ketidakadilan pembayaran bagi petani kecil lokal akibat permainan tengkulak; serta (3) Risiko keracunan makanan dan minimnya pengawasan mutu gizi yang transparan bagi publik.",
+      "keywords": "masalah;tantangan;kendala;solusi;alasan dibuat;urgensi",
+      "actionLink": "#masalah"
+    },
+    {
+      "id": "ORV-KB-0007",
+      "category": "UMUM & PRODUK",
+      "topic": "Masalah yang Diatasi",
+      "question": "Mengapa pengadaan pangan dapur gizi membutuhkan ORVANA?",
+      "answer": "ORVANA menyelesaikan tiga masalah utama: (1) Ketidakpastian pasokan bahan baku segar dan risiko monopoli distributor besar; (2) Keterlambatan dan ketidakadilan pembayaran bagi petani kecil lokal akibat permainan tengkulak; serta (3) Risiko keracunan makanan dan minimnya pengawasan mutu gizi yang transparan bagi publik.",
+      "keywords": "masalah;tantangan;kendala;solusi;alasan dibuat;urgensi",
+      "actionLink": "#masalah"
+    },
+    {
+      "id": "ORV-KB-0008",
+      "category": "UMUM & PRODUK",
+      "topic": "Masalah yang Diatasi",
+      "question": "Apa tantangan rantai pasok pangan yang dihadapi dapur gizi?",
+      "answer": "ORVANA menyelesaikan tiga masalah utama: (1) Ketidakpastian pasokan bahan baku segar dan risiko monopoli distributor besar; (2) Keterlambatan dan ketidakadilan pembayaran bagi petani kecil lokal akibat permainan tengkulak; serta (3) Risiko keracunan makanan dan minimnya pengawasan mutu gizi yang transparan bagi publik.",
+      "keywords": "masalah;tantangan;kendala;solusi;alasan dibuat;urgensi",
+      "actionLink": "#masalah"
+    },
+    {
+      "id": "ORV-KB-0009",
+      "category": "UMUM & PRODUK",
+      "topic": "Perbedaan dengan Marketplace",
+      "question": "Apa bedanya ORVANA dengan marketplace pertanian biasa?",
+      "answer": "Marketplace umum berbasis spot market (jual-beli bebas sewaktu-waktu tanpa jaminan serapan). ORVANA adalah sistem pengadaan terencana: jadwal menu dapur 10-14 hari ke depan dipetakan langsung ke rencana panen petani. Dilengkapi aturan kuota maksimal 60% per pemasok anti-monopoli, jaminan harga acuan resmi dinas, dan paspor penelusuran mutu publik.",
+      "keywords": "beda marketplace;ecommerce;perbedaan;keunggulan;jual beli bebas;spot market",
+      "actionLink": "#faq"
+    },
+    {
+      "id": "ORV-KB-0010",
+      "category": "UMUM & PRODUK",
+      "topic": "Perbedaan dengan Marketplace",
+      "question": "Mengapa ORVANA bukan e-commerce seperti Tokopedia atau Shopee?",
+      "answer": "Marketplace umum berbasis spot market (jual-beli bebas sewaktu-waktu tanpa jaminan serapan). ORVANA adalah sistem pengadaan terencana: jadwal menu dapur 10-14 hari ke depan dipetakan langsung ke rencana panen petani. Dilengkapi aturan kuota maksimal 60% per pemasok anti-monopoli, jaminan harga acuan resmi dinas, dan paspor penelusuran mutu publik.",
+      "keywords": "beda marketplace;ecommerce;perbedaan;keunggulan;jual beli bebas;spot market",
+      "actionLink": "#faq"
+    },
+    {
+      "id": "ORV-KB-0011",
+      "category": "UMUM & PRODUK",
+      "topic": "Perbedaan dengan Marketplace",
+      "question": "Apa keunggulan ORVANA dibanding platform jual beli hasil tani umum?",
+      "answer": "Marketplace umum berbasis spot market (jual-beli bebas sewaktu-waktu tanpa jaminan serapan). ORVANA adalah sistem pengadaan terencana: jadwal menu dapur 10-14 hari ke depan dipetakan langsung ke rencana panen petani. Dilengkapi aturan kuota maksimal 60% per pemasok anti-monopoli, jaminan harga acuan resmi dinas, dan paspor penelusuran mutu publik.",
+      "keywords": "beda marketplace;ecommerce;perbedaan;keunggulan;jual beli bebas;spot market",
+      "actionLink": "#faq"
+    },
+    {
+      "id": "ORV-KB-0012",
+      "category": "PERAN PENGGUNA",
+      "topic": "Daftar Peran Pengguna",
+      "question": "Ada berapa peran pengguna di ORVANA?",
+      "answer": "ORVANA memiliki 6 peran utama: (1) KITCHEN_MANAGER (pengelola dapur gizi), (2) SUPPLIER (petani, peternak, nelayan lokal), (3) COORDINATOR (koordinator pengepul dan logistik armada), (4) QUALITY_INSPECTOR (pengawas mutu dan ahli gizi), (5) ADMIN (administrator dinas ketahanan pangan), dan (6) AUDITOR (auditor publik/independen). Ditambah pengunjung publik tanpa login untuk cek batch QR.",
+      "keywords": "peran;role;pengguna;user;hak akses;aktor",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0013",
+      "category": "PERAN PENGGUNA",
+      "topic": "Daftar Peran Pengguna",
+      "question": "Sebutkan peran atau role yang ada di dalam sistem ORVANA",
+      "answer": "ORVANA memiliki 6 peran utama: (1) KITCHEN_MANAGER (pengelola dapur gizi), (2) SUPPLIER (petani, peternak, nelayan lokal), (3) COORDINATOR (koordinator pengepul dan logistik armada), (4) QUALITY_INSPECTOR (pengawas mutu dan ahli gizi), (5) ADMIN (administrator dinas ketahanan pangan), dan (6) AUDITOR (auditor publik/independen). Ditambah pengunjung publik tanpa login untuk cek batch QR.",
+      "keywords": "peran;role;pengguna;user;hak akses;aktor",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0014",
+      "category": "PERAN PENGGUNA",
+      "topic": "Daftar Peran Pengguna",
+      "question": "Siapa saja pengguna ORVANA?",
+      "answer": "ORVANA memiliki 6 peran utama: (1) KITCHEN_MANAGER (pengelola dapur gizi), (2) SUPPLIER (petani, peternak, nelayan lokal), (3) COORDINATOR (koordinator pengepul dan logistik armada), (4) QUALITY_INSPECTOR (pengawas mutu dan ahli gizi), (5) ADMIN (administrator dinas ketahanan pangan), dan (6) AUDITOR (auditor publik/independen). Ditambah pengunjung publik tanpa login untuk cek batch QR.",
+      "keywords": "peran;role;pengguna;user;hak akses;aktor",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0015",
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Kitchen Manager",
+      "question": "Apa tugas Kitchen Manager di ORVANA?",
+      "answer": "Kitchen Manager bertugas menyusun kalender menu mingguan, menghitung kebutuhan bahan kotor otomatis dengan kalkulator gizi, menerbitkan permintaan pasokan (DemandRequest), menerima kiriman bahan, dan memeriksa hasil inspeksi mutu sebelum bahan dimasak.",
+      "keywords": "kitchen manager;pengelola dapur;dapur gizi;tugas dapur;fitur dapur",
+      "actionLink": "#kalkulator"
+    },
+    {
+      "id": "ORV-KB-0016",
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Kitchen Manager",
+      "question": "Apa yang dilakukan pengelola dapur di ORVANA?",
+      "answer": "Kitchen Manager bertugas menyusun kalender menu mingguan, menghitung kebutuhan bahan kotor otomatis dengan kalkulator gizi, menerbitkan permintaan pasokan (DemandRequest), menerima kiriman bahan, dan memeriksa hasil inspeksi mutu sebelum bahan dimasak.",
+      "keywords": "kitchen manager;pengelola dapur;dapur gizi;tugas dapur;fitur dapur",
+      "actionLink": "#kalkulator"
+    },
+    {
+      "id": "ORV-KB-0017",
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Kitchen Manager",
+      "question": "Fitur apa saja yang dimiliki pengelola dapur?",
+      "answer": "Kitchen Manager bertugas menyusun kalender menu mingguan, menghitung kebutuhan bahan kotor otomatis dengan kalkulator gizi, menerbitkan permintaan pasokan (DemandRequest), menerima kiriman bahan, dan memeriksa hasil inspeksi mutu sebelum bahan dimasak.",
+      "keywords": "kitchen manager;pengelola dapur;dapur gizi;tugas dapur;fitur dapur",
+      "actionLink": "#kalkulator"
+    },
+    {
+      "id": "ORV-KB-0018",
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Supplier / Petani",
+      "question": "Apa yang dilakukan Supplier atau Petani di ORVANA?",
+      "answer": "Supplier mendaftarkan stok panen dan jadwal petik (bisa melalui web atau chat pesan singkat/WhatsApp asisten NLP), menerima tawaran alokasi order kuota, mengonfirmasi kesanggupan dalam 12 jam, dan memantau pencairan dana hasil panen di rekeningnya.",
+      "keywords": "supplier;petani;peternak;nelayan;tugas petani;stok panen",
+      "actionLink": "#asisten"
+    },
+    {
+      "id": "ORV-KB-0019",
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Supplier / Petani",
+      "question": "Bagaimana cara petani memakai ORVANA?",
+      "answer": "Supplier mendaftarkan stok panen dan jadwal petik (bisa melalui web atau chat pesan singkat/WhatsApp asisten NLP), menerima tawaran alokasi order kuota, mengonfirmasi kesanggupan dalam 12 jam, dan memantau pencairan dana hasil panen di rekeningnya.",
+      "keywords": "supplier;petani;peternak;nelayan;tugas petani;stok panen",
+      "actionLink": "#asisten"
+    },
+    {
+      "id": "ORV-KB-0020",
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Supplier / Petani",
+      "question": "Apa fungsi akun supplier?",
+      "answer": "Supplier mendaftarkan stok panen dan jadwal petik (bisa melalui web atau chat pesan singkat/WhatsApp asisten NLP), menerima tawaran alokasi order kuota, mengonfirmasi kesanggupan dalam 12 jam, dan memantau pencairan dana hasil panen di rekeningnya.",
+      "keywords": "supplier;petani;peternak;nelayan;tugas petani;stok panen",
+      "actionLink": "#asisten"
+    },
+    {
+      "id": "ORV-KB-0021",
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Koordinator Distribusi",
+      "question": "Apa tugas Koordinator di ORVANA?",
+      "answer": "Koordinator bertugas mengonsolidasi panen dari berbagai kelompok tani dalam radius pendek (< 25 km), melakukan verifikasi timbang di lokasi, menempelkan stiker QR batch, menjaga kestabilan rantai dingin (+4°C), dan mengantar bahan tepat waktu ke dapur.",
+      "keywords": "coordinator;koordinator;logistik;armada;pengepul;timbang panen;antar barang",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0022",
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Koordinator Distribusi",
+      "question": "Siapa itu coordinator di sistem ORVANA?",
+      "answer": "Koordinator bertugas mengonsolidasi panen dari berbagai kelompok tani dalam radius pendek (< 25 km), melakukan verifikasi timbang di lokasi, menempelkan stiker QR batch, menjaga kestabilan rantai dingin (+4°C), dan mengantar bahan tepat waktu ke dapur.",
+      "keywords": "coordinator;koordinator;logistik;armada;pengepul;timbang panen;antar barang",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0023",
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Koordinator Distribusi",
+      "question": "Bagaimana koordinator logistik bekerja?",
+      "answer": "Koordinator bertugas mengonsolidasi panen dari berbagai kelompok tani dalam radius pendek (< 25 km), melakukan verifikasi timbang di lokasi, menempelkan stiker QR batch, menjaga kestabilan rantai dingin (+4°C), dan mengantar bahan tepat waktu ke dapur.",
+      "keywords": "coordinator;koordinator;logistik;armada;pengepul;timbang panen;antar barang",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0024",
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Quality Inspector / Ahli Gizi",
+      "question": "Apa tugas Quality Inspector di ORVANA?",
+      "answer": "Quality Inspector memeriksa fisik bahan pangan yang tiba di dapur menggunakan checklist organoleptik terukur (kesegaran, warna, aroma, kebersihan, suhu). Mereka memberikan skor kelayakan mutu (0-100), memutuskan status Lulus/Sebagian/Tolak, dan memicu pelepasan pembayaran ke petani.",
+      "keywords": "quality inspector;inspektur mutu;ahli gizi;qc;uji mutu;organoleptik",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0025",
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Quality Inspector / Ahli Gizi",
+      "question": "Siapa yang mengawasi mutu makanan di ORVANA?",
+      "answer": "Quality Inspector memeriksa fisik bahan pangan yang tiba di dapur menggunakan checklist organoleptik terukur (kesegaran, warna, aroma, kebersihan, suhu). Mereka memberikan skor kelayakan mutu (0-100), memutuskan status Lulus/Sebagian/Tolak, dan memicu pelepasan pembayaran ke petani.",
+      "keywords": "quality inspector;inspektur mutu;ahli gizi;qc;uji mutu;organoleptik",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0026",
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Quality Inspector / Ahli Gizi",
+      "question": "Bagaimana ahli gizi memeriksa bahan pangan?",
+      "answer": "Quality Inspector memeriksa fisik bahan pangan yang tiba di dapur menggunakan checklist organoleptik terukur (kesegaran, warna, aroma, kebersihan, suhu). Mereka memberikan skor kelayakan mutu (0-100), memutuskan status Lulus/Sebagian/Tolak, dan memicu pelepasan pembayaran ke petani.",
+      "keywords": "quality inspector;inspektur mutu;ahli gizi;qc;uji mutu;organoleptik",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0027",
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Admin Dinas dan Auditor",
+      "question": "Apa tugas Admin di ORVANA?",
+      "answer": "Admin (dinas pangan) memverifikasi pendaftaran akun mitra, mengatur harga acuan resmi daerah, memantau metrik ekonomi wilayah, dan memutus sengketa. Auditor memiliki akses baca-saja menyeluruh terhadap buku besar transaksi, kepatuhan harga, dan log audit tanpa bisa mengubah data.",
+      "keywords": "admin;auditor;dinas ketahanan pangan;audit trail;buku besar;monitoring",
+      "actionLink": "#ledger"
+    },
+    {
+      "id": "ORV-KB-0028",
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Admin Dinas dan Auditor",
+      "question": "Apa wewenang Auditor di ORVANA?",
+      "answer": "Admin (dinas pangan) memverifikasi pendaftaran akun mitra, mengatur harga acuan resmi daerah, memantau metrik ekonomi wilayah, dan memutus sengketa. Auditor memiliki akses baca-saja menyeluruh terhadap buku besar transaksi, kepatuhan harga, dan log audit tanpa bisa mengubah data.",
+      "keywords": "admin;auditor;dinas ketahanan pangan;audit trail;buku besar;monitoring",
+      "actionLink": "#ledger"
+    },
+    {
+      "id": "ORV-KB-0029",
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Admin Dinas dan Auditor",
+      "question": "Bagaimana dinas memantau ORVANA?",
+      "answer": "Admin (dinas pangan) memverifikasi pendaftaran akun mitra, mengatur harga acuan resmi daerah, memantau metrik ekonomi wilayah, dan memutus sengketa. Auditor memiliki akses baca-saja menyeluruh terhadap buku besar transaksi, kepatuhan harga, dan log audit tanpa bisa mengubah data.",
+      "keywords": "admin;auditor;dinas ketahanan pangan;audit trail;buku besar;monitoring",
+      "actionLink": "#ledger"
+    },
+    {
+      "id": "ORV-KB-0030",
+      "category": "ATURAN BISNIS",
+      "topic": "Aturan Kuota 60% Anti-Monopoli",
+      "question": "Apa itu aturan batas kuota 60% per pemasok?",
+      "answer": "Sesuai aturan bisnis ORVANA (matching.maxSharePerSupplier = 0.6), satu pemasok maksimal hanya boleh menyuplai 60% dari total kebutuhan satu permintaan dapur. Sisa 40% dialokasikan wajib ke kelompok tani atau nelayan lain. Ini menjamin distributor besar tidak memonopoli serapan pangan dan petani kecil tetap mendapat porsi adil.",
+      "keywords": "kuota 60%;anti monopoli;batas pasokan;maxSharePerSupplier;distributor besar;pembagian kuota",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0031",
+      "category": "ATURAN BISNIS",
+      "topic": "Aturan Kuota 60% Anti-Monopoli",
+      "question": "Mengapa kuota pemasok dibatasi maksimal 60%?",
+      "answer": "Sesuai aturan bisnis ORVANA (matching.maxSharePerSupplier = 0.6), satu pemasok maksimal hanya boleh menyuplai 60% dari total kebutuhan satu permintaan dapur. Sisa 40% dialokasikan wajib ke kelompok tani atau nelayan lain. Ini menjamin distributor besar tidak memonopoli serapan pangan dan petani kecil tetap mendapat porsi adil.",
+      "keywords": "kuota 60%;anti monopoli;batas pasokan;maxSharePerSupplier;distributor besar;pembagian kuota",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0032",
+      "category": "ATURAN BISNIS",
+      "topic": "Aturan Kuota 60% Anti-Monopoli",
+      "question": "Bagaimana ORVANA mencegah monopoli distributor?",
+      "answer": "Sesuai aturan bisnis ORVANA (matching.maxSharePerSupplier = 0.6), satu pemasok maksimal hanya boleh menyuplai 60% dari total kebutuhan satu permintaan dapur. Sisa 40% dialokasikan wajib ke kelompok tani atau nelayan lain. Ini menjamin distributor besar tidak memonopoli serapan pangan dan petani kecil tetap mendapat porsi adil.",
+      "keywords": "kuota 60%;anti monopoli;batas pasokan;maxSharePerSupplier;distributor besar;pembagian kuota",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0033",
+      "category": "ATURAN BISNIS",
+      "topic": "Rumus Skor Pencocokan (Matching Algorithm)",
+      "question": "Bagaimana cara sistem mencocokkan dapur dengan petani?",
+      "answer": "Skor pencocokan dihitung dengan rumus multi-kriteria 0-100: MatchScore = 100 * (0.30*Jarak + 0.30*Mutu + 0.20*Harga + 0.10*Kesegaran + 0.10*Keandalan). Jarak dihitung dengan rumus Haversine radius maksimal 50 km. Pemasok dengan skor tertinggi dan memenuhi syarat akan diprioritaskan mendapat alokasi order.",
+      "keywords": "matching score;rumus pencocokan;algoritma;bobot kriteria;skor petani;kandidat",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0034",
+      "category": "ATURAN BISNIS",
+      "topic": "Rumus Skor Pencocokan (Matching Algorithm)",
+      "question": "Apa rumus perhitungan matching score di ORVANA?",
+      "answer": "Skor pencocokan dihitung dengan rumus multi-kriteria 0-100: MatchScore = 100 * (0.30*Jarak + 0.30*Mutu + 0.20*Harga + 0.10*Kesegaran + 0.10*Keandalan). Jarak dihitung dengan rumus Haversine radius maksimal 50 km. Pemasok dengan skor tertinggi dan memenuhi syarat akan diprioritaskan mendapat alokasi order.",
+      "keywords": "matching score;rumus pencocokan;algoritma;bobot kriteria;skor petani;kandidat",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0035",
+      "category": "ATURAN BISNIS",
+      "topic": "Rumus Skor Pencocokan (Matching Algorithm)",
+      "question": "Kriteria apa saja yang menentukan peringkat petani?",
+      "answer": "Skor pencocokan dihitung dengan rumus multi-kriteria 0-100: MatchScore = 100 * (0.30*Jarak + 0.30*Mutu + 0.20*Harga + 0.10*Kesegaran + 0.10*Keandalan). Jarak dihitung dengan rumus Haversine radius maksimal 50 km. Pemasok dengan skor tertinggi dan memenuhi syarat akan diprioritaskan mendapat alokasi order.",
+      "keywords": "matching score;rumus pencocokan;algoritma;bobot kriteria;skor petani;kandidat",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0036",
+      "category": "ATURAN BISNIS",
+      "topic": "Batas Waktu Respon Order Petani",
+      "question": "Berapa lama petani diberi waktu untuk menjawab tawaran order?",
+      "answer": "Petani memiliki jendela waktu 12 jam (order.responseWindowHours = 12) untuk menerima atau menolak tawaran pesanan. Jika melewati 12 jam tanpa jawaban, status pesanan otomatis kedaluwarsa (EXPIRED) dan sistem langsung mengalihkan sisa kuota ke pemasok cadangan berikutnya.",
+      "keywords": "response window;12 jam;batas jawab;kedaluwarsa;terima tolak;alokasi ulang",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0037",
+      "category": "ATURAN BISNIS",
+      "topic": "Batas Waktu Respon Order Petani",
+      "question": "Apa yang terjadi jika petani tidak merespons pesanan dalam 12 jam?",
+      "answer": "Petani memiliki jendela waktu 12 jam (order.responseWindowHours = 12) untuk menerima atau menolak tawaran pesanan. Jika melewati 12 jam tanpa jawaban, status pesanan otomatis kedaluwarsa (EXPIRED) dan sistem langsung mengalihkan sisa kuota ke pemasok cadangan berikutnya.",
+      "keywords": "response window;12 jam;batas jawab;kedaluwarsa;terima tolak;alokasi ulang",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0038",
+      "category": "ATURAN BISNIS",
+      "topic": "Batas Waktu Respon Order Petani",
+      "question": "Berapa response window order?",
+      "answer": "Petani memiliki jendela waktu 12 jam (order.responseWindowHours = 12) untuk menerima atau menolak tawaran pesanan. Jika melewati 12 jam tanpa jawaban, status pesanan otomatis kedaluwarsa (EXPIRED) dan sistem langsung mengalihkan sisa kuota ke pemasok cadangan berikutnya.",
+      "keywords": "response window;12 jam;batas jawab;kedaluwarsa;terima tolak;alokasi ulang",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0039",
+      "category": "ATURAN BISNIS",
+      "topic": "Rumus Kebutuhan Bahan & Toleransi Susut Masak",
+      "question": "Bagaimana cara menghitung kebutuhan bahan mentah dapur?",
+      "answer": "Kebutuhan kotor dihitung dengan rumus: needQty = (Porsi * Kuantitas per Porsi) * (1 + Susut / 100), dibulatkan ke atas 0,1 kg. Persentase susut default: Bayam Hijau 15% (karena akar & batang tua dibuang), Ikan Lele 10% (isi perut & insang), Telur Ayam 3% (cangkang retak), dan Beras 2% (penyortiran kerikil/kutu).",
+      "keywords": "rumus kebutuhan;susut masak;waste percent;kalkulator;porsi makan;toleransi susut",
+      "actionLink": "#kalkulator"
+    },
+    {
+      "id": "ORV-KB-0040",
+      "category": "ATURAN BISNIS",
+      "topic": "Rumus Kebutuhan Bahan & Toleransi Susut Masak",
+      "question": "Berapa toleransi susut masak untuk komoditas pangan?",
+      "answer": "Kebutuhan kotor dihitung dengan rumus: needQty = (Porsi * Kuantitas per Porsi) * (1 + Susut / 100), dibulatkan ke atas 0,1 kg. Persentase susut default: Bayam Hijau 15% (karena akar & batang tua dibuang), Ikan Lele 10% (isi perut & insang), Telur Ayam 3% (cangkang retak), dan Beras 2% (penyortiran kerikil/kutu).",
+      "keywords": "rumus kebutuhan;susut masak;waste percent;kalkulator;porsi makan;toleransi susut",
+      "actionLink": "#kalkulator"
+    },
+    {
+      "id": "ORV-KB-0041",
+      "category": "ATURAN BISNIS",
+      "topic": "Rumus Kebutuhan Bahan & Toleransi Susut Masak",
+      "question": "Bagaimana rumus kalkulator menu dapur?",
+      "answer": "Kebutuhan kotor dihitung dengan rumus: needQty = (Porsi * Kuantitas per Porsi) * (1 + Susut / 100), dibulatkan ke atas 0,1 kg. Persentase susut default: Bayam Hijau 15% (karena akar & batang tua dibuang), Ikan Lele 10% (isi perut & insang), Telur Ayam 3% (cangkang retak), dan Beras 2% (penyortiran kerikil/kutu).",
+      "keywords": "rumus kebutuhan;susut masak;waste percent;kalkulator;porsi makan;toleransi susut",
+      "actionLink": "#kalkulator"
+    },
+    {
+      "id": "ORV-KB-0042",
+      "category": "ATURAN BISNIS",
+      "topic": "Skor Kelulusan Mutu Organoleptik (QC)",
+      "question": "Berapa skor minimum agar bahan pangan lolos QC?",
+      "answer": "Standar kelulusan mutu default adalah skor 70 dari 100 (qc.defaultPassScore = 70). Jika skor >= 70, status QC_PASSED (Lolos penuh) dan dana 100% cair. Jika terdapat sebagian bahan cacat tapi bisa dipilah, status QC_PARTIAL (dana cair proporsional). Jika skor < 70 atau susut fisik melebihi 2%, status QC_FAILED (Ditolak) dan pesanan ditugaskan ke pemasok cadangan.",
+      "keywords": "skor qc;lulus mutu;ambang mutu;defaultPassScore;organoleptik;tolak bahan;grade a",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0043",
+      "category": "ATURAN BISNIS",
+      "topic": "Skor Kelulusan Mutu Organoleptik (QC)",
+      "question": "Bagaimana kriteria penilaian mutu bahan makanan?",
+      "answer": "Standar kelulusan mutu default adalah skor 70 dari 100 (qc.defaultPassScore = 70). Jika skor >= 70, status QC_PASSED (Lolos penuh) dan dana 100% cair. Jika terdapat sebagian bahan cacat tapi bisa dipilah, status QC_PARTIAL (dana cair proporsional). Jika skor < 70 atau susut fisik melebihi 2%, status QC_FAILED (Ditolak) dan pesanan ditugaskan ke pemasok cadangan.",
+      "keywords": "skor qc;lulus mutu;ambang mutu;defaultPassScore;organoleptik;tolak bahan;grade a",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0044",
+      "category": "ATURAN BISNIS",
+      "topic": "Skor Kelulusan Mutu Organoleptik (QC)",
+      "question": "Apa yang terjadi jika skor QC di bawah 70?",
+      "answer": "Standar kelulusan mutu default adalah skor 70 dari 100 (qc.defaultPassScore = 70). Jika skor >= 70, status QC_PASSED (Lolos penuh) dan dana 100% cair. Jika terdapat sebagian bahan cacat tapi bisa dipilah, status QC_PARTIAL (dana cair proporsional). Jika skor < 70 atau susut fisik melebihi 2%, status QC_FAILED (Ditolak) dan pesanan ditugaskan ke pemasok cadangan.",
+      "keywords": "skor qc;lulus mutu;ambang mutu;defaultPassScore;organoleptik;tolak bahan;grade a",
+      "actionLink": "#alur"
+    },
+    {
+      "id": "ORV-KB-0045",
+      "category": "ATURAN BISNIS",
+      "topic": "Keamanan Pembayaran & Sistem Escrow",
+      "question": "Bagaimana keamanan pembayaran petani dijamin?",
+      "answer": "Saat pesanan disetujui, dana belanja dapur langsung dicadangkan ke rekening penampung resmi (escrow locked). Begitu bahan tiba dan inspektur mutu menerbitkan hasil Lulus (QC_PASSED), dana langsung ditransfer penuh ke rekening petani secara real-time pada hari yang sama (T+0) tanpa potongan perantara atau tengkulak.",
+      "keywords": "escrow;keamanan pembayaran;cair dana;tengkulak;rekening penampung;t+0",
+      "actionLink": "#ledger"
+    },
+    {
+      "id": "ORV-KB-0046",
+      "category": "ATURAN BISNIS",
+      "topic": "Keamanan Pembayaran & Sistem Escrow",
+      "question": "Kapan uang hasil panen petani dicairkan?",
+      "answer": "Saat pesanan disetujui, dana belanja dapur langsung dicadangkan ke rekening penampung resmi (escrow locked). Begitu bahan tiba dan inspektur mutu menerbitkan hasil Lulus (QC_PASSED), dana langsung ditransfer penuh ke rekening petani secara real-time pada hari yang sama (T+0) tanpa potongan perantara atau tengkulak.",
+      "keywords": "escrow;keamanan pembayaran;cair dana;tengkulak;rekening penampung;t+0",
+      "actionLink": "#ledger"
+    },
+    {
+      "id": "ORV-KB-0047",
+      "category": "ATURAN BISNIS",
+      "topic": "Keamanan Pembayaran & Sistem Escrow",
+      "question": "Apakah ada potongan tengkulak di ORVANA?",
+      "answer": "Saat pesanan disetujui, dana belanja dapur langsung dicadangkan ke rekening penampung resmi (escrow locked). Begitu bahan tiba dan inspektur mutu menerbitkan hasil Lulus (QC_PASSED), dana langsung ditransfer penuh ke rekening petani secara real-time pada hari yang sama (T+0) tanpa potongan perantara atau tengkulak.",
+      "keywords": "escrow;keamanan pembayaran;cair dana;tengkulak;rekening penampung;t+0",
+      "actionLink": "#ledger"
+    },
+    {
+      "id": "ORV-KB-0048",
+      "category": "ATURAN BISNIS",
+      "topic": "Perlindungan Harga Acuan Resmi Daerah",
+      "question": "Bagaimana ORVANA melindungi harga agar tidak dipermainkan?",
+      "answer": "Dinas pangan menetapkan batas harga resmi daerah (Floor Price dan Ceiling Price). Sistem secara otomatis menolak permintaan belanja dapur jika menawar di bawah harga dasar produsen (aturan price.enforceFloor = true) guna melindungi petani dari penekanan harga yang tidak manusiawi.",
+      "keywords": "harga dasar;floor price;ceiling price;harga acuan;inflasi;batas harga",
+      "actionLink": "#faq"
+    },
+    {
+      "id": "ORV-KB-0049",
+      "category": "ATURAN BISNIS",
+      "topic": "Perlindungan Harga Acuan Resmi Daerah",
+      "question": "Apa itu harga dasar (floor price) dan harga batas (ceiling price)?",
+      "answer": "Dinas pangan menetapkan batas harga resmi daerah (Floor Price dan Ceiling Price). Sistem secara otomatis menolak permintaan belanja dapur jika menawar di bawah harga dasar produsen (aturan price.enforceFloor = true) guna melindungi petani dari penekanan harga yang tidak manusiawi.",
+      "keywords": "harga dasar;floor price;ceiling price;harga acuan;inflasi;batas harga",
+      "actionLink": "#faq"
+    },
+    {
+      "id": "ORV-KB-0050",
+      "category": "ATURAN BISNIS",
+      "topic": "Perlindungan Harga Acuan Resmi Daerah",
+      "question": "Apakah dapur boleh menawar di bawah harga modal petani?",
+      "answer": "Dinas pangan menetapkan batas harga resmi daerah (Floor Price dan Ceiling Price). Sistem secara otomatis menolak permintaan belanja dapur jika menawar di bawah harga dasar produsen (aturan price.enforceFloor = true) guna melindungi petani dari penekanan harga yang tidak manusiawi.",
+      "keywords": "harga dasar;floor price;ceiling price;harga acuan;inflasi;batas harga",
+      "actionLink": "#faq"
+    },
+    {
+      "id": "ORV-KB-0051",
+      "category": "PENELUSURAN & QR",
+      "topic": "Paspor Penelusuran Batch QR Publik",
+      "question": "Apa itu Paspor Mutu QR Code?",
+      "answer": "Setiap sajian dapur memiliki kode batch unik (format: ORV-YYYYMMDD-KITCHEN-COUNTER, contoh ORV-20260920-DPR01-0001). Siapa pun dapat memindai QR code tersebut lewat kamera HP tanpa login. Informasi yang muncul: kelompok tani asal bahan, tanggal panen, skor kelayakan gizi ahli gizi, nama pengemudi logistik, dan suhu perjalanan.",
+      "keywords": "paspor qr;pelacakan batch;traceability;qr code;asal muasal;wali murid",
+      "actionLink": "/trace/ORV-20260920-DPR01-0001"
+    },
+    {
+      "id": "ORV-KB-0052",
+      "category": "PENELUSURAN & QR",
+      "topic": "Paspor Penelusuran Batch QR Publik",
+      "question": "Bagaimana cara orang tua murid melacak asal makanan anak?",
+      "answer": "Setiap sajian dapur memiliki kode batch unik (format: ORV-YYYYMMDD-KITCHEN-COUNTER, contoh ORV-20260920-DPR01-0001). Siapa pun dapat memindai QR code tersebut lewat kamera HP tanpa login. Informasi yang muncul: kelompok tani asal bahan, tanggal panen, skor kelayakan gizi ahli gizi, nama pengemudi logistik, dan suhu perjalanan.",
+      "keywords": "paspor qr;pelacakan batch;traceability;qr code;asal muasal;wali murid",
+      "actionLink": "/trace/ORV-20260920-DPR01-0001"
+    },
+    {
+      "id": "ORV-KB-0053",
+      "category": "PENELUSURAN & QR",
+      "topic": "Paspor Penelusuran Batch QR Publik",
+      "question": "Informasi apa saja yang ada di dalam kode batch ORVANA?",
+      "answer": "Setiap sajian dapur memiliki kode batch unik (format: ORV-YYYYMMDD-KITCHEN-COUNTER, contoh ORV-20260920-DPR01-0001). Siapa pun dapat memindai QR code tersebut lewat kamera HP tanpa login. Informasi yang muncul: kelompok tani asal bahan, tanggal panen, skor kelayakan gizi ahli gizi, nama pengemudi logistik, dan suhu perjalanan.",
+      "keywords": "paspor qr;pelacakan batch;traceability;qr code;asal muasal;wali murid",
+      "actionLink": "/trace/ORV-20260920-DPR01-0001"
+    },
+    {
+      "id": "ORV-KB-0054",
+      "category": "PENELUSURAN & QR",
+      "topic": "Cara Cek Kode Batch",
+      "question": "Bagaimana cara mengecek batch di website ORVANA?",
+      "answer": "Anda bisa memasukkan kode batch pada kolom pencarian di navigasi atas atau footer situs ('Pemeriksaan Batch Publik'), atau langsung membuka tautan /trace/{kode_batch}. Seluruh data terbuka 100% demi transparansi gizi anak Indonesia.",
+      "keywords": "cara cek batch;halaman trace;cek batch publik;tanpa download;scanner",
+      "actionLink": "/trace/ORV-20260920-DPR01-0001"
+    },
+    {
+      "id": "ORV-KB-0055",
+      "category": "PENELUSURAN & QR",
+      "topic": "Cara Cek Kode Batch",
+      "question": "Di mana letak halaman pencarian kode batch?",
+      "answer": "Anda bisa memasukkan kode batch pada kolom pencarian di navigasi atas atau footer situs ('Pemeriksaan Batch Publik'), atau langsung membuka tautan /trace/{kode_batch}. Seluruh data terbuka 100% demi transparansi gizi anak Indonesia.",
+      "keywords": "cara cek batch;halaman trace;cek batch publik;tanpa download;scanner",
+      "actionLink": "/trace/ORV-20260920-DPR01-0001"
+    },
+    {
+      "id": "ORV-KB-0056",
+      "category": "PENELUSURAN & QR",
+      "topic": "Cara Cek Kode Batch",
+      "question": "Bisakah cek batch tanpa download aplikasi?",
+      "answer": "Anda bisa memasukkan kode batch pada kolom pencarian di navigasi atas atau footer situs ('Pemeriksaan Batch Publik'), atau langsung membuka tautan /trace/{kode_batch}. Seluruh data terbuka 100% demi transparansi gizi anak Indonesia.",
+      "keywords": "cara cek batch;halaman trace;cek batch publik;tanpa download;scanner",
+      "actionLink": "/trace/ORV-20260920-DPR01-0001"
+    },
+    {
+      "id": "ORV-KB-0057",
+      "category": "ASISTEN AI & NLP",
+      "topic": "Asisten Chat Panen Petani (NLP)",
+      "question": "Bagaimana petani yang gaptek menginput hasil panen?",
+      "answer": "Petani tidak perlu mengisi form aplikasi yang rumit. ORVANA dilengkapi modul NLP bahasa Indonesia yang memahami kalimat panen sehari-hari (contoh: 'besok ada panen cabai rawit dua kwintal harga 45rb'). Sistem otomatis mengekstrak komoditas, kuantitas kilogram, tanggal panen, dan harga per kg secara cerdas.",
+      "keywords": "asisten nlp;chat whatsapp;petani gaptek;input panen suara;bahasa indonesia;ai panen",
+      "actionLink": "#asisten"
+    },
+    {
+      "id": "ORV-KB-0058",
+      "category": "ASISTEN AI & NLP",
+      "topic": "Asisten Chat Panen Petani (NLP)",
+      "question": "Apa fungsi AI NLP di sistem ORVANA?",
+      "answer": "Petani tidak perlu mengisi form aplikasi yang rumit. ORVANA dilengkapi modul NLP bahasa Indonesia yang memahami kalimat panen sehari-hari (contoh: 'besok ada panen cabai rawit dua kwintal harga 45rb'). Sistem otomatis mengekstrak komoditas, kuantitas kilogram, tanggal panen, dan harga per kg secara cerdas.",
+      "keywords": "asisten nlp;chat whatsapp;petani gaptek;input panen suara;bahasa indonesia;ai panen",
+      "actionLink": "#asisten"
+    },
+    {
+      "id": "ORV-KB-0059",
+      "category": "ASISTEN AI & NLP",
+      "topic": "Asisten Chat Panen Petani (NLP)",
+      "question": "Bisakah lapor panen lewat chat WhatsApp biasa?",
+      "answer": "Petani tidak perlu mengisi form aplikasi yang rumit. ORVANA dilengkapi modul NLP bahasa Indonesia yang memahami kalimat panen sehari-hari (contoh: 'besok ada panen cabai rawit dua kwintal harga 45rb'). Sistem otomatis mengekstrak komoditas, kuantitas kilogram, tanggal panen, dan harga per kg secara cerdas.",
+      "keywords": "asisten nlp;chat whatsapp;petani gaptek;input panen suara;bahasa indonesia;ai panen",
+      "actionLink": "#asisten"
+    },
+    {
+      "id": "ORV-KB-0060",
+      "category": "KEMITRAAN & REGISTRASI",
+      "topic": "Cara Mendaftar Akun Mitra Baru",
+      "question": "Bagaimana cara bergabung menjadi mitra ORVANA?",
+      "answer": "Pendaftaran mitra dapat dilakukan gratis melalui tombol 'Daftar Mitra' di navigasi atas atau halaman /register. Pilih peran usaha Anda (Kelompok Tani, Dapur Gizi Massal, atau Koordinator Distribusi). Tim dinas daerah akan memverifikasi dokumen lokasi dan kelayakan dalam 1x24 jam.",
+      "keywords": "daftar mitra;registrasi;cara gabung;biaya pendaftaran;syarat mitra",
+      "actionLink": "/register"
+    },
+    {
+      "id": "ORV-KB-0061",
+      "category": "KEMITRAAN & REGISTRASI",
+      "topic": "Cara Mendaftar Akun Mitra Baru",
+      "question": "Bagaimana kelompok tani atau dapur gizi mendaftar?",
+      "answer": "Pendaftaran mitra dapat dilakukan gratis melalui tombol 'Daftar Mitra' di navigasi atas atau halaman /register. Pilih peran usaha Anda (Kelompok Tani, Dapur Gizi Massal, atau Koordinator Distribusi). Tim dinas daerah akan memverifikasi dokumen lokasi dan kelayakan dalam 1x24 jam.",
+      "keywords": "daftar mitra;registrasi;cara gabung;biaya pendaftaran;syarat mitra",
+      "actionLink": "/register"
+    },
+    {
+      "id": "ORV-KB-0062",
+      "category": "KEMITRAAN & REGISTRASI",
+      "topic": "Cara Mendaftar Akun Mitra Baru",
+      "question": "Apakah ada biaya pendaftaran mitra?",
+      "answer": "Pendaftaran mitra dapat dilakukan gratis melalui tombol 'Daftar Mitra' di navigasi atas atau halaman /register. Pilih peran usaha Anda (Kelompok Tani, Dapur Gizi Massal, atau Koordinator Distribusi). Tim dinas daerah akan memverifikasi dokumen lokasi dan kelayakan dalam 1x24 jam.",
+      "keywords": "daftar mitra;registrasi;cara gabung;biaya pendaftaran;syarat mitra",
+      "actionLink": "/register"
+    },
+    {
+      "id": "ORV-KB-0063",
+      "category": "KEMITRAAN & REGISTRASI",
+      "topic": "Persyaratan Petani dan Dapur",
+      "question": "Apa syarat petani bergabung di ORVANA?",
+      "answer": "Petani diutamakan tergabung dalam Kelompok Tani (Poktan), Gapoktan, atau Koperasi Desa yang memiliki lahan aktif di wilayah kabupaten/kota setempat. Untuk dapur gizi, unit harus memiliki izin SPPG (Satuan Pelayanan Pangan Gizi) atau terdaftar di dinas terkait dengan kapasitas minimal 200 porsi per hari.",
+      "keywords": "syarat petani;syarat dapur;legalitas;kelompok tani;poktan;sppg",
+      "actionLink": "/register"
+    },
+    {
+      "id": "ORV-KB-0064",
+      "category": "KEMITRAAN & REGISTRASI",
+      "topic": "Persyaratan Petani dan Dapur",
+      "question": "Apakah petani perseorangan boleh mendaftar?",
+      "answer": "Petani diutamakan tergabung dalam Kelompok Tani (Poktan), Gapoktan, atau Koperasi Desa yang memiliki lahan aktif di wilayah kabupaten/kota setempat. Untuk dapur gizi, unit harus memiliki izin SPPG (Satuan Pelayanan Pangan Gizi) atau terdaftar di dinas terkait dengan kapasitas minimal 200 porsi per hari.",
+      "keywords": "syarat petani;syarat dapur;legalitas;kelompok tani;poktan;sppg",
+      "actionLink": "/register"
+    },
+    {
+      "id": "ORV-KB-0065",
+      "category": "KEMITRAAN & REGISTRASI",
+      "topic": "Persyaratan Petani dan Dapur",
+      "question": "Apa syarat dapur gizi bergabung?",
+      "answer": "Petani diutamakan tergabung dalam Kelompok Tani (Poktan), Gapoktan, atau Koperasi Desa yang memiliki lahan aktif di wilayah kabupaten/kota setempat. Untuk dapur gizi, unit harus memiliki izin SPPG (Satuan Pelayanan Pangan Gizi) atau terdaftar di dinas terkait dengan kapasitas minimal 200 porsi per hari.",
+      "keywords": "syarat petani;syarat dapur;legalitas;kelompok tani;poktan;sppg",
+      "actionLink": "/register"
+    }
+  ],
+  "topics": [
+    {
+      "category": "UMUM & PRODUK",
+      "topic": "Definisi dan Tujuan ORVANA",
+      "questions": [
+        "Apa itu ORVANA?",
+        "Jelaskan apa itu aplikasi ORVANA",
+        "Apa fungsi utama dari ORVANA?",
+        "Untuk apa sistem ORVANA dibuat?",
+        "Apa visi dan misi ORVANA?"
+      ],
+      "keywords": [
+        "apa itu orvana",
+        "definisi",
+        "fungsi",
+        "tujuan",
+        "visi",
+        "misi",
+        "pengertian"
+      ],
+      "answer": "ORVANA adalah platform manajemen rantai pasok pangan lokal terintegrasi untuk dapur gizi massal (seperti program makan bergizi gratis, pesantren, dan asrama). Sistem ini mencocokkan jadwal menu makanan dapur dengan kalender panen petani/nelayan lokal secara otomatis, mengontrol mutu pangan dengan uji organoleptik, mencatat pembayaran bertahap di buku besar transparan, dan menyediakan paspor pelacakan batch berbasis QR Code untuk masyarakat.",
+      "actionLink": "#alur"
+    },
+    {
+      "category": "UMUM & PRODUK",
+      "topic": "Masalah yang Diatasi",
+      "questions": [
+        "Masalah apa yang diselesaikan oleh ORVANA?",
+        "Mengapa pengadaan pangan dapur gizi membutuhkan ORVANA?",
+        "Apa tantangan rantai pasok pangan yang dihadapi dapur gizi?"
+      ],
+      "keywords": [
+        "masalah",
+        "tantangan",
+        "kendala",
+        "solusi",
+        "alasan dibuat",
+        "urgensi"
+      ],
+      "answer": "ORVANA menyelesaikan tiga masalah utama: (1) Ketidakpastian pasokan bahan baku segar dan risiko monopoli distributor besar; (2) Keterlambatan dan ketidakadilan pembayaran bagi petani kecil lokal akibat permainan tengkulak; serta (3) Risiko keracunan makanan dan minimnya pengawasan mutu gizi yang transparan bagi publik.",
+      "actionLink": "#masalah"
+    },
+    {
+      "category": "UMUM & PRODUK",
+      "topic": "Perbedaan dengan Marketplace",
+      "questions": [
+        "Apa bedanya ORVANA dengan marketplace pertanian biasa?",
+        "Mengapa ORVANA bukan e-commerce seperti Tokopedia atau Shopee?",
+        "Apa keunggulan ORVANA dibanding platform jual beli hasil tani umum?"
+      ],
+      "keywords": [
+        "beda marketplace",
+        "ecommerce",
+        "perbedaan",
+        "keunggulan",
+        "jual beli bebas",
+        "spot market"
+      ],
+      "answer": "Marketplace umum berbasis spot market (jual-beli bebas sewaktu-waktu tanpa jaminan serapan). ORVANA adalah sistem pengadaan terencana: jadwal menu dapur 10-14 hari ke depan dipetakan langsung ke rencana panen petani. Dilengkapi aturan kuota maksimal 60% per pemasok anti-monopoli, jaminan harga acuan resmi dinas, dan paspor penelusuran mutu publik.",
+      "actionLink": "#faq"
+    },
+    {
+      "category": "PERAN PENGGUNA",
+      "topic": "Daftar Peran Pengguna",
+      "questions": [
+        "Ada berapa peran pengguna di ORVANA?",
+        "Sebutkan peran atau role yang ada di dalam sistem ORVANA",
+        "Siapa saja pengguna ORVANA?"
+      ],
+      "keywords": [
+        "peran",
+        "role",
+        "pengguna",
+        "user",
+        "hak akses",
+        "aktor"
+      ],
+      "answer": "ORVANA memiliki 6 peran utama: (1) KITCHEN_MANAGER (pengelola dapur gizi), (2) SUPPLIER (petani, peternak, nelayan lokal), (3) COORDINATOR (koordinator pengepul dan logistik armada), (4) QUALITY_INSPECTOR (pengawas mutu dan ahli gizi), (5) ADMIN (administrator dinas ketahanan pangan), dan (6) AUDITOR (auditor publik/independen). Ditambah pengunjung publik tanpa login untuk cek batch QR.",
+      "actionLink": "#alur"
+    },
+    {
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Kitchen Manager",
+      "questions": [
+        "Apa tugas Kitchen Manager di ORVANA?",
+        "Apa yang dilakukan pengelola dapur di ORVANA?",
+        "Fitur apa saja yang dimiliki pengelola dapur?"
+      ],
+      "keywords": [
+        "kitchen manager",
+        "pengelola dapur",
+        "dapur gizi",
+        "tugas dapur",
+        "fitur dapur"
+      ],
+      "answer": "Kitchen Manager bertugas menyusun kalender menu mingguan, menghitung kebutuhan bahan kotor otomatis dengan kalkulator gizi, menerbitkan permintaan pasokan (DemandRequest), menerima kiriman bahan, dan memeriksa hasil inspeksi mutu sebelum bahan dimasak.",
+      "actionLink": "#kalkulator"
+    },
+    {
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Supplier / Petani",
+      "questions": [
+        "Apa yang dilakukan Supplier atau Petani di ORVANA?",
+        "Bagaimana cara petani memakai ORVANA?",
+        "Apa fungsi akun supplier?"
+      ],
+      "keywords": [
+        "supplier",
+        "petani",
+        "peternak",
+        "nelayan",
+        "tugas petani",
+        "stok panen"
+      ],
+      "answer": "Supplier mendaftarkan stok panen dan jadwal petik (bisa melalui web atau chat pesan singkat/WhatsApp asisten NLP), menerima tawaran alokasi order kuota, mengonfirmasi kesanggupan dalam 12 jam, dan memantau pencairan dana hasil panen di rekeningnya.",
+      "actionLink": "#asisten"
+    },
+    {
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Koordinator Distribusi",
+      "questions": [
+        "Apa tugas Koordinator di ORVANA?",
+        "Siapa itu coordinator di sistem ORVANA?",
+        "Bagaimana koordinator logistik bekerja?"
+      ],
+      "keywords": [
+        "coordinator",
+        "koordinator",
+        "logistik",
+        "armada",
+        "pengepul",
+        "timbang panen",
+        "antar barang"
+      ],
+      "answer": "Koordinator bertugas mengonsolidasi panen dari berbagai kelompok tani dalam radius pendek (< 25 km), melakukan verifikasi timbang di lokasi, menempelkan stiker QR batch, menjaga kestabilan rantai dingin (+4°C), dan mengantar bahan tepat waktu ke dapur.",
+      "actionLink": "#alur"
+    },
+    {
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Quality Inspector / Ahli Gizi",
+      "questions": [
+        "Apa tugas Quality Inspector di ORVANA?",
+        "Siapa yang mengawasi mutu makanan di ORVANA?",
+        "Bagaimana ahli gizi memeriksa bahan pangan?"
+      ],
+      "keywords": [
+        "quality inspector",
+        "inspektur mutu",
+        "ahli gizi",
+        "qc",
+        "uji mutu",
+        "organoleptik"
+      ],
+      "answer": "Quality Inspector memeriksa fisik bahan pangan yang tiba di dapur menggunakan checklist organoleptik terukur (kesegaran, warna, aroma, kebersihan, suhu). Mereka memberikan skor kelayakan mutu (0-100), memutuskan status Lulus/Sebagian/Tolak, dan memicu pelepasan pembayaran ke petani.",
+      "actionLink": "#alur"
+    },
+    {
+      "category": "PERAN PENGGUNA",
+      "topic": "Peran Admin Dinas dan Auditor",
+      "questions": [
+        "Apa tugas Admin di ORVANA?",
+        "Apa wewenang Auditor di ORVANA?",
+        "Bagaimana dinas memantau ORVANA?"
+      ],
+      "keywords": [
+        "admin",
+        "auditor",
+        "dinas ketahanan pangan",
+        "audit trail",
+        "buku besar",
+        "monitoring"
+      ],
+      "answer": "Admin (dinas pangan) memverifikasi pendaftaran akun mitra, mengatur harga acuan resmi daerah, memantau metrik ekonomi wilayah, dan memutus sengketa. Auditor memiliki akses baca-saja menyeluruh terhadap buku besar transaksi, kepatuhan harga, dan log audit tanpa bisa mengubah data.",
+      "actionLink": "#ledger"
+    },
+    {
+      "category": "ATURAN BISNIS",
+      "topic": "Aturan Kuota 60% Anti-Monopoli",
+      "questions": [
+        "Apa itu aturan batas kuota 60% per pemasok?",
+        "Mengapa kuota pemasok dibatasi maksimal 60%?",
+        "Bagaimana ORVANA mencegah monopoli distributor?"
+      ],
+      "keywords": [
+        "kuota 60%",
+        "anti monopoli",
+        "batas pasokan",
+        "maxSharePerSupplier",
+        "distributor besar",
+        "pembagian kuota"
+      ],
+      "answer": "Sesuai aturan bisnis ORVANA (matching.maxSharePerSupplier = 0.6), satu pemasok maksimal hanya boleh menyuplai 60% dari total kebutuhan satu permintaan dapur. Sisa 40% dialokasikan wajib ke kelompok tani atau nelayan lain. Ini menjamin distributor besar tidak memonopoli serapan pangan dan petani kecil tetap mendapat porsi adil.",
+      "actionLink": "#alur"
+    },
+    {
+      "category": "ATURAN BISNIS",
+      "topic": "Rumus Skor Pencocokan (Matching Algorithm)",
+      "questions": [
+        "Bagaimana cara sistem mencocokkan dapur dengan petani?",
+        "Apa rumus perhitungan matching score di ORVANA?",
+        "Kriteria apa saja yang menentukan peringkat petani?"
+      ],
+      "keywords": [
+        "matching score",
+        "rumus pencocokan",
+        "algoritma",
+        "bobot kriteria",
+        "skor petani",
+        "kandidat"
+      ],
+      "answer": "Skor pencocokan dihitung dengan rumus multi-kriteria 0-100: MatchScore = 100 * (0.30*Jarak + 0.30*Mutu + 0.20*Harga + 0.10*Kesegaran + 0.10*Keandalan). Jarak dihitung dengan rumus Haversine radius maksimal 50 km. Pemasok dengan skor tertinggi dan memenuhi syarat akan diprioritaskan mendapat alokasi order.",
+      "actionLink": "#alur"
+    },
+    {
+      "category": "ATURAN BISNIS",
+      "topic": "Batas Waktu Respon Order Petani",
+      "questions": [
+        "Berapa lama petani diberi waktu untuk menjawab tawaran order?",
+        "Apa yang terjadi jika petani tidak merespons pesanan dalam 12 jam?",
+        "Berapa response window order?"
+      ],
+      "keywords": [
+        "response window",
+        "12 jam",
+        "batas jawab",
+        "kedaluwarsa",
+        "terima tolak",
+        "alokasi ulang"
+      ],
+      "answer": "Petani memiliki jendela waktu 12 jam (order.responseWindowHours = 12) untuk menerima atau menolak tawaran pesanan. Jika melewati 12 jam tanpa jawaban, status pesanan otomatis kedaluwarsa (EXPIRED) dan sistem langsung mengalihkan sisa kuota ke pemasok cadangan berikutnya.",
+      "actionLink": "#alur"
+    },
+    {
+      "category": "ATURAN BISNIS",
+      "topic": "Rumus Kebutuhan Bahan & Toleransi Susut Masak",
+      "questions": [
+        "Bagaimana cara menghitung kebutuhan bahan mentah dapur?",
+        "Berapa toleransi susut masak untuk komoditas pangan?",
+        "Bagaimana rumus kalkulator menu dapur?"
+      ],
+      "keywords": [
+        "rumus kebutuhan",
+        "susut masak",
+        "waste percent",
+        "kalkulator",
+        "porsi makan",
+        "toleransi susut"
+      ],
+      "answer": "Kebutuhan kotor dihitung dengan rumus: needQty = (Porsi * Kuantitas per Porsi) * (1 + Susut / 100), dibulatkan ke atas 0,1 kg. Persentase susut default: Bayam Hijau 15% (karena akar & batang tua dibuang), Ikan Lele 10% (isi perut & insang), Telur Ayam 3% (cangkang retak), dan Beras 2% (penyortiran kerikil/kutu).",
+      "actionLink": "#kalkulator"
+    },
+    {
+      "category": "ATURAN BISNIS",
+      "topic": "Skor Kelulusan Mutu Organoleptik (QC)",
+      "questions": [
+        "Berapa skor minimum agar bahan pangan lolos QC?",
+        "Bagaimana kriteria penilaian mutu bahan makanan?",
+        "Apa yang terjadi jika skor QC di bawah 70?"
+      ],
+      "keywords": [
+        "skor qc",
+        "lulus mutu",
+        "ambang mutu",
+        "defaultPassScore",
+        "organoleptik",
+        "tolak bahan",
+        "grade a"
+      ],
+      "answer": "Standar kelulusan mutu default adalah skor 70 dari 100 (qc.defaultPassScore = 70). Jika skor >= 70, status QC_PASSED (Lolos penuh) dan dana 100% cair. Jika terdapat sebagian bahan cacat tapi bisa dipilah, status QC_PARTIAL (dana cair proporsional). Jika skor < 70 atau susut fisik melebihi 2%, status QC_FAILED (Ditolak) dan pesanan ditugaskan ke pemasok cadangan.",
+      "actionLink": "#alur"
+    },
+    {
+      "category": "ATURAN BISNIS",
+      "topic": "Keamanan Pembayaran & Sistem Escrow",
+      "questions": [
+        "Bagaimana keamanan pembayaran petani dijamin?",
+        "Kapan uang hasil panen petani dicairkan?",
+        "Apakah ada potongan tengkulak di ORVANA?"
+      ],
+      "keywords": [
+        "escrow",
+        "keamanan pembayaran",
+        "cair dana",
+        "tengkulak",
+        "rekening penampung",
+        "t+0"
+      ],
+      "answer": "Saat pesanan disetujui, dana belanja dapur langsung dicadangkan ke rekening penampung resmi (escrow locked). Begitu bahan tiba dan inspektur mutu menerbitkan hasil Lulus (QC_PASSED), dana langsung ditransfer penuh ke rekening petani secara real-time pada hari yang sama (T+0) tanpa potongan perantara atau tengkulak.",
+      "actionLink": "#ledger"
+    },
+    {
+      "category": "ATURAN BISNIS",
+      "topic": "Perlindungan Harga Acuan Resmi Daerah",
+      "questions": [
+        "Bagaimana ORVANA melindungi harga agar tidak dipermainkan?",
+        "Apa itu harga dasar (floor price) dan harga batas (ceiling price)?",
+        "Apakah dapur boleh menawar di bawah harga modal petani?"
+      ],
+      "keywords": [
+        "harga dasar",
+        "floor price",
+        "ceiling price",
+        "harga acuan",
+        "inflasi",
+        "batas harga"
+      ],
+      "answer": "Dinas pangan menetapkan batas harga resmi daerah (Floor Price dan Ceiling Price). Sistem secara otomatis menolak permintaan belanja dapur jika menawar di bawah harga dasar produsen (aturan price.enforceFloor = true) guna melindungi petani dari penekanan harga yang tidak manusiawi.",
+      "actionLink": "#faq"
+    },
+    {
+      "category": "PENELUSURAN & QR",
+      "topic": "Paspor Penelusuran Batch QR Publik",
+      "questions": [
+        "Apa itu Paspor Mutu QR Code?",
+        "Bagaimana cara orang tua murid melacak asal makanan anak?",
+        "Informasi apa saja yang ada di dalam kode batch ORVANA?"
+      ],
+      "keywords": [
+        "paspor qr",
+        "pelacakan batch",
+        "traceability",
+        "qr code",
+        "asal muasal",
+        "wali murid"
+      ],
+      "answer": "Setiap sajian dapur memiliki kode batch unik (format: ORV-YYYYMMDD-KITCHEN-COUNTER, contoh ORV-20260920-DPR01-0001). Siapa pun dapat memindai QR code tersebut lewat kamera HP tanpa login. Informasi yang muncul: kelompok tani asal bahan, tanggal panen, skor kelayakan gizi ahli gizi, nama pengemudi logistik, dan suhu perjalanan.",
+      "actionLink": "/trace/ORV-20260920-DPR01-0001"
+    },
+    {
+      "category": "PENELUSURAN & QR",
+      "topic": "Cara Cek Kode Batch",
+      "questions": [
+        "Bagaimana cara mengecek batch di website ORVANA?",
+        "Di mana letak halaman pencarian kode batch?",
+        "Bisakah cek batch tanpa download aplikasi?"
+      ],
+      "keywords": [
+        "cara cek batch",
+        "halaman trace",
+        "cek batch publik",
+        "tanpa download",
+        "scanner"
+      ],
+      "answer": "Anda bisa memasukkan kode batch pada kolom pencarian di navigasi atas atau footer situs ('Pemeriksaan Batch Publik'), atau langsung membuka tautan /trace/{kode_batch}. Seluruh data terbuka 100% demi transparansi gizi anak Indonesia.",
+      "actionLink": "/trace/ORV-20260920-DPR01-0001"
+    },
+    {
+      "category": "ASISTEN AI & NLP",
+      "topic": "Asisten Chat Panen Petani (NLP)",
+      "questions": [
+        "Bagaimana petani yang gaptek menginput hasil panen?",
+        "Apa fungsi AI NLP di sistem ORVANA?",
+        "Bisakah lapor panen lewat chat WhatsApp biasa?"
+      ],
+      "keywords": [
+        "asisten nlp",
+        "chat whatsapp",
+        "petani gaptek",
+        "input panen suara",
+        "bahasa indonesia",
+        "ai panen"
+      ],
+      "answer": "Petani tidak perlu mengisi form aplikasi yang rumit. ORVANA dilengkapi modul NLP bahasa Indonesia yang memahami kalimat panen sehari-hari (contoh: 'besok ada panen cabai rawit dua kwintal harga 45rb'). Sistem otomatis mengekstrak komoditas, kuantitas kilogram, tanggal panen, dan harga per kg secara cerdas.",
+      "actionLink": "#asisten"
+    },
+    {
+      "category": "KEMITRAAN & REGISTRASI",
+      "topic": "Cara Mendaftar Akun Mitra Baru",
+      "questions": [
+        "Bagaimana cara bergabung menjadi mitra ORVANA?",
+        "Bagaimana kelompok tani atau dapur gizi mendaftar?",
+        "Apakah ada biaya pendaftaran mitra?"
+      ],
+      "keywords": [
+        "daftar mitra",
+        "registrasi",
+        "cara gabung",
+        "biaya pendaftaran",
+        "syarat mitra"
+      ],
+      "answer": "Pendaftaran mitra dapat dilakukan gratis melalui tombol 'Daftar Mitra' di navigasi atas atau halaman /register. Pilih peran usaha Anda (Kelompok Tani, Dapur Gizi Massal, atau Koordinator Distribusi). Tim dinas daerah akan memverifikasi dokumen lokasi dan kelayakan dalam 1x24 jam.",
+      "actionLink": "/register"
+    },
+    {
+      "category": "KEMITRAAN & REGISTRASI",
+      "topic": "Persyaratan Petani dan Dapur",
+      "questions": [
+        "Apa syarat petani bergabung di ORVANA?",
+        "Apakah petani perseorangan boleh mendaftar?",
+        "Apa syarat dapur gizi bergabung?"
+      ],
+      "keywords": [
+        "syarat petani",
+        "syarat dapur",
+        "legalitas",
+        "kelompok tani",
+        "poktan",
+        "sppg"
+      ],
+      "answer": "Petani diutamakan tergabung dalam Kelompok Tani (Poktan), Gapoktan, atau Koperasi Desa yang memiliki lahan aktif di wilayah kabupaten/kota setempat. Untuk dapur gizi, unit harus memiliki izin SPPG (Satuan Pelayanan Pangan Gizi) atau terdaftar di dinas terkait dengan kapasitas minimal 200 porsi per hari.",
+      "actionLink": "/register"
+    }
+  ]
+}
