@@ -88,13 +88,13 @@ export const MoncyCustomCursor: React.FC = () => {
 
         ringRef.current.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) scale(${scale})`;
 
-        // Dynamic styling depending on hover state
+        // Dynamic styling depending on hover state (Crystal Clear Lens without Blur)
         if (isHovering) {
           ringRef.current.className =
-            'fixed top-0 left-0 pointer-events-none z-[9999] rounded-full flex items-center justify-center transition-[background-color,border-color,box-shadow] duration-200 ease-out will-change-transform w-9 h-9 border border-emerald-500/80 bg-emerald-500/20 backdrop-blur-[2px] shadow-[0_0_20px_rgba(16,185,129,0.35)]';
+            'fixed top-0 left-0 pointer-events-none z-[9999] rounded-full flex items-center justify-center transition-[background-color,border-color,box-shadow,width,height] duration-200 ease-out will-change-transform w-11 h-11 border-2 border-emerald-500 bg-emerald-500/10 shadow-[0_0_20px_rgba(16,185,129,0.25)]';
         } else {
           ringRef.current.className =
-            'fixed top-0 left-0 pointer-events-none z-[9999] rounded-full flex items-center justify-center transition-[background-color,border-color,box-shadow] duration-200 ease-out will-change-transform w-9 h-9 border border-emerald-600/50 bg-emerald-500/5 shadow-[0_0_10px_rgba(16,185,129,0.15)]';
+            'fixed top-0 left-0 pointer-events-none z-[9999] rounded-full flex items-center justify-center transition-[background-color,border-color,box-shadow,width,height] duration-200 ease-out will-change-transform w-8 h-8 border border-emerald-600/40 bg-transparent shadow-none';
         }
       }
 
