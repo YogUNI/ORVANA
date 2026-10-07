@@ -61,9 +61,9 @@ export const SupplyChain3DHero: React.FC = () => {
             {/* AMBIENT SOFT SHADOW GLOW */}
             <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-emerald-500/20 via-transparent to-amber-500/15 blur-xl opacity-50 pointer-events-none -z-10 group-hover:opacity-80 transition-opacity" />
 
-            {/* SEAMLESS 3D LOOP VIDEO (SMOOTH GIF-LIKE REPETITION, PURE AMBIENT) */}
+            {/* 3D SUPPLY CHAIN HERO VIDEO */}
             <video
-              src="/videos/hero-seamless-loop.mp4"
+              src="/videos/hero-supply-chain.mp4"
               autoPlay
               loop
               muted
