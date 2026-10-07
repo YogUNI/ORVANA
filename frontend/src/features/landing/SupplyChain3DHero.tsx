@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import {
-  TrendingUp,
-  RotateCw,
   ExternalLink,
   Lock,
+  Sparkles,
+  Cpu,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -12,19 +12,36 @@ export const SupplyChain3DHero: React.FC = () => {
 
   return (
     <div className="w-full flex flex-col items-center select-none">
-      {/* 1. TOP UTILITY BAR (CLEAN, MINIMAL, MATCHING ORVANA PALETTE) */}
-      <div className="flex items-center justify-between w-full max-w-2xl mb-2.5 px-3">
-        <button
-          type="button"
-          onClick={() => setIsFlipped(!isFlipped)}
-          className="group inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/80 hover:bg-white text-stone-700 hover:text-emerald-950 border border-stone-200/90 shadow-xs hover:shadow-md transition-all active:scale-95 backdrop-blur-sm"
-        >
-          <RotateCw className={`w-3.5 h-3.5 text-emerald-800 transition-transform duration-500 ${isFlipped ? 'rotate-180' : 'group-hover:rotate-45'}`} />
-          <span>{isFlipped ? 'Balik ke Simulasi 3D' : 'Balik ke Engine Alokasi'}</span>
-          <span className="text-[10px] font-mono font-normal text-stone-400 bg-stone-100 px-1.5 py-0.5 rounded-full">
-            {isFlipped ? 'Depan' : 'Belakang'}
-          </span>
-        </button>
+      {/* 1. TOP SINGLE INTUITIVE TOGGLE BAR (THE ONLY MASTER BUTTON) */}
+      <div className="flex items-center justify-between w-full max-w-2xl mb-3 px-3">
+        {/* SINGLE MASTER 3D PERSPECTIVE TOGGLE PILL */}
+        <div className="inline-flex items-center p-1 bg-stone-900/90 hover:bg-stone-900 backdrop-blur-xl rounded-2xl border border-stone-800 shadow-sm transition-all">
+          <button
+            type="button"
+            onClick={() => setIsFlipped(false)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              !isFlipped
+                ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40 shadow-xs'
+                : 'text-stone-400 hover:text-white'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Simulasi 3D</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsFlipped(true)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              isFlipped
+                ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40 shadow-xs'
+                : 'text-stone-400 hover:text-white'
+            }`}
+          >
+            <Cpu className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Engine Alokasi</span>
+          </button>
+        </div>
 
         <Link
           to="/trace/ORV-20260920-DPR01-0001"
@@ -70,16 +87,6 @@ export const SupplyChain3DHero: React.FC = () => {
                 className="w-full h-full object-contain scale-110 will-change-transform"
               />
             </div>
-
-            {/* QUICK FLIP HINT ON HOVER */}
-            <button
-              type="button"
-              onClick={() => setIsFlipped(true)}
-              className="absolute bottom-2 right-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-stone-900/60 hover:bg-stone-900/80 backdrop-blur-md text-[11px] font-mono text-white/90 border border-white/10 shadow-sm transition-all hover:scale-105 active:scale-95"
-            >
-              <TrendingUp className="w-3 h-3 text-emerald-400" />
-              <span>Lihat Kalkulasi Engine</span>
-            </button>
           </div>
 
           {/* ================= BACK SIDE: 3D CYBER-DATA GREENHOUSE & ENGINE LAB (BORDERLESS & SEAMLESS BLEND) ================= */}
@@ -144,16 +151,6 @@ export const SupplyChain3DHero: React.FC = () => {
                 S2 Berkah: 29 kg (42%)
               </p>
             </div>
-
-            {/* QUICK FLIP BACK TO ISLAND */}
-            <button
-              type="button"
-              onClick={() => setIsFlipped(false)}
-              className="absolute bottom-2 right-2 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-stone-900/70 hover:bg-stone-900 backdrop-blur-md text-[11px] font-mono text-white/90 border border-white/10 shadow-sm transition-all hover:scale-105 active:scale-95 pointer-events-auto"
-            >
-              <RotateCw className="w-3 h-3 text-emerald-400" />
-              <span>Balik ke Pulau 3D</span>
-            </button>
           </div>
         </div>
       </div>
