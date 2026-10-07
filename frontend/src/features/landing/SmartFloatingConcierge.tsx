@@ -241,12 +241,23 @@ export const SmartFloatingConcierge: React.FC = () => {
         />
       )}
 
-      {/* BESPOKE ARTISAN AGRITECH COPILOT DRAWER */}
+      {/* BESPOKE ARTISAN AGRITECH COPILOT MODAL - GENIE PAPER UNFOLDING TRANSITION */}
       <aside
         aria-label="Terminal Asisten AI Resmi ORVANA"
-        className={`fixed top-0 right-0 bottom-0 z-50 w-full sm:w-[460px] md:w-[480px] h-screen bg-[#FAF8F5] shadow-[-10px_0_40px_rgba(19,42,33,0.15)] border-l border-emerald-950/10 flex flex-col font-sans text-stone-900 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-auto ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`fixed z-50 flex flex-col font-sans text-stone-900 pointer-events-auto bg-[#FAF8F5]
+          /* Mobile: full screen / sheet */
+          inset-x-0 bottom-0 top-0 sm:inset-auto sm:right-6 sm:bottom-20
+          /* Desktop window: Elegant Card Sheet like macOS / Arc app */
+          sm:w-[460px] sm:h-[620px] sm:max-h-[calc(100vh-100px)] sm:rounded-3xl sm:border sm:border-emerald-950/20
+          sm:shadow-[0_25px_70px_-15px_rgba(17,35,27,0.35),0_0_0_1px_rgba(16,185,129,0.12)]
+          overflow-hidden
+          /* macOS Genie Paper Unfold Effect: Originates right at the trigger button */
+          origin-bottom-right transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]
+          ${
+            isOpen
+              ? 'opacity-100 scale-100 translate-y-0 rotate-0 filter-none pointer-events-auto'
+              : 'opacity-0 scale-[0.08] translate-y-12 translate-x-4 rotate-1 pointer-events-none'
+          }`}
       >
         {/* Top Header: Dark Artisan Emerald with warm ambient glow */}
         <div className="relative px-5 py-4 bg-[#11231B] text-white flex items-center justify-between border-b border-emerald-800/40 shrink-0 overflow-hidden shadow-xs">
