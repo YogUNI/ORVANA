@@ -37,14 +37,14 @@ export const SupplyChain3DHero: React.FC = () => {
             {/* FLOATING AMBIENT GLOW BACKDROP */}
             <div className="absolute inset-6 rounded-full bg-gradient-to-tr from-emerald-500/10 via-amber-400/10 to-transparent blur-3xl opacity-80 pointer-events-none -z-10" />
 
-            {/* SEAMLESS BLENDED VIDEO CONTAINER (EXPANDED TO PREVENT ANY EDGE CLIPPING) */}
+            {/* SEAMLESS BLENDED VIDEO CONTAINER (EXPANDED TO MATCH ENGINE SCALE) */}
             <div
               className="relative w-full h-full flex items-center justify-center pointer-events-none"
               style={{
                 filter: 'contrast(1.15) brightness(1.08)',
                 mixBlendMode: 'multiply',
-                maskImage: 'radial-gradient(ellipse 70% 64% at 50% 50%, black 30%, transparent 68%)',
-                WebkitMaskImage: 'radial-gradient(ellipse 70% 64% at 50% 50%, black 30%, transparent 68%)',
+                maskImage: 'radial-gradient(ellipse 75% 68% at 50% 50%, black 35%, transparent 72%)',
+                WebkitMaskImage: 'radial-gradient(ellipse 75% 68% at 50% 50%, black 35%, transparent 72%)',
               }}
             >
               <video
@@ -55,7 +55,7 @@ export const SupplyChain3DHero: React.FC = () => {
                 playsInline
                 preload="auto"
                 disableRemotePlayback
-                className="w-full h-full object-contain scale-100 will-change-transform"
+                className="w-full h-full object-contain scale-[1.18] will-change-transform"
               />
             </div>
           </div>
