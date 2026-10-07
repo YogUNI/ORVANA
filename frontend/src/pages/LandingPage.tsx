@@ -670,11 +670,20 @@ export const LandingPage: React.FC = () => {
 
             {/* STAGE 1: DAPUR GIZI */}
             <div className="group relative flex flex-col bg-white rounded-3xl border border-stone-200/90 hover:border-emerald-500 shadow-soft hover:shadow-elevated transition-all duration-300 p-6 overflow-hidden">
+              {/* Thematic Atmospheric Background (Modern Commercial Kitchen / SPPG Motif) */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center opacity-[0.07] group-hover:opacity-[0.12] transition-opacity duration-500 pointer-events-none"
+                style={{
+                  backgroundImage: `url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=80')`,
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-emerald-50/50 via-white/80 to-white pointer-events-none" />
+
               {/* Top Accent Gradient Bar */}
               <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-emerald-500 to-emerald-600" />
               
               {/* Step Badge & Role Head */}
-              <div className="flex items-center justify-between mb-5">
+              <div className="relative z-10 flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2.5">
                   <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold shadow-2xs group-hover:scale-105 transition-transform">
                     <Utensils className="w-5 h-5" />
@@ -688,7 +697,7 @@ export const LandingPage: React.FC = () => {
               </div>
 
               {/* Tangible Action Headline */}
-              <div className="mb-4">
+              <div className="relative z-10 mb-4">
                 <h4 className="text-base font-bold text-stone-950 font-serif leading-snug">
                   Rilis Rencana Menu & Kebutuhan Otomatis
                 </h4>
@@ -698,8 +707,8 @@ export const LandingPage: React.FC = () => {
               </div>
 
               {/* Tangible Result Card (Visual Artefact) */}
-              <div className="mt-auto pt-4 border-t border-stone-100">
-                <div className="rounded-2xl bg-emerald-50/60 border border-emerald-200/80 p-3.5 space-y-2">
+              <div className="relative z-10 mt-auto pt-4 border-t border-stone-100">
+                <div className="rounded-2xl bg-white/90 backdrop-blur-xs border border-emerald-200/90 p-3.5 space-y-2 shadow-2xs">
                   <div className="flex items-center justify-between text-[11px] font-mono">
                     <span className="text-emerald-900 font-semibold">Resep R1 (1.000 Porsi)</span>
                     <span className="text-[10px] bg-emerald-200/70 text-emerald-900 px-1.5 py-0.5 rounded font-bold">H-7</span>
@@ -726,11 +735,20 @@ export const LandingPage: React.FC = () => {
 
             {/* STAGE 2: PETANI & NELAYAN */}
             <div className="group relative flex flex-col bg-white rounded-3xl border border-stone-200/90 hover:border-amber-500 shadow-soft hover:shadow-elevated transition-all duration-300 p-6 overflow-hidden">
+              {/* Thematic Atmospheric Background (Lush Harvest Fields / Green Agriculture) */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center opacity-[0.08] group-hover:opacity-[0.14] transition-opacity duration-500 pointer-events-none"
+                style={{
+                  backgroundImage: `url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=600&q=80')`,
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-amber-50/50 via-white/80 to-white pointer-events-none" />
+
               {/* Top Accent Gradient Bar */}
               <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-amber-500 to-amber-600" />
 
               {/* Step Badge & Role Head */}
-              <div className="flex items-center justify-between mb-5">
+              <div className="relative z-10 flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2.5">
                   <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold shadow-2xs group-hover:scale-105 transition-transform">
                     <Leaf className="w-5 h-5" />
@@ -744,18 +762,18 @@ export const LandingPage: React.FC = () => {
               </div>
 
               {/* Tangible Action Headline */}
-              <div className="mb-4">
+              <div className="relative z-10 mb-4">
                 <h4 className="text-base font-bold text-stone-950 font-serif leading-snug">
                   Terima Kuota Panen & Dana Terkunci Aman
                 </h4>
                 <p className="text-xs text-stone-600 mt-1.5 leading-relaxed">
-                  Petani menyanggupi kuota dalam 12 jam. Dana pesanan langsung dicadangkan [HOLD] di rekening penampung resmi (escrow).
+                  Petani menyanggupi kuota dalam 12 jam. Dana pesanan langsung dicadangkan di rekening penampung resmi (escrow).
                 </p>
               </div>
 
               {/* Tangible Result Card (Visual Artefact) */}
-              <div className="mt-auto pt-4 border-t border-stone-100">
-                <div className="rounded-2xl bg-amber-50/60 border border-amber-200/80 p-3.5 space-y-2">
+              <div className="relative z-10 mt-auto pt-4 border-t border-stone-100">
+                <div className="rounded-2xl bg-white/90 backdrop-blur-xs border border-amber-200/90 p-3.5 space-y-2 shadow-2xs">
                   <div className="flex items-center justify-between text-[11px] font-mono">
                     <span className="text-amber-950 font-semibold">Poktan Makmur (Desa)</span>
                     <span className="text-[10px] bg-amber-200/70 text-amber-900 px-1.5 py-0.5 rounded font-bold">Respon 12j</span>
@@ -765,7 +783,7 @@ export const LandingPage: React.FC = () => {
                       <span>Alokasi Panen:</span>
                       <strong className="text-stone-950">40,0 kg @ Rp 8.000</strong>
                     </div>
-                    <div className="flex justify-between items-center text-[11px] text-amber-900 font-bold bg-amber-100/60 px-2 py-0.5 rounded-md border border-amber-300/60">
+                    <div className="flex justify-between items-center text-[11px] text-amber-900 font-bold bg-amber-100/70 px-2 py-0.5 rounded-md border border-amber-300/60">
                       <span className="flex items-center gap-1">
                         <Lock className="w-3 h-3 text-amber-800" />
                         Escrow Terkunci:
@@ -785,11 +803,20 @@ export const LandingPage: React.FC = () => {
 
             {/* STAGE 3: KOORDINATOR DESA */}
             <div className="group relative flex flex-col bg-white rounded-3xl border border-stone-200/90 hover:border-sky-500 shadow-soft hover:shadow-elevated transition-all duration-300 p-6 overflow-hidden">
+              {/* Thematic Atmospheric Background (Fleet Logistics / Temperature-controlled Cargo) */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center opacity-[0.08] group-hover:opacity-[0.14] transition-opacity duration-500 pointer-events-none"
+                style={{
+                  backgroundImage: `url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=600&q=80')`,
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-sky-50/50 via-white/80 to-white pointer-events-none" />
+
               {/* Top Accent Gradient Bar */}
               <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-sky-500 to-sky-600" />
 
               {/* Step Badge & Role Head */}
-              <div className="flex items-center justify-between mb-5">
+              <div className="relative z-10 flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2.5">
                   <div className="w-10 h-10 rounded-2xl bg-sky-100 text-sky-800 flex items-center justify-center font-bold shadow-2xs group-hover:scale-105 transition-transform">
                     <Truck className="w-5 h-5" />
@@ -803,7 +830,7 @@ export const LandingPage: React.FC = () => {
               </div>
 
               {/* Tangible Action Headline */}
-              <div className="mb-4">
+              <div className="relative z-10 mb-4">
                 <h4 className="text-base font-bold text-stone-950 font-serif leading-snug">
                   Konsolidasi Rantai Dingin & Cetak Paspor QR
                 </h4>
@@ -813,8 +840,8 @@ export const LandingPage: React.FC = () => {
               </div>
 
               {/* Tangible Result Card (Visual Artefact) */}
-              <div className="mt-auto pt-4 border-t border-stone-100">
-                <div className="rounded-2xl bg-sky-50/60 border border-sky-200/80 p-3.5 space-y-2">
+              <div className="relative z-10 mt-auto pt-4 border-t border-stone-100">
+                <div className="rounded-2xl bg-white/90 backdrop-blur-xs border border-sky-200/90 p-3.5 space-y-2 shadow-2xs">
                   <div className="flex items-center justify-between text-[11px] font-mono">
                     <span className="text-sky-950 font-semibold">Batch: ORV-20261014-01</span>
                     <span className="text-[10px] bg-sky-200/70 text-sky-900 px-1.5 py-0.5 rounded font-bold">Transit</span>
@@ -843,11 +870,20 @@ export const LandingPage: React.FC = () => {
 
             {/* STAGE 4: PENGAWAS MUTU & QC */}
             <div className="group relative flex flex-col bg-white rounded-3xl border border-stone-200/90 hover:border-purple-500 shadow-soft hover:shadow-elevated transition-all duration-300 p-6 overflow-hidden">
+              {/* Thematic Atmospheric Background (Lab / Nutritional Food Inspection & Safety) */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center opacity-[0.08] group-hover:opacity-[0.14] transition-opacity duration-500 pointer-events-none"
+                style={{
+                  backgroundImage: `url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80')`,
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-purple-50/50 via-white/80 to-white pointer-events-none" />
+
               {/* Top Accent Gradient Bar */}
               <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-purple-500 to-purple-600" />
 
               {/* Step Badge & Role Head */}
-              <div className="flex items-center justify-between mb-5">
+              <div className="relative z-10 flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2.5">
                   <div className="w-10 h-10 rounded-2xl bg-purple-100 text-purple-800 flex items-center justify-center font-bold shadow-2xs group-hover:scale-105 transition-transform">
                     <ShieldCheck className="w-5 h-5" />
@@ -861,18 +897,18 @@ export const LandingPage: React.FC = () => {
               </div>
 
               {/* Tangible Action Headline */}
-              <div className="mb-4">
+              <div className="relative z-10 mb-4">
                 <h4 className="text-base font-bold text-stone-950 font-serif leading-snug">
                   Inspeksi Ahli Gizi & Pencairan Escrow Seketika
                 </h4>
                 <p className="text-xs text-stone-600 mt-1.5 leading-relaxed">
-                  Bahan diperiksa dengan checklist organoleptik. Status Lulus [PASS] otomatis mengeksekusi transfer ke petani saat itu juga (T+0).
+                  Bahan diperiksa dengan checklist organoleptik. Status Lulus otomatis mengeksekusi transfer ke petani saat itu juga (T+0).
                 </p>
               </div>
 
               {/* Tangible Result Card (Visual Artefact) */}
-              <div className="mt-auto pt-4 border-t border-stone-100">
-                <div className="rounded-2xl bg-purple-50/60 border border-purple-200/80 p-3.5 space-y-2">
+              <div className="relative z-10 mt-auto pt-4 border-t border-stone-100">
+                <div className="rounded-2xl bg-white/90 backdrop-blur-xs border border-purple-200/90 p-3.5 space-y-2 shadow-2xs">
                   <div className="flex items-center justify-between text-[11px] font-mono">
                     <span className="text-purple-950 font-semibold">Hasil: Grade A (90/100)</span>
                     <span className="text-[10px] bg-emerald-200 text-emerald-950 px-1.5 py-0.5 rounded font-bold">PASS 100%</span>
