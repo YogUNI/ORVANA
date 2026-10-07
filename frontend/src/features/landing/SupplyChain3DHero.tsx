@@ -65,7 +65,9 @@ export const SupplyChain3DHero: React.FC = () => {
                 loop
                 muted
                 playsInline
-                className="w-full h-full object-contain scale-110"
+                preload="auto"
+                disableRemotePlayback
+                className="w-full h-full object-contain scale-110 will-change-transform"
               />
             </div>
 
@@ -103,7 +105,9 @@ export const SupplyChain3DHero: React.FC = () => {
                 loop
                 muted
                 playsInline
-                className="w-full h-full object-contain scale-110"
+                preload="auto"
+                disableRemotePlayback
+                className="w-full h-full object-contain scale-110 will-change-transform"
               />
             </div>
 
