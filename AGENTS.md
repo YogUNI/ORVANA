@@ -122,3 +122,4 @@ Variabel lingkungan (lihat `.env.example`): `DATABASE_URL`, `JWT_ACCESS_SECRET`,
 | `docs/10-roadmap-tasks.md` | Tahap dan checklist tugas |
 | `docs/11-testing-demo.md` | Strategi uji, skenario E2E, skrip demo lomba |
 | `docs/12-quality-audit-future-roadmap.md` | Audit mutu komprehensif dan roadmap aksi masa depan |
+| `docs/13-ai-agent-testing-roadmap.md` | Roadmap & task list pengujian AI Agent ORVANA |
