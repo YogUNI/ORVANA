@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { apiClient } from '../lib/apiClient';
 import { formatRupiah, formatKg } from '../lib/format';
-import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Logo } from '../components/ui/Logo';
@@ -43,6 +42,8 @@ import {
   Salad,
   Calculator,
   Clock,
+  BookOpen,
+  FileCheck,
 } from 'lucide-react';
 
 interface PublicImpactSummary {
@@ -1548,90 +1549,243 @@ export const LandingPage: React.FC = () => {
 
 
       <ScrollReveal animation="fade-up" delayMs={0}>
-        {/* 5. METRIK DAMPAK DAERAH REAL-TIME */}
-      <section id="dampak" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="bg-white rounded-3xl border border-stone-200/90 p-6 sm:p-10 shadow-soft">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-stone-200 pb-5">
-            <div>
-              <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-emerald-900 mb-1">
-                <Sparkles className="w-4 h-4 text-amber-600" />
-                <span>Buku Besar Terbuka & Agregasi Dampak</span>
-              </div>
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-stone-950">
-                Transparansi Real-Time Ekonomi Lokal
-              </h2>
-              <p className="text-xs sm:text-sm text-stone-600 mt-0.5">
-                Data agregat langsung dari catatan transaksi append-only yang telah dituntaskan
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge color="accent">Audit Publik Terverifikasi</Badge>
-              <Link to="/auditor/dashboard">
-                <Button variant="ghost" size="sm" className="text-xs font-semibold text-emerald-900 hover:bg-emerald-50">
-                  <span>Portal Auditor</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </Button>
-              </Link>
-            </div>
+        {/* 5. THE LIVING OPEN LEDGER: BUKU BESAR AUDIT PUBLIK TERBUKA */}
+      <section id="dampak" className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-14">
+        
+        {/* Header Section */}
+        <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-100/90 text-emerald-900 text-[11px] font-mono font-bold uppercase tracking-wider border border-emerald-300 shadow-2xs">
+            <BookOpen className="w-3.5 h-3.5 text-emerald-800" />
+            <span>BUKU BESAR TERBUKA & AKUNTABILITAS PUBLIK</span>
           </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6">
-            <div className="p-4 sm:p-5 bg-emerald-50/60 rounded-2xl border border-emerald-100 hover:border-emerald-300 transition-colors text-left">
-              <span className="text-xs text-emerald-900 flex items-center gap-1 font-semibold">
-                <DollarSign className="w-3.5 h-3.5 text-emerald-700" />
-                Perputaran Belanja Lokal
-              </span>
-              <p className="text-xl sm:text-2xl font-serif font-bold text-emerald-950 mt-2">
-                {isLoading ? <Skeleton className="h-7 w-20" /> : formatRupiah(impact?.localSpendingRupiah || 0)}
-              </p>
-              <span className="text-[10px] text-emerald-800/80 block mt-1">100% langsung diserap petani daerah</span>
-            </div>
-
-            <div className="p-4 sm:p-5 bg-blue-50/60 rounded-2xl border border-blue-100 hover:border-blue-300 transition-colors text-left">
-              <span className="text-xs text-blue-900 flex items-center gap-1 font-semibold">
-                <Users className="w-3.5 h-3.5 text-blue-700" />
-                Mitra Produsen Terlibat
-              </span>
-              <p className="text-xl sm:text-2xl font-serif font-bold text-stone-900 mt-2">
-                {isLoading ? <Skeleton className="h-7 w-12" /> : `${impact?.producersInvolved || 0} Produsen`}
-              </p>
-              <span className="text-[10px] text-stone-500 block mt-1">Kelompok tani, peternak & UMKM</span>
-            </div>
-
-            <div className="p-4 sm:p-5 bg-amber-50/60 rounded-2xl border border-amber-100 hover:border-amber-300 transition-colors text-left">
-              <span className="text-xs text-amber-900 flex items-center gap-1 font-semibold">
-                <CheckCircle2 className="w-3.5 h-3.5 text-amber-700" />
-                Total Pangan Terserap
-              </span>
-              <p className="text-xl sm:text-2xl font-mono font-bold text-stone-950 mt-2">
-                {isLoading ? <Skeleton className="h-7 w-16" /> : formatKg(impact?.totalDeliveredKg || 0)}
-              </p>
-              <span className="text-[10px] text-amber-900/80 block mt-1">Bahan segar bergizi tersalurkan</span>
-            </div>
-
-            <div className="p-4 sm:p-5 bg-purple-50/60 rounded-2xl border border-purple-100 hover:border-purple-300 transition-colors text-left">
-              <span className="text-xs text-purple-900 flex items-center gap-1 font-semibold">
-                <ShieldCheck className="w-3.5 h-3.5 text-purple-700" />
-                Tingkat Lolos Mutu QC
-              </span>
-              <p className="text-xl sm:text-2xl font-mono font-bold text-purple-950 mt-2">
-                {isLoading ? <Skeleton className="h-7 w-14" /> : `${impact?.qualityPassRatePct || 0}%`}
-              </p>
-              <span className="text-[10px] text-purple-900/80 block mt-1">Standar inspeksi ahli gizi</span>
-            </div>
-
-            <div className="p-4 sm:p-5 bg-stone-100/70 rounded-2xl border border-stone-200 col-span-2 md:col-span-1 text-left">
-              <span className="text-xs text-stone-700 flex items-center gap-1 font-semibold">
-                <MapPin className="w-3.5 h-3.5 text-amber-800" />
-                Rata-rata Radius Jarak
-              </span>
-              <p className="text-xl sm:text-2xl font-mono font-bold text-amber-900 mt-2">
-                {isLoading ? <Skeleton className="h-7 w-16" /> : `${impact?.avgDistanceKm || 0} km`}
-              </p>
-              <span className="text-[10px] text-stone-500 block mt-1">Rute pendek, emisi karbon rendah</span>
-            </div>
-          </div>
+          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-stone-950 tracking-tight leading-tight">
+            Transparansi Real-Time <br className="hidden sm:inline" />
+            <span className="italic font-normal text-emerald-850">Buku Kas Ekonomi Daerah</span>
+          </h2>
+          <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
+            Setiap butir beras, kilogram ikan, dan rupiah transaksi terekam otomatis dalam buku besar digital tanpa rekayasa.
+          </p>
         </div>
+
+        {/* 3D Realistic Open Ledger Book Container */}
+        <div className="relative rounded-3xl bg-[#EDE7DD] p-3 sm:p-5 shadow-elevated border border-stone-300">
+          
+          {/* Hardcover Outer Leather Edge & Depth Layer */}
+          <div className="relative rounded-2xl bg-[#F8F5EE] border border-[#DDD5C5] shadow-2xl overflow-hidden">
+            
+            {/* Top Red-Gold Silk Bookmark Ribbon protruding out */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center pointer-events-none">
+              <div className="w-7 h-12 bg-gradient-to-b from-amber-600 via-amber-500 to-amber-700 shadow-md flex items-end justify-center pb-1">
+                <div className="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-b-[8px] border-b-[#F8F5EE]" />
+              </div>
+            </div>
+
+            {/* Subtle Parchment Page Grain Texture */}
+            <div className="absolute inset-0 bg-[radial-gradient(#5C4033_0.5px,transparent_0.5px)] [background-size:16px_16px] opacity-[0.025] pointer-events-none" />
+
+            {/* Central Book Spine Crease & Shadow (Two-Page Split Fold) */}
+            <div className="hidden lg:block absolute inset-y-0 left-1/2 -translate-x-1/2 w-8 bg-gradient-to-r from-stone-400/20 via-stone-500/35 to-stone-400/20 z-20 pointer-events-none shadow-inner" />
+            <div className="hidden lg:block absolute inset-y-0 left-1/2 -translate-x-1/2 w-[1px] bg-stone-300 z-25 pointer-events-none" />
+
+            {/* TWO-PAGE SPREAD CONTENT */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-stone-300/80 relative z-10">
+              
+              {/* HALAMAN KIRI: LEMBAR KAS DAERAH & PETANI */}
+              <div className="p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-r from-[#FAF7F0] via-[#FAF6EE] to-[#F5F0E6] relative">
+                
+                <div>
+                  {/* Ledger Page Header */}
+                  <div className="flex items-start justify-between border-b-2 border-stone-300 pb-4 mb-6">
+                    <div>
+                      <div className="flex items-center gap-1.5 text-[10px] font-mono font-extrabold text-stone-500 uppercase tracking-widest">
+                        <span>LEMBAR KAS #01</span>
+                        <span>•</span>
+                        <span>SERI ANGGARAN DAERAH</span>
+                      </div>
+                      <h3 className="text-base sm:text-lg font-serif font-bold text-stone-900 mt-0.5">
+                        Arus Belanja Pangan Lokal
+                      </h3>
+                    </div>
+
+                    {/* Official Stamp Wax / Seal Badge */}
+                    <div className="border-2 border-emerald-700/60 rounded-xl px-2.5 py-1 rotate-[-3deg] bg-emerald-50/80 shadow-2xs">
+                      <div className="text-[8px] font-mono font-black text-emerald-900 tracking-tighter uppercase text-center">
+                        TERVERIFIKASI
+                      </div>
+                      <div className="text-[10px] font-serif font-black text-emerald-800 text-center flex items-center justify-center gap-0.5">
+                        <Check className="w-3 h-3 text-emerald-700" />
+                        AUDIT SAH
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Main Metric: Perputaran Belanja Lokal (Large Callout) */}
+                  <div className="p-4 sm:p-5 rounded-2xl bg-white/80 border border-emerald-200/90 shadow-2xs space-y-2 mb-4">
+                    <div className="flex items-center justify-between text-xs font-mono font-bold text-emerald-900">
+                      <span className="flex items-center gap-1">
+                        <DollarSign className="w-3.5 h-3.5 text-emerald-700" />
+                        Total Perputaran Belanja Petani
+                      </span>
+                      <span className="text-[10px] bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded-full border border-emerald-200">
+                        100% Hak Daerah
+                      </span>
+                    </div>
+
+                    <div className="text-2xl sm:text-4xl font-serif font-bold text-emerald-950 tracking-tight">
+                      {isLoading ? <Skeleton className="h-9 w-40" /> : formatRupiah(impact?.localSpendingRupiah || 0)}
+                    </div>
+
+                    <p className="text-[11px] text-stone-600 font-sans leading-relaxed pt-1 border-t border-stone-200/60">
+                      Seluruh dana belanja bahan mentah langsung masuk rekening kelompok tani & nelayan desa tanpa potongan calo.
+                    </p>
+                  </div>
+
+                  {/* Secondary Metric: Mitra Produsen */}
+                  <div className="p-4 rounded-xl bg-white/60 border border-stone-200 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-stone-100 border border-stone-200 flex items-center justify-center text-stone-700 shrink-0">
+                        <Users className="w-5 h-5 text-emerald-850" />
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-mono font-bold uppercase text-stone-500 block">
+                          Mitra Produsen Terdaftar
+                        </span>
+                        <h4 className="text-base sm:text-lg font-serif font-bold text-stone-900">
+                          {isLoading ? <Skeleton className="h-6 w-16" /> : `${impact?.producersInvolved || 0} Produsen Aktif`}
+                        </h4>
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-mono text-stone-600 bg-stone-100 px-2 py-1 rounded">
+                      Kelompok Tani & UMKM
+                    </span>
+                  </div>
+                </div>
+
+                {/* Left Page Footer Note */}
+                <div className="pt-4 mt-6 border-t border-stone-200/80 flex items-center justify-between text-[10px] font-mono text-stone-600">
+                  <span>Pencatatan: Real-time Append-Only</span>
+                  <span>Halaman 1 dari 2</span>
+                </div>
+
+              </div>
+
+              {/* HALAMAN KANAN: LEMBAR LOGISTIK & MUTU GIZI */}
+              <div className="p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-l from-[#FAF7F0] via-[#FAF6EE] to-[#F5F0E6] relative">
+                
+                <div>
+                  {/* Ledger Page Header */}
+                  <div className="flex items-start justify-between border-b-2 border-stone-300 pb-4 mb-6">
+                    <div>
+                      <div className="flex items-center gap-1.5 text-[10px] font-mono font-extrabold text-stone-500 uppercase tracking-widest">
+                        <span>LEMBAR LOGISTIK #02</span>
+                        <span>•</span>
+                        <span>KONTROL MUTU GIZI</span>
+                      </div>
+                      <h3 className="text-base sm:text-lg font-serif font-bold text-stone-900 mt-0.5">
+                        Pangan Terserap & Radius
+                      </h3>
+                    </div>
+
+                    <Link to="/auditor/dashboard" className="shrink-0">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="text-[11px] font-bold text-stone-900 bg-white hover:bg-emerald-50 border-stone-300 shadow-2xs hover:border-emerald-600 flex items-center gap-1.5"
+                      >
+                        <FileCheck className="w-3.5 h-3.5 text-emerald-800" />
+                        <span>Buka Buku Kas Kasir</span>
+                        <ChevronRight className="w-3 h-3 text-stone-500" />
+                      </Button>
+                    </Link>
+                  </div>
+
+                  {/* 3 Metric Grid in Right Page */}
+                  <div className="space-y-3 mb-4">
+                    
+                    {/* Metrik 1: Total Pangan Terserap */}
+                    <div className="p-3.5 rounded-xl bg-white/70 border border-stone-200 flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-800 shrink-0">
+                          <CheckCircle2 className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-mono font-bold text-stone-600 block uppercase">
+                            Volume Panen Terserap
+                          </span>
+                          <strong className="text-base font-mono font-extrabold text-stone-950">
+                            {isLoading ? <Skeleton className="h-5 w-20" /> : formatKg(impact?.totalDeliveredKg || 0)}
+                          </strong>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-mono font-bold text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-200/60">
+                        Bahan Bergizi
+                      </span>
+                    </div>
+
+                    {/* Metrik 2: Tingkat Lolos Mutu QC */}
+                    <div className="p-3.5 rounded-xl bg-white/70 border border-stone-200 flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-800 shrink-0">
+                          <ShieldCheck className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-mono font-bold text-stone-600 block uppercase">
+                            Tingkat Kelulusan Uji Mutu QC
+                          </span>
+                          <strong className="text-base font-mono font-extrabold text-purple-950">
+                            {isLoading ? <Skeleton className="h-5 w-14" /> : `${impact?.qualityPassRatePct || 0}%`}
+                          </strong>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-mono font-bold text-purple-900 bg-purple-50 px-2 py-0.5 rounded border border-purple-200/60">
+                        Inspeksi Ahli Gizi
+                      </span>
+                    </div>
+
+                    {/* Metrik 3: Radius Pengiriman */}
+                    <div className="p-3.5 rounded-xl bg-white/70 border border-stone-200 flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-800 shrink-0">
+                          <MapPin className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-mono font-bold text-stone-600 block uppercase">
+                            Radius Rata-rata Pasokan
+                          </span>
+                          <strong className="text-base font-mono font-extrabold text-emerald-950">
+                            {isLoading ? <Skeleton className="h-5 w-16" /> : `${impact?.avgDistanceKm || 0} km`}
+                          </strong>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-mono font-bold text-emerald-900 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60">
+                        Rute Emisi Rendah
+                      </span>
+                    </div>
+
+                  </div>
+                </div>
+
+                {/* Right Page Footer Note */}
+                <div className="pt-4 mt-6 border-t border-stone-200/80 flex items-center justify-between text-[10px] font-mono text-stone-600">
+                  <span className="flex items-center gap-1 text-emerald-800 font-bold">
+                    <BadgeCheck className="w-3.5 h-3.5" />
+                    Buku Terbuka & Dapat Diakses Publik
+                  </span>
+                  <span>Halaman 2 dari 2</span>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* Book Bottom Page Edges Simulation (Stacked Pages Effect) */}
+          <div className="h-2 mx-3 bg-[#E2DAC9] rounded-b-xl border-x border-b border-[#D0C5B0] shadow-2xs" />
+          <div className="h-1 mx-6 bg-[#D8CEBA] rounded-b-lg border-x border-b border-[#C4B79E]" />
+
+        </div>
+
       </section>
       </ScrollReveal>
 
