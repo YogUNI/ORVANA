@@ -54,21 +54,30 @@ export const SupplyChain3DHero: React.FC = () => {
         )}
       </div>
 
-      {/* 2. PURE CINEMATIC THEATRE (LEAN, CLEAN, ZERO CLUTTER) */}
+      {/* 2. PURE FLOATING 3D DIORAMA (BORDERLESS, ZERO BOX, SEAMLESS BLEND WITH CLOUDS) */}
       {activeTab === 'video' && (
-        <div className="w-full max-w-xl flex flex-col items-center group">
-          <div className="relative w-full aspect-[16/9] rounded-3xl overflow-hidden border border-stone-200/90 shadow-2xl bg-stone-950 transition-all duration-500 hover:border-emerald-700/40">
-            {/* AMBIENT SOFT SHADOW GLOW */}
-            <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-emerald-500/20 via-transparent to-amber-500/15 blur-xl opacity-50 pointer-events-none -z-10 group-hover:opacity-80 transition-opacity" />
+        <div className="w-full max-w-xl flex flex-col items-center group relative">
+          {/* FLOATING CLOUD AMBIENT GLOW BACKDROP */}
+          <div className="absolute -inset-4 rounded-full bg-gradient-to-tr from-emerald-500/15 via-white/40 to-amber-400/10 blur-2xl opacity-70 pointer-events-none -z-10" />
 
-            {/* 3D SUPPLY CHAIN HERO VIDEO */}
+          {/* THE TRANSPARENT BLENDED VIDEO WRAPPER */}
+          <div
+            className="relative w-full aspect-[16/9] flex items-center justify-center overflow-visible"
+            style={{
+              // Blend mode multiply makes the light grey background vanish onto the page
+              mixBlendMode: 'multiply',
+              // Radial mask smoothly fades the outer 10% edges into zero opacity
+              maskImage: 'radial-gradient(ellipse 85% 82% at 50% 50%, black 65%, transparent 100%)',
+              WebkitMaskImage: 'radial-gradient(ellipse 85% 82% at 50% 50%, black 65%, transparent 100%)',
+            }}
+          >
             <video
               src="/videos/hero-supply-chain.mp4"
               autoPlay
               loop
               muted
               playsInline
-              className="w-full h-full object-cover object-center scale-[1.02] pointer-events-none"
+              className="w-full h-full object-contain pointer-events-none drop-shadow-xl"
             />
           </div>
 
