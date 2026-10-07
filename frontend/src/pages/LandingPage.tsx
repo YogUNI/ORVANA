@@ -1783,70 +1783,230 @@ export const LandingPage: React.FC = () => {
         </section>
       </ScrollReveal>
 
-      {/* 10. CALL TO ACTION (WARM AGRITECH) */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-14">
-        <div className="bg-emerald-950 text-white rounded-3xl p-8 sm:p-14 relative overflow-hidden shadow-elevated border border-emerald-900">
-          <div className="relative z-10 max-w-2xl text-left space-y-4">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider bg-amber-400 text-stone-950 px-3 py-1 rounded-full">
-              Gerakan Pangan Bergizi Nasional
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight leading-tight">
-              Wujudkan Rantai Pasok Pangan Mandiri, Berkeadilan, dan Bermutu
-            </h2>
-            <p className="text-emerald-200 text-sm sm:text-base leading-relaxed">
-              Daftarkan dapur gizi massal, kelompok tani, atau koperasi distribusi Anda ke dalam jaringan digital ORVANA sekarang.
-            </p>
-            <div className="pt-4 flex flex-wrap items-center gap-3">
-              <Link to="/register">
-                <Button
-                  variant="primary"
-                  size="md"
-                  className="bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold px-6 py-3 rounded-xl shadow-xs flex items-center gap-2"
-                >
-                  <span>Daftar Akun Mitra Baru</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-              <Link to="/login">
-                <Button
-                  variant="outline"
-                  size="md"
-                  className="bg-white/10 text-white border-white/20 hover:bg-white/20 font-semibold px-6 py-3 rounded-xl"
-                >
-                  <span>Masuk ke Dashboard</span>
-                </Button>
-              </Link>
+      {/* 10. CALL TO ACTION: THE NATIONWIDE AGRITECH ECOSYSTEM CALLOUT */}
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+        <div className="bg-gradient-to-br from-[#122820] via-[#0E2019] to-[#081510] text-white rounded-3xl p-8 sm:p-12 lg:p-14 relative overflow-hidden border border-emerald-900/60 shadow-xl">
+          {/* Subtle Ambient Decorative Circles */}
+          <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-emerald-700/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -left-20 -top-20 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            
+            {/* Sisi Kiri: Pesan Utama & Pintu Masuk Aksi */}
+            <div className="lg:col-span-7 space-y-6 text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-900/80 border border-emerald-700/50 text-emerald-200 text-xs font-mono font-medium">
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                <span>Gerakan Pangan Bergizi Nasional</span>
+              </div>
+
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.15] text-white">
+                Wujudkan Rantai Pasok Pangan Mandiri, Adil, dan Bermutu
+              </h2>
+
+              <p className="text-emerald-100/80 text-sm sm:text-base leading-relaxed max-w-xl font-sans">
+                Hubungkan dapur gizi massal, kelompok tani lokal, armada distribusi, dan dinas daerah dalam satu infrastruktur digital terpercaya.
+              </p>
+
+              <div className="pt-2 flex flex-wrap items-center gap-3">
+                <Link to="/register">
+                  <Button
+                    variant="primary"
+                    size="md"
+                    className="bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold px-6 py-3 rounded-xl shadow-xs flex items-center gap-2 transition-transform active:scale-95"
+                  >
+                    <span>Daftar Akun Mitra Baru</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+                <Link to="/login">
+                  <Button
+                    variant="outline"
+                    size="md"
+                    className="bg-white/10 text-white border-white/20 hover:bg-white/20 font-semibold px-6 py-3 rounded-xl transition-colors"
+                  >
+                    <span>Masuk ke Dashboard</span>
+                  </Button>
+                </Link>
+              </div>
+
+              <div className="pt-2 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-emerald-200/60 font-mono">
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  Bebas Biaya Lisensi Awal
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  Tata Kelola Standar Dinas
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  Ledger Kas Terbuka
+                </span>
+              </div>
             </div>
+
+            {/* Sisi Kanan: Matriks Nilai Ekosistem Terpadu */}
+            <div className="lg:col-span-5 grid grid-cols-1 gap-3 font-sans">
+              
+              <div className="p-4 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-xs flex items-start gap-3.5">
+                <div className="w-9 h-9 rounded-xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-300 shrink-0 font-bold text-sm">
+                  🌾
+                </div>
+                <div className="space-y-0.5">
+                  <h4 className="text-xs sm:text-sm font-bold text-white">Petani, Peternak & Nelayan</h4>
+                  <p className="text-xs text-emerald-100/70 leading-relaxed">
+                    Kepastian serapan panen 10-14 hari di muka dengan jaminan pencairan dana tanpa tengkulak.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-xs flex items-start gap-3.5">
+                <div className="w-9 h-9 rounded-xl bg-emerald-400/15 border border-emerald-400/30 flex items-center justify-center text-emerald-300 shrink-0 font-bold text-sm">
+                  🍳
+                </div>
+                <div className="space-y-0.5">
+                  <h4 className="text-xs sm:text-sm font-bold text-white">Dapur Gizi Massal & SPPG</h4>
+                  <p className="text-xs text-emerald-100/70 leading-relaxed">
+                    Penghitungan kebutuhan bahan otomatis dari menu harian dan kuota pasokan terbagi adil.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-xs flex items-start gap-3.5">
+                <div className="w-9 h-9 rounded-xl bg-sky-400/15 border border-sky-400/30 flex items-center justify-center text-sky-300 shrink-0 font-bold text-sm">
+                  🚚
+                </div>
+                <div className="space-y-0.5">
+                  <h4 className="text-xs sm:text-sm font-bold text-white">Koordinator Distribusi Lokal</h4>
+                  <p className="text-xs text-emerald-100/70 leading-relaxed">
+                    Rute logistik radius pendek (&lt; 25 km) menjaga kesegaran bahan pangan tiba tepat waktu.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* 11. FOOTER FORMAL & MINIMALIS */}
-      <footer className="border-t border-stone-200 bg-white py-12 relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-stone-600">
-          <div className="flex items-center gap-3">
-            <Logo size="sm" withText textSubtitle="Enterprise Agritech" />
-            <span className="hidden sm:inline text-stone-300">|</span>
-            <span className="text-stone-500">
-              &copy; 2026 ORVANA. Rantai Pasok Pangan Lokal Dapur Gizi Massal.
-            </span>
+      {/* 11. FOOTER INSTITUSIONAL & ENTERPRISE AGRITECH */}
+      <footer className="border-t border-stone-200/90 bg-white relative z-10 pt-16 pb-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Main Footer Directory Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-12 border-b border-stone-100">
+            
+            {/* Brand Mission & System Identity (4 Cols) */}
+            <div className="lg:col-span-4 space-y-4">
+              <Logo size="md" withText textSubtitle="Enterprise Agritech" />
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-sm">
+                Sistem pengelolaan rantai pasok pangan lokal berbasis jadwal menu dan kalender panen untuk dapur gizi massal di seluruh wilayah Indonesia.
+              </p>
+              <div className="pt-1 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                <span className="text-xs font-mono text-stone-500 font-medium">
+                  Infrastruktur Pengadaan Berkelanjutan
+                </span>
+              </div>
+            </div>
+
+            {/* Menu Navigasi Layanan & Solusi (3 Cols) */}
+            <div className="lg:col-span-3 space-y-3">
+              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-stone-900">
+                Layanan & Fitur
+              </h4>
+              <ul className="space-y-2.5 text-xs text-stone-600">
+                <li>
+                  <a href="#menu-calculator" className="hover:text-emerald-900 transition-colors">
+                    Kalkulator Kebutuhan Pangan
+                  </a>
+                </li>
+                <li>
+                  <a href="#impact-summary" className="hover:text-emerald-900 transition-colors">
+                    Metrik Dampak Ekonomi Lokal
+                  </a>
+                </li>
+                <li>
+                  <a href="#ledger" className="hover:text-emerald-900 transition-colors">
+                    Buku Besar Digital Transparan
+                  </a>
+                </li>
+                <li>
+                  <a href="#nlp-demo" className="hover:text-emerald-900 transition-colors">
+                    Asisten Kalender Panen AI
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Transparansi & Keterbukaan Publik (3 Cols) */}
+            <div className="lg:col-span-3 space-y-3">
+              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-stone-900">
+                Transparansi Publik
+              </h4>
+              <ul className="space-y-2.5 text-xs text-stone-600">
+                <li>
+                  <Link to="/trace/ORV-20260920-DPR01-0001" className="hover:text-emerald-900 transition-colors">
+                    Pelacakan Batch & QR Paspor
+                  </Link>
+                </li>
+                <li>
+                  <a href="#faq" className="hover:text-emerald-900 transition-colors">
+                    Pusat Pengetahuan & Regulasi
+                  </a>
+                </li>
+                <li>
+                  <Link to="/login" className="hover:text-emerald-900 transition-colors">
+                    Pemeriksaan Auditor Independen
+                  </Link>
+                </li>
+                <li>
+                  <span className="text-stone-400">
+                    Standar Mutu Uji Organoleptik
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Pintu Masuk Portal & Akun (2 Cols) */}
+            <div className="lg:col-span-2 space-y-3">
+              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-stone-900">
+                Akses Portal
+              </h4>
+              <ul className="space-y-2.5 text-xs text-stone-600 font-medium">
+                <li>
+                  <Link to="/login" className="hover:text-emerald-900 transition-colors">
+                    Masuk ke Sistem
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register" className="text-emerald-800 hover:text-emerald-950 font-bold transition-colors">
+                    Daftar Mitra Baru →
+                  </Link>
+                </li>
+                <li>
+                  <span className="text-stone-400 font-normal">
+                    Panduan Registrasi Dinas
+                  </span>
+                </li>
+              </ul>
+            </div>
+
           </div>
-          <div className="flex flex-wrap items-center gap-6 font-medium">
-            <Link to="/trace/ORV-20260920-DPR01-0001" className="hover:text-emerald-900 transition-colors">
-              Pemeriksaan Batch Publik
-            </Link>
-            <Link to="/login" className="hover:text-emerald-900 transition-colors">
-              Portal Pengelola & Petani
-            </Link>
-            <a
-              href="https://github.com/YogUNI/orvana"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-emerald-900 transition-colors"
-            >
-              Dokumentasi Source Code
-            </a>
+
+          {/* Bottom Bar: Copyright & Compliance */}
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
+            <p>
+              &copy; 2026 ORVANA. Rantai Pasok Pangan Lokal Dapur Gizi Massal. Hak cipta dilindungi.
+            </p>
+            <div className="flex items-center gap-6 text-stone-400 text-xs">
+              <span>Keamanan & Kepatuhan Tata Kelola Pangan</span>
+              <span>•</span>
+              <span>Integrasi Terpadu Wilayah</span>
+            </div>
           </div>
+
         </div>
       </footer>
 
