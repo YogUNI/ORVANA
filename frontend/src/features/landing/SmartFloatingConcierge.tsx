@@ -249,7 +249,7 @@ export const SmartFloatingConcierge: React.FC = () => {
         />
       )}
 
-      {/* BESPOKE ARTISAN AGRITECH COPILOT MODAL - AUTHENTIC macOS GENIE WINDOW & PAPER EXPANSION */}
+      {/* BESPOKE ARTISAN AGRITECH COPILOT MODAL - 3D PAPER CRUMPLE & UNFURL TRANSITION */}
       <aside
         aria-label="Terminal Asisten AI Resmi ORVANA"
         className={`fixed z-50 flex flex-col font-sans text-stone-900 bg-[#FAF8F5]
@@ -259,22 +259,22 @@ export const SmartFloatingConcierge: React.FC = () => {
           sm:w-[460px] sm:h-[620px] sm:max-h-[calc(100vh-100px)] sm:rounded-3xl sm:border sm:border-emerald-950/20
           sm:shadow-[0_25px_70px_-15px_rgba(17,35,27,0.4),0_0_0_1px_rgba(16,185,129,0.15)]
           overflow-hidden
-          /* macOS Genie 3D Transform Animation */
+          /* 3D Paper Crumple to Flat Sheet Animation */
           ${
             isOpen
-              ? 'animate-mac-genie-open pointer-events-auto'
+              ? 'animate-paper-unfurl-open pointer-events-auto'
               : hasBeenOpened
-              ? 'animate-mac-genie-close pointer-events-none'
+              ? 'animate-paper-crumple-close pointer-events-none'
               : 'opacity-0 pointer-events-none'
           }`}
       >
-        {/* Soft Paper Sheen Light Sweep Effect on Open */}
+        {/* Soft Crease Flattening Paper Sweep on Unfurl */}
         {isOpen && (
           <div
             className="absolute inset-0 pointer-events-none z-40 overflow-hidden"
             aria-hidden="true"
           >
-            <div className="w-[200%] h-32 bg-gradient-to-b from-white/30 via-emerald-200/20 to-transparent -translate-x-1/4 animate-paper-sheen" />
+            <div className="w-[200%] h-36 bg-gradient-to-b from-transparent via-emerald-100/25 to-white/40 -translate-x-1/4 animate-paper-flatten-sweep" />
           </div>
         )}
 

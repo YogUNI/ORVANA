@@ -195,90 +195,104 @@
   }
 }
 
-/* macOS Authentic Genie Window Animation (Suck-in into pill & expand outward) */
-@keyframes mac-genie-open {
+/* Authentic Paper Crumple 3D Animation: Crumpled Paper Ball to Clean Smooth Sheet */
+@keyframes paper-unfurl-open {
   0% {
     opacity: 0;
-    transform: translate3d(24px, 48px, -120px) scale(0.06, 0.04) skew(-4deg, 3deg);
-    filter: blur(8px) brightness(1.2);
+    /* Fase 1: Kertas lecek teremas bulat padat tepat di koordinat tombol trigger */
+    transform: translate3d(24px, 48px, -180px) scale(0.04) rotateX(65deg) rotateY(-50deg) rotateZ(35deg) skew(12deg, -8deg);
+    filter: blur(10px) contrast(1.8) drop-shadow(0 20px 25px rgba(0, 0, 0, 0.5));
     border-radius: 9999px;
   }
-  45% {
+  28% {
+    opacity: 0.85;
+    /* Fase 2: Gumpalan mulai merenggang & mekar berputar sedikit ke atas */
+    transform: translate3d(14px, 24px, -80px) scale(0.35, 0.4) rotateX(35deg) rotateY(-25deg) rotateZ(15deg) skew(-8deg, 5deg);
+    filter: blur(3px) contrast(1.4);
+    border-radius: 48px;
+  }
+  62% {
+    opacity: 0.98;
+    /* Fase 3: Lembaran kertas merekah bebas dari lipatan, sedikit bergetar elastis */
+    transform: translate3d(-3px, -4px, 15px) scale(1.03, 1.025) rotateX(-4deg) rotateY(2deg) rotateZ(-1deg) skew(1deg, -0.5deg);
+    filter: blur(0px) contrast(1.05);
+    border-radius: 28px;
+  }
+  85% {
+    /* Fase 4: Redaman elastis kertas mendarat rata */
+    transform: translate3d(1px, 1px, -2px) scale(0.995, 0.995) rotateX(1deg) rotateY(-0.5deg) rotateZ(0.2deg) skew(-0.2deg, 0.1deg);
+    border-radius: 24px;
+  }
+  100% {
+    opacity: 1;
+    /* Fase 5: Kertas bersih sempurna dan siap digunakan */
+    transform: translate3d(0px, 0px, 0px) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
+    filter: blur(0px) contrast(1);
+    border-radius: 24px;
+  }
+}
+
+@keyframes paper-crumple-close {
+  0% {
+    opacity: 1;
+    /* Kertas bersih flat */
+    transform: translate3d(0px, 0px, 0px) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
+    filter: blur(0px) contrast(1);
+    border-radius: 24px;
+  }
+  25% {
     opacity: 0.95;
-    transform: translate3d(6px, 12px, -30px) scale(0.75, 0.6) skew(-1.5deg, 1deg);
-    filter: blur(1px) brightness(1.05);
+    /* Mulai terlipat dan tertarik ke arah tombol */
+    transform: translate3d(6px, 10px, -20px) scale(0.85, 0.8) rotateX(-15deg) rotateY(12deg) rotateZ(-6deg) skew(-6deg, 4deg);
+    filter: blur(0.5px) contrast(1.2);
     border-radius: 36px;
   }
-  75% {
-    transform: translate3d(-2px, -3px, 10px) scale(1.02, 1.015) skew(0.4deg, -0.2deg);
-    filter: blur(0px) brightness(1);
-    border-radius: 26px;
-  }
-  100% {
-    opacity: 1;
-    transform: translate3d(0px, 0px, 0px) scale(1, 1) skew(0deg, 0deg);
-    filter: blur(0px) brightness(1);
-    border-radius: 24px;
-  }
-}
-
-@keyframes mac-genie-close {
-  0% {
-    opacity: 1;
-    transform: translate3d(0px, 0px, 0px) scale(1, 1) skew(0deg, 0deg);
-    filter: blur(0px) brightness(1);
-    border-radius: 24px;
-  }
-  30% {
-    opacity: 0.9;
-    transform: translate3d(4px, 10px, -20px) scale(0.85, 0.7) skew(1.5deg, -1deg);
-    filter: blur(0.5px) brightness(1.05);
-    border-radius: 32px;
-  }
-  70% {
-    opacity: 0.5;
-    transform: translate3d(16px, 36px, -80px) scale(0.28, 0.15) skew(3.5deg, -2deg);
-    filter: blur(4px) brightness(1.15);
-    border-radius: 50px;
+  60% {
+    opacity: 0.65;
+    /* Meremas terkompresi menjadi bola bulat berputar cepat */
+    transform: translate3d(16px, 32px, -90px) scale(0.25, 0.22) rotateX(45deg) rotateY(-35deg) rotateZ(25deg) skew(10deg, -7deg);
+    filter: blur(4px) contrast(1.6);
+    border-radius: 60px;
   }
   100% {
     opacity: 0;
-    transform: translate3d(28px, 52px, -150px) scale(0.04, 0.03) skew(5deg, -3deg);
-    filter: blur(12px) brightness(1.3);
+    /* Masuk ludes ke dalam shape tombol */
+    transform: translate3d(28px, 52px, -180px) scale(0.03) rotateX(75deg) rotateY(-60deg) rotateZ(45deg) skew(15deg, -10deg);
+    filter: blur(12px) contrast(2);
     border-radius: 9999px;
   }
 }
 
-@keyframes paper-sheen-sweep {
+@keyframes paper-flatten-crease-sweep {
   0% {
-    transform: translateY(100%) rotate(15deg);
+    transform: translateY(120%) skewY(-8deg);
     opacity: 0;
   }
-  30% {
-    opacity: 0.35;
+  35% {
+    opacity: 0.45;
   }
   100% {
-    transform: translateY(-120%) rotate(15deg);
+    transform: translateY(-130%) skewY(-8deg);
     opacity: 0;
   }
 }
 
-.animate-mac-genie-open {
-  animation: mac-genie-open 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.animate-paper-unfurl-open {
+  animation: paper-unfurl-open 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   transform-origin: bottom right;
   backface-visibility: hidden;
   will-change: transform, opacity, filter, border-radius;
 }
 
-.animate-mac-genie-close {
-  animation: mac-genie-close 0.38s cubic-bezier(0.35, 0, 0.25, 1) forwards;
+.animate-paper-crumple-close {
+  animation: paper-crumple-close 0.42s cubic-bezier(0.35, 0, 0.25, 1) forwards;
   transform-origin: bottom right;
   backface-visibility: hidden;
   will-change: transform, opacity, filter, border-radius;
 }
 
-.animate-paper-sheen {
-  animation: paper-sheen-sweep 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.animate-paper-flatten-sweep {
+  animation: paper-flatten-crease-sweep 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 
