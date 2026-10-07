@@ -24,7 +24,7 @@ export const SupplyChain3DHero: React.FC = () => {
       </div>
 
       {/* 2. 3D FLIP CONTAINER WITH IDENTICAL EXPANDED FIXED DIMENSIONS */}
-      <div className="w-full max-w-2xl h-[420px] sm:h-[440px] relative [perspective:1400px]">
+      <div className="w-full max-w-2xl h-[420px] sm:h-[450px] relative [perspective:1400px]">
         <div
           className={`w-full h-full relative transition-transform duration-700 ease-out [transform-style:preserve-3d] ${
             isFlipped ? '[transform:rotateY(180deg)]' : ''
@@ -32,19 +32,19 @@ export const SupplyChain3DHero: React.FC = () => {
         >
           {/* ================= FRONT SIDE: 3D FLOATING ISLAND (100% BORDERLESS, ZERO CARD LINE) ================= */}
           <div
-            className="absolute inset-0 w-full h-full [backface-visibility:hidden] flex flex-col items-center justify-center p-0"
+            className="absolute inset-0 w-full h-full [backface-visibility:hidden] flex flex-col items-center justify-center p-0 overflow-visible"
           >
             {/* FLOATING AMBIENT GLOW BACKDROP */}
-            <div className="absolute inset-4 rounded-full bg-gradient-to-tr from-emerald-500/10 via-amber-400/10 to-transparent blur-3xl opacity-80 pointer-events-none -z-10" />
+            <div className="absolute inset-6 rounded-full bg-gradient-to-tr from-emerald-500/10 via-amber-400/10 to-transparent blur-3xl opacity-80 pointer-events-none -z-10" />
 
             {/* SEAMLESS BLENDED VIDEO CONTAINER (EXPANDED TO PREVENT ANY EDGE CLIPPING) */}
             <div
-              className="relative w-[115%] h-[115%] flex items-center justify-center pointer-events-none"
+              className="relative w-full h-full flex items-center justify-center pointer-events-none"
               style={{
-                filter: 'contrast(1.12) brightness(1.08)',
+                filter: 'contrast(1.15) brightness(1.08)',
                 mixBlendMode: 'multiply',
-                maskImage: 'radial-gradient(circle at 50% 50%, black 35%, transparent 72%)',
-                WebkitMaskImage: 'radial-gradient(circle at 50% 50%, black 35%, transparent 72%)',
+                maskImage: 'radial-gradient(ellipse 70% 64% at 50% 50%, black 30%, transparent 68%)',
+                WebkitMaskImage: 'radial-gradient(ellipse 70% 64% at 50% 50%, black 30%, transparent 68%)',
               }}
             >
               <video
@@ -55,26 +55,26 @@ export const SupplyChain3DHero: React.FC = () => {
                 playsInline
                 preload="auto"
                 disableRemotePlayback
-                className="w-full h-full object-contain scale-110 will-change-transform"
+                className="w-full h-full object-contain scale-100 will-change-transform"
               />
             </div>
           </div>
 
           {/* ================= BACK SIDE: 3D CYBER-DATA GREENHOUSE & ENGINE LAB (BORDERLESS & SEAMLESS BLEND) ================= */}
           <div
-            className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] flex flex-col items-center justify-center p-0"
+            className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] flex flex-col items-center justify-center p-0 overflow-visible"
           >
             {/* FLOATING AMBIENT GLOW BACKDROP (CYBER EMERALD & CYAN) */}
-            <div className="absolute inset-8 rounded-full bg-gradient-to-tr from-cyan-500/10 via-emerald-500/15 to-amber-400/10 blur-3xl opacity-80 pointer-events-none -z-10" />
+            <div className="absolute inset-6 rounded-full bg-gradient-to-tr from-cyan-500/10 via-emerald-500/15 to-amber-400/10 blur-3xl opacity-80 pointer-events-none -z-10" />
 
             {/* SEAMLESS BLENDED VIDEO CONTAINER (ELIMINATES ALL RECTANGULAR EDGES) */}
             <div
-              className="relative w-[110%] h-[110%] flex items-center justify-center pointer-events-none"
+              className="relative w-full h-full flex items-center justify-center pointer-events-none"
               style={{
-                filter: 'contrast(1.12) brightness(1.08)',
+                filter: 'contrast(1.15) brightness(1.08)',
                 mixBlendMode: 'multiply',
-                maskImage: 'radial-gradient(circle at 50% 50%, black 35%, transparent 72%)',
-                WebkitMaskImage: 'radial-gradient(circle at 50% 50%, black 35%, transparent 72%)',
+                maskImage: 'radial-gradient(ellipse 70% 64% at 50% 50%, black 30%, transparent 68%)',
+                WebkitMaskImage: 'radial-gradient(ellipse 70% 64% at 50% 50%, black 30%, transparent 68%)',
               }}
             >
               <video
@@ -85,7 +85,7 @@ export const SupplyChain3DHero: React.FC = () => {
                 playsInline
                 preload="auto"
                 disableRemotePlayback
-                className="w-full h-full object-contain scale-110 will-change-transform"
+                className="w-full h-full object-contain scale-100 will-change-transform"
               />
             </div>
 
