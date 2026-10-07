@@ -8,9 +8,55 @@ import {
   ArrowRight,
   ShieldCheck,
   RotateCcw,
+  Bot,
 } from 'lucide-react';
 import { queryOrvanaKnowledge, CopilotResponse } from './orvanaKnowledgeEngine';
 import { apiClient } from '../../lib/apiClient';
+
+/**
+ * Format markdown sederhana (**bold**, *italic*, list bullet, dll)
+ * agar teks dari Gemini/AI tampil rapi dan bold tanpa mentah '**'.
+ */
+function renderFormattedMarkdown(text: string) {
+  // Pisahkan baris per baris
+  const lines = text.split('\n');
+
+  return lines.map((line, lineIdx) => {
+    // Cek apakah list item (- atau *)
+    const isBullet = /^\s*[-*]\s+(.*)$/.test(line);
+    const content = isBullet ? line.replace(/^\s*[-*]\s+/, '') : line;
+
+    // Tokenisasi regex untuk **bold** dan teks biasa
+    const parts = content.split(/(\*\*[^*]+\*\*)/g);
+
+    const renderedLine = parts.map((part, pIdx) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        const boldText = part.slice(2, -2);
+        return (
+          <strong key={pIdx} className="font-bold text-stone-900">
+            {boldText}
+          </strong>
+        );
+      }
+      return part;
+    });
+
+    if (isBullet) {
+      return (
+        <span key={lineIdx} className="flex items-start gap-1.5 my-1">
+          <span className="text-emerald-700 font-bold shrink-0">•</span>
+          <span className="flex-1">{renderedLine}</span>
+        </span>
+      );
+    }
+
+    return (
+      <span key={lineIdx} className="block min-h-[1.1em]">
+        {renderedLine}
+      </span>
+    );
+  });
+}
 
 interface ChatMessage {
   id: string;
@@ -203,17 +249,8 @@ export const SmartFloatingConcierge: React.FC = () => {
                 {/* Bot Profile Header (Hanya untuk Bot) */}
                 {msg.sender === 'bot' && (
                   <div className="flex items-center gap-2 pl-0.5">
-                    <div className="relative w-6 h-6 rounded-full overflow-hidden bg-emerald-950 ring-1.5 ring-emerald-500/30 shadow-xs shrink-0 flex items-center justify-center">
-                      <img
-                        src="/images/char-head-clean.png"
-                        alt="ORVANA AI Assistant"
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          // Fallback jika gambar belum termuat
-                          (e.target as HTMLElement).style.display = 'none';
-                        }}
-                      />
-                      <span className="text-[10px] select-none font-bold text-amber-300">🌾</span>
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-emerald-900 to-emerald-700 text-white ring-1.5 ring-emerald-500/40 shadow-xs shrink-0 flex items-center justify-center">
+                      <Bot className="w-3.5 h-3.5 text-emerald-200" />
                     </div>
                     <div className="flex items-center gap-1.5">
                       <span className="text-[11px] font-bold text-stone-900 tracking-tight">
@@ -236,10 +273,14 @@ export const SmartFloatingConcierge: React.FC = () => {
                   className={`p-3.5 rounded-2xl max-w-[88%] leading-relaxed ${
                     msg.sender === 'user'
                       ? 'bg-emerald-950 text-white rounded-br-xs shadow-xs font-medium mr-0.5'
-                      : 'bg-white text-stone-800 border border-stone-200/90 rounded-bl-xs shadow-2xs font-normal ml-8'
+                      : 'bg-white text-stone-800 border border-stone-200/90 rounded-bl-xs shadow-2xs font-normal ml-8 space-y-1'
                   }`}
                 >
-                  <p className="whitespace-pre-line">{msg.text}</p>
+                  {msg.sender === 'bot' ? (
+                    <div>{renderFormattedMarkdown(msg.text)}</div>
+                  ) : (
+                    <p className="whitespace-pre-line">{msg.text}</p>
+                  )}
 
                   {/* Quick Action Button inside response */}
                   {msg.actionLink && (
