@@ -510,11 +510,12 @@ export const SmartFloatingConcierge: React.FC = () => {
                 />
               </button>
 
-              {/* Upward Popup Dropdown Menu (Style inspired by Gemini / Cursor AI model picker) */}
+              {/* Upward Popup Dropdown Menu (Refined, Compact, Artisan Agritech UI) */}
               {isModelMenuOpen && (
-                <div className="absolute bottom-full left-0 mb-2 w-64 bg-[#18181B] text-white rounded-xl shadow-2xl border border-stone-700/80 p-1.5 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150">
-                  <div className="px-2.5 py-1.5 text-[10px] font-bold tracking-wider text-stone-400 uppercase border-b border-stone-800">
-                    Model Kecerdasan AI
+                <div className="absolute bottom-full left-0 mb-2 w-56 bg-[#16251E] text-stone-100 rounded-xl shadow-2xl border border-emerald-800/40 p-1.5 z-50 animate-in fade-in slide-in-from-bottom-1 duration-150 backdrop-blur-md">
+                  <div className="px-2 py-1 text-[9px] font-mono font-bold tracking-wider text-emerald-400/80 uppercase border-b border-emerald-900/60 flex items-center justify-between">
+                    <span>Pilih Model AI</span>
+                    <span className="text-[8px] text-stone-400 lowercase">live api</span>
                   </div>
 
                   <div className="py-1 space-y-0.5">
@@ -525,21 +526,21 @@ export const SmartFloatingConcierge: React.FC = () => {
                         setSelectedModel('auto');
                         setIsModelMenuOpen(false);
                       }}
-                      className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-left transition-all cursor-pointer ${
+                      className={`w-full flex items-center justify-between px-2 py-1.5 rounded-lg text-left transition-all cursor-pointer ${
                         selectedModel === 'auto'
-                          ? 'bg-stone-800 text-white font-semibold'
-                          : 'text-stone-300 hover:bg-stone-800/60 hover:text-white'
+                          ? 'bg-emerald-900/70 text-white font-medium border border-emerald-600/30'
+                          : 'text-stone-300 hover:bg-emerald-950/60 hover:text-white'
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <Sparkles className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                         <div>
-                          <div className="text-xs font-semibold leading-tight">Gemini Auto RAG</div>
-                          <div className="text-[10px] text-stone-400 font-sans">Multi-model optimal & stabil</div>
+                          <div className="text-[11px] font-semibold leading-tight">Auto Cascade</div>
+                          <div className="text-[9px] text-stone-400 font-sans">Multi-model adaptif</div>
                         </div>
                       </div>
                       {selectedModel === 'auto' && (
-                        <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                        <Check className="w-3 h-3 text-emerald-400 shrink-0" />
                       )}
                     </button>
 
@@ -550,26 +551,26 @@ export const SmartFloatingConcierge: React.FC = () => {
                         setSelectedModel('flash');
                         setIsModelMenuOpen(false);
                       }}
-                      className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-left transition-all cursor-pointer ${
+                      className={`w-full flex items-center justify-between px-2 py-1.5 rounded-lg text-left transition-all cursor-pointer ${
                         selectedModel === 'flash'
-                          ? 'bg-stone-800 text-white font-semibold'
-                          : 'text-stone-300 hover:bg-stone-800/60 hover:text-white'
+                          ? 'bg-emerald-900/70 text-white font-medium border border-emerald-600/30'
+                          : 'text-stone-300 hover:bg-emerald-950/60 hover:text-white'
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        <Zap className="w-4 h-4 text-amber-400 shrink-0" />
+                        <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                         <div>
-                          <div className="text-xs font-semibold leading-tight flex items-center gap-1.5">
-                            <span>Gemini 3.5 Flash</span>
-                            <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                              Instant
+                          <div className="text-[11px] font-semibold leading-tight flex items-center gap-1">
+                            <span>Gemini Flash</span>
+                            <span className="text-[8px] font-mono px-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                              Fast
                             </span>
                           </div>
-                          <div className="text-[10px] text-stone-400 font-sans">Respons super cepat (&lt;1s)</div>
+                          <div className="text-[9px] text-stone-400 font-sans">Respons cepat (&lt;1s)</div>
                         </div>
                       </div>
                       {selectedModel === 'flash' && (
-                        <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                        <Check className="w-3 h-3 text-amber-400 shrink-0" />
                       )}
                     </button>
 
@@ -580,26 +581,26 @@ export const SmartFloatingConcierge: React.FC = () => {
                         setSelectedModel('pro');
                         setIsModelMenuOpen(false);
                       }}
-                      className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-left transition-all cursor-pointer ${
+                      className={`w-full flex items-center justify-between px-2 py-1.5 rounded-lg text-left transition-all cursor-pointer ${
                         selectedModel === 'pro'
-                          ? 'bg-stone-800 text-white font-semibold'
-                          : 'text-stone-300 hover:bg-stone-800/60 hover:text-white'
+                          ? 'bg-emerald-900/70 text-white font-medium border border-emerald-600/30'
+                          : 'text-stone-300 hover:bg-emerald-950/60 hover:text-white'
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        <Cpu className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <Cpu className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                         <div>
-                          <div className="text-xs font-semibold leading-tight flex items-center gap-1.5">
+                          <div className="text-[11px] font-semibold leading-tight flex items-center gap-1">
                             <span>Gemini 3.8 / Pro</span>
-                            <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                              Reasoning
+                            <span className="text-[8px] font-mono px-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                              Reason
                             </span>
                           </div>
-                          <div className="text-[10px] text-stone-400 font-sans">Analisis mendalam & regulasi</div>
+                          <div className="text-[9px] text-stone-400 font-sans">Penalaran regulasi mendalam</div>
                         </div>
                       </div>
                       {selectedModel === 'pro' && (
-                        <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                        <Check className="w-3 h-3 text-emerald-400 shrink-0" />
                       )}
                     </button>
                   </div>
