@@ -10,6 +10,10 @@ import {
   ThumbsUp,
   ThumbsDown,
   Check,
+  ChevronUp,
+  Sparkles,
+  Zap,
+  Cpu,
 } from 'lucide-react';
 import { queryOrvanaKnowledge, CopilotResponse } from './orvanaKnowledgeEngine';
 import { apiClient } from '../../lib/apiClient';
@@ -78,7 +82,24 @@ export const SmartFloatingConcierge: React.FC = () => {
   const [inputQuery, setInputQuery] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [selectedModel, setSelectedModel] = useState<'flash' | 'pro' | 'auto'>('auto');
+  const [isModelMenuOpen, setIsModelMenuOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const modelMenuRef = useRef<HTMLDivElement | null>(null);
+
+  // Close model menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modelMenuRef.current && !modelMenuRef.current.contains(event.target as Node)) {
+        setIsModelMenuOpen(false);
+      }
+    };
+    if (isModelMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isModelMenuOpen]);
 
   const initialBotMessage: ChatMessage = {
     id: 'msg-init-1',
@@ -278,54 +299,15 @@ export const SmartFloatingConcierge: React.FC = () => {
           </div>
         </div>
 
-        {/* Technical Verified Sub-header & Model Selector */}
-        <div className="px-4 py-2.5 bg-emerald-950/5 border-b border-emerald-900/10 flex flex-wrap items-center justify-between gap-2 text-[11px]">
-          <span className="flex items-center gap-1.5 font-sans font-medium text-emerald-900">
+        {/* Technical Verified Sub-header */}
+        <div className="px-4 py-2 bg-emerald-950/5 border-b border-emerald-900/10 flex items-center justify-between text-[11px] text-emerald-900 font-medium">
+          <span className="flex items-center gap-1.5 font-sans">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-            <span>Konteks SPPG & Pergub Gizi</span>
+            <span>Konteks terkalibrasi ke standar SPPG & Pergub Gizi</span>
           </span>
-
-          {/* Interactive AI Agent Model Selector */}
-          <div className="flex items-center bg-white/90 p-0.5 rounded-lg border border-emerald-900/15 shadow-2xs">
-            <button
-              type="button"
-              onClick={() => setSelectedModel('auto')}
-              title="Otomatis pilih model paling optimal dan stabil"
-              className={`px-2 py-1 rounded-md text-[10px] font-mono font-bold transition-all cursor-pointer ${
-                selectedModel === 'auto'
-                  ? 'bg-[#11231B] text-amber-300 shadow-xs'
-                  : 'text-stone-600 hover:text-stone-900'
-              }`}
-            >
-              Auto
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedModel('flash')}
-              title="Gemini Flash: Respons instan berlatensi ultra-rendah (<1s)"
-              className={`px-2 py-1 rounded-md text-[10px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1 ${
-                selectedModel === 'flash'
-                  ? 'bg-amber-500 text-stone-950 shadow-xs'
-                  : 'text-stone-600 hover:text-stone-900'
-              }`}
-            >
-              <span>⚡</span>
-              <span>Flash</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedModel('pro')}
-              title="Gemini Pro: Analisis mendalam & penalaran aturan tingkat tinggi"
-              className={`px-2 py-1 rounded-md text-[10px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1 ${
-                selectedModel === 'pro'
-                  ? 'bg-emerald-800 text-white shadow-xs'
-                  : 'text-stone-600 hover:text-stone-900'
-              }`}
-            >
-              <span>🧠</span>
-              <span>Pro</span>
-            </button>
-          </div>
+          <span className="text-[10px] font-mono font-semibold text-emerald-800/80 bg-emerald-100/60 px-2 py-0.5 rounded-md">
+            Verified
+          </span>
         </div>
 
         {/* Chat Messages Body */}
@@ -491,11 +473,141 @@ export const SmartFloatingConcierge: React.FC = () => {
               <Send className="w-4 h-4" />
             </button>
           </div>
-          <div className="flex items-center justify-between text-[10px] font-mono text-stone-400 mt-2 px-1">
-            <span>
-              Mode: {selectedModel === 'pro' ? '🧠 Gemini Pro (Deep Reason)' : selectedModel === 'flash' ? '⚡ Gemini Flash (Instant)' : '🛡️ Auto Adaptive RAG'}
-            </span>
-            <span>Tekan Enter untuk kirim</span>
+          {/* Bottom Bar: Interactive Upward Model Selector & Enter Hint */}
+          <div className="relative flex items-center justify-between text-[11px] font-mono text-stone-500 mt-2.5 px-0.5">
+            {/* Model Selector Trigger Button */}
+            <div className="relative" ref={modelMenuRef}>
+              <button
+                type="button"
+                onClick={() => setIsModelMenuOpen(!isModelMenuOpen)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-stone-100 hover:bg-stone-200/90 text-stone-700 hover:text-stone-950 border border-stone-200/90 font-medium transition-all cursor-pointer shadow-2xs active:scale-95 text-[11px]"
+                aria-haspopup="true"
+                aria-expanded={isModelMenuOpen}
+              >
+                {selectedModel === 'pro' ? (
+                  <>
+                    <Cpu className="w-3.5 h-3.5 text-emerald-700" />
+                    <span className="font-semibold text-stone-800">Gemini 3.8 / Pro</span>
+                    <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100/80 px-1 py-0.2 rounded">Deep</span>
+                  </>
+                ) : selectedModel === 'flash' ? (
+                  <>
+                    <Zap className="w-3.5 h-3.5 text-amber-600" />
+                    <span className="font-semibold text-stone-800">Gemini 3.5 / Flash</span>
+                    <span className="text-[9px] font-bold text-amber-700 bg-amber-100/80 px-1 py-0.2 rounded">Fast</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                    <span className="font-semibold text-stone-800">Gemini Auto Cascade</span>
+                    <span className="text-[9px] font-bold text-emerald-800 bg-emerald-100 px-1 py-0.2 rounded">Smart</span>
+                  </>
+                )}
+                <ChevronUp
+                  className={`w-3.5 h-3.5 text-stone-400 transition-transform duration-200 ${
+                    isModelMenuOpen ? 'rotate-180 text-stone-700' : ''
+                  }`}
+                />
+              </button>
+
+              {/* Upward Popup Dropdown Menu (Style inspired by Gemini / Cursor AI model picker) */}
+              {isModelMenuOpen && (
+                <div className="absolute bottom-full left-0 mb-2 w-64 bg-[#18181B] text-white rounded-xl shadow-2xl border border-stone-700/80 p-1.5 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150">
+                  <div className="px-2.5 py-1.5 text-[10px] font-bold tracking-wider text-stone-400 uppercase border-b border-stone-800">
+                    Model Kecerdasan AI
+                  </div>
+
+                  <div className="py-1 space-y-0.5">
+                    {/* Option: Auto */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedModel('auto');
+                        setIsModelMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-left transition-all cursor-pointer ${
+                        selectedModel === 'auto'
+                          ? 'bg-stone-800 text-white font-semibold'
+                          : 'text-stone-300 hover:bg-stone-800/60 hover:text-white'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <div>
+                          <div className="text-xs font-semibold leading-tight">Gemini Auto RAG</div>
+                          <div className="text-[10px] text-stone-400 font-sans">Multi-model optimal & stabil</div>
+                        </div>
+                      </div>
+                      {selectedModel === 'auto' && (
+                        <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      )}
+                    </button>
+
+                    {/* Option: Flash */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedModel('flash');
+                        setIsModelMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-left transition-all cursor-pointer ${
+                        selectedModel === 'flash'
+                          ? 'bg-stone-800 text-white font-semibold'
+                          : 'text-stone-300 hover:bg-stone-800/60 hover:text-white'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Zap className="w-4 h-4 text-amber-400 shrink-0" />
+                        <div>
+                          <div className="text-xs font-semibold leading-tight flex items-center gap-1.5">
+                            <span>Gemini 3.5 Flash</span>
+                            <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                              Instant
+                            </span>
+                          </div>
+                          <div className="text-[10px] text-stone-400 font-sans">Respons super cepat (&lt;1s)</div>
+                        </div>
+                      </div>
+                      {selectedModel === 'flash' && (
+                        <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                      )}
+                    </button>
+
+                    {/* Option: Pro */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedModel('pro');
+                        setIsModelMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-left transition-all cursor-pointer ${
+                        selectedModel === 'pro'
+                          ? 'bg-stone-800 text-white font-semibold'
+                          : 'text-stone-300 hover:bg-stone-800/60 hover:text-white'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Cpu className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <div>
+                          <div className="text-xs font-semibold leading-tight flex items-center gap-1.5">
+                            <span>Gemini 3.8 / Pro</span>
+                            <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                              Reasoning
+                            </span>
+                          </div>
+                          <div className="text-[10px] text-stone-400 font-sans">Analisis mendalam & regulasi</div>
+                        </div>
+                      </div>
+                      {selectedModel === 'pro' && (
+                        <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <span className="text-[10px] text-stone-400">Tekan Enter untuk kirim</span>
           </div>
         </div>
       </aside>
