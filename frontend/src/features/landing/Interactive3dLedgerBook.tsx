@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { formatRupiah, formatKg } from '../../lib/format';
 import { Skeleton } from '../../components/ui/Skeleton';
@@ -37,42 +37,63 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
   // 1: Lembar 3 & 4
   // 2: Lembar 5 & 6
   const [spread, setSpread] = useState<number>(0);
-  const [turning, setTurning] = useState<'next' | 'prev' | null>(null);
-
+  const [isFlipping, setIsFlipping] = useState<boolean>(false);
+  const [flipDir, setFlipDir] = useState<'next' | 'prev' | null>(null);
+  const [flipAngle, setFlipAngle] = useState<number>(0);
   const totalSpreads = 3;
 
-  const handleNext = () => {
-    if (turning !== null || spread >= totalSpreads - 1) return;
-    setTurning('next');
+  const triggerNext = () => {
+    if (isFlipping || spread >= totalSpreads - 1) return;
+    setFlipDir('next');
+    setIsFlipping(true);
+    setFlipAngle(0);
+
+    // Animate smoothly to -180 deg
+    requestAnimationFrame(() => {
+      setFlipAngle(-180);
+    });
+
     setTimeout(() => {
       setSpread((prev) => prev + 1);
-      setTurning(null);
-    }, 600);
+      setIsFlipping(false);
+      setFlipDir(null);
+      setFlipAngle(0);
+    }, 700);
   };
 
-  const handlePrev = () => {
-    if (turning !== null || spread <= 0) return;
-    setTurning('prev');
+  const triggerPrev = () => {
+    if (isFlipping || spread <= 0) return;
+    setFlipDir('prev');
+    setIsFlipping(true);
+    setFlipAngle(-180);
+
+    // Animate smoothly from -180 to 0 deg
+    requestAnimationFrame(() => {
+      setFlipAngle(0);
+    });
+
     setTimeout(() => {
       setSpread((prev) => prev - 1);
-      setTurning(null);
-    }, 600);
+      setIsFlipping(false);
+      setFlipDir(null);
+      setFlipAngle(0);
+    }, 700);
   };
 
   // Touch swipe support
-  const touchStartRef = React.useRef<number | null>(null);
+  const touchStartRef = useRef<number | null>(null);
   const onTouchStart = (e: React.TouchEvent) => {
     touchStartRef.current = e.touches[0].clientX;
   };
   const onTouchEnd = (e: React.TouchEvent) => {
     if (touchStartRef.current === null) return;
     const diff = touchStartRef.current - e.changedTouches[0].clientX;
-    if (diff > 40) handleNext();
-    else if (diff < -40) handlePrev();
+    if (diff > 45) triggerNext();
+    else if (diff < -45) triggerPrev();
     touchStartRef.current = null;
   };
 
-  // Content renderers for spreads
+  // Render content of left pages (hal 1, 3, 5)
   const renderLeft = (idx: number) => {
     if (idx === 0) {
       return (
@@ -236,6 +257,7 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
     }
   };
 
+  // Render content of right pages (hal 2, 4, 6)
   const renderRight = (idx: number) => {
     if (idx === 0) {
       return (
@@ -276,12 +298,12 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
             {/* Turn Page Button / Corner Fold */}
             <button
               type="button"
-              onClick={handleNext}
+              onClick={triggerNext}
               className="w-full p-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 text-xs font-mono font-bold flex items-center justify-between cursor-pointer transition-all shadow-2xs group"
             >
               <span className="flex items-center gap-1.5">
                 <Hand className="w-3.5 h-3.5 text-amber-700 group-hover:translate-x-1 transition-transform" />
-                <span>Balik ke Lembar Mutu Gizi</span>
+                <span>Balik Lembar ke Mutu Gizi</span>
               </span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
@@ -328,12 +350,12 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
 
             <button
               type="button"
-              onClick={handleNext}
+              onClick={triggerNext}
               className="w-full p-2.5 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-950 text-xs font-mono font-bold flex items-center justify-between cursor-pointer transition-all shadow-2xs group"
             >
               <span className="flex items-center gap-1.5">
                 <Hand className="w-3.5 h-3.5 text-purple-700 group-hover:translate-x-1 transition-transform" />
-                <span>Balik ke Lembar Paspor QR</span>
+                <span>Balik Lembar ke Paspor QR</span>
               </span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
@@ -363,7 +385,7 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
 
             <div className="p-4 rounded-2xl bg-white/95 border border-emerald-200 shadow-2xs space-y-2.5 mb-3 text-center">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-950 text-[10px] font-mono font-bold">
-                <Sparkles className="w-3 h-3 text-amber-500" />
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                 <span>ANTI-MARKUP ANGGARAN</span>
               </div>
               <p className="text-xs text-stone-600 leading-relaxed font-sans">
@@ -397,7 +419,7 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
       <div className="flex items-center justify-between gap-2 mb-4 px-2">
         <div className="flex items-center gap-2 text-xs font-mono text-stone-600">
           <Hand className="w-4 h-4 text-emerald-700 animate-pulse" />
-          <span className="hidden sm:inline">Usap layar atau klik tombol untuk membalik halaman</span>
+          <span className="hidden sm:inline">Usap layar atau klik tombol untuk membalik lembaran kertas</span>
           <span className="sm:hidden">Usap untuk membalik lembar</span>
         </div>
 
@@ -405,8 +427,8 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
         <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-stone-200 shadow-2xs text-xs font-mono">
           <button
             type="button"
-            onClick={handlePrev}
-            disabled={spread === 0 || turning !== null}
+            onClick={triggerPrev}
+            disabled={spread === 0 || isFlipping}
             className="p-1.5 rounded-lg hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-stone-800 cursor-pointer"
             title="Balik ke Lembar Sebelumnya"
           >
@@ -417,8 +439,8 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
           </span>
           <button
             type="button"
-            onClick={handleNext}
-            disabled={spread >= totalSpreads - 1 || turning !== null}
+            onClick={triggerNext}
+            disabled={spread >= totalSpreads - 1 || isFlipping}
             className="p-1.5 rounded-lg hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-stone-800 cursor-pointer"
             title="Balik ke Lembar Berikutnya"
           >
@@ -430,9 +452,11 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
       {/* Outer Hardcover Frame with Depth */}
       <div className="relative rounded-3xl bg-[#EDE7DD] p-3 sm:p-5 shadow-elevated border border-stone-300">
         
-        {/* Main Book Shell */}
-        <div className="relative rounded-2xl bg-[#F8F5EE] border border-[#DDD5C5] shadow-2xl overflow-hidden min-h-[460px]">
-          
+        {/* Main Book Shell with 3D Perspective */}
+        <div
+          style={{ perspective: '2000px' }}
+          className="relative rounded-2xl bg-[#F8F5EE] border border-[#DDD5C5] shadow-2xl overflow-hidden min-h-[470px]"
+        >
           {/* Top Red-Gold Silk Bookmark Ribbon */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center pointer-events-none">
             <div className="w-8 h-12 bg-gradient-to-b from-amber-600 via-amber-500 to-amber-700 shadow-md flex items-end justify-center pb-1">
@@ -445,27 +469,71 @@ export const Interactive3dLedgerBook: React.FC<Interactive3dLedgerBookProps> = (
           <div className="hidden lg:block absolute inset-y-0 left-1/2 -translate-x-1/2 w-[1px] bg-stone-300 z-35 pointer-events-none" />
 
           {/* 3D BOOK SPREAD ARCHITECTURE */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-stone-300/80 relative z-10 min-h-[460px]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-stone-300/80 relative z-10 min-h-[470px]">
             
-            {/* HALAMAN KIRI */}
-            <div
-              className={`p-6 sm:p-8 bg-gradient-to-r from-[#FAF7F0] via-[#FAF6EE] to-[#F5F0E6] transition-all duration-500 ${
-                turning === 'prev' ? 'opacity-40 translate-x-2' : 'opacity-100 translate-x-0'
-              }`}
-            >
-              {renderLeft(spread)}
+            {/* STATIC LEFT PAGE */}
+            <div className="p-6 sm:p-8 bg-gradient-to-r from-[#FAF7F0] via-[#FAF6EE] to-[#F5F0E6]">
+              {renderLeft(
+                isFlipping && flipDir === 'next'
+                  ? spread + 1
+                  : spread
+              )}
             </div>
 
-            {/* HALAMAN KANAN */}
-            <div
-              className={`p-6 sm:p-8 bg-gradient-to-l from-[#FAF7F0] via-[#FAF6EE] to-[#F5F0E6] transition-all duration-500 ${
-                turning === 'next' ? 'opacity-40 -translate-x-2' : 'opacity-100 translate-x-0'
-              }`}
-            >
-              {renderRight(spread)}
+            {/* STATIC RIGHT PAGE (Reveals underneath as page flips) */}
+            <div className="p-6 sm:p-8 bg-gradient-to-l from-[#FAF7F0] via-[#FAF6EE] to-[#F5F0E6]">
+              {renderRight(
+                isFlipping && flipDir === 'next'
+                  ? spread + 1
+                  : spread
+              )}
             </div>
 
           </div>
+
+          {/* ======================================================== */}
+          {/* THE REAL 3D FLIPPING SHEET (LEMBAR KERTAS FISIK MEMBALIK) */}
+          {/* ======================================================== */}
+          {isFlipping && (
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                right: 0,
+                width: '50%',
+                transformOrigin: 'left center',
+                transform: `rotateY(${flipAngle}deg)`,
+                transformStyle: 'preserve-3d',
+                transition: 'transform 700ms cubic-bezier(0.4, 0.0, 0.2, 1)',
+                zIndex: 35,
+              }}
+              className="hidden lg:block pointer-events-none"
+            >
+              {/* Sisi Muka Kertas (Halaman Kanan yang sedang membalik ke kiri) */}
+              <div
+                style={{ backfaceVisibility: 'hidden' }}
+                className="absolute inset-0 p-6 sm:p-8 bg-gradient-to-l from-[#FAF7F0] via-[#FAF6EE] to-[#F5F0E6] border-l border-stone-300 shadow-2xl overflow-hidden"
+              >
+                {renderRight(flipDir === 'next' ? spread : spread - 1)}
+                {/* Bayangan Lipatan Lembar */}
+                <div className="absolute inset-0 bg-gradient-to-r from-stone-900/15 via-transparent to-transparent pointer-events-none" />
+              </div>
+
+              {/* Sisi Belakang Kertas (Halaman Kiri tujuan yang sudah terbalik 180 derajat) */}
+              <div
+                style={{
+                  transform: 'rotateY(180deg)',
+                  backfaceVisibility: 'hidden',
+                }}
+                className="absolute inset-0 p-6 sm:p-8 bg-gradient-to-r from-[#FAF7F0] via-[#FAF6EE] to-[#F5F0E6] border-r border-stone-300 shadow-2xl overflow-hidden"
+              >
+                {renderLeft(flipDir === 'next' ? spread + 1 : spread)}
+                {/* Bayangan Punggung Kertas */}
+                <div className="absolute inset-0 bg-gradient-to-l from-stone-900/20 via-transparent to-transparent pointer-events-none" />
+              </div>
+            </div>
+          )}
 
         </div>
 
