@@ -173,54 +173,63 @@ export const SmartFloatingConcierge: React.FC = () => {
   };
 
   return (
-    <aside
-      aria-label="Pusat Bantuan Asisten AI Resmi"
-      className="fixed bottom-6 right-6 z-50 select-none flex flex-col items-end pointer-events-auto"
-    >
-      {/* CHAT COPILOT MODAL POPUP */}
+    <>
+      {/* BACKDROP BLUR OVERLAY (Hanya di layar mobile atau saat drawer terbuka) */}
       {isOpen && (
-        <div className="mb-3 w-[92vw] sm:w-[420px] max-h-[72vh] sm:max-h-[560px] h-[540px] bg-white border border-stone-200/90 rounded-2xl shadow-2xl flex flex-col overflow-hidden text-stone-900 transition-all duration-300 animate-in fade-in zoom-in-95 slide-in-from-bottom-4 font-sans ring-1 ring-stone-900/5">
-          
-          {/* Header Bar */}
-          <div className="px-4 py-3.5 bg-gradient-to-r from-emerald-950 via-[#132A21] to-emerald-950 text-white flex items-center justify-between border-b border-emerald-900 shrink-0">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-amber-400 text-stone-950 flex items-center justify-center font-bold text-sm shadow-xs">
-                🌾
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <h4 className="text-xs font-bold font-serif leading-tight">
-                    ORVANA Agritech AI Copilot
-                  </h4>
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                </div>
-                <div className="flex items-center gap-1.5 text-[10px] font-mono text-emerald-300">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Online • Basis Regulasi Resmi</span>
-                </div>
-              </div>
-            </div>
+        <div
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 z-50 bg-stone-950/20 backdrop-blur-xs transition-opacity duration-300 pointer-events-auto sm:bg-stone-950/10"
+          aria-hidden="true"
+        />
+      )}
 
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={resetChat}
-                title="Mulai percakapan baru"
-                className="p-1.5 rounded-lg text-emerald-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                aria-label="Reset Chat"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-lg text-emerald-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                aria-label="Tutup Menu"
-              >
-                <X className="w-4 h-4" />
-              </button>
+      {/* FULL-HEIGHT SLIDE-OVER COPILOT PANEL (Pilihan 1: Modern Copilot Drawer) */}
+      <aside
+        aria-label="Pusat Bantuan Asisten AI Resmi"
+        className={`fixed top-0 right-0 bottom-0 z-50 w-full sm:w-[440px] md:w-[460px] h-screen bg-white shadow-2xl border-l border-stone-200/90 flex flex-col font-sans text-stone-900 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-auto ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        {/* Header Bar */}
+        <div className="px-5 py-4 bg-gradient-to-r from-emerald-950 via-[#132A21] to-emerald-950 text-white flex items-center justify-between border-b border-emerald-900 shrink-0 shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-amber-400 text-stone-950 flex items-center justify-center font-bold text-base shadow-xs shrink-0">
+              🌾
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <h4 className="text-sm font-bold font-serif leading-tight">
+                  ORVANA Agritech AI Copilot
+                </h4>
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              </div>
+              <div className="flex items-center gap-1.5 text-[11px] font-mono text-emerald-300 mt-0.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Online • Basis Regulasi & Data Resmi</span>
+              </div>
             </div>
           </div>
+
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={resetChat}
+              title="Mulai percakapan baru"
+              className="p-2 rounded-lg text-emerald-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+              aria-label="Reset Chat"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="p-2 rounded-lg text-emerald-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+              aria-label="Tutup Panel"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
 
           {/* Quick Notice Banner */}
           <div className="px-3.5 py-1.5 bg-emerald-50 border-b border-emerald-100/80 flex items-center justify-between text-[11px] text-emerald-900 font-medium">
@@ -337,14 +346,14 @@ export const SmartFloatingConcierge: React.FC = () => {
           </div>
 
           {/* Chat Input Bar */}
-          <div className="p-3 bg-white border-t border-stone-200 flex items-center gap-2 shrink-0">
+          <div className="p-3.5 bg-white border-t border-stone-200 flex items-center gap-2 shrink-0">
             <input
               type="text"
               value={inputQuery}
               onChange={(e) => setInputQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Tanya seputar aturan ORVANA, kuota, panen..."
-              className="flex-1 bg-stone-50 hover:bg-stone-100/70 focus:bg-white border border-stone-200 focus:border-emerald-600 rounded-xl px-3.5 py-2 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-none transition-all"
+              className="flex-1 bg-stone-50 hover:bg-stone-100/70 focus:bg-white border border-stone-200 focus:border-emerald-600 rounded-xl px-4 py-2.5 text-xs text-stone-900 placeholder:text-stone-400 focus:outline-none transition-all"
             />
             <button
               type="button"
@@ -353,25 +362,25 @@ export const SmartFloatingConcierge: React.FC = () => {
               className="p-2.5 rounded-xl bg-emerald-950 hover:bg-emerald-900 disabled:opacity-40 text-white transition-colors cursor-pointer shrink-0 shadow-2xs"
               aria-label="Kirim Pesan"
             >
-              <Send className="w-3.5 h-3.5" />
+              <Send className="w-4 h-4" />
             </button>
           </div>
+      </aside>
 
-        </div>
-      )}
-
-      {/* FLOATING TRIGGER BUTTON (Pill Design) */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="group relative flex items-center gap-2 px-4 py-2.5 rounded-full bg-stone-900/95 hover:bg-stone-950 text-white shadow-xl hover:shadow-2xl border border-stone-700/80 transition-all duration-300 hover:scale-[1.02] active:scale-95 cursor-pointer"
-        aria-label="Buka Asisten AI Orvana"
-      >
-        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-xs" />
-        <MessageSquare className="w-4 h-4 text-emerald-400 group-hover:rotate-6 transition-transform" />
-        <span className="text-xs font-bold font-sans tracking-wide">
-          {isOpen ? 'Tutup Asisten' : 'Asisten AI ORVANA'}
-        </span>
-      </button>
-    </aside>
+      {/* FLOATING TRIGGER BUTTON (Pill Design - Selalu di pojok kanan bawah) */}
+      <div className="fixed bottom-6 right-6 z-40 select-none pointer-events-auto">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="group relative flex items-center gap-2 px-4 py-2.5 rounded-full bg-stone-900/95 hover:bg-stone-950 text-white shadow-xl hover:shadow-2xl border border-stone-700/80 transition-all duration-300 hover:scale-[1.02] active:scale-95 cursor-pointer"
+          aria-label="Buka Asisten AI Orvana"
+        >
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-xs" />
+          <MessageSquare className="w-4 h-4 text-emerald-400 group-hover:rotate-6 transition-transform" />
+          <span className="text-xs font-bold font-sans tracking-wide">
+            {isOpen ? 'Tutup Asisten' : 'Asisten AI ORVANA'}
+          </span>
+        </button>
+      </div>
+    </>
   );
 };
