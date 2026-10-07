@@ -90,37 +90,42 @@ export const SupplyChain3DHero: React.FC = () => {
             </div>
 
             {/* FLOATING HUD BADGE TOP-LEFT (LIVE ENGINE STATUS) */}
-            <div className="absolute top-2 left-2 flex items-center gap-2 bg-stone-900/80 hover:bg-stone-900 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/10 shadow-lg transition-all pointer-events-auto">
+            <div className="absolute top-3 left-4 flex items-center gap-2.5 bg-white/90 hover:bg-white backdrop-blur-xl px-3.5 py-1.5 rounded-full border border-stone-200/90 shadow-md shadow-stone-900/5 transition-all pointer-events-auto">
               <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
               </span>
-              <div className="flex flex-col text-left">
-                <span className="text-[10px] font-mono font-bold tracking-tight text-white uppercase leading-none">
-                  Cyber Engine Lab
-                </span>
-                <span className="text-[9px] font-mono text-emerald-400 leading-tight mt-0.5">
-                  Fair Split Cap 60%
+              <div className="flex items-center gap-1.5 font-mono text-[11px]">
+                <span className="font-bold text-stone-900 uppercase tracking-tight">Algoritma Alokasi</span>
+                <span className="text-stone-300">|</span>
+                <span className="text-emerald-800 font-bold bg-emerald-50 px-1.5 py-0.5 rounded-md border border-emerald-200/60 text-[10px]">
+                  Cap 60%
                 </span>
               </div>
             </div>
 
             {/* FLOATING HUD BADGE TOP-RIGHT (SMART ESCROW STATUS) */}
-            <div className="absolute top-2 right-2 flex items-center gap-1.5 bg-stone-900/80 backdrop-blur-md px-2.5 py-1.5 rounded-2xl border border-white/10 shadow-lg text-[10px] font-mono text-emerald-300 pointer-events-auto">
-              <Lock className="w-3 h-3 text-amber-400" />
-              <span>Escrow: Rp 552.000</span>
+            <div className="absolute top-3 right-4 flex items-center gap-1.5 bg-white/90 hover:bg-white backdrop-blur-xl px-3 py-1.5 rounded-full border border-stone-200/90 shadow-md shadow-stone-900/5 text-[11px] font-mono text-stone-800 pointer-events-auto">
+              <div className="p-1 rounded-full bg-amber-50 border border-amber-200/60 text-amber-700">
+                <Lock className="w-3 h-3" />
+              </div>
+              <span className="font-semibold text-stone-600">Escrow:</span>
+              <span className="font-bold text-emerald-900">Rp 552.000</span>
             </div>
 
-            {/* FLOATING HUD BADGE BOTTOM-LEFT (ALLOCATION STATS) */}
-            <div className="absolute bottom-2 left-2 bg-stone-900/85 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/10 shadow-lg text-left pointer-events-auto max-w-[200px]">
-              <div className="flex items-center justify-between text-[10px] font-bold text-white mb-0.5">
-                <span>Alokasi Petani</span>
-                <span className="text-emerald-400 font-mono">100%</span>
+            {/* FLOATING HUD BADGE BOTTOM (SINGLE STREAMLINED PILL FOR FAIR ALLOCATION) */}
+            <div className="absolute bottom-4 inset-x-0 mx-auto w-fit flex items-center gap-3 bg-white/90 hover:bg-white backdrop-blur-xl px-4 py-1.5 rounded-full border border-stone-200/90 shadow-md shadow-stone-900/5 font-mono text-[11px] pointer-events-auto">
+              <div className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                <span className="font-medium text-stone-600">S1 Makmur:</span>
+                <span className="font-bold text-stone-900">40 kg (58%)</span>
               </div>
-              <p className="text-[9px] text-stone-300 font-mono leading-tight">
-                S1 Makmur: 40 kg (58%)<br />
-                S2 Berkah: 29 kg (42%)
-              </p>
+              <span className="text-stone-300">|</span>
+              <div className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                <span className="font-medium text-stone-600">S2 Berkah:</span>
+                <span className="font-bold text-stone-900">29 kg (42%)</span>
+              </div>
             </div>
           </div>
         </div>
