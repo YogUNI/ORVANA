@@ -154,24 +154,17 @@ export const SupplyChain3DHero: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. CAPTION UNDER CARD (LOCKED IN PLACE, NEVER JUMPS OR SHIFTS) */}
-      <div className="w-full max-w-lg mt-3 px-2 flex items-center justify-between text-xs text-stone-500">
-        <span className="flex items-center gap-1.5">
+      {/* 3. CAPTION UNDER CARD (CLEAN & CENTERED, NO REDUNDANT BUTTONS) */}
+      <div className="w-full max-w-lg mt-3 px-2 flex items-center justify-center text-xs text-stone-500">
+        <span className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="font-medium text-stone-700">
             {isFlipped ? 'Cyber Engine Lab:' : 'Alur Rantai Pasok Terintegrasi:'}
           </span>
-          <span className="hidden sm:inline">
+          <span>
             {isFlipped ? 'Hologram AI Alokasi Kuota & Brankas Escrow' : 'Lahan Petani ➔ Dapur Gizi Massal'}
           </span>
         </span>
-        <button
-          type="button"
-          onClick={() => setIsFlipped(!isFlipped)}
-          className="font-mono text-[11px] text-emerald-800 hover:text-emerald-950 underline font-semibold transition-colors"
-        >
-          {isFlipped ? 'Lihat Pulau 3D' : 'Lihat Lab Engine'}
-        </button>
       </div>
     </div>
   );
