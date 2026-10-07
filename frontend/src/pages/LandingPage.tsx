@@ -1185,48 +1185,54 @@ export const LandingPage: React.FC = () => {
             {/* SISI KIRI: INPUT WHATSAPP STYLE & REACTIVE MASCOT */}
             <div className="lg:col-span-6 space-y-5">
               
-              {/* Reactive Mascot Stage */}
-              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-stone-50 border border-stone-200/80">
-                <div className="space-y-1">
-                  <span className="text-[10px] font-mono font-bold text-stone-500 uppercase tracking-wider block">
-                    AI AGENT COMPANION
-                  </span>
-                  <p className="text-xs font-semibold text-stone-900">
+              {/* Reactive Mascot Stage - Integrated Clean Cockpit */}
+              <div className="flex items-center justify-between p-4 rounded-2xl bg-white border border-stone-200/90 shadow-2xs gap-4 relative overflow-hidden">
+                <div className="space-y-1.5 flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-[10px] font-mono font-bold text-stone-500 uppercase tracking-wider">
+                      ORVANA AI ASSISTANT
+                    </span>
+                  </div>
+                  <p className="text-xs font-bold text-stone-900 leading-snug">
                     {mascotStatus === 'thinking'
-                      ? '🧠 Memproses bahasa alami petani...'
+                      ? '🧠 Menganalisis makna kalimat petani...'
                       : mascotStatus === 'wow'
-                      ? '🎉 Wow! Ekstraksi entitas 100% akurat!'
-                      : '👀 Menunggu kalimat input petani...'}
+                      ? '🎉 Ekstraksi selesai! Nilai dan bobot valid.'
+                      : 'Ketik pesan bebas atau klik contoh di bawah'}
                   </p>
-                  <span className="text-[10px] font-mono text-emerald-800 block">
-                    Coba ketik atau pilih contoh di bawah:
-                  </span>
+                  <p className="text-[11px] text-stone-500 font-sans leading-relaxed">
+                    Karakter bereaksi langsung mengikuti apa yang Anda ketik.
+                  </p>
                 </div>
-                {/* 3D Animated Reactive Mascot */}
-                <AiThinkingMascot status={mascotStatus} size={75} />
+                {/* 2D Living Vector Mascot */}
+                <AiThinkingMascot status={mascotStatus} size={70} />
               </div>
 
-              {/* Chat-Style Input Bar */}
-              <div className="space-y-2">
-                <label className="text-xs font-mono font-bold text-stone-700 uppercase tracking-wider block">
-                  Ketik Pesan / Kalimat Petani:
-                </label>
-                <div className="relative">
+              {/* Chat-Style Input Bar with clean padding and clear separation */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-mono font-bold text-stone-700 uppercase tracking-wider">
+                    Input Pesan Petani (Slang / Bebas):
+                  </label>
+                  <span className="text-[10px] font-mono text-stone-600">Tekan Enter untuk memproses</span>
+                </div>
+                <div className="flex gap-2">
                   <input
                     type="text"
                     value={nlpSampleText}
                     onChange={(e) => handleInputChange(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleTestNLP()}
                     placeholder="Contoh: besok panen 2 kwintal cabai rawit 45rb..."
-                    className="w-full pl-3.5 pr-24 py-3 border border-stone-300 rounded-xl text-xs bg-white text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-700 font-mono shadow-2xs"
+                    className="flex-1 px-3.5 py-2.5 border border-stone-300 rounded-xl text-xs bg-white text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-700 font-mono shadow-2xs placeholder:text-stone-400"
                   />
                   <Button
                     type="button"
                     onClick={handleTestNLP}
                     disabled={nlpLoading}
-                    className="absolute right-1.5 top-1.5 bottom-1.5 bg-emerald-950 hover:bg-emerald-900 text-white text-xs px-3.5 font-bold rounded-lg flex items-center gap-1.5 transition-all cursor-pointer"
+                    className="bg-emerald-950 hover:bg-emerald-900 text-white text-xs px-4 py-2.5 font-bold rounded-xl flex items-center gap-1.5 transition-all cursor-pointer shrink-0 shadow-2xs"
                   >
-                    <Send className="w-3 h-3" />
+                    <Send className="w-3.5 h-3.5" />
                     <span>{nlpLoading ? 'Mengurai...' : 'Urai AI'}</span>
                   </Button>
                 </div>

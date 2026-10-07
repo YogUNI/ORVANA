@@ -31,33 +31,38 @@ export const AiThinkingMascot: React.FC<AiThinkingMascotProps> = ({ status, size
   }, [status]);
 
   return (
-    <div className="relative flex flex-col items-center select-none" style={{ width: `${size * 1.5}px` }}>
-      {/* Speech / Thought Bubble with organic bounce */}
+    <div className="relative flex flex-col items-center select-none shrink-0" style={{ width: `${size}px` }}>
+      {/* Speech / Thought Bubble with arrow */}
       <div
-        className={`mb-2 px-3 py-1.5 rounded-2xl text-[10px] font-mono font-bold shadow-md transition-all duration-300 transform ${
+        className={`relative mb-1.5 px-2.5 py-1 rounded-xl text-[10px] font-mono font-bold shadow-xs transition-all duration-300 text-center ${
           status === 'thinking'
-            ? 'bg-amber-400 text-stone-950 scale-105 border border-amber-300 animate-pulse'
+            ? 'bg-amber-400 text-stone-950 border border-amber-300 animate-pulse'
             : status === 'wow'
-            ? 'bg-emerald-950 text-emerald-300 scale-110 border border-emerald-500 ring-2 ring-emerald-400/40'
-            : 'bg-white/95 text-stone-700 border border-stone-200'
+            ? 'bg-emerald-950 text-emerald-300 border border-emerald-500'
+            : 'bg-white text-stone-700 border border-stone-200'
         }`}
       >
-        <div className="flex items-center gap-1.5 whitespace-nowrap">
-          {status === 'thinking' && (
-            <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-800 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-900" />
-            </span>
-          )}
-          {status === 'wow' && <span className="text-amber-300">✨</span>}
-          <span>{bubbleText}</span>
+        <div className="flex items-center justify-center gap-1">
+          {status === 'thinking' && <span className="w-1.5 h-1.5 rounded-full bg-stone-900 animate-ping shrink-0" />}
+          {status === 'wow' && <span className="text-amber-300 text-[10px]">✨</span>}
+          <span className="truncate max-w-[110px]">{bubbleText}</span>
         </div>
+        {/* Little bubble tail arrow pointing to mascot */}
+        <div
+          className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 border-r border-b ${
+            status === 'thinking'
+              ? 'bg-amber-400 border-amber-300'
+              : status === 'wow'
+              ? 'bg-emerald-950 border-emerald-500'
+              : 'bg-white border-stone-200'
+          }`}
+        />
       </div>
 
       {/* SVG Vector Living Character Stage (100% Vector, No Jagged Images) */}
       <div
         className="relative flex items-center justify-center"
-        style={{ width: `${size}px`, height: `${size * 1.15}px` }}
+        style={{ width: `${size}px`, height: `${size * 1.05}px` }}
       >
         {/* Soft Organic Aura Glow */}
         <div
