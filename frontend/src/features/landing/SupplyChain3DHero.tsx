@@ -13,11 +13,11 @@ export const SupplyChain3DHero: React.FC = () => {
   return (
     <div className="w-full flex flex-col items-center select-none">
       {/* 1. TOP UTILITY BAR (CLEAN, MINIMAL, MATCHING ORVANA PALETTE) */}
-      <div className="flex items-center justify-between w-full max-w-lg mb-2 px-2">
+      <div className="flex items-center justify-between w-full max-w-2xl mb-2.5 px-3">
         <button
           type="button"
           onClick={() => setIsFlipped(!isFlipped)}
-          className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-white/80 hover:bg-white text-stone-700 hover:text-emerald-950 border border-stone-200/90 shadow-xs hover:shadow-md transition-all active:scale-95 backdrop-blur-sm"
+          className="group inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/80 hover:bg-white text-stone-700 hover:text-emerald-950 border border-stone-200/90 shadow-xs hover:shadow-md transition-all active:scale-95 backdrop-blur-sm"
         >
           <RotateCw className={`w-3.5 h-3.5 text-emerald-800 transition-transform duration-500 ${isFlipped ? 'rotate-180' : 'group-hover:rotate-45'}`} />
           <span>{isFlipped ? 'Balik ke Simulasi 3D' : 'Balik ke Engine Alokasi'}</span>
@@ -35,8 +35,8 @@ export const SupplyChain3DHero: React.FC = () => {
         </Link>
       </div>
 
-      {/* 2. 3D FLIP CONTAINER WITH IDENTICAL FIXED DIMENSIONS (LOCKS HEIGHT SO TEXT NEVER MOVES) */}
-      <div className="w-full max-w-lg h-[340px] relative [perspective:1200px]">
+      {/* 2. 3D FLIP CONTAINER WITH IDENTICAL EXPANDED FIXED DIMENSIONS */}
+      <div className="w-full max-w-2xl h-[420px] sm:h-[440px] relative [perspective:1400px]">
         <div
           className={`w-full h-full relative transition-transform duration-700 ease-out [transform-style:preserve-3d] ${
             isFlipped ? '[transform:rotateY(180deg)]' : ''
@@ -47,11 +47,11 @@ export const SupplyChain3DHero: React.FC = () => {
             className="absolute inset-0 w-full h-full [backface-visibility:hidden] flex flex-col items-center justify-center p-0"
           >
             {/* FLOATING AMBIENT GLOW BACKDROP */}
-            <div className="absolute inset-8 rounded-full bg-gradient-to-tr from-emerald-500/10 via-amber-400/10 to-transparent blur-3xl opacity-70 pointer-events-none -z-10" />
+            <div className="absolute inset-4 rounded-full bg-gradient-to-tr from-emerald-500/10 via-amber-400/10 to-transparent blur-3xl opacity-80 pointer-events-none -z-10" />
 
             {/* SEAMLESS BLENDED VIDEO CONTAINER (EXPANDED TO PREVENT ANY EDGE CLIPPING) */}
             <div
-              className="relative w-[110%] h-[110%] flex items-center justify-center pointer-events-none"
+              className="relative w-[115%] h-[115%] flex items-center justify-center pointer-events-none"
               style={{
                 filter: 'contrast(1.12) brightness(1.08)',
                 mixBlendMode: 'multiply',
@@ -155,7 +155,7 @@ export const SupplyChain3DHero: React.FC = () => {
       </div>
 
       {/* 3. CAPTION UNDER CARD (CLEAN & CENTERED, NO REDUNDANT BUTTONS) */}
-      <div className="w-full max-w-lg mt-3 px-2 flex items-center justify-center text-xs text-stone-500">
+      <div className="w-full max-w-2xl mt-3 px-2 flex items-center justify-center text-xs text-stone-500">
         <span className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="font-medium text-stone-700">
