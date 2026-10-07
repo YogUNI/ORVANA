@@ -70,6 +70,9 @@ export const LandingPage: React.FC = () => {
   // Interactive FAQ Accordion State
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
 
+  // Interactive Onboarding Partner Persona State
+  const [partnerRole, setPartnerRole] = useState<'supplier' | 'kitchen' | 'coordinator'>('supplier');
+
   // Scroll Spy Active Section & Scrolled Navbar Glass State
   const [activeSection, setActiveSection] = useState<string>('');
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
@@ -1783,110 +1786,280 @@ export const LandingPage: React.FC = () => {
         </section>
       </ScrollReveal>
 
-      {/* 10. CALL TO ACTION: THE NATIONWIDE AGRITECH ECOSYSTEM CALLOUT */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-        <div className="bg-gradient-to-br from-[#122820] via-[#0E2019] to-[#081510] text-white rounded-3xl p-8 sm:p-12 lg:p-14 relative overflow-hidden border border-emerald-900/60 shadow-xl">
-          {/* Subtle Ambient Decorative Circles */}
-          <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-emerald-700/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -left-20 -top-20 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+      {/* 10. CALL TO ACTION: THE NATIONAL AGRITECH ONBOARDING STUDIO (HIGH-CRAFT ORGANIC HORIZON) */}
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+        
+        {/* Warm Canvas Card with Subtle Organic Border & Texture */}
+        <div className="rounded-3xl bg-gradient-to-b from-[#F4EFE6] via-[#F8F5EE] to-[#EFE9DC] border border-stone-300/80 p-8 sm:p-12 lg:p-16 shadow-lg shadow-stone-900/5 relative overflow-hidden text-stone-900">
+          
+          {/* Subtle Agricultural Contour Graphic Accents (Non-intrusive) */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-600/[0.04] rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-600/[0.04] rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          {/* Top Stamp / Header Row */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-8 border-b border-stone-300/70">
+            <div className="flex items-center gap-3">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-700 animate-pulse" />
+              <span className="font-mono text-xs font-semibold uppercase tracking-wider text-stone-600">
+                Inisiatif Digitalisasi Rantai Pasok Pangan Mandiri
+              </span>
+            </div>
+            <div className="font-mono text-[11px] text-stone-500 bg-white/70 px-3 py-1 rounded-full border border-stone-300/60 inline-flex items-center gap-1.5 self-start sm:self-auto">
+              <span>Status:</span>
+              <span className="font-bold text-emerald-850">Registrasi Terbuka 2026</span>
+            </div>
+          </div>
+
+          {/* Main Studio Grid: Narrative Pitch + Interactive Persona Boarding Pass */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center pt-8">
             
-            {/* Sisi Kiri: Pesan Utama & Pintu Masuk Aksi */}
-            <div className="lg:col-span-7 space-y-6 text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-900/80 border border-emerald-700/50 text-emerald-200 text-xs font-mono font-medium">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                <span>Gerakan Pangan Bergizi Nasional</span>
-              </div>
-
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.15] text-white">
-                Wujudkan Rantai Pasok Pangan Mandiri, Adil, dan Bermutu
+            {/* Sisi Kiri: Editorial Pitch & Core Guarantees (6 Cols) */}
+            <div className="lg:col-span-6 space-y-6 text-left">
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-stone-950 leading-[1.12]">
+                Wujudkan Ekosistem Pangan Mandiri, Berkeadilan, & Bermutu.
               </h2>
-
-              <p className="text-emerald-100/80 text-sm sm:text-base leading-relaxed max-w-xl font-sans">
-                Hubungkan dapur gizi massal, kelompok tani lokal, armada distribusi, dan dinas daerah dalam satu infrastruktur digital terpercaya.
+              
+              <p className="text-stone-600 text-sm sm:text-base leading-relaxed font-sans max-w-xl">
+                ORVANA bukan sekadar aplikasi pencatatan, melainkan jembatan pengadaan terencana yang mengikat kuota panen petani lokal dengan kebutuhan dapur gizi massal secara transparan.
               </p>
 
-              <div className="pt-2 flex flex-wrap items-center gap-3">
-                <Link to="/register">
-                  <Button
-                    variant="primary"
-                    size="md"
-                    className="bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold px-6 py-3 rounded-xl shadow-xs flex items-center gap-2 transition-transform active:scale-95"
-                  >
-                    <span>Daftar Akun Mitra Baru</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </Link>
-                <Link to="/login">
-                  <Button
-                    variant="outline"
-                    size="md"
-                    className="bg-white/10 text-white border-white/20 hover:bg-white/20 font-semibold px-6 py-3 rounded-xl transition-colors"
-                  >
-                    <span>Masuk ke Dashboard</span>
-                  </Button>
-                </Link>
+              {/* Verified Safeguard Marks */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                <div className="p-3.5 rounded-xl bg-white/80 border border-stone-200 shadow-2xs space-y-1">
+                  <div className="font-mono text-[11px] font-bold text-emerald-900">01. TANPA BIAYA</div>
+                  <div className="text-xs text-stone-600">Gratis biaya lisensi awal bagi seluruh kelompok tani desa.</div>
+                </div>
+                <div className="p-3.5 rounded-xl bg-white/80 border border-stone-200 shadow-2xs space-y-1">
+                  <div className="font-mono text-[11px] font-bold text-emerald-900">02. KUOTA ADIL</div>
+                  <div className="text-xs text-stone-600">Batas maksimal kuota 60% per pemasok anti monopoli.</div>
+                </div>
+                <div className="p-3.5 rounded-xl bg-white/80 border border-stone-200 shadow-2xs space-y-1">
+                  <div className="font-mono text-[11px] font-bold text-emerald-900">03. KAS DIGITAL</div>
+                  <div className="text-xs text-stone-600">Ledger audit terbuka mencegah penundaan pencairan.</div>
+                </div>
               </div>
 
-              <div className="pt-2 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-emerald-200/60 font-mono">
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                  Bebas Biaya Lisensi Awal
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                  Tata Kelola Standar Dinas
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                  Ledger Kas Terbuka
-                </span>
+              {/* Quick Contact Line */}
+              <div className="pt-2 flex items-center gap-2 text-xs text-stone-500 font-sans">
+                <span className="text-stone-400">Pertanyaan integrasi teknis dinas?</span>
+                <a href="#faq" className="text-emerald-900 font-semibold hover:underline">
+                  Pelajari di Pusat Regulasi →
+                </a>
               </div>
             </div>
 
-            {/* Sisi Kanan: Matriks Nilai Ekosistem Terpadu */}
-            <div className="lg:col-span-5 grid grid-cols-1 gap-3 font-sans">
-              
-              <div className="p-4 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-xs flex items-start gap-3.5">
-                <div className="w-9 h-9 rounded-xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-300 shrink-0 font-bold text-sm">
-                  🌾
+            {/* Sisi Kanan: The Interactive Partner Boarding Pass (6 Cols) */}
+            <div className="lg:col-span-6">
+              <div className="bg-white rounded-2xl border-2 border-stone-300 shadow-elevated overflow-hidden font-sans">
+                
+                {/* Segmented Persona Selector Tabs */}
+                <div className="grid grid-cols-3 border-b border-stone-200 bg-stone-100/70 p-1.5 gap-1.5 text-xs font-mono font-bold">
+                  {[
+                    { id: 'supplier', label: 'Petani & Ternak' },
+                    { id: 'kitchen', label: 'Dapur Gizi' },
+                    { id: 'coordinator', label: 'Koordinator' },
+                  ].map((tab) => {
+                    const isActive = partnerRole === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setPartnerRole(tab.id as any)}
+                        className={`py-2 px-3 rounded-xl transition-all cursor-pointer text-center ${
+                          isActive
+                            ? 'bg-emerald-950 text-white shadow-xs'
+                            : 'text-stone-600 hover:text-stone-900 hover:bg-white/60'
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    );
+                  })}
                 </div>
-                <div className="space-y-0.5">
-                  <h4 className="text-xs sm:text-sm font-bold text-white">Petani, Peternak & Nelayan</h4>
-                  <p className="text-xs text-emerald-100/70 leading-relaxed">
-                    Kepastian serapan panen 10-14 hari di muka dengan jaminan pencairan dana tanpa tengkulak.
-                  </p>
-                </div>
-              </div>
 
-              <div className="p-4 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-xs flex items-start gap-3.5">
-                <div className="w-9 h-9 rounded-xl bg-emerald-400/15 border border-emerald-400/30 flex items-center justify-center text-emerald-300 shrink-0 font-bold text-sm">
-                  🍳
-                </div>
-                <div className="space-y-0.5">
-                  <h4 className="text-xs sm:text-sm font-bold text-white">Dapur Gizi Massal & SPPG</h4>
-                  <p className="text-xs text-emerald-100/70 leading-relaxed">
-                    Penghitungan kebutuhan bahan otomatis dari menu harian dan kuota pasokan terbagi adil.
-                  </p>
-                </div>
-              </div>
+                {/* Dynamic Persona Preview Content */}
+                <div className="p-6 sm:p-7 space-y-5">
+                  {partnerRole === 'supplier' && (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between pb-3 border-b border-stone-100">
+                        <div>
+                          <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200/80">
+                            Peran: Produsen Pangan
+                          </span>
+                          <h3 className="font-serif text-lg font-bold text-stone-900 mt-1">
+                            Petani, Peternak, & Nelayan Lokal
+                          </h3>
+                        </div>
+                        <div className="text-right">
+                          <span className="font-mono text-xs text-stone-400 block">Jaminan Serapan</span>
+                          <span className="font-mono text-xs font-bold text-emerald-900">10-14 Hari di Muka</span>
+                        </div>
+                      </div>
 
-              <div className="p-4 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-xs flex items-start gap-3.5">
-                <div className="w-9 h-9 rounded-xl bg-sky-400/15 border border-sky-400/30 flex items-center justify-center text-sky-300 shrink-0 font-bold text-sm">
-                  🚚
-                </div>
-                <div className="space-y-0.5">
-                  <h4 className="text-xs sm:text-sm font-bold text-white">Koordinator Distribusi Lokal</h4>
-                  <p className="text-xs text-emerald-100/70 leading-relaxed">
-                    Rute logistik radius pendek (&lt; 25 km) menjaga kesegaran bahan pangan tiba tepat waktu.
-                  </p>
-                </div>
-              </div>
+                      <ul className="space-y-2 text-xs text-stone-600 leading-relaxed">
+                        <li className="flex items-start gap-2">
+                          <span className="font-mono font-bold text-emerald-700">✓</span>
+                          <span>Input jadwal panen via web atau asisten chat WhatsApp tanpa form rumit.</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="font-mono font-bold text-emerald-700">✓</span>
+                          <span>Proteksi batas harga dasar resmi daerah mencegah permainan tengkulak.</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="font-mono font-bold text-emerald-700">✓</span>
+                          <span>Pencairan dana langsung ke rekening setelah uji mutu lolos di dapur.</span>
+                        </li>
+                      </ul>
 
+                      <div className="pt-2 flex flex-col sm:flex-row gap-2.5">
+                        <Link to="/register" className="flex-1">
+                          <Button
+                            variant="primary"
+                            size="md"
+                            className="w-full bg-emerald-950 hover:bg-emerald-900 text-white font-bold py-2.5 rounded-xl shadow-xs flex items-center justify-center gap-2"
+                          >
+                            <span>Daftar Sebagai Produsen</span>
+                            <ArrowRight className="w-4 h-4" />
+                          </Button>
+                        </Link>
+                        <Link to="/login" className="sm:w-auto">
+                          <Button
+                            variant="outline"
+                            size="md"
+                            className="w-full border-stone-300 text-stone-700 hover:bg-stone-50 py-2.5 rounded-xl text-xs"
+                          >
+                            <span>Masuk Portal</span>
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+
+                  {partnerRole === 'kitchen' && (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between pb-3 border-b border-stone-100">
+                        <div>
+                          <span className="text-[10px] font-mono uppercase tracking-wider text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded border border-amber-200/80">
+                            Peran: Pengelola Pasokan
+                          </span>
+                          <h3 className="font-serif text-lg font-bold text-stone-900 mt-1">
+                            Dapur Gizi Massal, SPPG, & Asrama
+                          </h3>
+                        </div>
+                        <div className="text-right">
+                          <span className="font-mono text-xs text-stone-400 block">Kalkulasi Menu</span>
+                          <span className="font-mono text-xs font-bold text-stone-900">Otomatis Presisi</span>
+                        </div>
+                      </div>
+
+                      <ul className="space-y-2 text-xs text-stone-600 leading-relaxed">
+                        <li className="flex items-start gap-2">
+                          <span className="font-mono font-bold text-emerald-700">✓</span>
+                          <span>Konversi porsi makan anak ke kebutuhan kilogram bahan mentah seketika.</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="font-mono font-bold text-emerald-700">✓</span>
+                          <span>Algoritma pencocokan memasangkan kebutuhan dengan petani lokal terdekat.</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="font-mono font-bold text-emerald-700">✓</span>
+                          <span>Penerbitan label QR paspor batch otomatis untuk pengawasan wali santri & dinas.</span>
+                        </li>
+                      </ul>
+
+                      <div className="pt-2 flex flex-col sm:flex-row gap-2.5">
+                        <Link to="/register" className="flex-1">
+                          <Button
+                            variant="primary"
+                            size="md"
+                            className="w-full bg-emerald-950 hover:bg-emerald-900 text-white font-bold py-2.5 rounded-xl shadow-xs flex items-center justify-center gap-2"
+                          >
+                            <span>Daftarkan Unit Dapur Gizi</span>
+                            <ArrowRight className="w-4 h-4" />
+                          </Button>
+                        </Link>
+                        <Link to="/login" className="sm:w-auto">
+                          <Button
+                            variant="outline"
+                            size="md"
+                            className="w-full border-stone-300 text-stone-700 hover:bg-stone-50 py-2.5 rounded-xl text-xs"
+                          >
+                            <span>Masuk Portal</span>
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+
+                  {partnerRole === 'coordinator' && (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between pb-3 border-b border-stone-100">
+                        <div>
+                          <span className="text-[10px] font-mono uppercase tracking-wider text-sky-800 bg-sky-50 px-2.5 py-0.5 rounded border border-sky-200/80">
+                            Peran: Konsolidasi Logistik
+                          </span>
+                          <h3 className="font-serif text-lg font-bold text-stone-900 mt-1">
+                            Koordinator Pengepul & Armada Wilayah
+                          </h3>
+                        </div>
+                        <div className="text-right">
+                          <span className="font-mono text-xs text-stone-400 block">Radius Distribusi</span>
+                          <span className="font-mono text-xs font-bold text-sky-900">&lt; 25 km Terjaga</span>
+                        </div>
+                      </div>
+
+                      <ul className="space-y-2 text-xs text-stone-600 leading-relaxed">
+                        <li className="flex items-start gap-2">
+                          <span className="font-mono font-bold text-emerald-700">✓</span>
+                          <span>Gabungkan titik jemput panen dari kelompok tani dalam rute tercepat.</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="font-mono font-bold text-emerald-700">✓</span>
+                          <span>Pencatatan timbangan digital di lokasi untuk menghindari sengketa susut muatan.</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="font-mono font-bold text-emerald-700">✓</span>
+                          <span>Pengantaran terjadwal memastikan sayur dan protein segar tiba tepat sebelum masak.</span>
+                        </li>
+                      </ul>
+
+                      <div className="pt-2 flex flex-col sm:flex-row gap-2.5">
+                        <Link to="/register" className="flex-1">
+                          <Button
+                            variant="primary"
+                            size="md"
+                            className="w-full bg-emerald-950 hover:bg-emerald-900 text-white font-bold py-2.5 rounded-xl shadow-xs flex items-center justify-center gap-2"
+                          >
+                            <span>Gabung Tim Distribusi</span>
+                            <ArrowRight className="w-4 h-4" />
+                          </Button>
+                        </Link>
+                        <Link to="/login" className="sm:w-auto">
+                          <Button
+                            variant="outline"
+                            size="md"
+                            className="w-full border-stone-300 text-stone-700 hover:bg-stone-50 py-2.5 rounded-xl text-xs"
+                          >
+                            <span>Masuk Portal</span>
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Trust Footer inside Card */}
+                  <div className="pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] font-mono text-stone-500">
+                    <span>Sistem Terverifikasi</span>
+                    <span className="text-emerald-800 font-semibold">Tersinkronisasi 2026</span>
+                  </div>
+
+                </div>
+
+              </div>
             </div>
 
           </div>
+
         </div>
       </section>
 
