@@ -195,113 +195,72 @@
   }
 }
 
-/* Authentic Paper Ball Crumple 3D Animation: Realistic Origami Crushing & Unfolding */
-@keyframes paper-ball-crush-in {
+/* Authentic macOS Window / Tab Genie Transition
+   Khas animasi minimize/expand tab Apple:
+   - Gerakan kurva bezier lentur khas macOS (Spring cubic-bezier)
+   - Melengkung & tersedot (suck-in) persis ke titik tombol floating konsol AI di kanan bawah
+   - Tidak acak-acakan/terpotong, tetap mempertahankan bentuk window yang bersih dan berbobot
+*/
+@keyframes macos-genie-open {
+  0% {
+    opacity: 0;
+    transform: scale(0.12) translate3d(140px, 120px, 0);
+    filter: blur(10px) brightness(0.9);
+    border-radius: 40px;
+  }
+  45% {
+    opacity: 0.9;
+    transform: scale(0.72) translate3d(24px, 18px, 0);
+    filter: blur(2px) brightness(1.02);
+  }
+  75% {
+    transform: scale(1.025) translate3d(-3px, -2px, 0);
+    filter: blur(0px) brightness(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+    filter: blur(0px);
+    border-radius: 24px;
+  }
+}
+
+@keyframes macos-genie-close {
   0% {
     opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    transform: scale(1) translate3d(0, 0, 0);
+    filter: blur(0px);
     border-radius: 24px;
-    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-    box-shadow: 0 25px 70px -15px rgba(17, 35, 27, 0.4);
-    filter: contrast(1);
   }
   30% {
     opacity: 0.95;
-    /* Sudut-sudut mulai tertekuk bergerigi seperti kertas kusut */
-    clip-path: polygon(8% 4%, 93% 6%, 98% 91%, 4% 96%, 15% 45%, 88% 52%);
-    transform: translate3d(8px, 14px, -30px) scale(0.72, 0.68) rotate(6deg) rotateX(15deg) rotateY(-18deg);
-    border-radius: 38px;
-    filter: contrast(1.3) drop-shadow(0 15px 25px rgba(17, 35, 27, 0.35));
+    transform: scale(0.85) translate3d(15px, 20px, 0);
+    filter: blur(0px);
   }
-  65% {
-    opacity: 0.85;
-    /* Teremas kuat menjadi bentuk gumpalan bola kusut multi-sudut (crumpled polygonal ball) */
-    clip-path: polygon(30% 0%, 75% 8%, 98% 40%, 88% 85%, 52% 100%, 12% 82%, 0% 45%, 15% 15%);
-    transform: translate3d(24px, 38px, -90px) scale(0.24, 0.22) rotate(-28deg) rotateX(45deg) rotateY(40deg);
-    border-radius: 50%;
-    background-color: #E6DFD3;
-    box-shadow: inset 4px 4px 12px rgba(0, 0, 0, 0.35), inset -4px -4px 12px rgba(255, 255, 255, 0.5), 0 10px 20px rgba(0, 0, 0, 0.4);
-    filter: contrast(1.7) brightness(0.9);
-  }
-  90% {
-    opacity: 0.6;
-    clip-path: polygon(25% 5%, 80% 12%, 95% 50%, 82% 90%, 45% 98%, 8% 75%, 2% 40%, 20% 10%);
-    transform: translate3d(36px, 58px, -150px) scale(0.08, 0.08) rotate(90deg) rotateX(70deg);
-    border-radius: 50%;
-    filter: contrast(2) brightness(0.8);
+  70% {
+    opacity: 0.5;
+    transform: scale(0.35) translate3d(95px, 90px, 0);
+    filter: blur(4px) brightness(0.95);
+    border-radius: 36px;
   }
   100% {
     opacity: 0;
-    /* Masuk ludes tepat ke dalam pusat tombol pill */
-    clip-path: circle(50% at 50% 50%);
-    transform: translate3d(42px, 68px, -200px) scale(0.01) rotate(160deg);
-    border-radius: 50%;
+    transform: scale(0.08) translate3d(140px, 130px, 0);
+    filter: blur(12px) brightness(0.9);
+    border-radius: 48px;
   }
 }
 
-@keyframes paper-ball-unfurl-out {
-  0% {
-    opacity: 0;
-    clip-path: circle(50% at 50% 50%);
-    transform: translate3d(42px, 68px, -200px) scale(0.01) rotate(-160deg);
-    border-radius: 50%;
-    filter: contrast(2) brightness(0.8);
-  }
-  25% {
-    opacity: 0.85;
-    /* Muncul melontar keluar dari tombol berupa gumpalan bola kertas lecek berputar */
-    clip-path: polygon(30% 0%, 75% 8%, 98% 40%, 88% 85%, 52% 100%, 12% 82%, 0% 45%, 15% 15%);
-    transform: translate3d(24px, 32px, -80px) scale(0.26, 0.24) rotate(35deg) rotateX(-35deg) rotateY(30deg);
-    border-radius: 50%;
-    background-color: #EDE6DC;
-    box-shadow: inset 5px 5px 14px rgba(0, 0, 0, 0.3), inset -5px -5px 14px rgba(255, 255, 255, 0.6);
-    filter: contrast(1.6);
-  }
-  55% {
-    opacity: 0.95;
-    /* Mulai membuka lipatan-lipatan kusutnya melebar */
-    clip-path: polygon(5% 2%, 96% 4%, 99% 94%, 2% 98%, 10% 50%, 92% 48%);
-    transform: translate3d(6px, 8px, -20px) scale(0.82, 0.78) rotate(-8deg) rotateX(-10deg) rotateY(12deg);
-    border-radius: 34px;
-    filter: contrast(1.25);
-  }
-  80% {
-    opacity: 1;
-    /* Merekah penuh dengan hentakan elastis kertas membentang rata */
-    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-    transform: translate3d(-2px, -3px, 10px) scale(1.025, 1.02) rotate(1deg);
-    border-radius: 26px;
-    filter: contrast(1.05);
-  }
-  100% {
-    opacity: 1;
-    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
-    border-radius: 24px;
-    filter: contrast(1);
-  }
+.animate-macos-open {
+  animation: macos-genie-open 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: calc(100% - 40px) calc(100% - 20px);
+  will-change: transform, opacity, filter;
 }
 
-/* Tekstur lipatan bayangan kusut 3D origami (crumple texture overlay) */
-.paper-crumple-overlay {
-  background: 
-    linear-gradient(135deg, rgba(0,0,0,0.06) 25%, transparent 25%),
-    linear-gradient(225deg, rgba(0,0,0,0.06) 25%, transparent 25%),
-    linear-gradient(315deg, rgba(255,255,255,0.12) 25%, transparent 25%),
-    linear-gradient(45deg, rgba(255,255,255,0.12) 25%, transparent 25%);
-  background-size: 40px 40px;
-}
-
-.animate-paper-ball-open {
-  animation: paper-ball-unfurl-out 0.52s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  transform-origin: bottom right;
-  will-change: transform, opacity, clip-path, filter;
-}
-
-.animate-paper-ball-close {
-  animation: paper-ball-crush-in 0.44s cubic-bezier(0.35, 0, 0.25, 1) forwards;
-  transform-origin: bottom right;
-  will-change: transform, opacity, clip-path, filter;
+.animate-macos-close {
+  animation: macos-genie-close 0.35s cubic-bezier(0.32, 0, 0.24, 1) forwards;
+  transform-origin: calc(100% - 40px) calc(100% - 20px);
+  will-change: transform, opacity, filter;
 }
 
 

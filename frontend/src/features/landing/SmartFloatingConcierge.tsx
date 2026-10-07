@@ -249,7 +249,7 @@ export const SmartFloatingConcierge: React.FC = () => {
         />
       )}
 
-      {/* BESPOKE ARTISAN AGRITECH COPILOT MODAL - 3D PAPER CRUMPLE & UNFURL TRANSITION */}
+      {/* BESPOKE ARTISAN AGRITECH COPILOT MODAL - MACOS GENIE TAB TRANSITION */}
       <aside
         aria-label="Terminal Asisten AI Resmi ORVANA"
         className={`fixed z-50 flex flex-col font-sans text-stone-900 bg-[#FAF8F5]
@@ -259,32 +259,15 @@ export const SmartFloatingConcierge: React.FC = () => {
           sm:w-[460px] sm:h-[620px] sm:max-h-[calc(100vh-100px)] sm:rounded-3xl sm:border sm:border-emerald-950/20
           sm:shadow-[0_25px_70px_-15px_rgba(17,35,27,0.4),0_0_0_1px_rgba(16,185,129,0.15)]
           overflow-hidden
-          /* 3D Paper Ball Crumple to Flat Sheet Animation */
+          /* macOS Spring Genie Open/Close Animation ke Tombol Konsol AI */
           ${
             isOpen
-              ? 'animate-paper-ball-open pointer-events-auto'
+              ? 'animate-macos-open pointer-events-auto'
               : hasBeenOpened
-              ? 'animate-paper-ball-close pointer-events-none'
+              ? 'animate-macos-close pointer-events-none'
               : 'opacity-0 pointer-events-none'
           }`}
       >
-        {/* Realistic Crumpled Paper Shadow Texture (Tampak jelas saat kertas diremas/mekar) */}
-        <div
-          className={`absolute inset-0 pointer-events-none z-40 paper-crumple-overlay transition-opacity duration-500 ${
-            isOpen ? 'opacity-0' : 'opacity-80'
-          }`}
-          aria-hidden="true"
-        />
-
-        {/* Soft Crease Flattening Paper Sweep on Unfurl */}
-        {isOpen && (
-          <div
-            className="absolute inset-0 pointer-events-none z-40 overflow-hidden"
-            aria-hidden="true"
-          >
-            <div className="w-[200%] h-36 bg-gradient-to-b from-transparent via-emerald-100/25 to-white/40 -translate-x-1/4 animate-particle-rise" />
-          </div>
-        )}
 
         {/* Top Header: Dark Artisan Emerald with warm ambient glow */}
         <div className="relative px-5 py-4 bg-[#11231B] text-white flex items-center justify-between border-b border-emerald-800/40 shrink-0 overflow-hidden shadow-xs">
