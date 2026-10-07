@@ -83,8 +83,16 @@ export const SmartFloatingConcierge: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [selectedModel, setSelectedModel] = useState<'flash' | 'pro' | 'auto'>('auto');
   const [isModelMenuOpen, setIsModelMenuOpen] = useState(false);
+  const [hasBeenOpened, setHasBeenOpened] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const modelMenuRef = useRef<HTMLDivElement | null>(null);
+
+  // Track when concierge has been opened to enable smooth closing animation
+  useEffect(() => {
+    if (isOpen) {
+      setHasBeenOpened(true);
+    }
+  }, [isOpen]);
 
   // Close model menu when clicking outside
   useEffect(() => {
@@ -241,24 +249,35 @@ export const SmartFloatingConcierge: React.FC = () => {
         />
       )}
 
-      {/* BESPOKE ARTISAN AGRITECH COPILOT MODAL - GENIE PAPER UNFOLDING TRANSITION */}
+      {/* BESPOKE ARTISAN AGRITECH COPILOT MODAL - AUTHENTIC macOS GENIE WINDOW & PAPER EXPANSION */}
       <aside
         aria-label="Terminal Asisten AI Resmi ORVANA"
-        className={`fixed z-50 flex flex-col font-sans text-stone-900 pointer-events-auto bg-[#FAF8F5]
-          /* Mobile: full screen / sheet */
+        className={`fixed z-50 flex flex-col font-sans text-stone-900 bg-[#FAF8F5]
+          /* Mobile: full screen / bottom sheet */
           inset-x-0 bottom-0 top-0 sm:inset-auto sm:right-6 sm:bottom-20
           /* Desktop window: Elegant Card Sheet like macOS / Arc app */
           sm:w-[460px] sm:h-[620px] sm:max-h-[calc(100vh-100px)] sm:rounded-3xl sm:border sm:border-emerald-950/20
-          sm:shadow-[0_25px_70px_-15px_rgba(17,35,27,0.35),0_0_0_1px_rgba(16,185,129,0.12)]
+          sm:shadow-[0_25px_70px_-15px_rgba(17,35,27,0.4),0_0_0_1px_rgba(16,185,129,0.15)]
           overflow-hidden
-          /* macOS Genie Paper Unfold Effect: Originates right at the trigger button */
-          origin-bottom-right transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]
+          /* macOS Genie 3D Transform Animation */
           ${
             isOpen
-              ? 'opacity-100 scale-100 translate-y-0 rotate-0 filter-none pointer-events-auto'
-              : 'opacity-0 scale-[0.08] translate-y-12 translate-x-4 rotate-1 pointer-events-none'
+              ? 'animate-mac-genie-open pointer-events-auto'
+              : hasBeenOpened
+              ? 'animate-mac-genie-close pointer-events-none'
+              : 'opacity-0 pointer-events-none'
           }`}
       >
+        {/* Soft Paper Sheen Light Sweep Effect on Open */}
+        {isOpen && (
+          <div
+            className="absolute inset-0 pointer-events-none z-40 overflow-hidden"
+            aria-hidden="true"
+          >
+            <div className="w-[200%] h-32 bg-gradient-to-b from-white/30 via-emerald-200/20 to-transparent -translate-x-1/4 animate-paper-sheen" />
+          </div>
+        )}
+
         {/* Top Header: Dark Artisan Emerald with warm ambient glow */}
         <div className="relative px-5 py-4 bg-[#11231B] text-white flex items-center justify-between border-b border-emerald-800/40 shrink-0 overflow-hidden shadow-xs">
           {/* Subtle noise / ambient warm accent behind header */}
