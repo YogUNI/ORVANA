@@ -198,10 +198,36 @@ export const SmartFloatingConcierge: React.FC = () => {
             {messages.map((msg) => (
               <div
                 key={msg.id}
-                className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'} space-y-1`}
+                className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'} space-y-1.5`}
               >
+                {/* Bot Profile Header (Hanya untuk Bot) */}
+                {msg.sender === 'bot' && (
+                  <div className="flex items-center gap-2 pl-0.5">
+                    <div className="relative w-6 h-6 rounded-full overflow-hidden bg-emerald-950 ring-1.5 ring-emerald-500/30 shadow-xs shrink-0 flex items-center justify-center">
+                      <img
+                        src="/images/char-head-clean.png"
+                        alt="ORVANA AI Assistant"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback jika gambar belum termuat
+                          (e.target as HTMLElement).style.display = 'none';
+                        }}
+                      />
+                      <span className="text-[10px] select-none font-bold text-amber-300">🌾</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[11px] font-bold text-stone-900 tracking-tight">
+                        Asisten AI ORVANA
+                      </span>
+                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold border border-emerald-200/60">
+                        Official AI
+                      </span>
+                    </div>
+                  </div>
+                )}
+
                 {msg.category && msg.sender === 'bot' && (
-                  <span className="text-[9px] font-mono font-bold text-emerald-800 uppercase tracking-wider px-1">
+                  <span className="text-[9px] font-mono font-bold text-emerald-700 uppercase tracking-wider pl-8">
                     {msg.category}
                   </span>
                 )}
@@ -209,8 +235,8 @@ export const SmartFloatingConcierge: React.FC = () => {
                 <div
                   className={`p-3.5 rounded-2xl max-w-[88%] leading-relaxed ${
                     msg.sender === 'user'
-                      ? 'bg-emerald-950 text-white rounded-br-xs shadow-xs font-medium'
-                      : 'bg-white text-stone-800 border border-stone-200/90 rounded-bl-xs shadow-2xs font-normal'
+                      ? 'bg-emerald-950 text-white rounded-br-xs shadow-xs font-medium mr-0.5'
+                      : 'bg-white text-stone-800 border border-stone-200/90 rounded-bl-xs shadow-2xs font-normal ml-8'
                   }`}
                 >
                   <p className="whitespace-pre-line">{msg.text}</p>
@@ -236,7 +262,7 @@ export const SmartFloatingConcierge: React.FC = () => {
 
                 {/* Suggested Follow Up Chips (Only on bot message) */}
                 {msg.suggestedFollowUps && msg.suggestedFollowUps.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 pt-1.5 max-w-[90%]">
+                  <div className="flex flex-wrap gap-1.5 pt-1 pl-8 max-w-[90%]">
                     {msg.suggestedFollowUps.map((chip, idx) => (
                       <button
                         key={idx}
@@ -250,7 +276,7 @@ export const SmartFloatingConcierge: React.FC = () => {
                   </div>
                 )}
 
-                <span className="text-[9px] font-mono text-stone-400 px-1">
+                <span className={`text-[9px] font-mono text-stone-400 px-1 ${msg.sender === 'bot' ? 'pl-8' : ''}`}>
                   {msg.timestamp}
                 </span>
               </div>
