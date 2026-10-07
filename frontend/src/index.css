@@ -195,72 +195,56 @@
   }
 }
 
-/* Authentic macOS Window / Tab Genie Transition
-   Khas animasi minimize/expand tab Apple:
-   - Gerakan kurva bezier lentur khas macOS (Spring cubic-bezier)
-   - Melengkung & tersedot (suck-in) persis ke titik tombol floating konsol AI di kanan bawah
-   - Tidak acak-acakan/terpotong, tetap mempertahankan bentuk window yang bersih dan berbobot
+/* Ultra-Smooth 60FPS macOS Window / Tab Transition
+   - Menggunakan 100% GPU compositing (hanya transform & opacity)
+   - Zero layout reflow & zero paint jank (tanpa filter blur berulang di keyframes yang memicu lag)
+   - Easing: Apple Spring / quintic cubic-bezier (0.16, 1, 0.3, 1)
+   - Transform-origin presisi mengarah tepat ke tombol floating konsol AI di kanan bawah
 */
-@keyframes macos-genie-open {
+@keyframes macos-tab-open {
   0% {
     opacity: 0;
-    transform: scale(0.12) translate3d(140px, 120px, 0);
-    filter: blur(10px) brightness(0.9);
-    border-radius: 40px;
+    transform: translate3d(60px, 80px, 0) scale(0.15);
   }
-  45% {
-    opacity: 0.9;
-    transform: scale(0.72) translate3d(24px, 18px, 0);
-    filter: blur(2px) brightness(1.02);
-  }
-  75% {
-    transform: scale(1.025) translate3d(-3px, -2px, 0);
-    filter: blur(0px) brightness(1);
+  60% {
+    opacity: 1;
+    transform: translate3d(-3px, -4px, 0) scale(1.015);
   }
   100% {
     opacity: 1;
-    transform: scale(1) translate3d(0, 0, 0);
-    filter: blur(0px);
-    border-radius: 24px;
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
-@keyframes macos-genie-close {
+@keyframes macos-tab-close {
   0% {
     opacity: 1;
-    transform: scale(1) translate3d(0, 0, 0);
-    filter: blur(0px);
-    border-radius: 24px;
+    transform: translate3d(0, 0, 0) scale(1);
   }
   30% {
     opacity: 0.95;
-    transform: scale(0.85) translate3d(15px, 20px, 0);
-    filter: blur(0px);
-  }
-  70% {
-    opacity: 0.5;
-    transform: scale(0.35) translate3d(95px, 90px, 0);
-    filter: blur(4px) brightness(0.95);
-    border-radius: 36px;
+    transform: translate3d(12px, 16px, 0) scale(0.88);
   }
   100% {
     opacity: 0;
-    transform: scale(0.08) translate3d(140px, 130px, 0);
-    filter: blur(12px) brightness(0.9);
-    border-radius: 48px;
+    transform: translate3d(65px, 85px, 0) scale(0.12);
   }
 }
 
 .animate-macos-open {
-  animation: macos-genie-open 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  transform-origin: calc(100% - 40px) calc(100% - 20px);
-  will-change: transform, opacity, filter;
+  animation: macos-tab-open 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: bottom right;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .animate-macos-close {
-  animation: macos-genie-close 0.35s cubic-bezier(0.32, 0, 0.24, 1) forwards;
-  transform-origin: calc(100% - 40px) calc(100% - 20px);
-  will-change: transform, opacity, filter;
+  animation: macos-tab-close 0.28s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+  transform-origin: bottom right;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 
