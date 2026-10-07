@@ -74,7 +74,7 @@ export function queryOrvanaKnowledge(userQuery: string): CopilotResponse {
     };
   }
 
-  // 1. GREETING & CASUAL OPENINGS (E.g. "halo", "halooo", "selamat siang", "halo selamat siang", "pagi bro", "hai")
+  // 1. GREETING & CASUAL OPENINGS (E.g. "halo", "boleh nanya", "mau nanya", "pagi bro", "hai", dll)
   const greetingKeywords = [
     'halo',
     'hai',
@@ -87,17 +87,42 @@ export function queryOrvanaKnowledge(userQuery: string): CopilotResponse {
     'assalamualaikum',
     'permisi',
     'tes',
+    'nanya',
+    'tanya',
   ];
 
+  const isAskingPermission =
+    normalizedQuery.includes('nanya') ||
+    normalizedQuery.includes('tanya') ||
+    normalizedQuery.includes('boleh') ||
+    normalizedQuery.includes('mau tanya');
+
   const isGreetingQuery =
-    greetingKeywords.some((g) => normalizedQuery === g || normalizedQuery.includes(g)) &&
-    !normalizedQuery.includes('apa') &&
-    !normalizedQuery.includes('bagaimana') &&
+    (greetingKeywords.some((g) => normalizedQuery === g || normalizedQuery.includes(g)) || isAskingPermission) &&
+    !normalizedQuery.includes('apa itu') &&
     !normalizedQuery.includes('kenapa') &&
     !normalizedQuery.includes('berapa') &&
-    !normalizedQuery.includes('jelaskan');
+    !normalizedQuery.includes('jelaskan') &&
+    !normalizedQuery.includes('rumus') &&
+    !normalizedQuery.includes('kuota');
 
   if (isGreetingQuery) {
+    const isSantai = normalizedQuery.includes('bro') || normalizedQuery.includes('gan') || normalizedQuery.includes('dong');
+    if (isSantai || isAskingPermission) {
+      return {
+        answer:
+          'Boleh banget, bro! Mau nanya seputar apa nih? Saya siap bantu jelasin alur pasokan dapur gizi, hitungan kuota 60%, jaminan DP petani, atau cara scan QR batch makanannya. Santai aja, tanyain apa pun yang bikin penasaran! 😊',
+        category: 'SAPAAN & ASISTEN RESMI',
+        confidence: 1,
+        suggestedFollowUps: [
+          'Sebenarnya ORVANA ini apa sih?',
+          'Apa itu aturan kuota 60% per pemasok?',
+          'Bagaimana petani menerima pembayaran?',
+          'Bagaimana cara melacak batch pangan dengan QR?',
+        ],
+      };
+    }
+
     const greetingItem = knowledgeItems.find((item) => item.category.includes('SAPAAN'));
     return {
       answer: greetingItem

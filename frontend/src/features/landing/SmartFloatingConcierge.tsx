@@ -442,7 +442,7 @@ export const SmartFloatingConcierge: React.FC = () => {
             </button>
           </div>
           <div className="flex items-center justify-between text-[10px] font-mono text-stone-400 mt-2 px-1">
-            <span>Model: Gemini 3.5 Flash RAG</span>
+            <span>Model: Gemini 2.5/Flash RAG (Live)</span>
             <span>Tekan Enter untuk kirim</span>
           </div>
         </div>

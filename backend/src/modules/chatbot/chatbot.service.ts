@@ -220,12 +220,15 @@ export class ChatbotService {
     userMessage: string,
     history?: Array<{ role: 'user' | 'model'; text: string }>,
   ): Promise<ChatbotResponse | null> {
-    // Model sequence: prioritaskan flash-lite tercepat untuk chat UI real-time
+    // Model sequence: prioritaskan model aktif dan berlatensi sangat rendah
     const candidateModels = [
-      'gemini-3.1-flash-lite',
-      'gemini-3.5-flash',
-      'gemini-3.7-flash',
+      'gemini-flash-lite-latest',
       'gemini-flash-latest',
+      'gemini-2.5-flash-lite',
+      'gemini-3.5-flash-lite',
+      'gemini-3.1-flash-lite',
+      'gemini-3.8-flash',
+      'gemini-pro-latest',
     ];
 
     const contents: any[] = [];
@@ -253,6 +256,9 @@ export class ChatbotService {
     for (const model of candidateModels) {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.geminiApiKey}`;
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
+
       try {
         const fetchRes = await fetch(url, {
           method: 'POST',
@@ -268,11 +274,13 @@ export class ChatbotService {
               maxOutputTokens: 2048,
             },
           }),
+          signal: controller.signal,
         });
+        clearTimeout(timeoutId);
 
         if (!fetchRes.ok) {
           const errText = await fetchRes.text();
-          this.logger.warn(`Model ${model} returned ${fetchRes.status}: ${errText}`);
+          this.logger.warn(`Model ${model} returned ${fetchRes.status}: ${errText.substring(0, 150)}`);
           continue;
         }
 
@@ -285,6 +293,7 @@ export class ChatbotService {
           return this.parseGeminiOutput(rawReply, model);
         }
       } catch (e: any) {
+        clearTimeout(timeoutId);
         this.logger.warn(`Failed with model ${model}: ${e.message}`);
       }
     }
@@ -351,28 +360,107 @@ export class ChatbotService {
   private fallbackAdaptiveIntelligence(userMessage: string): ChatbotResponse {
     const text = userMessage.toLowerCase();
 
-    if (text.includes('halo') || text.includes('pagi') || text.includes('siang') || text.includes('sore') || text.includes('malam') || text.includes('hai')) {
+    // 1. Izin bertanya / sapaan pembuka santai ("boleh nanya", "mau nanya", "bisa tanya", "halo", "hai", dll)
+    if (
+      text.includes('nanya') ||
+      text.includes('tanya') ||
+      text.includes('halo') ||
+      text.includes('hai') ||
+      text.includes('pagi') ||
+      text.includes('siang') ||
+      text.includes('sore') ||
+      text.includes('malam') ||
+      text.includes('permisi') ||
+      text.includes('tes')
+    ) {
+      const isSantai = text.includes('bro') || text.includes('gan') || text.includes('min') || text.includes('dong');
       return {
-        answer: 'Halo! Salam hangat. Saya Asisten AI Resmi ORVANA. Saya siap membantu Anda memahami tata kelola rantai pasok pangan lokal, perhitungan kuota 60%, audit pembayaran petani, hingga penelusuran batch mutu. Ada hal menarik yang ingin Anda diskusikan hari ini?',
-        category: 'ASISTEN RESMI',
+        answer: isSantai
+          ? 'Boleh banget, bro! Mau nanya seputar apa nih? Saya siap bantu jelasin alur pasokan dapur gizi, hitungan kuota 60%, jaminan DP petani, atau cara scan QR batch makanannya. Santai aja, tanyain apa pun yang bikin penasaran! 😊'
+          : 'Halo! Tentu saja, silakan bertanya. Saya siap membantu menjawab pertanyaan Anda seputar tata kelola rantai pasok pangan ORVANA, aturan kuota lokal 60%, pembayaran bertahap petani, hingga sertifikasi mutu dan paspor QR pangan.',
+        category: 'SAPAAN & ASISTEN RESMI',
         actionLink: '#alur-kerja',
         suggestedFollowUps: [
-          'Bagaimana sistem ini membantu petani lokal?',
-          'Apa itu aturan kuota 60%?',
-          'Bagaimana cara kerja DP 30% dan pelunasan 70%?',
+          'Apa itu aturan kuota serapan lokal 60%?',
+          'Bagaimana petani menerima DP 30% dan pelunasan 70%?',
+          'Bagaimana cara kerja verifikasi mutu QC di dapur?',
+        ],
+        modelUsed: 'ORVANA Adaptive Neural Fallback',
+      };
+    }
+
+    // 2. Pertanyaan Aturan Kuota 60%
+    if (text.includes('kuota') || text.includes('60%') || text.includes('60 persen') || text.includes('monopoli')) {
+      return {
+        answer:
+          'Aturan **Kuota Lokal 60%** di ORVANA mewajibkan setiap dapur gizi massal menyerap **minimal 60% bahan pangan langsung dari petani, peternak, dan nelayan lokal** di wilayah terdekat. Sisanya (maksimal 40%) hanya boleh dialokasikan ke distributor besar jika terjadi defisit panen darurat. Tujuannya adalah mencegah monopoli dan memastikan anggaran pangan berputar langsung di ekonomi rakyat.',
+        category: 'REGULASI & KEBIJAKAN',
+        actionLink: '#alur-kerja',
+        suggestedFollowUps: [
+          'Bagaimana jika hasil panen lokal kurang dari 60%?',
+          'Bagaimana cara petani mendaftarkan hasil panennya?',
+          'Berapa batas radius pemasok lokal yang diakui?',
+        ],
+        modelUsed: 'ORVANA Adaptive Neural Fallback',
+      };
+    }
+
+    // 3. Pertanyaan Pembayaran / DP 30% & Pelunasan 70%
+    if (text.includes('dp') || text.includes('bayar') || text.includes('uang') || text.includes('cair') || text.includes('escrow') || text.includes('70%') || text.includes('30%')) {
+      return {
+        answer:
+          'ORVANA menggunakan sistem pembayaran bertahap (**Two-Stage Escrow**) yang adil:\n\n1. **DP 30% Otomatis**: Ditransfer langsung ke rekening petani saat Purchase Order (PO) diterbitkan untuk modal panen, packing, dan bahan bakar.\n2. **Pelunasan 70%**: Cair otomatis maksimal 24 jam setelah bahan makanan tiba di dapur dan dinyatakan lolos uji inspeksi mutu (**QC PASSED**).',
+        category: 'SISTEM KEUANGAN & PEMBAYARAN',
+        actionLink: '#alur-kerja',
+        suggestedFollowUps: [
+          'Bagaimana jika sayur ditolak saat pemeriksaan QC?',
+          'Apakah ada biaya admin pemotongan untuk petani?',
+          'Bagaimana peran koordinator dalam penyaluran dana?',
+        ],
+        modelUsed: 'ORVANA Adaptive Neural Fallback',
+      };
+    }
+
+    // 4. Pertanyaan QC Mutu & Gizi
+    if (text.includes('qc') || text.includes('mutu') || text.includes('kualitas') || text.includes('gizi') || text.includes('rusak') || text.includes('busuk') || text.includes('tolak')) {
+      return {
+        answer:
+          'Pemeriksaan mutu (**Quality Control**) dilakukan saat bahan pangan tiba di pos dapur gizi oleh Ahli Gizi / Inspektur Mutu bersertifikat. Status hasil uji terbagi menjadi:\n- **PASSED**: Mutu prima sesuai standar, langsung disalurkan ke dapur masak.\n- **CONDITIONALLY ACCEPTED**: Layak konsumsi dengan sedikit catatan susut ukuran/bobot (harga disesuaikan transparan).\n- **REJECTED**: Rusak/tidak higienis, bahan ditolak dan sistem membuka tiket retur penggantian cepat.',
+        category: 'KONTROL MUTU & GIZI',
+        actionLink: '#alur-kerja',
+        suggestedFollowUps: [
+          'Apa saja parameter kesegaran sayur dan daging?',
+          'Berapa batas toleransi susut berat yang diizinkan?',
+          'Apakah petani bisa mengajukan banding jika hasil QC sengketa?',
+        ],
+        modelUsed: 'ORVANA Adaptive Neural Fallback',
+      };
+    }
+
+    // 5. Pertanyaan Paspor QR & Penelusuran
+    if (text.includes('qr') || text.includes('trace') || text.includes('lacak') || text.includes('scan') || text.includes('paspor')) {
+      return {
+        answer:
+          'Setiap batch pengiriman pangan di ORVANA dilengkapi **Paspor Digital Berbasis QR Code**. Melalui tautan `/trace/:batchCode`, siapa pun (termasuk masyarakat umum, orang tua siswa, atau auditor) dapat memindai QR untuk memverifikasi asal ladang petani, jam panen, sertifikat uji residu, foto saat tiba di dapur, hingga bukti pelunasan kas petani.',
+        category: 'PENELUSURAN & PASPOR QR',
+        actionLink: '#trace',
+        suggestedFollowUps: [
+          'Bisa coba simulasi scan QR batch sekarang?',
+          'Apakah QR code bisa dipalsukan oleh oknum pengepul?',
+          'Bagaimana cara orang tua siswa memeriksa makanan anaknya?',
         ],
         modelUsed: 'ORVANA Adaptive Neural Fallback',
       };
     }
 
     return {
-      answer: `Terima kasih atas pertanyaannya! Di ekosistem ORVANA, setiap alur dari peramalan kebutuhan dapur, pencocokan stok petani, jaminan DP 30%, QC mutu, hingga paspor QR pangan saling terhubung secara transparan dan akuntabel. Ada bagian spesifik yang ingin Anda ketahui lebih detail?`,
+      answer: `Terima kasih atas pertanyaannya! Di ekosistem ORVANA, setiap alur dari peramalan kebutuhan dapur, pencocokan stok petani lokal, jaminan DP 30%, kontrol mutu laboratorium, hingga paspor QR pangan saling terhubung secara transparan dan akuntabel. Ada bagian spesifik yang ingin Anda ketahui lebih detail?`,
       category: 'PUSAT INFORMASI ORVANA',
       actionLink: '#alur-kerja',
       suggestedFollowUps: [
-        'Jelaskan cara verifikasi mutu QC',
-        'Bagaimana cara mendaftar jadi pemasok?',
-        'Bisa lihat sertifikat penelusuran batch?',
+        'Jelaskan aturan kuota lokal 60%',
+        'Bagaimana petani menerima pembayaran DP 30%?',
+        'Bagaimana cara kerja verifikasi mutu QC di dapur?',
       ],
       modelUsed: 'ORVANA Adaptive Neural Fallback',
     };
