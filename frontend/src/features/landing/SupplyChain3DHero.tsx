@@ -1,11 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   Sparkles,
   TrendingUp,
-  Volume2,
-  VolumeX,
-  Play,
-  Pause,
   ExternalLink,
   Building2,
   CheckCircle2,
@@ -15,26 +11,6 @@ import { Link } from 'react-router-dom';
 
 export const SupplyChain3DHero: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'video' | 'engine'>('video');
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  const togglePlay = () => {
-    if (!videoRef.current) return;
-    if (isPlaying) {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      videoRef.current.play();
-      setIsPlaying(true);
-    }
-  };
-
-  const toggleMute = () => {
-    if (!videoRef.current) return;
-    videoRef.current.muted = !isMuted;
-    setIsMuted(!isMuted);
-  };
 
   return (
     <div className="w-full flex flex-col items-center select-none">
@@ -85,44 +61,15 @@ export const SupplyChain3DHero: React.FC = () => {
             {/* AMBIENT SOFT SHADOW GLOW */}
             <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-emerald-500/20 via-transparent to-amber-500/15 blur-xl opacity-50 pointer-events-none -z-10 group-hover:opacity-80 transition-opacity" />
 
-            {/* FULL HD 3D LOOP VIDEO */}
+            {/* SEAMLESS 3D LOOP VIDEO (SMOOTH GIF-LIKE REPETITION, PURE AMBIENT) */}
             <video
-              ref={videoRef}
-              src="/videos/hero-supply-chain.mp4"
+              src="/videos/hero-seamless-loop.mp4"
               autoPlay
               loop
-              muted={isMuted}
+              muted
               playsInline
-              className="w-full h-full object-cover object-center scale-[1.02]"
+              className="w-full h-full object-cover object-center scale-[1.02] pointer-events-none"
             />
-
-            {/* MINIMAL CORNER CONTROLS (FADES IN ON HOVER) */}
-            <div className="absolute top-3.5 right-3.5 flex items-center gap-1.5 bg-stone-950/70 backdrop-blur-md p-1 rounded-full border border-white/10 opacity-70 group-hover:opacity-100 transition-opacity z-20">
-              <button
-                type="button"
-                onClick={togglePlay}
-                className="p-1.5 rounded-full text-stone-300 hover:text-white hover:bg-stone-800 transition-colors"
-                title={isPlaying ? 'Jeda' : 'Putar'}
-              >
-                {isPlaying ? (
-                  <Pause className="w-3.5 h-3.5" />
-                ) : (
-                  <Play className="w-3.5 h-3.5 fill-current" />
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={toggleMute}
-                className="p-1.5 rounded-full text-stone-300 hover:text-white hover:bg-stone-800 transition-colors"
-                title={isMuted ? 'Nyalakan Audio' : 'Bisukan'}
-              >
-                {isMuted ? (
-                  <VolumeX className="w-3.5 h-3.5" />
-                ) : (
-                  <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
-                )}
-              </button>
-            </div>
           </div>
 
           {/* SINGLE CONCISE CAPTION BENEATH THE VIDEO */}
