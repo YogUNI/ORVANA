@@ -37,33 +37,28 @@ export const SupplyChain3DHero: React.FC = () => {
         </Link>
       </div>
 
-      {/* 2. 3D FLIP CONTAINER (PERSPECTIVE CARD FLIP LIKE UNO / TRADING CARD) */}
-      <div
-        className="w-full max-w-lg aspect-[16/10] relative [perspective:1200px]"
-      >
+      {/* 2. 3D FLIP CONTAINER WITH IDENTICAL FIXED DIMENSIONS (LOCKS HEIGHT SO TEXT NEVER MOVES) */}
+      <div className="w-full max-w-lg h-[340px] relative [perspective:1200px]">
         <div
           className={`w-full h-full relative transition-transform duration-700 ease-out [transform-style:preserve-3d] ${
             isFlipped ? '[transform:rotateY(180deg)]' : ''
           }`}
         >
-          {/* ================= FRONT SIDE: 3D FLOATING ISLAND ANIMATION ================= */}
+          {/* ================= FRONT SIDE: 3D FLOATING ISLAND (100% BORDERLESS, ZERO CARD LINE) ================= */}
           <div
-            className="absolute inset-0 w-full h-full [backface-visibility:hidden] rounded-3xl overflow-hidden flex flex-col items-center justify-center p-2"
+            className="absolute inset-0 w-full h-full [backface-visibility:hidden] flex flex-col items-center justify-center p-0"
           >
-            {/* FLOATING AMBIENT GLOW (SUBTLE ORVANA EMERALD & WARM AMBER) */}
-            <div className="absolute inset-4 rounded-full bg-gradient-to-tr from-emerald-500/10 via-amber-400/10 to-transparent blur-3xl opacity-70 pointer-events-none -z-10" />
+            {/* FLOATING AMBIENT GLOW BACKDROP */}
+            <div className="absolute inset-8 rounded-full bg-gradient-to-tr from-emerald-500/10 via-amber-400/10 to-transparent blur-3xl opacity-70 pointer-events-none -z-10" />
 
-            {/* SEAMLESS BLENDED VIDEO CONTAINER (ELIMINATES ALL RECTANGULAR EDGES) */}
+            {/* SEAMLESS BLENDED VIDEO CONTAINER (EXPANDED TO PREVENT ANY EDGE CLIPPING) */}
             <div
-              className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-2xl"
+              className="relative w-[110%] h-[110%] flex items-center justify-center pointer-events-none"
               style={{
-                // Contrast & brightness boost helps background hit pure white
-                filter: 'contrast(1.08) brightness(1.04)',
-                // Multiply mode dissolves the white/grey backdrop into the website's #FAF8F5
+                filter: 'contrast(1.12) brightness(1.08)',
                 mixBlendMode: 'multiply',
-                // Heavy radial mask dissolves all 4 rectangular outer edges to 0 opacity
-                maskImage: 'radial-gradient(ellipse 68% 68% at 50% 50%, black 45%, transparent 92%)',
-                WebkitMaskImage: 'radial-gradient(ellipse 68% 68% at 50% 50%, black 45%, transparent 92%)',
+                maskImage: 'radial-gradient(circle at 50% 50%, black 35%, transparent 72%)',
+                WebkitMaskImage: 'radial-gradient(circle at 50% 50%, black 35%, transparent 72%)',
               }}
             >
               <video
@@ -72,7 +67,7 @@ export const SupplyChain3DHero: React.FC = () => {
                 loop
                 muted
                 playsInline
-                className="w-full h-full object-contain pointer-events-none scale-105"
+                className="w-full h-full object-contain scale-110"
               />
             </div>
 
@@ -80,14 +75,14 @@ export const SupplyChain3DHero: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsFlipped(true)}
-              className="absolute bottom-3 right-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-stone-900/60 hover:bg-stone-900/80 backdrop-blur-md text-[11px] font-mono text-white/90 border border-white/10 shadow-sm transition-all hover:scale-105 active:scale-95"
+              className="absolute bottom-2 right-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-stone-900/60 hover:bg-stone-900/80 backdrop-blur-md text-[11px] font-mono text-white/90 border border-white/10 shadow-sm transition-all hover:scale-105 active:scale-95"
             >
               <TrendingUp className="w-3 h-3 text-emerald-400" />
               <span>Lihat Kalkulasi Engine</span>
             </button>
           </div>
 
-          {/* ================= BACK SIDE: LIVE MATCHING ENGINE ALGORITHM CARD ================= */}
+          {/* ================= BACK SIDE: LIVE MATCHING ENGINE ALGORITHM CARD (EXACT SAME 340PX HEIGHT) ================= */}
           <div
             className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-stone-950 text-white rounded-3xl border border-stone-800/80 p-5 shadow-2xl backdrop-blur-2xl flex flex-col justify-between overflow-hidden text-left"
           >
@@ -95,7 +90,7 @@ export const SupplyChain3DHero: React.FC = () => {
 
             {/* Header Card */}
             <div>
-              <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
+              <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-2.5">
                 <div className="flex items-center gap-2">
                   <span className="flex h-2 w-2 relative">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -121,7 +116,7 @@ export const SupplyChain3DHero: React.FC = () => {
               </div>
 
               {/* Requirement Summary */}
-              <div className="p-3 bg-stone-900/80 rounded-xl border border-white/10 mb-2.5">
+              <div className="p-3 bg-stone-900/80 rounded-xl border border-white/10 mb-2">
                 <div className="flex justify-between items-center text-[11px]">
                   <span className="font-semibold text-stone-300 flex items-center gap-1.5">
                     <Building2 className="w-3.5 h-3.5 text-emerald-400" />
@@ -139,7 +134,7 @@ export const SupplyChain3DHero: React.FC = () => {
 
               {/* Allocation List */}
               <div className="space-y-1.5">
-                <div className="p-2.5 bg-emerald-950/40 border border-emerald-500/30 rounded-xl flex items-center justify-between">
+                <div className="p-2 bg-emerald-950/40 border border-emerald-500/30 rounded-xl flex items-center justify-between">
                   <div>
                     <div className="text-xs font-bold text-white flex items-center gap-1.5">
                       <span>Kelompok Tani Makmur (S1)</span>
@@ -155,7 +150,7 @@ export const SupplyChain3DHero: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="p-2.5 bg-amber-950/30 border border-amber-500/30 rounded-xl flex items-center justify-between">
+                <div className="p-2 bg-amber-950/30 border border-amber-500/30 rounded-xl flex items-center justify-between">
                   <div>
                     <div className="text-xs font-bold text-white flex items-center gap-1.5">
                       <span>Gapoktan Sumber Berkah (S2)</span>
@@ -188,8 +183,8 @@ export const SupplyChain3DHero: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. CAPTION UNDER CARD */}
-      <div className="w-full max-w-lg mt-2 px-2 flex items-center justify-between text-xs text-stone-500">
+      {/* 3. CAPTION UNDER CARD (LOCKED IN PLACE, NEVER JUMPS OR SHIFTS) */}
+      <div className="w-full max-w-lg mt-3 px-2 flex items-center justify-between text-xs text-stone-500">
         <span className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="font-medium text-stone-700">
