@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 export interface ChatbotResponse {
+  chatLogId?: string;
   answer: string;
   category: string;
   actionLink?: string;
@@ -67,12 +68,17 @@ SIFAT DAN GAYA KOMUNIKASI ANDA:
      [FOLLOW_UPS: Pilihan 1 | Pilihan 2 | Pilihan 3]
 `;
 
+import { PrismaService } from '../prisma/prisma.service';
+
 @Injectable()
 export class ChatbotService {
   private readonly logger = new Logger(ChatbotService.name);
   private readonly geminiApiKey: string | undefined;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly prisma: PrismaService,
+  ) {
     this.geminiApiKey =
       this.configService.get<string>('GEMINI_API_KEY') ||
       '';
@@ -84,9 +90,11 @@ export class ChatbotService {
   async processQuery(
     message: string,
     history?: Array<{ role: 'user' | 'model'; text: string }>,
+    ipAddress?: string,
   ): Promise<ChatbotResponse> {
     const trimmed = message.trim();
     const cacheKey = trimmed.toLowerCase();
+    const startTime = Date.now();
 
     // Cek cache untuk pertanyaan single-turn tanpa history
     if (!history || history.length === 0) {
@@ -96,23 +104,116 @@ export class ChatbotService {
       }
     }
 
+    let result: ChatbotResponse;
+
     // 1. Coba panggil Gemini API dengan model generasi cepat
     if (this.geminiApiKey) {
       try {
         const response = await this.callGeminiApi(trimmed, history);
         if (response) {
-          if (!history || history.length === 0) {
-            this.queryCache.set(cacheKey, { res: response, expires: Date.now() + 10 * 60 * 1000 });
-          }
-          return response;
+          result = response;
+        } else {
+          result = this.fallbackAdaptiveIntelligence(trimmed);
         }
       } catch (err: any) {
         this.logger.warn(`Gemini API call failed, falling back to local intelligence: ${err.message}`);
+        result = this.fallbackAdaptiveIntelligence(trimmed);
       }
+    } else {
+      // 2. Fallback cerdas adaptif jika API offline/limit
+      result = this.fallbackAdaptiveIntelligence(trimmed);
     }
 
-    // 2. Fallback cerdas adaptif jika API offline/limit
-    return this.fallbackAdaptiveIntelligence(trimmed);
+    const latencyMs = Date.now() - startTime;
+
+    // 3. Simpan Telemetri ke Database ChatLog (untuk Active Learning Loop)
+    try {
+      const log = await this.prisma.chatLog.create({
+        data: {
+          userQuery: trimmed,
+          botAnswer: result.answer,
+          category: result.category,
+          modelUsed: result.modelUsed,
+          latencyMs,
+          ipAddress: ipAddress || null,
+        },
+      });
+      result.chatLogId = log.id;
+    } catch (err: any) {
+      this.logger.error(`Gagal mencatat chat telemetry ke database: ${err.message}`);
+    }
+
+    if (!history || history.length === 0) {
+      this.queryCache.set(cacheKey, { res: result, expires: Date.now() + 10 * 60 * 1000 });
+    }
+
+    return result;
+  }
+
+  /**
+   * Catat feedback pengguna (👍 Thumbs Up = 1, 👎 Thumbs Down = -1)
+   */
+  async recordFeedback(chatLogId: string, rating: number, note?: string) {
+    return this.prisma.chatLog.update({
+      where: { id: chatLogId },
+      data: {
+        feedbackRating: rating,
+        feedbackNote: note || null,
+      },
+    });
+  }
+
+  /**
+   * Ambil ringkasan telemetri untuk Active Learning (Pertanyaan yang butuh perhatian kurasi)
+   */
+  async getActiveLearningTelemetry() {
+    const totalChats = await this.prisma.chatLog.count();
+    const thumbsUp = await this.prisma.chatLog.count({ where: { feedbackRating: 1 } });
+    const thumbsDown = await this.prisma.chatLog.count({ where: { feedbackRating: -1 } });
+
+    // Pertanyaan yang mendapat jempol ke bawah (kandidat pembelajaran/klarifikasi)
+    const needsReview = await this.prisma.chatLog.findMany({
+      where: { feedbackRating: -1 },
+      orderBy: { createdAt: 'desc' },
+      take: 20,
+    });
+
+    // Pengetahuan aktif yang sudah dikurasi
+    const activeKnowledge = await this.prisma.aiKnowledgeEntry.findMany({
+      where: { isVerified: true },
+      orderBy: { updatedAt: 'desc' },
+    });
+
+    return {
+      stats: { totalChats, thumbsUp, thumbsDown },
+      needsReview,
+      activeKnowledge,
+    };
+  }
+
+  /**
+   * Mengambil pengetahuan tambahan yang sudah diverifikasi dan menyusunnya ke dalam prompt
+   */
+  private async getDynamicKnowledgeContext(query: string): Promise<string> {
+    try {
+      const entries = await this.prisma.aiKnowledgeEntry.findMany({
+        where: { isVerified: true },
+      });
+      if (entries.length === 0) return '';
+
+      const lower = query.toLowerCase();
+      // Cocokkan kata kunci jika ada yang relevan
+      const relevant = entries.filter((e) =>
+        e.keywords.some((k) => lower.includes(k.toLowerCase())),
+      );
+
+      const itemsToInject = relevant.length > 0 ? relevant : entries.slice(0, 5);
+      return `\n\nPENGETAHUAN TAMBAHAN RESMI TERVERIFIKASI ORVANA:\n${itemsToInject
+        .map((i) => `- [${i.topic}]: ${i.factContent}`)
+        .join('\n')}`;
+    } catch {
+      return '';
+    }
   }
 
   private async callGeminiApi(
@@ -146,6 +247,9 @@ export class ChatbotService {
       parts: [{ text: userMessage }],
     });
 
+    const dynamicKnowledge = await this.getDynamicKnowledgeContext(userMessage);
+    const systemPrompt = SYSTEM_KNOWLEDGE_PROMPT + dynamicKnowledge;
+
     for (const model of candidateModels) {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.geminiApiKey}`;
 
@@ -155,7 +259,7 @@ export class ChatbotService {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             system_instruction: {
-              parts: [{ text: SYSTEM_KNOWLEDGE_PROMPT }],
+              parts: [{ text: systemPrompt }],
             },
             contents,
             generationConfig: {

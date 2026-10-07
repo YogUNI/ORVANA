@@ -4,13 +4,32 @@ import { ChatbotService } from './chatbot.service';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+import { PrismaService } from '../prisma/prisma.service';
+
 describe('ChatbotService - Persona Blind Test & Boundary Guard (T-AI-05)', () => {
   let service: ChatbotService;
+
+  const mockPrismaService = {
+    chatLog: {
+      create: jest.fn().mockResolvedValue({ id: 'mock-log-id' }),
+      update: jest.fn().mockResolvedValue({ id: 'mock-log-id' }),
+      count: jest.fn().mockResolvedValue(10),
+      findMany: jest.fn().mockResolvedValue([]),
+    },
+    aiKnowledgeEntry: {
+      findMany: jest.fn().mockResolvedValue([]),
+      count: jest.fn().mockResolvedValue(5),
+    },
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ChatbotService,
+        {
+          provide: PrismaService,
+          useValue: mockPrismaService,
+        },
         {
           provide: ConfigService,
           useValue: {

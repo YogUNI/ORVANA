@@ -591,6 +591,41 @@ model SequenceCounter {
 
   @@map("sequence_counters")
 }
+
+// ---------- CHATBOT ACTIVE LEARNING & TELEMETRY MODELS ----------
+
+model ChatLog {
+  id             String    @id @default(uuid())
+  userQuery      String    @db.Text
+  botAnswer      String    @db.Text
+  category       String?   // GENERAL, LOCAL_QUOTA, ESCROW, QC_STANDARD, MENU, OUT_OF_SCOPE
+  modelUsed      String?   // gemini-3.1-flash-lite, fallback-heuristic
+  latencyMs      Int?      // Latensi respon dalam milidetik
+  feedbackRating Int?      // 1 (Thumbs Up), -1 (Thumbs Down)
+  feedbackNote   String?   @db.Text
+  ipAddress      String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([createdAt])
+  @@index([feedbackRating])
+  @@index([category])
+  @@map("chat_logs")
+}
+
+model AiKnowledgeEntry {
+  id          String   @id @default(uuid())
+  topic       String   // Topik/Entitas, misal: "Standar Susut Gabah Basah"
+  keywords    String[] // Array kata kunci pencocokan, misal: ["gabah", "susut", "potongan"]
+  factContent String   @db.Text // Fakta resmi yang diinjeksikan ke prompt
+  isVerified  Boolean  @default(true) // Status kurasi admin
+  verifiedBy  String?  // Nama admin/ahli gizi yang memverifikasi
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isVerified])
+  @@map("ai_knowledge_entries")
+}
 ```
 
 ## 3. Aturan integritas yang harus ditegakkan di aplikasi

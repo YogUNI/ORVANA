@@ -6,15 +6,40 @@ import { ChatbotController } from './chatbot.controller';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+import { PrismaService } from '../prisma/prisma.service';
+
 describe('ChatbotService & ChatbotController - AI Agent Suite (T-AI-04)', () => {
   let service: ChatbotService;
   let controller: ChatbotController;
+
+  const mockPrismaService = {
+    chatLog: {
+      create: jest.fn().mockResolvedValue({
+        id: 'mock-log-id-123',
+        userQuery: 'test query',
+        botAnswer: 'test answer',
+      }),
+      update: jest.fn().mockImplementation(({ where, data }) =>
+        Promise.resolve({ id: where.id, ...data }),
+      ),
+      count: jest.fn().mockResolvedValue(10),
+      findMany: jest.fn().mockResolvedValue([]),
+    },
+    aiKnowledgeEntry: {
+      findMany: jest.fn().mockResolvedValue([]),
+      count: jest.fn().mockResolvedValue(5),
+    },
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ChatbotController],
       providers: [
         ChatbotService,
+        {
+          provide: PrismaService,
+          useValue: mockPrismaService,
+        },
         {
           provide: ConfigService,
           useValue: {
@@ -82,9 +107,12 @@ describe('ChatbotService & ChatbotController - AI Agent Suite (T-AI-04)', () => 
 
   it('TC-06: harus menyediakan fallback adaptif jika terjadi blackout jaringan atau API offline', async () => {
     // Paksa instance service tanpa API key untuk menguji resiliensi fallback offline
-    const offlineService = new ChatbotService({
-      get: () => '',
-    } as any);
+    const offlineService = new ChatbotService(
+      {
+        get: () => '',
+      } as any,
+      mockPrismaService as any,
+    );
 
     const res = await offlineService.processQuery('halo bro, sistem ini buat apa?');
     expect(res).toBeDefined();
@@ -94,9 +122,30 @@ describe('ChatbotService & ChatbotController - AI Agent Suite (T-AI-04)', () => 
   });
 
   it('TC-07: ChatbotController endpoint harus membungkus output dalam format { data }', async () => {
-    const result = await controller.query({ message: 'halo orvana' });
+    const result = await controller.query({ message: 'halo orvana' }, '127.0.0.1');
     expect(result).toBeDefined();
     expect(result.data).toBeDefined();
     expect(result.data.answer).toBeDefined();
   }, 20000);
+
+  it('TC-08: harus dapat mencatat umpan balik feedback (👍 / 👎) dari pengguna', async () => {
+    const result = await controller.feedback({
+      chatLogId: 'mock-log-id-123',
+      rating: 1,
+      note: 'Penjelasan sangat membantu dan akurat!',
+    });
+    expect(result.data.success).toBe(true);
+    expect(result.data.logId).toBe('mock-log-id-123');
+  });
+
+  it('TC-09: harus dapat mengambil metrik telemetri active learning', async () => {
+    mockPrismaService.chatLog.findMany = jest.fn().mockResolvedValue([]);
+    mockPrismaService.aiKnowledgeEntry.findMany = jest.fn().mockResolvedValue([
+      { id: '1', topic: 'KUOTA', factContent: '60% kuota lokal', isVerified: true },
+    ]);
+    const telemetry = await controller.getTelemetry();
+    expect(telemetry.data).toBeDefined();
+    expect(telemetry.data.stats.totalChats).toBe(10);
+    expect(telemetry.data.activeKnowledge.length).toBe(1);
+  });
 });

@@ -7,6 +7,9 @@ import {
   ShieldCheck,
   RotateCcw,
   Bot,
+  ThumbsUp,
+  ThumbsDown,
+  Check,
 } from 'lucide-react';
 import { queryOrvanaKnowledge, CopilotResponse } from './orvanaKnowledgeEngine';
 import { apiClient } from '../../lib/apiClient';
@@ -64,6 +67,9 @@ interface ChatMessage {
   actionLink?: string;
   suggestedFollowUps?: string[];
   timestamp: string;
+  chatLogId?: string;
+  feedbackGiven?: 1 | -1;
+  feedbackSubmitting?: boolean;
 }
 
 export const SmartFloatingConcierge: React.FC = () => {
@@ -96,6 +102,32 @@ export const SmartFloatingConcierge: React.FC = () => {
       scrollToBottom();
     }
   }, [messages, isOpen]);
+
+  const handleFeedback = async (msgId: string, chatLogId: string | undefined, rating: 1 | -1) => {
+    // Optimistic update status feedback di UI
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.id === msgId ? { ...m, feedbackGiven: rating, feedbackSubmitting: true } : m,
+      ),
+    );
+
+    if (chatLogId) {
+      try {
+        await apiClient.post('/public/chatbot/feedback', {
+          chatLogId,
+          rating,
+        });
+      } catch (err) {
+        console.warn('Gagal mengirim telemetry feedback ke server:', err);
+      }
+    }
+
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.id === msgId ? { ...m, feedbackSubmitting: false } : m,
+      ),
+    );
+  };
 
   const handleSendMessage = async (textToSend?: string) => {
     const text = (textToSend || inputQuery).trim();
@@ -133,6 +165,7 @@ export const SmartFloatingConcierge: React.FC = () => {
           category: data.category || 'ORVANA AI ASSISTANT',
           actionLink: data.actionLink,
           suggestedFollowUps: data.suggestedFollowUps,
+          chatLogId: data.chatLogId,
           timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
         };
         setMessages((prev) => [...prev, botReply]);
@@ -324,9 +357,51 @@ export const SmartFloatingConcierge: React.FC = () => {
                 </div>
               )}
 
-              <span className={`text-[9px] font-mono text-stone-400 px-1 ${msg.sender === 'bot' ? 'pl-2' : ''}`}>
-                {msg.timestamp}
-              </span>
+              {/* Message Footer: Timestamp & Active Learning Feedback */}
+              <div
+                className={`flex items-center gap-3 px-1 text-[10px] font-mono text-stone-400 ${
+                  msg.sender === 'bot' ? 'pl-2' : ''
+                }`}
+              >
+                <span>{msg.timestamp}</span>
+
+                {/* Tombol Feedback 👍 / 👎 untuk Continuous Active Learning Loop */}
+                {msg.sender === 'bot' && (
+                  <div className="flex items-center gap-1.5 ml-1">
+                    {msg.feedbackGiven !== undefined ? (
+                      <span className="inline-flex items-center gap-1 text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60 font-sans font-medium">
+                        <Check className="w-3 h-3 text-emerald-600" />
+                        <span>
+                          {msg.feedbackGiven === 1
+                            ? 'Membantu 👍'
+                            : 'Dicatat untuk kurasi 👎'}
+                        </span>
+                      </span>
+                    ) : (
+                      <div className="flex items-center gap-1 opacity-70 hover:opacity-100 transition-opacity">
+                        <button
+                          type="button"
+                          onClick={() => handleFeedback(msg.id, msg.chatLogId, 1)}
+                          title="Jawaban ini akurat dan membantu"
+                          className="p-1 rounded-md hover:bg-emerald-50 hover:text-emerald-700 text-stone-400 active:scale-90 transition-all cursor-pointer"
+                          aria-label="Suka jawaban"
+                        >
+                          <ThumbsUp className="w-3 h-3" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleFeedback(msg.id, msg.chatLogId, -1)}
+                          title="Jawaban kurang relevan/butuh perbaikan"
+                          className="p-1 rounded-md hover:bg-rose-50 hover:text-rose-700 text-stone-400 active:scale-90 transition-all cursor-pointer"
+                          aria-label="Tidak suka jawaban"
+                        >
+                          <ThumbsDown className="w-3 h-3" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           ))}
 
