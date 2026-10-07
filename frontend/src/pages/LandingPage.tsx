@@ -42,7 +42,6 @@ import {
   Wheat,
   Salad,
   Calculator,
-  ShieldAlert,
   Clock,
 } from 'lucide-react';
 
@@ -1371,219 +1370,176 @@ export const LandingPage: React.FC = () => {
 
 
       <ScrollReveal animation="fade-up" delayMs={0}>
-        {/* 6. PERBANDINGAN STRATEGIS: CARA LAMA VS ORVANA (BALANCED COMPACT SHOWDOWN) */}
-      <section id="keunggulan" className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-12">
+        {/* 6. PERBANDINGAN STRATEGIS: CARA LAMA VS ORVANA (EDITORIAL COMPARISON BOARD) */}
+      <section id="keunggulan" className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-14">
         
         {/* Header Section */}
-        <div className="text-center max-w-2xl mx-auto mb-8 space-y-2">
+        <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-100/90 text-emerald-900 text-[11px] font-mono font-bold uppercase tracking-wider border border-emerald-300 shadow-2xs">
             <Scale className="w-3.5 h-3.5 text-emerald-700" />
             <span>TRANSFORMASI TATA KELOLA PANGAN</span>
           </div>
           <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-stone-950 tracking-tight leading-tight">
-            Mengapa Beralih ke <span className="italic font-normal text-emerald-850">Standar ORVANA?</span>
+            Mengapa Ekosistem Pangan <br className="hidden sm:inline" />
+            <span className="italic font-normal text-emerald-850">Beralih ke Standar ORVANA?</span>
           </h2>
-          <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-            Perbandingan nyata antara jalur tengkulak konvensional dengan ekosistem digital transparan ORVANA.
+          <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
+            Lihat kontras nyata antara jalur tengkulak konvensional dengan ekosistem digital transparan ORVANA.
           </p>
         </div>
 
-        {/* The Showdown Matrix: Compact Balanced Container with Striking Center VS Badge */}
-        <div className="relative">
+        {/* Master Comparison Board (Unified, Clean, Editorial Grade) */}
+        <div className="rounded-3xl bg-white border border-stone-200/90 shadow-elevated overflow-hidden">
           
-          {/* Prominent High-Contrast Floating VS Badge */}
-          <div className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex-col items-center justify-center">
-            <div className="w-13 h-13 rounded-full bg-gradient-to-br from-stone-950 via-stone-900 to-emerald-950 border-4 border-white shadow-xl flex items-center justify-center text-amber-300 font-serif font-black text-sm tracking-wider ring-4 ring-emerald-500/20">
-              VS
-            </div>
-            <span className="text-[9px] font-mono font-bold tracking-widest text-stone-600 uppercase bg-white/95 px-2 py-0.5 rounded-full border border-stone-200 shadow-2xs mt-1">
-              KOMPARASI
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-stretch">
-            
-            {/* KARTU 1: CARA LAMA (TENGKULAK & RANTAI PASOK GELAP) */}
-            <div className="relative rounded-2xl bg-[#FCFAF8] border border-stone-200/90 p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-2xs">
-              {/* Top Warning Accent */}
-              <div className="absolute top-0 inset-x-0 h-1 bg-rose-400" />
-
-              <div>
-                {/* Header Card Lama */}
-                <div className="flex items-center justify-between gap-2 pb-3.5 border-b border-stone-200/80 mb-3.5">
-                  <div>
-                    <div className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-rose-800 uppercase tracking-wider">
-                      <ShieldAlert className="w-3 h-3 text-rose-600" />
-                      <span>Sistem Konvensional</span>
-                    </div>
-                    <h3 className="text-base sm:text-lg font-serif font-bold text-stone-900">
-                      Jalur Tengkulak & Makelar
-                    </h3>
-                  </div>
-                  <span className="shrink-0 text-[10px] font-mono font-bold text-rose-800 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">
-                    ✕ Rawan Sengketa
-                  </span>
-                </div>
-
-                {/* List of 5 Core Problems (Compact & Punchy) */}
-                <div className="space-y-2.5">
-                  {[
-                    {
-                      aspect: 'Harga Hasil Tani',
-                      desc: 'Harga ditekan sepihak jauh di bawah modal produksi petani.',
-                      tag: 'Petani Rugi',
-                    },
-                    {
-                      aspect: 'Kepastian Penjualan',
-                      desc: 'Transaksi serba mendadak, risiko panen busuk di ladang tinggi.',
-                      tag: 'Panen Terbuang',
-                    },
-                    {
-                      aspect: 'Pemerataan Kuota',
-                      desc: 'Didominasi 1 distributor besar, petani kecil tidak kebagian kuota.',
-                      tag: 'Monopoli Kuota',
-                    },
-                    {
-                      aspect: 'Pencairan Pembayaran',
-                      desc: 'Uang pembayaran mundur berminggu-minggu bahkan gagal bayar.',
-                      tag: 'Tersendat',
-                    },
-                    {
-                      aspect: 'Asal Usul & Keamanan Makanan',
-                      desc: 'Asal ladang tidak jelas dan tanpa laporan uji mutu gizi.',
-                      tag: 'Tanpa Jejak',
-                    },
-                  ].map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="p-2.5 rounded-xl bg-white/90 border border-stone-200/60 flex items-start justify-between gap-2 text-xs"
-                    >
-                      <div className="flex items-start gap-2">
-                        <span className="w-4 h-4 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
-                          ✕
-                        </span>
-                        <div>
-                          <h4 className="text-xs font-bold text-stone-900 leading-snug">
-                            {item.aspect}
-                          </h4>
-                          <p className="text-[11px] text-stone-500 leading-tight mt-0.5">
-                            {item.desc}
-                          </p>
-                        </div>
-                      </div>
-                      <span className="text-[9px] font-mono text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200/50 shrink-0 whitespace-nowrap">
-                        {item.tag}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Bottom Status Cara Lama */}
-              <div className="mt-4 pt-3 border-t border-stone-200 text-[11px] font-mono text-stone-500 flex items-center justify-between">
-                <span>Margin Makelar:</span>
-                <strong className="text-rose-700 font-bold">+25% s/d 40% Beban Harga</strong>
-              </div>
-            </div>
-
-            {/* KARTU 2: REVOLUSI ORVANA (TRANSPARAN, ADIL, BERKELANJUTAN) */}
-            <div className="relative rounded-2xl bg-gradient-to-b from-white via-emerald-50/25 to-emerald-100/15 border-2 border-emerald-600/90 p-5 sm:p-6 flex flex-col justify-between shadow-elevated">
-              {/* Top Emerald Forest Accent */}
-              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-emerald-600 via-amber-400 to-emerald-600" />
-
-              <div>
-                {/* Header Card ORVANA */}
-                <div className="flex items-center justify-between gap-2 pb-3.5 border-b border-emerald-200/70 mb-3.5">
-                  <div>
-                    <div className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-emerald-800 uppercase tracking-wider">
-                      <Sparkles className="w-3 h-3 text-amber-500" />
-                      <span>Ekosistem Modern</span>
-                    </div>
-                    <h3 className="text-base sm:text-lg font-serif font-bold text-stone-950 flex items-center gap-1.5">
-                      <span>ORVANA Digital Rantai Pasok</span>
-                    </h3>
-                  </div>
-                  <span className="shrink-0 text-[10px] font-mono font-bold text-emerald-900 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-full shadow-2xs">
-                    ✓ Standar Dinas
-                  </span>
-                </div>
-
-                {/* List of 5 Core Solutions (Compact & Punchy) */}
-                <div className="space-y-2.5">
-                  {[
-                    {
-                      aspect: 'Jaminan Harga Adil Wilayah',
-                      desc: 'Otomatis tolak tawaran di bawah harga dasar pemerintah daerah.',
-                      tag: 'Harga Terkunci',
-                      icon: ShieldCheck,
-                    },
-                    {
-                      aspect: 'Kepastian Serapan Panen',
-                      desc: 'Jadwal kebutuhan dapur terencana 1-2 minggu lebih awal.',
-                      tag: 'Pasti Terserap',
-                      icon: Clock,
-                    },
-                    {
-                      aspect: 'Pemerataan Kuota Semua Petani',
-                      desc: 'Kuota dibatasi maksimal 60% per pemasok agar petani kecil terlindungi.',
-                      tag: 'Anti-Monopoli',
-                      icon: Users,
-                    },
-                    {
-                      aspect: 'Keamanan Dompet & Bayar Cepat',
-                      desc: 'Dana dijamin di muka sistem, cair otomatis begitu lulus uji mutu QC.',
-                      tag: 'Cair Instan',
-                      icon: Lock,
-                    },
-                    {
-                      aspect: 'Paspor Digital & QR Jejak Pangan',
-                      desc: 'Kode QR publik menampilkan riwayat desa, kurir, & laporan ahli gizi.',
-                      tag: 'Bisa Dilacak',
-                      icon: QrCode,
-                    },
-                  ].map((item, idx) => {
-                    const ItemIcon = item.icon;
-                    return (
-                      <div
-                        key={idx}
-                        className="p-2.5 rounded-xl bg-white border border-emerald-200/80 shadow-2xs flex items-start justify-between gap-2 text-xs hover:border-emerald-500 transition-all"
-                      >
-                        <div className="flex items-start gap-2">
-                          <span className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5 shadow-2xs">
-                            <Check className="w-3 h-3" />
-                          </span>
-                          <div>
-                            <h4 className="text-xs font-bold text-emerald-950 flex items-center gap-1 leading-snug">
-                              <ItemIcon className="w-3 h-3 text-emerald-700 shrink-0" />
-                              <span>{item.aspect}</span>
-                            </h4>
-                            <p className="text-[11px] text-stone-600 leading-tight mt-0.5">
-                              {item.desc}
-                            </p>
-                          </div>
-                        </div>
-                        <span className="text-[9px] font-mono font-bold text-emerald-900 bg-emerald-100/90 px-1.5 py-0.5 rounded border border-emerald-300 shrink-0 whitespace-nowrap">
-                          {item.tag}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Bottom Status ORVANA */}
-              <div className="mt-4 pt-3 border-t border-emerald-200 text-[11px] font-mono text-stone-700 flex items-center justify-between">
-                <span className="flex items-center gap-1 font-bold text-emerald-950">
-                  <BadgeCheck className="w-3.5 h-3.5 text-emerald-600" />
-                  Efisiensi Distribusi:
+          {/* Top Board Column Headers */}
+          <div className="grid grid-cols-1 md:grid-cols-12 border-b border-stone-200 bg-stone-50/70">
+            <div className="md:col-span-5 p-4 sm:px-6 flex items-center justify-between border-b md:border-b-0 md:border-r border-stone-200">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-rose-500" />
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-stone-600">
+                  Cara Lama (Tengkulak / Makelar)
                 </span>
-                <strong className="text-emerald-800 font-extrabold bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-300">
-                  100% Hak Petani & Dapur
-                </strong>
               </div>
+              <span className="text-[10px] font-mono font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+                ✕ Rawan Rugi
+              </span>
+            </div>
+            
+            <div className="md:col-span-2 hidden md:flex items-center justify-center py-2 bg-stone-100/60 border-r border-stone-200 text-[11px] font-mono font-bold text-stone-500 uppercase tracking-widest">
+              Aspek
             </div>
 
+            <div className="md:col-span-5 p-4 sm:px-6 flex items-center justify-between bg-emerald-50/40">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-950">
+                  Standar Digital ORVANA
+                </span>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-emerald-900 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300 shadow-2xs">
+                ✓ Solusi Resmi
+              </span>
+            </div>
           </div>
+
+          {/* 5 Comparison Rows */}
+          <div className="divide-y divide-stone-100">
+            {[
+              {
+                aspect: 'Perlindungan Harga',
+                oldDesc: 'Harga ditekan sepihak di bawah modal tanam. Petani tidak memiliki posisi tawar.',
+                oldTag: 'Petani Rugi',
+                orvanaTitle: 'Jaminan Harga Adil Wilayah',
+                orvanaDesc: 'Otomatis tolak pesanan di bawah patokan harga dasar dinas daerah.',
+                orvanaTag: 'Harga Terkunci',
+                icon: ShieldCheck,
+              },
+              {
+                aspect: 'Kepastian Penjualan',
+                oldDesc: 'Transaksi serba mendadak, hasil panen sering membusuk di kebun karena batal sepihak.',
+                oldTag: 'Panen Terbuang',
+                orvanaTitle: 'Serapan Terjadwal 1-2 Minggu di Muka',
+                orvanaDesc: 'Kebutuhan dapur gizi dipetakan lebih awal langsung ke kalender panen petani.',
+                orvanaTag: '100% Terserap',
+                icon: Clock,
+              },
+              {
+                aspect: 'Pemerataan Kuota',
+                oldDesc: 'Didominasi 1 distributor besar, petani kecil sulit masuk dan tersisih.',
+                oldTag: 'Monopoli Kuota',
+                orvanaTitle: 'Batasan Kuota Maksimal 60%',
+                orvanaDesc: 'Distribusi adil otomatis membagi kuota agar kelompok tani kecil tetap berdaya.',
+                orvanaTag: 'Anti-Monopoli',
+                icon: Users,
+              },
+              {
+                aspect: 'Keamanan Bayar',
+                oldDesc: 'Uang pembayaran tertahan berminggu-minggu, sering terjadi risiko gagal bayar.',
+                oldTag: 'Macet Berminggu2',
+                orvanaTitle: 'Pencairan Instan Setelah Uji Mutu',
+                orvanaDesc: 'Dana belanja dapur diamankan di muka sistem, cair seketika begitu bahan lolos QC.',
+                orvanaTag: 'Cair Instan',
+                icon: Lock,
+              },
+              {
+                aspect: 'Ketertelusuran Bahan',
+                oldDesc: 'Asal usul ladang tidak jelas dan sulit dipertanggungjawabkan ke pihak sekolah/dinas.',
+                oldTag: 'Tanpa Riwayat',
+                orvanaTitle: 'Paspor Digital & QR Code Publik',
+                orvanaDesc: 'Dapat dipindai siapa saja untuk melihat desa asal panen, kurir pengantar, & uji ahli gizi.',
+                orvanaTag: 'Transparan Penuh',
+                icon: QrCode,
+              },
+            ].map((row, rIdx) => {
+              const RowIcon = row.icon;
+              return (
+                <div
+                  key={rIdx}
+                  className="grid grid-cols-1 md:grid-cols-12 items-stretch hover:bg-stone-50/50 transition-colors group"
+                >
+                  {/* Sisi Kiri: Cara Lama */}
+                  <div className="md:col-span-5 p-4 sm:px-6 flex items-start gap-3 bg-stone-50/20 md:border-r border-stone-200">
+                    <span className="w-5 h-5 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                      ✕
+                    </span>
+                    <div className="space-y-1 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="md:hidden text-[10px] font-mono font-bold text-stone-500 uppercase">
+                          {row.aspect}
+                        </span>
+                        <span className="text-[10px] font-mono text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200/60">
+                          {row.oldTag}
+                        </span>
+                      </div>
+                      <p className="text-xs text-stone-600 leading-relaxed font-sans">
+                        {row.oldDesc}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Aspek Center Badge (Desktop) */}
+                  <div className="md:col-span-2 hidden md:flex flex-col items-center justify-center p-3 bg-stone-100/30 md:border-r border-stone-200 text-center">
+                    <RowIcon className="w-4 h-4 text-emerald-800 mb-1" />
+                    <span className="text-[11px] font-bold text-stone-800 font-sans leading-tight">
+                      {row.aspect}
+                    </span>
+                  </div>
+
+                  {/* Sisi Kanan: Standar ORVANA */}
+                  <div className="md:col-span-5 p-4 sm:px-6 flex items-start gap-3 bg-emerald-50/20 group-hover:bg-emerald-50/40 transition-colors">
+                    <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 shadow-2xs">
+                      <Check className="w-3.5 h-3.5" />
+                    </span>
+                    <div className="space-y-1 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <h4 className="text-xs sm:text-sm font-bold text-emerald-950 font-sans">
+                          {row.orvanaTitle}
+                        </h4>
+                        <span className="text-[10px] font-mono font-bold text-emerald-900 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300 shrink-0">
+                          {row.orvanaTag}
+                        </span>
+                      </div>
+                      <p className="text-xs text-stone-600 leading-relaxed font-sans">
+                        {row.orvanaDesc}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Bottom Summary Footer */}
+          <div className="p-4 sm:px-6 bg-stone-900 text-white flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono">
+            <div className="flex items-center gap-2 text-stone-300">
+              <BadgeCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>Dampak Nyata: Menghapus potongan tengkulak gelap 25% - 40%</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-emerald-400 font-bold">100% Hak Petani & Dapur Terlindungi</span>
+            </div>
+          </div>
+
         </div>
 
       </section>
