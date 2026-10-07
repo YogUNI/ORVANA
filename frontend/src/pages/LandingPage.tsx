@@ -457,41 +457,123 @@ export const LandingPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Ambient Infinite Supply Chain Logistics Ribbon (Pita Animasi Mengalir Halus) */}
-        <div className="w-full mt-10 border-t border-b border-stone-200/80 bg-white/60 backdrop-blur-md py-3 overflow-hidden select-none">
-          <div className="flex items-center gap-8 whitespace-nowrap animate-marquee">
-            {[1, 2].map((loopIdx) => (
-              <div key={loopIdx} className="flex items-center gap-8 shrink-0 text-xs font-mono text-stone-600">
-                <span className="flex items-center gap-2 text-emerald-950 font-bold">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  ALIRAN INTEGRASI DIGITAL
-                </span>
-                <span className="text-stone-300">/</span>
-                <span className="flex items-center gap-1.5">
-                  <span className="text-stone-900 font-semibold">🌾 Petik Panen Desa</span>
-                  <span className="text-[10px] text-emerald-800 bg-emerald-100 px-1.5 py-0.2 rounded font-bold">Cap 60%</span>
-                </span>
-                <span className="text-stone-400">➔</span>
-                <span className="flex items-center gap-1.5">
-                  <span className="text-stone-900 font-semibold">🚚 Logistik Suhu Dingin</span>
-                  <span className="text-[10px] text-amber-800 bg-amber-100 px-1.5 py-0.2 rounded font-bold">+4°C</span>
-                </span>
-                <span className="text-stone-400">➔</span>
-                <span className="flex items-center gap-1.5">
-                  <span className="text-stone-900 font-semibold">🔍 Uji Mutu Ahli Gizi</span>
-                  <span className="text-[10px] text-sky-800 bg-sky-100 px-1.5 py-0.2 rounded font-bold">QC 100%</span>
-                </span>
-                <span className="text-stone-400">➔</span>
-                <span className="flex items-center gap-1.5">
-                  <span className="text-stone-900 font-semibold">🍳 Dapur Gizi Massal</span>
-                  <span className="text-[10px] text-purple-800 bg-purple-100 px-1.5 py-0.2 rounded font-bold">1.000 Porsi</span>
-                </span>
-                <span className="text-stone-400">➔</span>
-                <span className="flex items-center gap-1.5">
-                  <span className="text-stone-900 font-semibold">🔒 Pencairan Escrow Instan</span>
-                  <span className="text-[10px] text-emerald-800 bg-emerald-100 px-1.5 py-0.2 rounded font-bold">Real-time</span>
-                </span>
-                <span className="text-stone-300">/</span>
+        {/* Ambient Interactive Supply Chain Node Stream (Bukan Ticker Berita Kaku) */}
+        <div className="w-full mt-12 py-4 relative overflow-hidden select-none">
+          {/* Subtle glowing ambient line */}
+          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent pointer-events-none" />
+
+          {/* Edge fade gradients for seamless infinite float */}
+          <div className="absolute left-0 inset-y-0 w-24 bg-gradient-to-r from-[#FAF8F5] via-[#FAF8F5]/80 to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 inset-y-0 w-24 bg-gradient-to-l from-[#FAF8F5] via-[#FAF8F5]/80 to-transparent z-10 pointer-events-none" />
+
+          <div className="flex items-center gap-4 whitespace-nowrap animate-marquee">
+            {[1, 2, 3].map((loopIdx) => (
+              <div key={loopIdx} className="flex items-center gap-4 shrink-0">
+                {/* Protocol Pill Indicator */}
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950 text-emerald-300 text-[11px] font-mono tracking-wider font-semibold shadow-sm border border-emerald-800/60">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+                  </span>
+                  <span>LIVE PROTOCOL</span>
+                </div>
+
+                {/* Node 1: Petik Panen Desa */}
+                <div className="group/node flex items-center gap-3 px-4 py-2 rounded-2xl bg-white/80 hover:bg-white border border-stone-200/90 hover:border-emerald-500/50 shadow-soft hover:shadow-card transition-all duration-300">
+                  <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-emerald-100 to-emerald-200/60 flex items-center justify-center text-emerald-800 shadow-2xs group-hover/node:scale-110 transition-transform">
+                    <Leaf className="w-3.5 h-3.5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-mono font-medium text-stone-600 uppercase tracking-wider">Hulu Pangan</span>
+                    <span className="text-xs font-semibold text-stone-900 group-hover/node:text-emerald-900 transition-colors">Petik Panen Petani Desa</span>
+                  </div>
+                  <span className="ml-1 text-[10px] font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/70 px-2 py-0.5 rounded-full">
+                    Cap 60%
+                  </span>
+                </div>
+
+                {/* Micro Connector */}
+                <div className="flex items-center text-emerald-400/60">
+                  <span className="w-4 h-[1px] bg-emerald-300/60" />
+                  <ChevronRight className="w-3 h-3 -ml-1 text-emerald-500" />
+                </div>
+
+                {/* Node 2: Logistik Suhu Dingin */}
+                <div className="group/node flex items-center gap-3 px-4 py-2 rounded-2xl bg-white/80 hover:bg-white border border-stone-200/90 hover:border-amber-500/50 shadow-soft hover:shadow-card transition-all duration-300">
+                  <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-amber-100 to-amber-200/60 flex items-center justify-center text-amber-800 shadow-2xs group-hover/node:scale-110 transition-transform">
+                    <Truck className="w-3.5 h-3.5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-mono font-medium text-stone-600 uppercase tracking-wider">Rantai Dingin</span>
+                    <span className="text-xs font-semibold text-stone-900 group-hover/node:text-amber-900 transition-colors">Logistik Terpantau IoT</span>
+                  </div>
+                  <span className="ml-1 text-[10px] font-mono font-bold text-amber-800 bg-amber-50 border border-amber-200/70 px-2 py-0.5 rounded-full">
+                    +4°C Stabil
+                  </span>
+                </div>
+
+                {/* Micro Connector */}
+                <div className="flex items-center text-emerald-400/60">
+                  <span className="w-4 h-[1px] bg-emerald-300/60" />
+                  <ChevronRight className="w-3 h-3 -ml-1 text-emerald-500" />
+                </div>
+
+                {/* Node 3: Uji Mutu Ahli Gizi */}
+                <div className="group/node flex items-center gap-3 px-4 py-2 rounded-2xl bg-white/80 hover:bg-white border border-stone-200/90 hover:border-sky-500/50 shadow-soft hover:shadow-card transition-all duration-300">
+                  <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-sky-100 to-sky-200/60 flex items-center justify-center text-sky-800 shadow-2xs group-hover/node:scale-110 transition-transform">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-mono font-medium text-stone-600 uppercase tracking-wider">Quality Gate</span>
+                    <span className="text-xs font-semibold text-stone-900 group-hover/node:text-sky-900 transition-colors">Uji Organoleptik & Gizi</span>
+                  </div>
+                  <span className="ml-1 text-[10px] font-mono font-bold text-sky-800 bg-sky-50 border border-sky-200/70 px-2 py-0.5 rounded-full">
+                    QC 100% Lulus
+                  </span>
+                </div>
+
+                {/* Micro Connector */}
+                <div className="flex items-center text-emerald-400/60">
+                  <span className="w-4 h-[1px] bg-emerald-300/60" />
+                  <ChevronRight className="w-3 h-3 -ml-1 text-emerald-500" />
+                </div>
+
+                {/* Node 4: Dapur Gizi Massal */}
+                <div className="group/node flex items-center gap-3 px-4 py-2 rounded-2xl bg-white/80 hover:bg-white border border-stone-200/90 hover:border-purple-500/50 shadow-soft hover:shadow-card transition-all duration-300">
+                  <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-purple-100 to-purple-200/60 flex items-center justify-center text-purple-800 shadow-2xs group-hover/node:scale-110 transition-transform">
+                    <Building2 className="w-3.5 h-3.5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-mono font-medium text-stone-600 uppercase tracking-wider">Pusat Olahan</span>
+                    <span className="text-xs font-semibold text-stone-900 group-hover/node:text-purple-900 transition-colors">Dapur Gizi Terpadu</span>
+                  </div>
+                  <span className="ml-1 text-[10px] font-mono font-bold text-purple-800 bg-purple-50 border border-purple-200/70 px-2 py-0.5 rounded-full">
+                    1.000 Porsi/Hari
+                  </span>
+                </div>
+
+                {/* Micro Connector */}
+                <div className="flex items-center text-emerald-400/60">
+                  <span className="w-4 h-[1px] bg-emerald-300/60" />
+                  <ChevronRight className="w-3 h-3 -ml-1 text-emerald-500" />
+                </div>
+
+                {/* Node 5: Pencairan Escrow Instan */}
+                <div className="group/node flex items-center gap-3 px-4 py-2 rounded-2xl bg-white/80 hover:bg-white border border-stone-200/90 hover:border-emerald-500/50 shadow-soft hover:shadow-card transition-all duration-300">
+                  <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-emerald-100 to-emerald-200/60 flex items-center justify-center text-emerald-800 shadow-2xs group-hover/node:scale-110 transition-transform">
+                    <Lock className="w-3.5 h-3.5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-mono font-medium text-stone-600 uppercase tracking-wider">Settlement Otomatis</span>
+                    <span className="text-xs font-semibold text-stone-900 group-hover/node:text-emerald-900 transition-colors">Pencairan Escrow Rekening</span>
+                  </div>
+                  <span className="ml-1 text-[10px] font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/70 px-2 py-0.5 rounded-full">
+                    Real-Time T+0
+                  </span>
+                </div>
+
+                {/* Separator between iterations */}
+                <div className="w-6 flex items-center justify-center text-stone-300 font-mono text-xs">///</div>
               </div>
             ))}
           </div>
