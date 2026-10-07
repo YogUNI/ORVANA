@@ -251,11 +251,11 @@ export const LandingPage: React.FC = () => {
             </div>
           </Link>
 
-          {/* Nav Links: Ramping, Bersih, Lega dengan highlight pill halus */}
+          {/* Nav Links: Modern Geometric Typography (Plus Jakarta Sans) */}
           <nav
             ref={navContainerRef}
             onMouseLeave={() => setHoveredNav(null)}
-            className="hidden lg:flex items-center relative text-xs font-medium text-stone-600 px-1 py-1"
+            className="hidden lg:flex items-center relative font-heading text-[13px] font-semibold text-stone-600 px-1 py-0.5 tracking-[-0.01em]"
           >
             {/* Soft Organic Floating Highlight Pill */}
             <div
@@ -292,7 +292,7 @@ export const LandingPage: React.FC = () => {
                   className={`relative z-10 px-4 py-2 rounded-full transition-colors duration-200 flex items-center gap-1.5 whitespace-nowrap ${
                     isHighlighted
                       ? 'text-emerald-950 font-bold'
-                      : 'text-stone-600 hover:text-stone-900'
+                      : 'text-stone-600 hover:text-stone-950'
                   }`}
                 >
                   {nav.isAi && (
@@ -308,11 +308,11 @@ export const LandingPage: React.FC = () => {
             })}
           </nav>
 
-          {/* Quick Actions (Cek Batch, Masuk, Daftar) - Bersih & Rapi */}
-          <div className="flex items-center gap-2 shrink-0">
+          {/* Quick Actions (Cek Batch, Masuk, Daftar) - Font-Heading Plus Jakarta Sans */}
+          <div className="flex items-center gap-2 shrink-0 font-heading tracking-[-0.01em]">
             <Link
               to="/trace"
-              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-900/90 hover:text-emerald-950 px-3 py-1.5 rounded-full hover:bg-emerald-100/60 transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-emerald-900/90 hover:text-emerald-950 px-3.5 py-1.5 rounded-full hover:bg-emerald-100/60 transition-colors"
             >
               <QrCode className="w-3.5 h-3.5 text-emerald-700" />
               <span>Cek Batch</span>
@@ -320,7 +320,7 @@ export const LandingPage: React.FC = () => {
 
             <Link
               to="/login"
-              className="text-xs font-semibold text-stone-700 hover:text-stone-950 px-3 py-1.5 rounded-full hover:bg-stone-100 transition-colors"
+              className="text-xs font-bold text-stone-700 hover:text-stone-950 px-3 py-1.5 rounded-full hover:bg-stone-100 transition-colors"
             >
               Masuk
             </Link>
@@ -328,7 +328,7 @@ export const LandingPage: React.FC = () => {
             <Link to="/register">
               <button
                 type="button"
-                className="px-4 py-2 text-xs font-semibold rounded-full bg-emerald-900 hover:bg-emerald-950 text-white shadow-xs hover:shadow-sm transition-all active:scale-[0.98]"
+                className="px-4 py-2 text-xs font-bold rounded-full bg-emerald-900 hover:bg-emerald-950 text-white shadow-xs hover:shadow-sm transition-all active:scale-[0.98]"
               >
                 Daftar Mitra
               </button>
