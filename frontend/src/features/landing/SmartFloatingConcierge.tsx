@@ -3,7 +3,6 @@ import {
   MessageSquare,
   X,
   Send,
-  ExternalLink,
   ArrowRight,
   ShieldCheck,
   RotateCcw,
@@ -196,8 +195,12 @@ export const SmartFloatingConcierge: React.FC = () => {
           <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
 
           <div className="relative flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 via-amber-300 to-emerald-400 text-emerald-950 flex items-center justify-center font-bold text-lg shadow-md shadow-amber-400/20 shrink-0 ring-2 ring-white/10">
-              🌾
+            <div className="w-10 h-10 rounded-2xl bg-white/10 p-1.5 flex items-center justify-center shrink-0 ring-1 ring-white/20 shadow-md">
+              <img
+                src="/logo-192.png"
+                alt="ORVANA Intelligence"
+                className="w-full h-full object-contain filter drop-shadow-sm"
+              />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -242,15 +245,9 @@ export const SmartFloatingConcierge: React.FC = () => {
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
             <span>Konteks terkalibrasi ke standar SPPG & Pergub Gizi</span>
           </span>
-          <a
-            href="/data/orvana_knowledge_base.csv"
-            target="_blank"
-            rel="noreferrer"
-            className="text-[10px] font-mono font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1 px-2 py-0.5 rounded-md hover:bg-emerald-100/60 transition-colors"
-          >
-            <span>Audit CSV</span>
-            <ExternalLink className="w-2.5 h-2.5" />
-          </a>
+          <span className="text-[10px] font-mono font-semibold text-emerald-800/80 bg-emerald-100/60 px-2 py-0.5 rounded-md">
+            Verified
+          </span>
         </div>
 
         {/* Chat Messages Body */}
