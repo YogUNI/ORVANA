@@ -42,6 +42,8 @@ import {
   Wheat,
   Salad,
   Calculator,
+  ShieldAlert,
+  Clock,
 } from 'lucide-react';
 
 interface PublicImpactSummary {
@@ -1369,97 +1371,214 @@ export const LandingPage: React.FC = () => {
 
 
       <ScrollReveal animation="fade-up" delayMs={0}>
-        {/* 6. TABEL PERBANDINGAN: ORVANA VS KONVENSIONAL */}
-      <section id="keunggulan" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-900 bg-emerald-100/70 px-3 py-1 rounded-full border border-emerald-300">
-            Perbandingan Transparan
-          </span>
-          <h2 className="font-serif text-3xl font-bold text-stone-950 mt-3">
-            Mengapa Ekosistem Pangan Memilih ORVANA?
+        {/* 6. PERBANDINGAN STRATEGIS: CARA LAMA VS ORVANA (EDITORIAL DUAL-CARD SHOWDOWN) */}
+      <section id="keunggulan" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16">
+        
+        {/* Header Section */}
+        <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/80 text-emerald-900 text-xs font-mono font-bold uppercase tracking-wider border border-emerald-300 shadow-2xs">
+            <Scale className="w-3.5 h-3.5 text-emerald-700" />
+            <span>TRANSFORMASI TATA KELOLA PANGAN</span>
+          </div>
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-stone-950 tracking-tight leading-tight">
+            Mengapa Ekosistem Pangan <br className="hidden sm:inline" />
+            <span className="italic font-normal text-emerald-850">Beralih ke Standar ORVANA?</span>
           </h2>
-          <p className="text-xs sm:text-sm text-stone-600 mt-2">
-            Perbedaan mendasar antara rantai pasok konvensional perantara dengan arsitektur digital ORVANA.
+          <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-2xl mx-auto">
+            Perbandingan nyata antara sistem pengadaan tengkulak konvensional dengan ekosistem digital terintegrasi ORVANA yang menjamin transparansi, keadilan harga, dan kepastian serapan.
           </p>
         </div>
 
-        <div className="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-soft">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs sm:text-sm">
-              <thead>
-                <tr className="border-b border-stone-200 bg-stone-50">
-                  <th className="py-4 px-6 font-heading font-bold text-stone-700 w-1/3">Aspek Pengadaan</th>
-                  <th className="py-4 px-6 font-heading font-bold text-rose-800 bg-rose-50/50 w-1/3">
-                    Pengadaan Konvensional (Tengkulak)
-                  </th>
-                  <th className="py-4 px-6 font-heading font-bold text-emerald-950 bg-emerald-50/70 w-1/3">
-                    ORVANA Digital Rantai Pasok
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-200">
-                <tr>
-                  <td className="py-4 px-6 font-semibold text-stone-900">Perlindungan Harga Petani</td>
-                  <td className="py-4 px-6 text-stone-600 bg-rose-50/20">
-                    Harga ditekan sepihak, sering di bawah biaya produksi.
-                  </td>
-                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/40 flex items-center gap-2">
-                    <Check className="w-4 h-4 text-emerald-700 shrink-0" />
-                    <span>Otomatis tolak tawaran di bawah harga dasar wilayah.</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-6 font-semibold text-stone-900">Kepastian Serapan Panen</td>
-                  <td className="py-4 px-6 text-stone-600 bg-rose-50/20">
-                    Transaksi mendadak, risiko panen membusuk di kebun tinggi.
-                  </td>
-                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/40">
-                    <div className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-emerald-700 shrink-0" />
-                      <span>Terencana 1-2 minggu lebih awal dari menu dapur.</span>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-6 font-semibold text-stone-900">Pencegahan Monopoli Kuota</td>
-                  <td className="py-4 px-6 text-stone-600 bg-rose-50/20">
-                    Didominasi 1 distributor besar, petani kecil terpinggirkan.
-                  </td>
-                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/40">
-                    <div className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-emerald-700 shrink-0" />
-                      <span>Algoritma Greedy membatasi kuota maks 60% per petani.</span>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-6 font-semibold text-stone-900">Jaminan Keamanan Pembayaran</td>
-                  <td className="py-4 px-6 text-stone-600 bg-rose-50/20">
-                    Pembayaran mundur berminggu-minggu bahkan gagal bayar.
-                  </td>
-                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/40">
-                    <div className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-emerald-700 shrink-0" />
-                      <span>Dana [HOLD] di awal, langsung [RELEASE] begitu QC lolos.</span>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-6 font-semibold text-stone-900">Ketertelusuran Asal Pangan</td>
-                  <td className="py-4 px-6 text-stone-600 bg-rose-50/20">
-                    Asal muasal bahan tidak jelas, sulit dipertanggungjawabkan.
-                  </td>
-                  <td className="py-4 px-6 font-semibold text-emerald-950 bg-emerald-50/40">
-                    <div className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-emerald-700 shrink-0" />
-                      <span>Paspor QR Code publik menampilkan riwayat desa, supir, & QC.</span>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+        {/* The Showdown Matrix: 2 Connected Cards with High Contrast & Visual Depth */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch relative">
+          
+          {/* Subtle Center VS Badge (Visible on Desktop) */}
+          <div className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-stone-900 border-4 border-stone-100 text-white font-mono font-black text-xs items-center justify-center shadow-lg">
+            VS
           </div>
+
+          {/* KARTU 1: CARA LAMA (TENGKULAK & RANTAI PASOK GELAP) */}
+          <div className="relative rounded-3xl bg-stone-50/80 border border-stone-200/90 p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-2xs hover:border-rose-300 transition-all duration-300">
+            {/* Top Warning Accent */}
+            <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-stone-300 via-rose-400 to-stone-400" />
+
+            <div>
+              {/* Header Card Lama */}
+              <div className="flex items-center justify-between gap-3 pb-5 border-b border-stone-200/80 mb-6">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold text-rose-800 uppercase tracking-wider mb-1">
+                    <ShieldAlert className="w-3.5 h-3.5 text-rose-600" />
+                    <span>Sistem Pengadaan Konvensional</span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-serif font-bold text-stone-900">
+                    Jalur Tengkulak & Makelar
+                  </h3>
+                </div>
+                <span className="shrink-0 text-[10px] font-mono font-bold text-rose-800 bg-rose-100/70 border border-rose-200 px-3 py-1 rounded-full">
+                  ✕ Rawan Sengketa
+                </span>
+              </div>
+
+              {/* List of 5 Core Problems */}
+              <div className="space-y-4">
+                {[
+                  {
+                    aspect: 'Harga Hasil Tani',
+                    desc: 'Harga ditekan sepihak di bawah modal tanam. Petani tidak memiliki posisi tawar.',
+                    tag: 'Petani Merugi',
+                  },
+                  {
+                    aspect: 'Kepastian Penjualan',
+                    desc: 'Transaksi serba mendadak. Panen sering membusuk di ladang karena pembeli membatalkan pesanan.',
+                    tag: 'Risiko Panen Terbuang',
+                  },
+                  {
+                    aspect: 'Pemerataan Kuota',
+                    desc: 'Didominasi 1 distributor besar bermodal raksasa. Kelompok tani kecil sulit masuk ke dapur dinas.',
+                    tag: 'Monopoli Pihak Tertentu',
+                  },
+                  {
+                    aspect: 'Pencairan Pembayaran',
+                    desc: 'Uang hasil panen tertahan berminggu-minggu, modal tanam berikutnya terganggu.',
+                    tag: 'Gagal Bayar / Tersendat',
+                  },
+                  {
+                    aspect: 'Asal Usul & Keamanan Makanan',
+                    desc: 'Tidak ada catatan jelas ladang mana yang memproduksi dan apakah bahan lolos uji kesegaran.',
+                    tag: 'Bahan Tidak Terlacak',
+                  },
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="p-3.5 rounded-2xl bg-white/70 border border-stone-200/70 space-y-1 hover:bg-rose-50/30 hover:border-rose-200 transition-all"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="w-5 h-5 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center text-xs font-bold shrink-0">
+                          ✕
+                        </span>
+                        <h4 className="text-xs sm:text-sm font-bold text-stone-900 font-sans">
+                          {item.aspect}
+                        </h4>
+                      </div>
+                      <span className="text-[10px] font-mono text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-200/60 shrink-0">
+                        {item.tag}
+                      </span>
+                    </div>
+                    <p className="text-xs text-stone-500 pl-7 leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom Status Cara Lama */}
+            <div className="mt-8 pt-4 border-t border-stone-200 text-xs font-mono text-stone-500 flex items-center justify-between">
+              <span>Biaya Tambahan Perantara:</span>
+              <strong className="text-rose-700 font-bold">+25% s/d 40% Margin Makelar</strong>
+            </div>
+          </div>
+
+          {/* KARTU 2: REVOLUSI ORVANA (TRANSPARAN, ADIL, BERKELANJUTAN) */}
+          <div className="relative rounded-3xl bg-gradient-to-b from-white via-emerald-50/30 to-emerald-100/20 border-2 border-emerald-600/80 p-6 sm:p-8 flex flex-col justify-between shadow-elevated hover:shadow-2xl transition-all duration-300">
+            {/* Top Emerald Forest Accent */}
+            <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-emerald-600 via-amber-400 to-emerald-600" />
+
+            <div>
+              {/* Header Card ORVANA */}
+              <div className="flex items-center justify-between gap-3 pb-5 border-b border-emerald-200/70 mb-6">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold text-emerald-800 uppercase tracking-wider mb-1">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                    <span>Ekosistem Pangan Masa Depan</span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-serif font-bold text-stone-950 flex items-center gap-2">
+                    <span>ORVANA Digital Rantai Pasok</span>
+                  </h3>
+                </div>
+                <span className="shrink-0 text-[10px] font-mono font-bold text-emerald-900 bg-emerald-100 border border-emerald-300 px-3 py-1 rounded-full shadow-2xs">
+                  ✓ Standar Resmi Dinas
+                </span>
+              </div>
+
+              {/* List of 5 Core Solutions */}
+              <div className="space-y-4">
+                {[
+                  {
+                    aspect: 'Jaminan Harga Adil Wilayah',
+                    desc: 'Sistem otomatis menolak tawaran di bawah harga dasar pemerintah daerah. Margin keuntungan petani terjaga.',
+                    tag: 'Harga Adil & Terkunci',
+                    icon: ShieldCheck,
+                  },
+                  {
+                    aspect: 'Kepastian Serapan Panen',
+                    desc: 'Jadwal kebutuhan bahan dapur diketahui 1-2 minggu di muka. Panen langsung terhubung ke kontrak resmi.',
+                    tag: 'Panen Terencana 100%',
+                    icon: Clock,
+                  },
+                  {
+                    aspect: 'Pemerataan Kuota Semua Petani',
+                    desc: 'Alokasi cerdas otomatis membatasi maksimal 60% per pemasok agar kelompok tani kecil tetap kebagian jatah.',
+                    tag: 'Anti-Monopoli Kuota',
+                    icon: Users,
+                  },
+                  {
+                    aspect: 'Keamanan Dompet & Pembayaran Cepat',
+                    desc: 'Anggaran belanja dapur dijamin di awal sistem, langsung dicairkan seketika setelah uji mutu kualitas lolos.',
+                    tag: 'Cair Instan & Pasti',
+                    icon: Lock,
+                  },
+                  {
+                    aspect: 'Paspor Digital & QR Code Jejak Pangan',
+                    desc: 'Setiap paket bahan memiliki kode QR publik yang menampilkan nama petani, desa asal, supir kurir, & laporan ahli gizi.',
+                    tag: 'Bisa Dilacak Siapa Pun',
+                    icon: QrCode,
+                  },
+                ].map((item, idx) => {
+                  const ItemIcon = item.icon;
+                  return (
+                    <div
+                      key={idx}
+                      className="p-3.5 rounded-2xl bg-white border border-emerald-200/80 shadow-2xs space-y-1 hover:border-emerald-500 hover:ring-1 hover:ring-emerald-500/20 transition-all"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-2xs">
+                            <Check className="w-3.5 h-3.5" />
+                          </span>
+                          <h4 className="text-xs sm:text-sm font-bold text-emerald-950 font-sans flex items-center gap-1.5">
+                            <ItemIcon className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                            <span>{item.aspect}</span>
+                          </h4>
+                        </div>
+                        <span className="text-[10px] font-mono font-bold text-emerald-900 bg-emerald-100/80 px-2 py-0.5 rounded border border-emerald-300 shrink-0">
+                          {item.tag}
+                        </span>
+                      </div>
+                      <p className="text-xs text-stone-600 pl-7 leading-relaxed font-sans">
+                        {item.desc}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Bottom Status ORVANA */}
+            <div className="mt-8 pt-4 border-t border-emerald-200 text-xs font-mono text-stone-700 flex flex-wrap items-center justify-between gap-2">
+              <span className="flex items-center gap-1.5 font-bold text-emerald-950">
+                <BadgeCheck className="w-4 h-4 text-emerald-600" />
+                Efisiensi Distribusi Bersih:
+              </span>
+              <strong className="text-emerald-800 font-extrabold bg-emerald-100/90 px-2.5 py-1 rounded-full border border-emerald-300">
+                100% Hak Petani & Dapur Tanpa Potongan Gelap
+              </strong>
+            </div>
+          </div>
+
         </div>
+
       </section>
       </ScrollReveal>
 
