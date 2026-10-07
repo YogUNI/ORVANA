@@ -1252,77 +1252,97 @@ export const LandingPage: React.FC = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
-            {/* SISI KIRI: INPUT WHATSAPP STYLE DENGAN MASKOT CERDAS LANGSUNG DI ATASNYA */}
+            {/* SISI KIRI: THE WHATSAPP HARVEST TERMINAL (EYE-CATCHING & JELAS BISA DIKETIK) */}
             <div className="lg:col-span-6 space-y-4">
               
-              {/* Header Input & Living Mascot Observer Anchor */}
-              <div className="flex items-end justify-between pb-1 relative">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[10px] font-mono font-bold text-stone-500 uppercase tracking-wider">
-                      UJI COBA PESAN CHAT
-                    </span>
+              {/* Terminal Frame dengan Header Chat WhatsApp Resmi */}
+              <div className="rounded-2xl bg-gradient-to-b from-[#11231B] to-[#0A1611] border-2 border-emerald-500/40 p-4 sm:p-5 shadow-xl shadow-emerald-950/20 text-white relative overflow-hidden">
+                
+                {/* Background Ambient Glow */}
+                <div className="absolute top-0 right-0 w-36 h-36 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+
+                {/* Top Terminal Bar */}
+                <div className="flex items-center justify-between pb-3 mb-3 border-b border-emerald-800/40">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center shrink-0">
+                      <MessageSquare className="w-4 h-4 text-emerald-300" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-amber-50 font-sans flex items-center gap-1.5">
+                        <span>Terminal WA Bot Petani ORVANA</span>
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      </div>
+                      <div className="text-[10px] text-emerald-400 font-mono">Penerima Pesan Panen Lapangan</div>
+                    </div>
                   </div>
-                  <h3 className="text-sm font-bold text-stone-900 font-serif">
-                    Ketik Kalimat Bebas Seperti Chat WhatsApp:
-                  </h3>
-                  <p className="text-[11px] text-stone-500 font-sans">
-                    Bisa pakai singkatan ketikan cepat, sebutan takaran lokal, atau harga pasar.
-                  </p>
+
+                  {/* Maskot Pengamat Langsung */}
+                  <div className="shrink-0 -my-2">
+                    <AiThinkingMascot status={mascotStatus} size={60} />
+                  </div>
                 </div>
 
-                {/* 2D Living Vector Mascot Directly Observing Input */}
-                <div className="shrink-0 -mb-2">
-                  <AiThinkingMascot status={mascotStatus} size={78} />
+                {/* Callout Mengundang Mengetik */}
+                <div className="mb-3 px-3 py-1.5 rounded-lg bg-emerald-950/80 border border-emerald-500/30 flex items-center justify-between text-[11px] font-mono">
+                  <span className="text-emerald-300 flex items-center gap-1.5 font-bold">
+                    <span className="animate-ping inline-flex h-2 w-2 rounded-full bg-amber-400 opacity-75" />
+                    👉 Uji Ketik Pesan Panen di Sini:
+                  </span>
+                  <span className="text-stone-400 text-[10px]">Dialek & Singkatan Bebas</span>
                 </div>
+
+                {/* INPUT BAR MENONJOL: Mirip Input WhatsApp Asli Beraksen Hijau */}
+                <div className="relative group">
+                  <div className="flex items-center gap-2 p-1.5 rounded-xl bg-white border-2 border-emerald-400 shadow-md shadow-emerald-950/30 focus-within:ring-3 focus-within:ring-emerald-400/40 transition-all">
+                    <input
+                      type="text"
+                      value={nlpSampleText}
+                      onChange={(e) => handleInputChange(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleTestNLP()}
+                      placeholder="Ketik: besok ada panen 2 kwintal cabai..."
+                      className="flex-1 px-3 py-2 text-xs sm:text-sm bg-transparent text-stone-900 font-sans focus:outline-none placeholder:text-stone-400"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleTestNLP}
+                      disabled={nlpLoading}
+                      className="px-4 py-2.5 rounded-lg bg-emerald-900 hover:bg-emerald-800 text-white font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95 disabled:opacity-50 shrink-0"
+                    >
+                      <Send className="w-3.5 h-3.5 text-emerald-300" />
+                      <span>{nlpLoading ? 'Urai...' : 'Kirim'}</span>
+                    </button>
+                  </div>
+                  <div className="flex justify-between items-center text-[10px] font-mono text-stone-400 mt-2 px-1">
+                    <span>Tekan Enter di keyboard untuk kirim</span>
+                    <span className="text-emerald-400">Paham sebutan: kwintal, ikat, ton, rb</span>
+                  </div>
+                </div>
+
               </div>
 
-              {/* Chat-Style Input Bar with clean padding and clear separation */}
-              <div className="space-y-1.5">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={nlpSampleText}
-                    onChange={(e) => handleInputChange(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleTestNLP()}
-                    placeholder="Contoh: besok panen 2 kwintal cabai rawit 45rb..."
-                    className="flex-1 px-4 py-3 border border-stone-300 hover:border-emerald-500 focus:border-emerald-600 rounded-xl text-xs bg-white text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 font-mono shadow-2xs placeholder:text-stone-400 transition-all"
-                  />
-                  <Button
-                    type="button"
-                    onClick={handleTestNLP}
-                    disabled={nlpLoading}
-                    className="bg-emerald-950 hover:bg-emerald-900 text-white text-xs px-5 py-3 font-bold rounded-xl flex items-center gap-1.5 transition-all cursor-pointer shrink-0 shadow-sm"
-                  >
-                    <Send className="w-3.5 h-3.5" />
-                    <span>{nlpLoading ? 'Membaca...' : 'Urai Pesan'}</span>
-                  </Button>
-                </div>
-                <div className="flex justify-between items-center text-[10px] font-mono text-stone-600 px-1">
-                  <span>Tekan Enter di keyboard untuk kirim pesan</span>
-                  <span className="text-emerald-800">Terkoneksi: WhatsApp & Jalur SMS Petani</span>
-                </div>
-              </div>
-
-              {/* Quick 1-Click Tap Prompts */}
+              {/* QUICK CLICK BUBBLES: Bergaya Balon Chat Masuk Asli */}
               <div className="space-y-2 pt-1">
-                <span className="text-[10px] font-mono text-stone-600 block">
-                  Atau klik contoh kalimat pesan di lapangan:
-                </span>
-                <div className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between text-[10px] font-mono text-stone-600 px-1">
+                  <span>Atau klik contoh obrolan petani di bawah:</span>
+                  <span className="text-emerald-800 font-bold">👆 1x Klik untuk Tes</span>
+                </div>
+
+                <div className="flex flex-col gap-2">
                   {[
                     {
-                      label: 'Pakai Kata Satuan ("dua kwintal"):',
+                      role: 'Petani Cabai (Takaran Kwintal)',
                       text: 'besok ada panen cabai rawit dua kwintal harga 45rb sama bayam 50 kilo',
+                      time: '08:14',
                     },
                     {
-                      label: 'Banyak Komoditas ("setengah ton"):',
+                      role: 'Peternak & Petani (Satuan Ton & Ekor)',
                       text: 'lusa siap kirim setengah ton beras lokal sama lele 30 kilo 25rb',
+                      time: '09:30',
                     },
                     {
-                      label: 'Singkatan Cepat Petani ("sy bsoq ad pnn"):',
+                      role: 'Singkatan WhatsApp Cepat Lapangan',
                       text: 'sy bsoq ad pnn cengek 100 kg harga 40 ribu siap setor',
+                      time: '11:05',
                     },
                   ].map((preset, pIdx) => (
                     <button
@@ -1332,12 +1352,17 @@ export const LandingPage: React.FC = () => {
                         handleInputChange(preset.text);
                         setTimeout(() => handleTestNLP(), 100);
                       }}
-                      className="text-left px-3 py-2 rounded-xl bg-white hover:bg-emerald-50/70 border border-stone-200/90 hover:border-emerald-300 text-stone-700 transition-all cursor-pointer group shadow-2xs"
+                      className="text-left p-3 rounded-2xl bg-white hover:bg-emerald-50/80 border border-stone-300 hover:border-emerald-500 shadow-2xs hover:shadow-sm transition-all cursor-pointer group relative"
                     >
-                      <div className="text-[9px] font-mono font-bold text-emerald-800 uppercase group-hover:text-emerald-900">
-                        {preset.label}
+                      <div className="flex items-center justify-between text-[10px] font-mono mb-1">
+                        <span className="font-bold text-emerald-900 group-hover:text-emerald-950">
+                          💬 {preset.role}
+                        </span>
+                        <span className="text-stone-400 flex items-center gap-1">
+                          {preset.time} <span className="text-sky-600">✓✓</span>
+                        </span>
                       </div>
-                      <div className="text-xs font-mono text-stone-800 truncate mt-0.5">
+                      <div className="text-xs font-sans text-stone-800 italic group-hover:text-stone-950">
                         "{preset.text}"
                       </div>
                     </button>
