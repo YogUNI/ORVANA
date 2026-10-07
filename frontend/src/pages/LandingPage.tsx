@@ -34,10 +34,7 @@ import {
   Lock,
   Utensils,
   BadgeCheck,
-  FileText,
-  Clock,
   Zap,
-  Award,
   Thermometer,
 } from 'lucide-react';
 
@@ -51,7 +48,6 @@ interface PublicImpactSummary {
 
 export const LandingPage: React.FC = () => {
   const [batchCodeInput, setBatchCodeInput] = useState('');
-  const [activeTabRole, setActiveTabRole] = useState<'kitchen' | 'farmer' | 'coordinator' | 'inspector'>('kitchen');
 
   // Interactive Live Calculator State
   const [calcPortions, setCalcPortions] = useState<number>(1000);
@@ -588,609 +584,286 @@ export const LandingPage: React.FC = () => {
       </section>
 
       <ScrollReveal animation="fade-up" delayMs={0}>
-        {/* 8. ALUR KERJA 4 PERAN LAPANGAN (INTERACTIVE ROLE ECOSYSTEM) */}
-      {/* 8. ALUR KERJA 4 PERAN LAPANGAN (INTERACTIVE ROLE ECOSYSTEM) */}
+        {/* 8. ALUR KERJA 4 PERAN LAPANGAN - 4-COLUMN CONNECTED PIPELINE STORYBOARD */}
       <section id="alur" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-24">
         
-        {/* Header Bagian - Editorial Agritech Style */}
+        {/* Header Bagian - Clean & Direct */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950 text-emerald-300 text-[11px] font-mono font-semibold tracking-wider border border-emerald-800/60 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>SINERGI SIKLUS TERPADU</span>
+            <span>ALUR KERJA TERPADU (END-TO-END)</span>
           </div>
           <h2 className="font-serif text-3xl sm:text-5xl font-bold text-stone-950 tracking-tight leading-tight">
-            Bagaimana Alur Kerja <span className="italic font-normal text-emerald-850">4 Peran Lapangan?</span>
+            Bagaimana <span className="italic font-normal text-emerald-850">4 Peran Bekerja Sama?</span>
           </h2>
-          <p className="text-sm sm:text-base text-stone-600 leading-relaxed font-sans max-w-2xl mx-auto">
-            Bukan sekadar form statis. Saksikan bagaimana pesanan dapur bertransformasi menjadi kontrak riil petani, manifest rantai dingin berpaspor QR, hingga rilis escrow otomatis saat mutu terverifikasi.
+          <p className="text-sm sm:text-base text-stone-600 leading-relaxed max-w-2xl mx-auto">
+            Dari menu dapur hingga rupiah di tangan petani. Satu siklus rantai pasok terhubung dalam 4 langkah transparan tanpa perantara gelap.
           </p>
         </div>
 
-        {/* Connected Stage Stepper Timeline (Anti-Kaku, Terhubung Garis Data) */}
-        <div className="max-w-5xl mx-auto mb-12">
-          <div className="relative">
-            {/* Connecting background progress track */}
-            <div className="hidden md:block absolute top-1/2 left-8 right-8 -translate-y-1/2 h-[2px] bg-gradient-to-r from-emerald-200 via-stone-200 to-emerald-200 z-0 pointer-events-none" />
+        {/* 4-Stage Horizontal Connected Flowboard */}
+        <div className="relative">
+          {/* Neon Connection Pipeline Track (Visible on Desktop) */}
+          <div className="hidden lg:block absolute top-[52px] left-[10%] right-[10%] h-[3px] bg-gradient-to-r from-emerald-400 via-amber-400 via-sky-400 to-purple-400 opacity-60 z-0 pointer-events-none rounded-full" />
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 relative z-10">
-              {[
-                {
-                  id: 'kitchen',
-                  step: '01',
-                  label: 'Pengelola Dapur',
-                  roleDesc: 'Demand & Peramalan Resep',
-                  icon: Utensils,
-                  tag: 'Hulu Permintaan',
-                  accent: 'emerald',
-                },
-                {
-                  id: 'farmer',
-                  step: '02',
-                  label: 'Petani & Nelayan',
-                  roleDesc: 'Alokasi & Escrow Hold',
-                  icon: Leaf,
-                  tag: 'Produsen Lokal',
-                  accent: 'amber',
-                },
-                {
-                  id: 'coordinator',
-                  step: '03',
-                  label: 'Koordinator Desa',
-                  roleDesc: 'Konsolidasi & Paspor QR',
-                  icon: Truck,
-                  tag: 'Rantai Dingin',
-                  accent: 'sky',
-                },
-                {
-                  id: 'inspector',
-                  step: '04',
-                  label: 'Pengawas Mutu',
-                  roleDesc: 'Audit Fisik & Rilis Escrow',
-                  icon: ShieldCheck,
-                  tag: 'Quality Gate',
-                  accent: 'purple',
-                },
-              ].map((tab) => {
-                const Icon = tab.icon;
-                const isActive = activeTabRole === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    onClick={() => setActiveTabRole(tab.id as any)}
-                    className={`group relative text-left p-4 sm:p-5 rounded-2xl sm:rounded-3xl transition-all duration-300 backdrop-blur-sm cursor-pointer ${
-                      isActive
-                        ? 'bg-emerald-950 text-white shadow-xl shadow-emerald-950/20 ring-2 ring-emerald-500/40 -translate-y-1'
-                        : 'bg-white/90 hover:bg-white text-stone-700 border border-stone-200/90 hover:border-emerald-300 shadow-soft hover:shadow-card'
-                    }`}
-                  >
-                    {/* Active Pip Indicator */}
-                    {isActive && (
-                      <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-8 h-1 bg-amber-400 rounded-full shadow-sm" />
-                    )}
+          {/* 4 Storyboard Columns Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
 
-                    <div className="flex items-center justify-between mb-3">
-                      <span className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-md ${
-                        isActive
-                          ? 'bg-emerald-900/90 text-amber-300 border border-emerald-700/60'
-                          : 'bg-stone-100 text-stone-500 border border-stone-200/60'
-                      }`}>
-                        TAHAP {tab.step}
-                      </span>
-                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 ${
-                        isActive
-                          ? 'bg-emerald-800 text-amber-300 shadow-inner'
-                          : 'bg-stone-100 text-stone-600 group-hover:text-emerald-700 group-hover:bg-emerald-50'
-                      }`}>
-                        <Icon className="w-4 h-4" />
-                      </div>
+            {/* STAGE 1: DAPUR GIZI */}
+            <div className="group relative flex flex-col bg-white rounded-3xl border border-stone-200/90 hover:border-emerald-500 shadow-soft hover:shadow-elevated transition-all duration-300 p-6 overflow-hidden">
+              {/* Top Accent Gradient Bar */}
+              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-emerald-500 to-emerald-600" />
+              
+              {/* Step Badge & Role Head */}
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold shadow-2xs group-hover:scale-105 transition-transform">
+                    <Utensils className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-mono font-bold text-emerald-800 uppercase tracking-wider block">Langkah 01</span>
+                    <h3 className="text-sm font-bold text-stone-900 leading-tight">Pengelola Dapur</h3>
+                  </div>
+                </div>
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-4 ring-emerald-100" />
+              </div>
+
+              {/* Tangible Action Headline */}
+              <div className="mb-4">
+                <h4 className="text-base font-bold text-stone-950 font-serif leading-snug">
+                  Rilis Rencana Menu & Kebutuhan Otomatis
+                </h4>
+                <p className="text-xs text-stone-600 mt-1.5 leading-relaxed">
+                  Dapur memasukkan menu (misal 1.000 porsi). Sistem langsung menghitung kebutuhan bahan kotor + toleransi susut masak.
+                </p>
+              </div>
+
+              {/* Tangible Result Card (Visual Artefact) */}
+              <div className="mt-auto pt-4 border-t border-stone-100">
+                <div className="rounded-2xl bg-emerald-50/60 border border-emerald-200/80 p-3.5 space-y-2">
+                  <div className="flex items-center justify-between text-[11px] font-mono">
+                    <span className="text-emerald-900 font-semibold">Resep R1 (1.000 Porsi)</span>
+                    <span className="text-[10px] bg-emerald-200/70 text-emerald-900 px-1.5 py-0.5 rounded font-bold">H-7</span>
+                  </div>
+                  <div className="space-y-1 font-mono text-xs">
+                    <div className="flex justify-between items-center text-stone-700">
+                      <span>Bayam Segar:</span>
+                      <strong className="text-stone-950">69,0 kg</strong>
                     </div>
-
-                    <h3 className="text-xs sm:text-sm font-bold tracking-tight leading-snug truncate">
-                      {tab.label}
-                    </h3>
-                    <p className={`text-[11px] mt-1 font-sans line-clamp-1 ${
-                      isActive ? 'text-emerald-200/80' : 'text-stone-600'
-                    }`}>
-                      {tab.roleDesc}
-                    </p>
-
-                    {/* Stage status indicator pill */}
-                    <div className="mt-3 pt-2.5 border-t border-stone-100/10 flex items-center gap-1.5 text-[10px] font-mono">
-                      <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-400 animate-pulse' : 'bg-stone-300'}`} />
-                      <span className={isActive ? 'text-emerald-300 font-semibold' : 'text-stone-600'}>
-                        {tab.tag}
-                      </span>
+                    <div className="flex justify-between items-center text-[11px] text-emerald-800">
+                      <span>Toleransi Susut:</span>
+                      <span className="font-bold">+15% Terhitung</span>
                     </div>
-                  </button>
-                );
-              })}
+                  </div>
+                </div>
+
+                {/* Outcome Micro Tag */}
+                <div className="mt-3 flex items-center gap-1.5 text-[11px] font-mono font-bold text-emerald-800">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Kebutuhan Siap Dicocokkan ➔</span>
+                </div>
+              </div>
             </div>
+
+            {/* STAGE 2: PETANI & NELAYAN */}
+            <div className="group relative flex flex-col bg-white rounded-3xl border border-stone-200/90 hover:border-amber-500 shadow-soft hover:shadow-elevated transition-all duration-300 p-6 overflow-hidden">
+              {/* Top Accent Gradient Bar */}
+              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-amber-500 to-amber-600" />
+
+              {/* Step Badge & Role Head */}
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold shadow-2xs group-hover:scale-105 transition-transform">
+                    <Leaf className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-mono font-bold text-amber-800 uppercase tracking-wider block">Langkah 02</span>
+                    <h3 className="text-sm font-bold text-stone-900 leading-tight">Petani / Nelayan</h3>
+                  </div>
+                </div>
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 ring-4 ring-amber-100" />
+              </div>
+
+              {/* Tangible Action Headline */}
+              <div className="mb-4">
+                <h4 className="text-base font-bold text-stone-950 font-serif leading-snug">
+                  Terima Kuota Panen & Dana Terkunci Aman
+                </h4>
+                <p className="text-xs text-stone-600 mt-1.5 leading-relaxed">
+                  Petani menyanggupi kuota dalam 12 jam. Dana pesanan langsung dicadangkan [HOLD] di rekening penampung resmi (escrow).
+                </p>
+              </div>
+
+              {/* Tangible Result Card (Visual Artefact) */}
+              <div className="mt-auto pt-4 border-t border-stone-100">
+                <div className="rounded-2xl bg-amber-50/60 border border-amber-200/80 p-3.5 space-y-2">
+                  <div className="flex items-center justify-between text-[11px] font-mono">
+                    <span className="text-amber-950 font-semibold">Poktan Makmur (Desa)</span>
+                    <span className="text-[10px] bg-amber-200/70 text-amber-900 px-1.5 py-0.5 rounded font-bold">Respon 12j</span>
+                  </div>
+                  <div className="space-y-1 font-mono text-xs">
+                    <div className="flex justify-between items-center text-stone-700">
+                      <span>Alokasi Panen:</span>
+                      <strong className="text-stone-950">40,0 kg @ Rp 8.000</strong>
+                    </div>
+                    <div className="flex justify-between items-center text-[11px] text-amber-900 font-bold bg-amber-100/60 px-2 py-0.5 rounded-md border border-amber-300/60">
+                      <span className="flex items-center gap-1">
+                        <Lock className="w-3 h-3 text-amber-800" />
+                        Escrow Terkunci:
+                      </span>
+                      <span>Rp 320.000</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Outcome Micro Tag */}
+                <div className="mt-3 flex items-center gap-1.5 text-[11px] font-mono font-bold text-amber-800">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-600" />
+                  <span>Jaminan Pasar Tanpa Tengkulak ➔</span>
+                </div>
+              </div>
+            </div>
+
+            {/* STAGE 3: KOORDINATOR DESA */}
+            <div className="group relative flex flex-col bg-white rounded-3xl border border-stone-200/90 hover:border-sky-500 shadow-soft hover:shadow-elevated transition-all duration-300 p-6 overflow-hidden">
+              {/* Top Accent Gradient Bar */}
+              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-sky-500 to-sky-600" />
+
+              {/* Step Badge & Role Head */}
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-10 h-10 rounded-2xl bg-sky-100 text-sky-800 flex items-center justify-center font-bold shadow-2xs group-hover:scale-105 transition-transform">
+                    <Truck className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-mono font-bold text-sky-800 uppercase tracking-wider block">Langkah 03</span>
+                    <h3 className="text-sm font-bold text-stone-900 leading-tight">Koordinator Desa</h3>
+                  </div>
+                </div>
+                <span className="w-2.5 h-2.5 rounded-full bg-sky-500 ring-4 ring-sky-100" />
+              </div>
+
+              {/* Tangible Action Headline */}
+              <div className="mb-4">
+                <h4 className="text-base font-bold text-stone-950 font-serif leading-snug">
+                  Konsolidasi Rantai Dingin & Cetak Paspor QR
+                </h4>
+                <p className="text-xs text-stone-600 mt-1.5 leading-relaxed">
+                  Panen dijemput dalam radius pendek (&lt;25 km). Suhu dijaga stabil (+4°C), ditimbang digital, dan diberi label QR batch.
+                </p>
+              </div>
+
+              {/* Tangible Result Card (Visual Artefact) */}
+              <div className="mt-auto pt-4 border-t border-stone-100">
+                <div className="rounded-2xl bg-sky-50/60 border border-sky-200/80 p-3.5 space-y-2">
+                  <div className="flex items-center justify-between text-[11px] font-mono">
+                    <span className="text-sky-950 font-semibold">Batch: ORV-20261014-01</span>
+                    <span className="text-[10px] bg-sky-200/70 text-sky-900 px-1.5 py-0.5 rounded font-bold">Transit</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 pt-1">
+                    <div className="w-9 h-9 rounded-lg bg-white border border-sky-200 p-1 flex items-center justify-center shadow-2xs shrink-0">
+                      <QrCode className="w-full h-full text-slate-800" />
+                    </div>
+                    <div className="space-y-0.5 min-w-0 font-mono text-[11px]">
+                      <div className="flex items-center gap-1 text-sky-900 font-bold">
+                        <Thermometer className="w-3 h-3 text-sky-700" />
+                        <span>Suhu: +4,2°C (Optimal)</span>
+                      </div>
+                      <div className="text-stone-600 text-[10px]">Jarak Tempuh: 8,57 km</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Outcome Micro Tag */}
+                <div className="mt-3 flex items-center gap-1.5 text-[11px] font-mono font-bold text-sky-800">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-sky-600" />
+                  <span>Paspor Digital Siap Scan ➔</span>
+                </div>
+              </div>
+            </div>
+
+            {/* STAGE 4: PENGAWAS MUTU & QC */}
+            <div className="group relative flex flex-col bg-white rounded-3xl border border-stone-200/90 hover:border-purple-500 shadow-soft hover:shadow-elevated transition-all duration-300 p-6 overflow-hidden">
+              {/* Top Accent Gradient Bar */}
+              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-purple-500 to-purple-600" />
+
+              {/* Step Badge & Role Head */}
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-10 h-10 rounded-2xl bg-purple-100 text-purple-800 flex items-center justify-center font-bold shadow-2xs group-hover:scale-105 transition-transform">
+                    <ShieldCheck className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-mono font-bold text-purple-800 uppercase tracking-wider block">Langkah 04</span>
+                    <h3 className="text-sm font-bold text-stone-900 leading-tight">Pengawas Mutu (QC)</h3>
+                  </div>
+                </div>
+                <span className="w-2.5 h-2.5 rounded-full bg-purple-500 ring-4 ring-purple-100" />
+              </div>
+
+              {/* Tangible Action Headline */}
+              <div className="mb-4">
+                <h4 className="text-base font-bold text-stone-950 font-serif leading-snug">
+                  Inspeksi Ahli Gizi & Pencairan Escrow Seketika
+                </h4>
+                <p className="text-xs text-stone-600 mt-1.5 leading-relaxed">
+                  Bahan diperiksa dengan checklist organoleptik. Status Lulus [PASS] otomatis mengeksekusi transfer ke petani saat itu juga (T+0).
+                </p>
+              </div>
+
+              {/* Tangible Result Card (Visual Artefact) */}
+              <div className="mt-auto pt-4 border-t border-stone-100">
+                <div className="rounded-2xl bg-purple-50/60 border border-purple-200/80 p-3.5 space-y-2">
+                  <div className="flex items-center justify-between text-[11px] font-mono">
+                    <span className="text-purple-950 font-semibold">Hasil: Grade A (90/100)</span>
+                    <span className="text-[10px] bg-emerald-200 text-emerald-950 px-1.5 py-0.5 rounded font-bold">PASS 100%</span>
+                  </div>
+                  <div className="space-y-1 font-mono text-xs">
+                    <div className="flex justify-between items-center text-stone-700">
+                      <span>Fisik Daun:</span>
+                      <strong className="text-emerald-700">Hijau & Bersih</strong>
+                    </div>
+                    <div className="flex justify-between items-center text-[11px] text-emerald-900 font-bold bg-emerald-100/70 px-2 py-0.5 rounded-md border border-emerald-300/60">
+                      <span className="flex items-center gap-1">
+                        <BadgeCheck className="w-3 h-3 text-emerald-700" />
+                        Rilis Escrow:
+                      </span>
+                      <span>Rp 320.000 [T+0]</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Outcome Micro Tag */}
+                <div className="mt-3 flex items-center gap-1.5 text-[11px] font-mono font-bold text-purple-800">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-purple-600" />
+                  <span>Audit Trail Permanen Tuntas ✓</span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
-        {/* Interactive Role Showcase Container - Layered Editorial Cockpit */}
-        <div className="max-w-5xl mx-auto relative rounded-[2rem] sm:rounded-[2.5rem] bg-gradient-to-b from-white via-white/95 to-[#FAF8F5] border border-stone-200/90 shadow-elevated overflow-hidden">
-          
-          {/* Subtle Ambient Blueprint Grid Texture in Background */}
-          <div className="absolute inset-0 bg-[radial-gradient(#1E3A2F_0.75px,transparent_0.75px)] [background-size:20px_20px] opacity-[0.03] pointer-events-none" />
-
-          {/* Top Bar Cockpit Header */}
-          <div className="px-6 sm:px-10 py-4 border-b border-stone-200/70 bg-stone-50/60 backdrop-blur-sm flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-            <div className="flex items-center gap-2.5 text-stone-700">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-              <span className="font-bold tracking-wider text-stone-900 uppercase">
-                SIMULASI OPERASIONAL TERPADU • PROTOKOL ORVANA v1.4
-              </span>
+        {/* Bottom Trust Guarantee Strip */}
+        <div className="mt-12 max-w-4xl mx-auto rounded-2xl bg-stone-900 text-white p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl border border-stone-800 text-xs font-mono">
+          <div className="flex items-center gap-3 text-center sm:text-left">
+            <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+              <Zap className="w-4 h-4" />
             </div>
-            <div className="flex items-center gap-3 text-stone-600 text-[11px]">
-              <span className="hidden sm:inline">Zona Waktu: Asia/Jakarta (WIB)</span>
-              <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold border border-emerald-300/70">
-                STATUS: AKTIF SINKRON
-              </span>
+            <div>
+              <span className="text-white font-bold block text-sm">Transparansi 100% Tanpa Celah</span>
+              <span className="text-stone-400 text-[11px]">Setiap langkah diaudit permanen di buku besar digital, bebas manipulasi nota atau keterlambatan bayar.</span>
             </div>
           </div>
-
-          <div className="p-6 sm:p-10 relative z-10">
-            {/* TAHAP 1: DAPUR GIZI MASSAL */}
-            {activeTabRole === 'kitchen' && (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
-                {/* Deskripsi Alur Kiri */}
-                <div className="lg:col-span-6 flex flex-col justify-between space-y-6">
-                  <div className="space-y-4">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/90 text-emerald-900 text-xs font-mono font-bold border border-emerald-300 shadow-2xs">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
-                      <span>FASE 01 • DEMAND & PLANNING ENGINES</span>
-                    </div>
-
-                    <h3 className="font-serif text-2xl sm:text-3xl font-bold text-stone-950 leading-tight">
-                      Dapur Menyusun Rencana Menu & Toleransi Susut Otomatis
-                    </h3>
-
-                    <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
-                      Pengelola dapur memasukkan rencana menu bergizi massal 1–2 minggu sebelum jadwal masak (misal Resep R1: Soto Ayam Bergizi untuk 1.000 porsi). Sistem ORVANA secara cerdas mengonversi resep gramasi menjadi kebutuhan bahan baku kotor lengkap dengan formula toleransi susut masak.
-                    </p>
-
-                    <div className="space-y-2.5 pt-2">
-                      <div className="flex items-start gap-2 text-xs text-stone-700 font-sans">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span><strong>Formula Baku Resep R1–R5:</strong> Setiap komoditas dihitung otomatis per gram porsi standar BPOM & Kemenkes.</span>
-                      </div>
-                      <div className="flex items-start gap-2 text-xs text-stone-700 font-sans">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span><strong>Toleransi Susut Masak (+15%):</strong> Mencegah kekurangan pasokan saat pemotongan dan pembersihan bahan sayur basah.</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 pt-4 border-t border-stone-200/80">
-                    <button
-                      type="button"
-                      onClick={() => setActiveTabRole('farmer')}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold shadow-md transition-all cursor-pointer group"
-                    >
-                      <span>Lanjut ke Tahap 02: Petani</span>
-                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                    <span className="text-[11px] font-mono text-stone-600">Simulasi Realistis</span>
-                  </div>
-                </div>
-
-                {/* Artefak Visual Kanan: Smart Recipe & Demand Formulation Sheet */}
-                <div className="lg:col-span-6 bg-gradient-to-br from-stone-900 to-stone-950 text-stone-200 rounded-2xl sm:rounded-3xl p-6 shadow-2xl border border-stone-800/80 relative flex flex-col justify-between">
-                  <div className="space-y-4">
-                    {/* Header Dokumen Rencana */}
-                    <div className="flex items-center justify-between border-b border-stone-800 pb-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-                          <FileText className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <div className="text-[11px] font-mono font-bold text-white uppercase tracking-wider">LEMBAR PERENCANAAN DAPUR</div>
-                          <div className="text-[10px] text-stone-400 font-mono">DAPUR-01 • UPT Dapur Gizi Terpadu</div>
-                        </div>
-                      </div>
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-mono font-bold border border-emerald-500/30">
-                        STATUS: SIAP DICOCOKKAN
-                      </span>
-                    </div>
-
-                    {/* Metrik Porsi & Jadwal Masak */}
-                    <div className="grid grid-cols-2 gap-3 p-3 rounded-xl bg-stone-800/50 border border-stone-700/50 text-xs font-mono">
-                      <div>
-                        <div className="text-[10px] text-stone-400">Target Masak:</div>
-                        <div className="font-bold text-white text-sm">1.000 Porsi</div>
-                        <div className="text-[10px] text-emerald-400">Menu Resep R1</div>
-                      </div>
-                      <div>
-                        <div className="text-[10px] text-stone-400">Jadwal Pengiriman:</div>
-                        <div className="font-bold text-amber-400 text-sm">H-1 Pukul 06.00</div>
-                        <div className="text-[10px] text-stone-400">Sebelum Masak Subuh</div>
-                      </div>
-                    </div>
-
-                    {/* Breakdown Kebutuhan Bahan Otomatis */}
-                    <div className="space-y-2 text-xs font-mono">
-                      <div className="text-[11px] font-bold text-stone-300 uppercase tracking-wider flex justify-between">
-                        <span>Komoditas Utama</span>
-                        <span>Estimasi Kebutuhan</span>
-                      </div>
-                      
-                      {/* Item 1 */}
-                      <div className="p-2.5 rounded-lg bg-stone-800/80 border border-stone-700/40 flex items-center justify-between">
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                          <div>
-                            <div className="text-white font-semibold">Bayam Hijau Segar</div>
-                            <div className="text-[10px] text-stone-400">Netto: 60,0 kg | Susut: +15%</div>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-amber-300 font-bold text-sm">69,0 kg</div>
-                          <div className="text-[10px] text-emerald-400">Maks. Rp 10.000/kg</div>
-                        </div>
-                      </div>
-
-                      {/* Item 2 */}
-                      <div className="p-2.5 rounded-lg bg-stone-800/80 border border-stone-700/40 flex items-center justify-between">
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-2 h-2 rounded-full bg-amber-400" />
-                          <div>
-                            <div className="text-white font-semibold">Daging Ayam Broiler Bersih</div>
-                            <div className="text-[10px] text-stone-400">Netto: 80,0 kg | Potong 10</div>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-white font-bold text-sm">85,0 kg</div>
-                          <div className="text-[10px] text-emerald-400">Maks. Rp 34.000/kg</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Footer Telemetry */}
-                  <div className="mt-4 pt-3 border-t border-stone-800 flex items-center justify-between text-[11px] font-mono text-stone-400">
-                    <span className="flex items-center gap-1.5 text-emerald-400">
-                      <Zap className="w-3.5 h-3.5" />
-                      Algoritma Pencocokan: Siap
-                    </span>
-                    <span>Toleransi Alokasi: Multi-Pemasok</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAHAP 2: PETANI / NELAYAN LOKAL */}
-            {activeTabRole === 'farmer' && (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
-                {/* Deskripsi Alur Kiri */}
-                <div className="lg:col-span-6 flex flex-col justify-between space-y-6">
-                  <div className="space-y-4">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100/90 text-amber-900 text-xs font-mono font-bold border border-amber-300 shadow-2xs">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-600" />
-                      <span>FASE 02 • CONTRACT ALLOCATION & SMART ESCROW</span>
-                    </div>
-
-                    <h3 className="font-serif text-2xl sm:text-3xl font-bold text-stone-950 leading-tight">
-                      Petani Menerima Alokasi Kuota & Jaminan Pembayaran Pasti
-                    </h3>
-
-                    <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
-                      Petani atau kelompok tani lokal di pelosok desa menerima penawaran kuota panen pasti. Begitu disepakati, sistem langsung mencadangkan dana transaksi secara aman ke rekening penampung resmi (*escrow hold*), sehingga petani terbebas dari permainan harga tengkulak atau risiko gagal bayar.
-                    </p>
-
-                    <div className="space-y-2.5 pt-2">
-                      <div className="flex items-start gap-2 text-xs text-stone-700 font-sans">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span><strong>Batas Respon Kuota 12 Jam:</strong> Alokasi bergulir otomatis ke cadangan poktan lain jika tidak direspons tepat waktu.</span>
-                      </div>
-                      <div className="flex items-start gap-2 text-xs text-stone-700 font-sans">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span><strong>Dana Terkunci Aman [ESCROW HOLD]:</strong> Petani memiliki kepastian bahwa dana sudah siap dicairkan sesaat setelah panen lolos QC.</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 pt-4 border-t border-stone-200/80">
-                    <button
-                      type="button"
-                      onClick={() => setActiveTabRole('coordinator')}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-700 hover:bg-amber-800 text-white text-xs font-semibold shadow-md transition-all cursor-pointer group"
-                    >
-                      <span>Lanjut ke Tahap 03: Koordinator</span>
-                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                    <span className="text-[11px] font-mono text-stone-600">Simulasi Realistis</span>
-                  </div>
-                </div>
-
-                {/* Artefak Visual Kanan: Tiket Kontrak Alokasi & Escrow Vault Card */}
-                <div className="lg:col-span-6 bg-gradient-to-br from-[#1C1A14] to-[#12110D] text-stone-200 rounded-2xl sm:rounded-3xl p-6 shadow-2xl border border-amber-900/40 relative flex flex-col justify-between">
-                  <div className="space-y-4">
-                    {/* Header Tiket Kontrak */}
-                    <div className="flex items-center justify-between border-b border-stone-800 pb-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
-                          <Lock className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <div className="text-[11px] font-mono font-bold text-white uppercase tracking-wider">SURAT PERINTAH PANEN RESMI</div>
-                          <div className="text-[10px] text-stone-400 font-mono">PO-ORV-20261014-001 • Poktan Makmur</div>
-                        </div>
-                      </div>
-                      <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-mono font-bold border border-amber-500/40 flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        SISA RESPON: 08:42:15
-                      </span>
-                    </div>
-
-                    {/* Informasi Produsen & Escrow Badge */}
-                    <div className="p-3.5 rounded-xl bg-stone-900/90 border border-amber-900/50 space-y-2">
-                      <div className="flex items-center justify-between text-xs font-mono">
-                        <span className="text-stone-400">Penyedia:</span>
-                        <span className="text-white font-bold">Pak Sugeng / Poktan Makmur Desa Sukamaju</span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs font-mono">
-                        <span className="text-stone-400">Komoditas & Kuota:</span>
-                        <span className="text-amber-300 font-bold">40,0 kg Bayam Hijau</span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs font-mono">
-                        <span className="text-stone-400">Harga Disepakati:</span>
-                        <span className="text-emerald-400 font-bold">Rp 8.000 / kg (Tanpa Potongan)</span>
-                      </div>
-                    </div>
-
-                    {/* Escrow Vault Guarantee Box */}
-                    <div className="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-750/60 relative overflow-hidden">
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-1">
-                          <div className="text-[10px] font-mono uppercase text-emerald-400 tracking-wider font-semibold">
-                            STATUS JAMINAN PEMBAYARAN
-                          </div>
-                          <div className="text-lg font-mono font-extrabold text-white">
-                            Rp 320.000
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold border border-emerald-400/30">
-                            <Lock className="w-3 h-3" />
-                            DANA TERKUNCI [HOLD]
-                          </div>
-                          <div className="text-[10px] text-stone-400 font-mono mt-1">Dicadangkan di Escrow Bank</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Footer Telemetry */}
-                  <div className="mt-4 pt-3 border-t border-stone-800 flex items-center justify-between text-[11px] font-mono text-stone-400">
-                    <span className="text-emerald-400">✓ Kepatuhan Harga Acuan Dinas</span>
-                    <span>Siap Petik Panen H-1</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAHAP 3: KOORDINATOR DESA */}
-            {activeTabRole === 'coordinator' && (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
-                {/* Deskripsi Alur Kiri */}
-                <div className="lg:col-span-6 flex flex-col justify-between space-y-6">
-                  <div className="space-y-4">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100/90 text-sky-900 text-xs font-mono font-bold border border-sky-300 shadow-2xs">
-                      <span className="w-1.5 h-1.5 rounded-full bg-sky-600" />
-                      <span>FASE 03 • CONSOLIDATION & QR TRACEABILITY</span>
-                    </div>
-
-                    <h3 className="font-serif text-2xl sm:text-3xl font-bold text-stone-950 leading-tight">
-                      Koordinator Mengonsolidasi, Memantau Rantai Dingin, & Terbitkan Paspor QR
-                    </h3>
-
-                    <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
-                      Koordinator wilayah menjemput panen dari kelompok tani dalam radius pendek (&lt; 25 km). Hasil panen ditimbang digital, suhu logistik dipantau ketat (+4°C), dan sistem menerbitkan kode batch QR resmi yang menghubungkan identitas petani langsung dengan dapur penerima.
-                    </p>
-
-                    <div className="space-y-2.5 pt-2">
-                      <div className="flex items-start gap-2 text-xs text-stone-700 font-sans">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span><strong>Timbangan Digital Anti-Kecurangan:</strong> Data berat panen terkunci instan langsung ke sistem ORVANA tanpa manipulasi manual.</span>
-                      </div>
-                      <div className="flex items-start gap-2 text-xs text-stone-700 font-sans">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span><strong>Paspor Batch QR Unik:</strong> Label QR fisik ditempelkan pada wadah muatan untuk verifikasi instan di pintu masuk dapur.</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 pt-4 border-t border-stone-200/80">
-                    <button
-                      type="button"
-                      onClick={() => setActiveTabRole('inspector')}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-700 hover:bg-sky-800 text-white text-xs font-semibold shadow-md transition-all cursor-pointer group"
-                    >
-                      <span>Lanjut ke Tahap 04: Pengawas Mutu</span>
-                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                    <span className="text-[11px] font-mono text-stone-600">Simulasi Realistis</span>
-                  </div>
-                </div>
-
-                {/* Artefak Visual Kanan: Manifest Pengiriman IoT & QR Paspor */}
-                <div className="lg:col-span-6 bg-gradient-to-br from-[#0F172A] to-[#0A0F1D] text-stone-200 rounded-2xl sm:rounded-3xl p-6 shadow-2xl border border-sky-900/40 relative flex flex-col justify-between">
-                  <div className="space-y-4">
-                    {/* Header Manifest */}
-                    <div className="flex items-center justify-between border-b border-stone-800 pb-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center">
-                          <Truck className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <div className="text-[11px] font-mono font-bold text-white uppercase tracking-wider">SURAT JALAN & MANIFEST LOGISTIK</div>
-                          <div className="text-[10px] text-stone-400 font-mono">BATCH: ORV-20261014-DPR01-0001</div>
-                        </div>
-                      </div>
-                      <span className="px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-[10px] font-mono font-bold border border-sky-500/40">
-                        STATUS: DALAM PERJALANAN
-                      </span>
-                    </div>
-
-                    {/* Sensor Telemetri Suhu & Rute */}
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="p-3 rounded-xl bg-stone-900/80 border border-sky-900/40">
-                        <div className="flex items-center gap-1.5 text-[10px] font-mono text-sky-400 mb-1">
-                          <Thermometer className="w-3.5 h-3.5" />
-                          <span>SUHU RANTAI DINGIN</span>
-                        </div>
-                        <div className="text-xl font-mono font-extrabold text-white">+4,2°C</div>
-                        <div className="text-[10px] text-emerald-400 font-mono">Stabil & Optimal</div>
-                      </div>
-                      <div className="p-3 rounded-xl bg-stone-900/80 border border-sky-900/40">
-                        <div className="flex items-center gap-1.5 text-[10px] font-mono text-stone-400 mb-1">
-                          <MapPin className="w-3.5 h-3.5" />
-                          <span>RADIUS TEMPUH</span>
-                        </div>
-                        <div className="text-xl font-mono font-extrabold text-white">8,57 km</div>
-                        <div className="text-[10px] text-stone-400 font-mono">Waktu Tempuh: 24 Menit</div>
-                      </div>
-                    </div>
-
-                    {/* QR Passport Preview Box */}
-                    <div className="p-3 rounded-xl bg-sky-950/30 border border-sky-800/40 flex items-center gap-4">
-                      <div className="w-14 h-14 bg-white rounded-lg p-1.5 shrink-0 flex items-center justify-center shadow-md">
-                        <QrCode className="w-full h-full text-slate-900" />
-                      </div>
-                      <div className="space-y-0.5 min-w-0">
-                        <div className="text-xs font-mono font-bold text-white truncate">Paspor Digital Batch ORV-0001</div>
-                        <div className="text-[10px] font-mono text-stone-300">Muatan: 69,0 kg (2 Titik Petani Lokal)</div>
-                        <div className="text-[10px] font-mono text-emerald-400">Timbangan Tervalidasi Sensor IoT</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Footer Telemetry */}
-                  <div className="mt-4 pt-3 border-t border-stone-800 flex items-center justify-between text-[11px] font-mono text-stone-400">
-                    <span className="text-sky-400">Armada: Cold-Box Motor Listrik</span>
-                    <span>ETA: 05:40 WIB</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAHAP 4: PENGAWAS MUTU / QC */}
-            {activeTabRole === 'inspector' && (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
-                {/* Deskripsi Alur Kiri */}
-                <div className="lg:col-span-6 flex flex-col justify-between space-y-6">
-                  <div className="space-y-4">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100/90 text-purple-900 text-xs font-mono font-bold border border-purple-300 shadow-2xs">
-                      <span className="w-1.5 h-1.5 rounded-full bg-purple-600" />
-                      <span>FASE 04 • QUALITY VERIFICATION & INSTANT SETTLEMENT</span>
-                    </div>
-
-                    <h3 className="font-serif text-2xl sm:text-3xl font-bold text-stone-950 leading-tight">
-                      Inspeksi Fisik Ahli Gizi & Pencairan Dana Seketika (T+0)
-                    </h3>
-
-                    <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
-                      Pengawas mutu memeriksa bahan saat tiba di dapur menggunakan instrumen checklist digital organoleptik. Begitu status mutu dinyatakan Lolos Prima [PASS], sistem otomatis mengeksekusi transfer pencairan saldo dari rekening escrow langsung ke rekening petani secara transparan dan permanen.
-                    </p>
-
-                    <div className="space-y-2.5 pt-2">
-                      <div className="flex items-start gap-2 text-xs text-stone-700 font-sans">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span><strong>Tiga Putusan Akurat:</strong> PASS (bayar 100%), PARTIAL (disesuaikan dengan toleransi), atau REJECT (retur transparan).</span>
-                      </div>
-                      <div className="flex items-start gap-2 text-xs text-stone-700 font-sans">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span><strong>Audit Trail Permanen (Append-Only):</strong> Setiap pengeluaran uang terekam di buku besar audit publik tanpa bisa diubah-ubah.</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 pt-4 border-t border-stone-200/80">
-                    <button
-                      type="button"
-                      onClick={() => setActiveTabRole('kitchen')}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-900 hover:bg-purple-950 text-white text-xs font-semibold shadow-md transition-all cursor-pointer group"
-                    >
-                      <span>Ulangi Simulasi (Tahap 01)</span>
-                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                    <span className="text-[11px] font-mono text-stone-600">Siklus Ditutup Sempurna</span>
-                  </div>
-                </div>
-
-                {/* Artefak Visual Kanan: Berita Acara QC & Kuitansi Escrow Release */}
-                <div className="lg:col-span-6 bg-gradient-to-br from-[#1A1028] to-[#110A1B] text-stone-200 rounded-2xl sm:rounded-3xl p-6 shadow-2xl border border-purple-900/40 relative flex flex-col justify-between">
-                  <div className="space-y-4">
-                    {/* Header QC Certificate */}
-                    <div className="flex items-center justify-between border-b border-stone-800 pb-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center">
-                          <Award className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <div className="text-[11px] font-mono font-bold text-white uppercase tracking-wider">BERITA ACARA MUTU & AUDIT GIZI</div>
-                          <div className="text-[10px] text-stone-400 font-mono">AUDITOR: dr. Ahli Gizi Lapangan • QC-PASS</div>
-                        </div>
-                      </div>
-                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold border border-emerald-500/40">
-                        MUTU: GRADE A (90/100)
-                      </span>
-                    </div>
-
-                    {/* Checklist Organoleptik Card */}
-                    <div className="p-3.5 rounded-xl bg-stone-900/80 border border-purple-900/40 space-y-2">
-                      <div className="flex items-center justify-between text-xs font-mono">
-                        <span className="text-stone-400">1. Kesegaran Fisik Daun:</span>
-                        <span className="text-emerald-400 font-bold flex items-center gap-1">
-                          <Check className="w-3.5 h-3.5" /> Hijau Bebas Layu
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs font-mono">
-                        <span className="text-stone-400">2. Kebersihan Akar & Tanah:</span>
-                        <span className="text-emerald-400 font-bold flex items-center gap-1">
-                          <Check className="w-3.5 h-3.5" /> Bersih Dicuci
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs font-mono">
-                        <span className="text-stone-400">3. Berat Riil Diterima:</span>
-                        <span className="text-white font-bold">40,0 kg (Toleransi 0%)</span>
-                      </div>
-                    </div>
-
-                    {/* Instant Settlement Slip */}
-                    <div className="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/40 relative">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-semibold">
-                            PENCAIRAN DANA OTOMATIS (T+0)
-                          </div>
-                          <div className="text-lg font-mono font-extrabold text-white">
-                            Rp 320.000 <span className="text-xs text-emerald-400 font-normal">SELESAI</span>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold border border-emerald-500/40">
-                            <BadgeCheck className="w-3 h-3" />
-                            ESCROW RELEASED
-                          </span>
-                          <div className="text-[10px] text-stone-400 font-mono mt-1">Ref: TX-20261014-9921</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Footer Telemetry */}
-                  <div className="mt-4 pt-3 border-t border-stone-800 flex items-center justify-between text-[11px] font-mono text-stone-400">
-                    <span className="text-emerald-400">Buku Besar Audit: Immutable Append-Only</span>
-                    <span>Waktu Proses: &lt; 2 Detik</span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+          <Link
+            to="/auth/register"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-bold text-xs shrink-0 transition-colors"
+          >
+            <span>Daftar Sebagai Mitra</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
+
       </section>
       </ScrollReveal>
 
