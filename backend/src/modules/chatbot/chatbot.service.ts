@@ -75,21 +75,35 @@ export class ChatbotService {
   constructor(private readonly configService: ConfigService) {
     this.geminiApiKey =
       this.configService.get<string>('GEMINI_API_KEY') ||
-      process.env.GEMINI_API_KEY ||
       '';
   }
+
+  // Cache in-memory berumur 10 menit untuk pertanyaan umum identik (mengurangi latensi & hemat kuota)
+  private readonly queryCache = new Map<string, { res: ChatbotResponse; expires: number }>();
 
   async processQuery(
     message: string,
     history?: Array<{ role: 'user' | 'model'; text: string }>,
   ): Promise<ChatbotResponse> {
     const trimmed = message.trim();
+    const cacheKey = trimmed.toLowerCase();
+
+    // Cek cache untuk pertanyaan single-turn tanpa history
+    if (!history || history.length === 0) {
+      const cached = this.queryCache.get(cacheKey);
+      if (cached && Date.now() < cached.expires) {
+        return cached.res;
+      }
+    }
 
     // 1. Coba panggil Gemini API dengan model generasi cepat
     if (this.geminiApiKey) {
       try {
         const response = await this.callGeminiApi(trimmed, history);
         if (response) {
+          if (!history || history.length === 0) {
+            this.queryCache.set(cacheKey, { res: response, expires: Date.now() + 10 * 60 * 1000 });
+          }
           return response;
         }
       } catch (err: any) {
@@ -105,10 +119,10 @@ export class ChatbotService {
     userMessage: string,
     history?: Array<{ role: 'user' | 'model'; text: string }>,
   ): Promise<ChatbotResponse | null> {
-    // Model fallback sequence
+    // Model sequence: prioritaskan flash-lite tercepat untuk chat UI real-time
     const candidateModels = [
-      'gemini-3.5-flash',
       'gemini-3.1-flash-lite',
+      'gemini-3.5-flash',
       'gemini-3.7-flash',
       'gemini-flash-latest',
     ];

@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { ChatbotService } from './chatbot.service';
 import { ChatbotController } from './chatbot.controller';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 describe('ChatbotService & ChatbotController - AI Agent Suite (T-AI-04)', () => {
   let service: ChatbotService;
@@ -24,7 +27,10 @@ describe('ChatbotService & ChatbotController - AI Agent Suite (T-AI-04)', () => 
           },
         },
       ],
-    }).compile();
+    })
+      .overrideGuard(ThrottlerGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     service = module.get<ChatbotService>(ChatbotService);
     controller = module.get<ChatbotController>(ChatbotController);
