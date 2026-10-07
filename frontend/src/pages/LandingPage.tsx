@@ -1610,16 +1610,16 @@ export const LandingPage: React.FC = () => {
         {/* 9. THE EDITORIAL AGRITECH DIRECTORY & ACCORDION (WORLD-CLASS CRAFT) */}
         <section id="faq" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
           
-          {/* Section Header with Refined Typography & Spacing */}
-          <div className="max-w-3xl mb-12 lg:mb-16">
-            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200/80 inline-block mb-3">
+          {/* Section Header with Refined Typography & Spacing (Centered) */}
+          <div className="max-w-3xl mx-auto text-center mb-12 lg:mb-16">
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3.5 py-1 rounded-full border border-emerald-200/80 inline-block mb-3.5">
               Pusat Pengetahuan & Regulasi
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-stone-950 tracking-tight leading-[1.15]">
               Transparansi Tata Kelola & <br className="hidden sm:inline" />
               <span className="italic font-normal text-emerald-900">Operasional Rantai Pasok Pangan</span>
             </h2>
-            <p className="text-sm sm:text-base text-stone-600 mt-4 leading-relaxed font-sans max-w-2xl">
+            <p className="text-sm sm:text-base text-stone-600 mt-4 leading-relaxed font-sans max-w-2xl mx-auto">
               Prinsip kerja, mekanisme proteksi harga petani lokal, standar kontrol mutu dapur gizi, serta keterbukaan penelusuran batch bahan bagi publik.
             </p>
           </div>
