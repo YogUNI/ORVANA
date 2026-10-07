@@ -12,40 +12,11 @@ export const SupplyChain3DHero: React.FC = () => {
 
   return (
     <div className="w-full flex flex-col items-center select-none">
-      {/* 1. TOP SINGLE INTUITIVE TOGGLE BAR (THE ONLY MASTER BUTTON) */}
-      <div className="flex items-center justify-between w-full max-w-2xl mb-3 px-3">
-        {/* SINGLE MASTER 3D PERSPECTIVE TOGGLE PILL */}
-        <div className="inline-flex items-center p-1 bg-stone-900/90 hover:bg-stone-900 backdrop-blur-xl rounded-2xl border border-stone-800 shadow-sm transition-all">
-          <button
-            type="button"
-            onClick={() => setIsFlipped(false)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              !isFlipped
-                ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40 shadow-xs'
-                : 'text-stone-400 hover:text-white'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Simulasi 3D</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setIsFlipped(true)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              isFlipped
-                ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40 shadow-xs'
-                : 'text-stone-400 hover:text-white'
-            }`}
-          >
-            <Cpu className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Engine Alokasi</span>
-          </button>
-        </div>
-
+      {/* 1. TOP SUBTLE LINK BAR (LEAN, ULTRA-CLEAN, ZERO BULKY BUTTONS) */}
+      <div className="flex items-center justify-end w-full max-w-2xl mb-1 px-4">
         <Link
           to="/trace/ORV-20260920-DPR01-0001"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 hover:text-emerald-950 transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 hover:text-emerald-950 transition-colors py-1"
         >
           <span>Uji Paspor QR</span>
           <ExternalLink className="w-3.5 h-3.5" />
@@ -155,17 +126,48 @@ export const SupplyChain3DHero: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. CAPTION UNDER CARD (CLEAN & CENTERED, NO REDUNDANT BUTTONS) */}
-      <div className="w-full max-w-2xl mt-3 px-2 flex items-center justify-center text-xs text-stone-500">
-        <span className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="font-medium text-stone-700">
-            {isFlipped ? 'Cyber Engine Lab:' : 'Alur Rantai Pasok Terintegrasi:'}
+      {/* 3. OPTION A: FLOATING GLASS SEGMENTED PILL DI TENGAH BAWAH (ORVANA WARM-WHITE & EMERALD) */}
+      <div className="mt-3 flex flex-col items-center gap-2 w-full max-w-2xl px-2">
+        <div className="inline-flex items-center p-1 bg-white/95 backdrop-blur-xl rounded-full border border-stone-200/90 shadow-md shadow-stone-900/5 transition-all">
+          <button
+            type="button"
+            onClick={() => setIsFlipped(false)}
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              !isFlipped
+                ? 'bg-emerald-900 text-white shadow-xs'
+                : 'text-stone-600 hover:text-stone-950 hover:bg-stone-50'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <span>Simulasi 3D</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsFlipped(true)}
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              isFlipped
+                ? 'bg-emerald-900 text-white shadow-xs'
+                : 'text-stone-600 hover:text-stone-950 hover:bg-stone-50'
+            }`}
+          >
+            <Cpu className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Lab Engine</span>
+          </button>
+        </div>
+
+        {/* SUBTLE CAPTION UNDER PILL */}
+        <div className="flex items-center justify-center text-[11px] text-stone-500">
+          <span className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-medium text-stone-700">
+              {isFlipped ? 'Cyber Engine Lab:' : 'Alur Rantai Pasok:'}
+            </span>
+            <span>
+              {isFlipped ? 'Hologram AI Alokasi Kuota & Brankas Escrow' : 'Lahan Petani ➔ Dapur Gizi Massal'}
+            </span>
           </span>
-          <span>
-            {isFlipped ? 'Hologram AI Alokasi Kuota & Brankas Escrow' : 'Lahan Petani ➔ Dapur Gizi Massal'}
-          </span>
-        </span>
+        </div>
       </div>
     </div>
   );
