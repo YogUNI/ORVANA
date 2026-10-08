@@ -1258,12 +1258,35 @@ export const LandingPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* SISI KIRI: ARTISAN CHAT CONSOLE (WARM, HARMONIS & MENYATU DENGAN KARTU KANAN) */}
-            <div className="lg:col-span-6 space-y-4">
+            <div className="lg:col-span-6 space-y-3">
               
+              {/* Header Box Sisi Kiri dengan Maskot Berukuran Besar & Speech Bubble Lengkap */}
+              <div className="flex items-end justify-between px-1 pb-1">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-[10px] font-mono font-bold text-stone-500 uppercase tracking-wider">
+                      SIMULASI BOT PANEN
+                    </span>
+                  </div>
+                  <h3 className="text-sm font-bold text-stone-900 font-serif">
+                    Ketik Bebas Seperti Chat WhatsApp:
+                  </h3>
+                  <p className="text-[11px] text-stone-500 font-sans">
+                    Coba ketik rencana panen atau klik tombol contoh di bawah.
+                  </p>
+                </div>
+
+                {/* Living Character Mascot dengan Ukuran Nyaman & Speech Bubble Bebas Tidak Terpotong */}
+                <div className="shrink-0 -mb-1">
+                  <AiThinkingMascot status={mascotStatus} size={76} />
+                </div>
+              </div>
+
               {/* Warm Artisan Chat Box: Warna selaras dengan kartu kanan (White & Warm Cream) */}
               <div className="rounded-2xl bg-white border border-stone-200/90 shadow-soft overflow-hidden font-sans">
                 
-                {/* Header Chat: Menggunakan dark forest slate elegan khas Orvana */}
+                {/* Header Chat WhatsApp Bar */}
                 <div className="bg-[#11231B] text-white px-4 py-3 flex items-center justify-between border-b border-emerald-950">
                   <div className="flex items-center gap-2.5">
                     <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/20 p-1 flex items-center justify-center shrink-0">
@@ -1272,19 +1295,14 @@ export const LandingPage: React.FC = () => {
                     <div>
                       <div className="text-xs font-bold font-serif leading-tight flex items-center gap-1.5 text-amber-50">
                         <span>Pencatat Pesan WhatsApp Petani</span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                       </div>
-                      <div className="text-[10px] text-emerald-300/90 font-mono">Simulasi Penerimaan Panen Langsung</div>
+                      <div className="text-[10px] text-emerald-300/90 font-mono">online • terhubung ke dapur gizi</div>
                     </div>
                   </div>
-
-                  {/* Maskot Avatar Mini di Pojok Bar (Tanpa speech bubble di atasnya agar tidak terpotong) */}
-                  <div className="shrink-0 -my-1 flex items-center gap-1.5">
-                    <span className="text-[10px] font-mono text-emerald-400 hidden sm:inline">
-                      {mascotStatus === 'thinking' ? 'Menganalisis...' : mascotStatus === 'wow' ? 'Tercatat!' : 'Siap'}
-                    </span>
-                    <AiThinkingMascot status={mascotStatus} size={42} hideBubble={true} />
-                  </div>
+                  <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-800">
+                    Sistem Aktif
+                  </span>
                 </div>
 
                 {/* Chat Preview Stream Area */}
