@@ -86,6 +86,21 @@ export const SmartFloatingConcierge: React.FC = () => {
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const modelMenuRef = useRef<HTMLDivElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  // Auto-resize textarea height as user types (like ChatGPT/Gemini/Claude)
+  const adjustTextareaHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      const scrollHeight = textareaRef.current.scrollHeight;
+      // Batasi tinggi minimum 40px dan maksimum 140px dengan scrollbar halus
+      textareaRef.current.style.height = `${Math.min(scrollHeight, 140)}px`;
+    }
+  };
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [inputQuery]);
 
   // Track when concierge has been opened to enable smooth closing animation
   useEffect(() => {
@@ -228,8 +243,9 @@ export const SmartFloatingConcierge: React.FC = () => {
     }, 350);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       handleSendMessage();
     }
   };
@@ -473,23 +489,25 @@ export const SmartFloatingConcierge: React.FC = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Bar: Artisan Clean Box with elevated shadow */}
+        {/* Input Bar: Artisan Clean Box with elevated shadow & auto-scrolling textarea */}
         <div className="p-4 bg-white border-t border-stone-200/90 shrink-0 shadow-lg">
-          <div className="relative flex items-center bg-stone-50 border border-stone-200 focus-within:border-emerald-600 focus-within:bg-white focus-within:ring-3 focus-within:ring-emerald-600/10 rounded-2xl transition-all shadow-inner">
-            <input
-              type="text"
+          <div className="relative flex items-end bg-stone-50 border border-stone-200 focus-within:border-emerald-600 focus-within:bg-white focus-within:ring-3 focus-within:ring-emerald-600/10 rounded-2xl transition-all shadow-inner p-1.5">
+            <textarea
+              ref={textareaRef}
+              rows={1}
               value={inputQuery}
               onChange={(e) => setInputQuery(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Tanya seputar aturan kuota, DP 30%, QC mutu..."
-              className="flex-1 bg-transparent px-4 py-3 text-xs sm:text-[13px] text-stone-900 placeholder:text-stone-400 focus:outline-none"
+              placeholder="Tanya seputar aturan kuota, DP 30%, QC mutu, atau ketik saran..."
+              className="flex-1 bg-transparent px-3 py-2 text-xs sm:text-[13px] text-stone-900 placeholder:text-stone-400 focus:outline-none resize-none overflow-y-auto leading-relaxed custom-scrollbar max-h-[140px] min-h-[38px]"
             />
             <button
               type="button"
               onClick={() => handleSendMessage()}
               disabled={!inputQuery.trim() || isTyping}
-              className="mr-1.5 p-2 rounded-xl bg-[#132A21] hover:bg-emerald-900 disabled:opacity-30 disabled:pointer-events-none text-white transition-all cursor-pointer shadow-xs active:scale-95"
+              className="mb-1 mr-1 p-2.5 rounded-xl bg-[#132A21] hover:bg-emerald-900 disabled:opacity-30 disabled:pointer-events-none text-white transition-all cursor-pointer shadow-xs active:scale-95 shrink-0"
               aria-label="Kirim Pesan"
+              title="Kirim (Enter)"
             >
               <Send className="w-4 h-4" />
             </button>
@@ -629,7 +647,9 @@ export const SmartFloatingConcierge: React.FC = () => {
               )}
             </div>
 
-            <span className="text-[10px] text-stone-400">Tekan Enter untuk kirim</span>
+            <span className="text-[10px] text-stone-400">
+              <kbd className="font-mono bg-stone-100 px-1 py-0.5 rounded border border-stone-200 text-stone-600">Enter</kbd> kirim • <kbd className="font-mono bg-stone-100 px-1 py-0.5 rounded border border-stone-200 text-stone-600">Shift+Enter</kbd> baris baru
+            </span>
           </div>
         </div>
       </aside>
