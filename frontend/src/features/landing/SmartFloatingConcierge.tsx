@@ -646,10 +646,6 @@ export const SmartFloatingConcierge: React.FC = () => {
                 </div>
               )}
             </div>
-
-            <span className="text-[10px] text-stone-400">
-              <kbd className="font-mono bg-stone-100 px-1 py-0.5 rounded border border-stone-200 text-stone-600">Enter</kbd> kirim • <kbd className="font-mono bg-stone-100 px-1 py-0.5 rounded border border-stone-200 text-stone-600">Shift+Enter</kbd> baris baru
-            </span>
           </div>
         </div>
       </aside>
