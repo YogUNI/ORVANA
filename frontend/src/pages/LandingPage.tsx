@@ -1260,26 +1260,26 @@ export const LandingPage: React.FC = () => {
             {/* SISI KIRI: ARTISAN CHAT CONSOLE (WARM, HARMONIS & MENYATU DENGAN KARTU KANAN) */}
             <div className="lg:col-span-6 space-y-3">
               
-              {/* Header Box Sisi Kiri dengan Maskot Berukuran Besar & Speech Bubble Lengkap */}
-              <div className="flex items-end justify-between px-1 pb-1">
-                <div className="space-y-1">
+              {/* Header Box Sisi Kiri dengan Maskot Gagah Berukuran Besar & Speech Bubble Nyaman */}
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 px-1 pb-2">
+                <div className="space-y-1 max-w-xs">
                   <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-[10px] font-mono font-bold text-stone-500 uppercase tracking-wider">
                       SIMULASI BOT PANEN
                     </span>
                   </div>
-                  <h3 className="text-sm font-bold text-stone-900 font-serif">
+                  <h3 className="text-base font-bold text-stone-900 font-serif">
                     Ketik Bebas Seperti Chat WhatsApp:
                   </h3>
-                  <p className="text-[11px] text-stone-500 font-sans">
-                    Coba ketik rencana panen atau klik tombol contoh di bawah.
+                  <p className="text-xs text-stone-500 font-sans leading-relaxed">
+                    Ketik rencana panen atau klik tombol contoh preset di bawah.
                   </p>
                 </div>
 
-                {/* Living Character Mascot dengan Ukuran Nyaman & Speech Bubble Bebas Tidak Terpotong */}
-                <div className="shrink-0 -mb-1">
-                  <AiThinkingMascot status={mascotStatus} size={76} />
+                {/* Living Character Mascot dengan Ukuran Nyaman, Gagah & Speech Bubble Lega */}
+                <div className="self-center sm:self-end shrink-0 pt-2 sm:pt-0">
+                  <AiThinkingMascot status={mascotStatus} size={108} />
                 </div>
               </div>
 

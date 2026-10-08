@@ -32,11 +32,11 @@ export const AiThinkingMascot: React.FC<AiThinkingMascotProps> = ({ status, size
   }, [status]);
 
   return (
-    <div className="relative flex flex-col items-center select-none shrink-0" style={{ width: hideBubble ? `${size}px` : '120px' }}>
+    <div className="relative flex flex-col items-center select-none shrink-0" style={{ minWidth: hideBubble ? `${size}px` : `${Math.max(size, 160)}px` }}>
       {/* Speech / Thought Bubble with arrow */}
       {!hideBubble && (
         <div
-          className={`relative mb-2 px-3 py-1.5 rounded-xl text-[10px] font-mono font-bold shadow-xs transition-all duration-300 text-center whitespace-nowrap z-10 ${
+          className={`relative mb-2.5 px-3 py-1.5 rounded-xl text-[11px] font-mono font-bold shadow-soft transition-all duration-300 text-center whitespace-nowrap z-10 ${
             status === 'thinking'
               ? 'bg-amber-400 text-stone-950 border border-amber-300 animate-pulse'
               : status === 'wow'
