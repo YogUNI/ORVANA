@@ -63,6 +63,7 @@ export const LandingPage: React.FC = () => {
 
   // Interactive Live NLP Simulator State
   const [nlpSampleText, setNlpSampleText] = useState('besok ada panen cabai rawit dua kwintal harga 45rb sama bayam 50 kilo');
+  const [nlpSubmittedText, setNlpSubmittedText] = useState<string>('besok ada panen cabai rawit dua kwintal harga 45rb sama bayam 50 kilo');
   const [nlpParsed, setNlpParsed] = useState<any>(null);
   const [nlpLoading, setNlpLoading] = useState(false);
   const [mascotStatus, setMascotStatus] = useState<MascotReaction>('idle');
@@ -173,12 +174,16 @@ export const LandingPage: React.FC = () => {
     }, 2500);
   };
 
-  const handleTestNLP = async () => {
-    if (!nlpSampleText.trim()) return;
+  const handleTestNLP = async (overrideText?: string) => {
+    const textToSend = (overrideText !== undefined ? overrideText : nlpSampleText).trim();
+    if (!textToSend) return;
+    
+    // Set teks yang resmi terkirim ke chat bubble WhatsApp
+    setNlpSubmittedText(textToSend);
     setNlpLoading(true);
     setMascotStatus('thinking');
     try {
-      const res: any = await apiClient.post('/public/parse-text', { text: nlpSampleText.trim() });
+      const res: any = await apiClient.post('/public/parse-text', { text: textToSend });
       setNlpParsed(res?.data || null);
       setMascotStatus('wow');
     } catch (err) {
@@ -1273,9 +1278,12 @@ export const LandingPage: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Maskot Avatar Mini di Pojok Bar */}
-                  <div className="shrink-0 -my-1">
-                    <AiThinkingMascot status={mascotStatus} size={44} />
+                  {/* Maskot Avatar Mini di Pojok Bar (Tanpa speech bubble di atasnya agar tidak terpotong) */}
+                  <div className="shrink-0 -my-1 flex items-center gap-1.5">
+                    <span className="text-[10px] font-mono text-emerald-400 hidden sm:inline">
+                      {mascotStatus === 'thinking' ? 'Menganalisis...' : mascotStatus === 'wow' ? 'Tercatat!' : 'Siap'}
+                    </span>
+                    <AiThinkingMascot status={mascotStatus} size={42} hideBubble={true} />
                   </div>
                 </div>
 
@@ -1286,17 +1294,17 @@ export const LandingPage: React.FC = () => {
                   <div className="flex justify-start">
                     <div className="max-w-[88%] bg-white rounded-2xl rounded-tl-xs p-3 shadow-2xs border border-stone-200/90 text-xs text-stone-800 leading-relaxed">
                       <p className="text-[11px]">
-                        🌾 <strong>Halo Pak Tani / Nelayan!</strong> Ketik rencana panen Anda di kolom bawah. Anda bebas pakai singkatan ("<em>sy bsoq ad pnn</em>") atau sebutan lokal ("<em>dua kwintal</em>").
+                        🌾 <strong>Halo Pak Tani / Nelayan!</strong> Ketik rencana panen Anda di kolom bawah, lalu tekan <strong>Kirim</strong>. Anda bebas pakai singkatan ("<em>sy bsoq ad pnn</em>") atau sebutan lokal ("<em>dua kwintal</em>").
                       </p>
                       <span className="text-[9px] text-stone-400 block text-right mt-1 font-mono">08:00</span>
                     </div>
                   </div>
 
-                  {/* User Sample Dynamic Preview Bubble (jika ada input) */}
-                  {nlpSampleText && (
-                    <div className="flex justify-end">
+                  {/* User Sent Message Bubble: Hanya muncul setelah dikirim (bukan saat ngetik) */}
+                  {nlpSubmittedText && (
+                    <div className="flex justify-end animate-fadeIn">
                       <div className="max-w-[88%] bg-[#E8F5E9] rounded-2xl rounded-tr-xs p-3 shadow-2xs border border-emerald-300/80 text-xs text-stone-900 leading-relaxed">
-                        <p className="text-[11px] font-sans font-medium text-emerald-950">{nlpSampleText}</p>
+                        <p className="text-[11px] font-sans font-medium text-emerald-950">{nlpSubmittedText}</p>
                         <span className="text-[9px] text-emerald-700 block text-right mt-1 font-mono flex items-center justify-end gap-1">
                           <span>Terkirim</span>
                           <span className="text-emerald-600 font-bold">✓✓</span>
@@ -1320,7 +1328,7 @@ export const LandingPage: React.FC = () => {
                   </div>
                   <button
                     type="button"
-                    onClick={handleTestNLP}
+                    onClick={() => handleTestNLP()}
                     disabled={nlpLoading}
                     className="px-4 py-2 rounded-xl bg-emerald-950 hover:bg-emerald-900 text-white flex items-center gap-1.5 shrink-0 shadow-2xs cursor-pointer active:scale-95 transition-all disabled:opacity-50 text-xs font-bold"
                     title="Urai kalimat panen"
@@ -1347,8 +1355,8 @@ export const LandingPage: React.FC = () => {
                       key={idx}
                       type="button"
                       onClick={() => {
-                        handleInputChange(preset.text);
-                        setTimeout(() => handleTestNLP(), 100);
+                        setNlpSampleText(preset.text);
+                        handleTestNLP(preset.text);
                       }}
                       className="px-3 py-2 rounded-xl bg-white hover:bg-emerald-50/70 border border-stone-200 hover:border-emerald-500 text-stone-700 hover:text-emerald-950 text-[11px] font-sans font-medium text-left truncate cursor-pointer shadow-2xs transition-all"
                     >

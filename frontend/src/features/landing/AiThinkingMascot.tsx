@@ -5,9 +5,10 @@ export type MascotReaction = 'idle' | 'thinking' | 'wow';
 interface AiThinkingMascotProps {
   status: MascotReaction;
   size?: number;
+  hideBubble?: boolean;
 }
 
-export const AiThinkingMascot: React.FC<AiThinkingMascotProps> = ({ status, size = 110 }) => {
+export const AiThinkingMascot: React.FC<AiThinkingMascotProps> = ({ status, size = 110, hideBubble = false }) => {
   const [bubbleText, setBubbleText] = useState<string>('Ketik pesan...');
   const [blink, setBlink] = useState(false);
 
@@ -31,33 +32,35 @@ export const AiThinkingMascot: React.FC<AiThinkingMascotProps> = ({ status, size
   }, [status]);
 
   return (
-    <div className="relative flex flex-col items-center select-none shrink-0" style={{ width: '120px' }}>
+    <div className="relative flex flex-col items-center select-none shrink-0" style={{ width: hideBubble ? `${size}px` : '120px' }}>
       {/* Speech / Thought Bubble with arrow */}
-      <div
-        className={`relative mb-2 px-3 py-1.5 rounded-xl text-[10px] font-mono font-bold shadow-xs transition-all duration-300 text-center whitespace-nowrap z-10 ${
-          status === 'thinking'
-            ? 'bg-amber-400 text-stone-950 border border-amber-300 animate-pulse'
-            : status === 'wow'
-            ? 'bg-emerald-950 text-emerald-300 border border-emerald-500'
-            : 'bg-stone-100 text-stone-700 border border-stone-200'
-        }`}
-      >
-        <div className="flex items-center justify-center gap-1.5">
-          {status === 'thinking' && <span className="w-1.5 h-1.5 rounded-full bg-stone-950 animate-ping shrink-0" />}
-          {status === 'wow' && <span className="text-amber-300 text-[10px]">✨</span>}
-          <span>{bubbleText}</span>
-        </div>
-        {/* Little bubble tail arrow pointing down to head */}
+      {!hideBubble && (
         <div
-          className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 border-r border-b ${
+          className={`relative mb-2 px-3 py-1.5 rounded-xl text-[10px] font-mono font-bold shadow-xs transition-all duration-300 text-center whitespace-nowrap z-10 ${
             status === 'thinking'
-              ? 'bg-amber-400 border-amber-300'
+              ? 'bg-amber-400 text-stone-950 border border-amber-300 animate-pulse'
               : status === 'wow'
-              ? 'bg-emerald-950 border-emerald-500'
-              : 'bg-stone-100 border-stone-200'
+              ? 'bg-emerald-950 text-emerald-300 border border-emerald-500'
+              : 'bg-stone-100 text-stone-700 border border-stone-200'
           }`}
-        />
-      </div>
+        >
+          <div className="flex items-center justify-center gap-1.5">
+            {status === 'thinking' && <span className="w-1.5 h-1.5 rounded-full bg-stone-950 animate-ping shrink-0" />}
+            {status === 'wow' && <span className="text-amber-300 text-[10px]">✨</span>}
+            <span>{bubbleText}</span>
+          </div>
+          {/* Little bubble tail arrow pointing down to head */}
+          <div
+            className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 border-r border-b ${
+              status === 'thinking'
+                ? 'bg-amber-400 border-amber-300'
+                : status === 'wow'
+                ? 'bg-emerald-950 border-emerald-500'
+                : 'bg-stone-100 border-stone-200'
+            }`}
+          />
+        </div>
+      )}
 
       {/* SVG Vector Living Character Stage (100% Vector, No Jagged Images) */}
       <div
