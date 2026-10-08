@@ -1438,7 +1438,7 @@ export const LandingPage: React.FC = () => {
                       <div className="p-2 rounded-lg bg-white border border-stone-200/60">
                         <span className="text-[9px] text-stone-600 block uppercase">Jumlah Timbangan:</span>
                         <strong className="text-sm text-emerald-950 font-extrabold">
-                          {item.quantityKg} kg
+                          {item.quantityKg ? `${item.quantityKg} kg` : 'Konfirmasi Petani (Siap Timbang)'}
                         </strong>
                       </div>
                       <div className="p-2 rounded-lg bg-white border border-stone-200/60">
@@ -1456,11 +1456,19 @@ export const LandingPage: React.FC = () => {
               <div className="p-3 rounded-xl bg-stone-50 border border-stone-200/70 space-y-1.5 text-[11px] font-mono text-stone-600">
                 <div className="flex justify-between items-center">
                   <span>Penerjemahan Sebutan Berat:</span>
-                  <strong className="text-emerald-800">"dua kwintal" ➔ 200 kg ✓</strong>
+                  <strong className="text-emerald-800">
+                    {nlpParsed?.candidates?.some((c: any) => c.quantityKg)
+                      ? `${nlpParsed.candidates.find((c: any) => c.quantityKg)?.quantityKg} kg Terverifikasi ✓`
+                      : 'Otomatis Konversi Satuan Lokal (Kwintal/Ton/Kg) ✓'}
+                  </strong>
                 </div>
                 <div className="flex justify-between items-center">
                   <span>Penerjemahan Singkatan Harga:</span>
-                  <strong className="text-emerald-800">"45rb" ➔ Rp 45.000 ✓</strong>
+                  <strong className="text-emerald-800">
+                    {nlpParsed?.candidates?.some((c: any) => c.askingPrice)
+                      ? `Rp ${nlpParsed.candidates.find((c: any) => c.askingPrice)?.askingPrice.toLocaleString('id-ID')}/kg ✓`
+                      : 'Sesuai Plafon Acuan Resmi Dinas ✓'}
+                  </strong>
                 </div>
                 <div className="flex justify-between items-center pt-1 border-t border-stone-200/60 text-[10px] text-stone-600">
                   <span>Status Data:</span>

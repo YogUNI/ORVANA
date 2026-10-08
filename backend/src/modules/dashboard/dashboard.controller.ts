@@ -45,7 +45,7 @@ export class DashboardController {
   @Post('public/parse-text')
   @ApiOperation({ summary: 'Sandbox publik NLP AI untuk demonstrasi di landing page' })
   async parsePublicNlpText(@Body('text') text: string) {
-    const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:8000';
+    const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:8001';
     try {
       const response = await fetch(`${aiServiceUrl}/ai/parse-text`, {
         method: 'POST',

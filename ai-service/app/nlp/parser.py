@@ -46,18 +46,26 @@ def parse_supply_sentence(text: str, base_date: Optional[datetime] = None) -> Pa
     # 3. Temukan komoditas (Kamus Sinonim Eksak)
     commodity_matches = find_commodity_matches(norm_text)
 
-    # 3. Jika tidak ditemukan eksak, coba Fuzzy Semantic Matching untuk toleransi typo
-    if not commodity_matches:
-        words = norm_text.split()
-        for w in words:
-            clean_w = "".join(c for c in w if c.isalnum())
-            if len(clean_w) >= 3:
-                fuzzy_canon, f_score = nlp_engine.fuzzy_match_commodity(clean_w)
-                if fuzzy_canon and f_score >= 0.65:
-                    cat = COMMODITY_SYNONYMS[fuzzy_canon][0]
-                    commodity_matches.append((fuzzy_canon, cat, norm_text.lower().find(clean_w.lower()), 0))
-                    warnings.append(f"Mendeteksi kemungkinan komoditas '{fuzzy_canon}' dari kata '{clean_w}'.")
-                    break
+    # 3. Fuzzy Semantic Matching untuk kata-kata lain yang belum ter-match secara eksak
+    words = norm_text.split()
+    matched_canonical = {m[0] for m in commodity_matches}
+    matched_spans = [(m[2], m[3]) for m in commodity_matches]
+    common_filler = {"ada", "barang", "sama", "bebas", "harga", "berapa", "berapaa", "aja", "saja", "saya", "siap", "kirim", "panen", "stok", "hari", "ini", "besok", "lusa", "bisa", "buat", "untuk", "dari", "ke"}
+    
+    for w in words:
+        clean_w = "".join(c for c in w if c.isalnum()).lower()
+        if len(clean_w) >= 3 and clean_w not in common_filler:
+            idx = norm_text.lower().find(clean_w)
+            # Lewati jika kata ini berada di dalam span komoditas eksak
+            if any(s <= idx < e for (s, e) in matched_spans):
+                continue
+            fuzzy_canon, f_score = nlp_engine.fuzzy_match_commodity(clean_w, threshold=0.75)
+            if fuzzy_canon and f_score >= 0.75 and fuzzy_canon not in matched_canonical:
+                cat = COMMODITY_SYNONYMS[fuzzy_canon][0]
+                commodity_matches.append((fuzzy_canon, cat, idx, idx + len(clean_w)))
+                matched_canonical.add(fuzzy_canon)
+                matched_spans.append((idx, idx + len(clean_w)))
+                warnings.append(f"Mendeteksi kemungkinan komoditas '{fuzzy_canon}' dari kata '{clean_w}'.")
 
     if not commodity_matches:
         return ParseTextResponse(

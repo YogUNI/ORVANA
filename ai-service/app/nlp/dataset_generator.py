@@ -9,18 +9,21 @@ from typing import List, Tuple
 
 # Komoditas dan variasi penyebutan
 COMMODITY_VARIANTS = [
-    ("Cabai rawit", ["cabai rawit", "cabe rawit", "cabai", "cabe", "lombok rawit", "rawit", "cengek", "cbe rwit", "cabe merah"]),
-    ("Bawang merah", ["bawang merah", "bawang", "brambang", "bawmer", "bwg merah", "bawang mrh"]),
-    ("Bayam", ["bayam", "bayem", "bayam hijau", "bayam cabut", "byam"]),
+    ("Cabai rawit", ["cabai rawit", "cabe rawit", "cabai", "cabe", "lombok rawit", "rawit", "cengek", "cbe rwit", "cabe merah", "cbe"]),
+    ("Bawang merah", ["bawang merah", "bawang", "brambang", "bawmer", "bwg merah", "bawang mrh", "bwang merah"]),
+    ("Bayam", ["bayam", "bayem", "bayam hijau", "bayam cabut", "byam", "bayam merah"]),
     ("Kangkung", ["kangkung", "kangkong", "kangkung darat", "kangkung air", "kngkung"]),
     ("Wortel", ["wortel", "karot", "wortel lokal", "wrtel", "wortel manis"]),
-    ("Tomat", ["tomat", "tomat merah", "tomat buah", "tomat sayur", "tmat"]),
+    ("Tomat", ["tomat", "tomt", "tomat merah", "tomat buah", "tomat sayur", "tmat", "tomaat"]),
     ("Ikan lele", ["ikan lele", "lele", "lele sangkuriang", "lele dumbo", "ikn lele", "bibit lele"]),
     ("Ikan nila", ["ikan nila", "nila", "nilem", "nila merah", "nila hitam", "ikn nila"]),
-    ("Telur ayam", ["telur ayam", "telor ayam", "telur", "telor", "endog", "tlur ayam", "telor negeri"]),
-    ("Ayam potong", ["ayam potong", "ayam", "broiler", "ayam sayur", "daging ayam", "aym potong"]),
+    ("Telur ayam", ["telur ayam", "telor ayam", "telur", "telor", "endog", "tlur ayam", "tlur", "telor negeri"]),
+    ("Ayam potong", ["ayam potong", "ayam", "broiler", "ayam sayur", "daging ayam", "aym potong", "aym"]),
     ("Tempe", ["tempe", "tempeh", "tempe kedelai", "tempe daun", "tempe papan"]),
-    ("Beras", ["beras", "beras putih", "beras pandan wangi", "beras setra ramos", "bras"]),
+    ("Tahu", ["tahu", "tahu putih", "tahu kuning", "tahu sutra", "tofu"]),
+    ("Beras", ["beras", "beras putih", "beras pandan wangi", "beras setra ramos", "bras", "beras lokal"]),
+    ("Kentang", ["kentang", "kntang", "kentang dieng", "potato"]),
+    ("Jagung", ["jagung", "jgung", "jagung manis", "jagung pipil"]),
     ("Pisang", ["pisang", "gedang", "pisang ambon", "pisang cavendish", "pisang raja", "psang"]),
 ]
 
@@ -53,6 +56,15 @@ STOCK_TEMPLATES = [
     "timbangan {comm} ada {qty} {unit} {date} {price}",
     "panen raya {comm} {qty} {unit} tanggal panen {date} {price}",
     "sedia {comm} segar {qty} {unit} {date} banderol {price}",
+    # Tambahan pola percakapan santai sehari-hari petani / WA chat
+    "saya ada barang {comm} bebas harga berapa aja",
+    "saya ada {comm} sama {comm2} monggo diangkut",
+    "ada barang {comm} segar di kebun barangkali dapur butuh",
+    "sy ada pasokan {comm} dan {comm2} siap diambil bos",
+    "ada {comm} {qty} {unit} dan {comm2} {qty2} {unit2} {price}",
+    "panen {comm} melimpah hari ini harga santai",
+    "stok {comm} banyak di gudang silahkan cek dapur",
+    "kita ada barang {comm} fresh petik pagi ini",
 ]
 
 PLAN_TEMPLATES = [
@@ -102,12 +114,23 @@ def generate_training_dataset(target_count: int = 550) -> List[Tuple[str, str]]:
     for _ in range(500):
         _, comm_variants = random.choice(COMMODITY_VARIANTS)
         comm = random.choice(comm_variants)
+        _, comm_variants2 = random.choice(COMMODITY_VARIANTS)
+        comm2 = random.choice(comm_variants2)
         qty, unit = random.choice(QUANTITY_SAMPLES)
+        qty2, unit2 = random.choice(QUANTITY_SAMPLES)
         date = random.choice(DATE_SAMPLES)
         price = random.choice(PRICE_SAMPLES) if random.random() > 0.15 else "" # 15% tanpa harga
         tmpl = random.choice(STOCK_TEMPLATES)
-        text = tmpl.format(date=date, qty=qty, unit=unit, comm=comm, price=price).strip()
-        text = " ".join(text.split())
+        
+        format_kwargs = {
+            "date": date, "qty": qty, "unit": unit, "comm": comm, "price": price,
+            "comm2": comm2, "qty2": qty2, "unit2": unit2
+        }
+        # Format template dengan parameter yang tersedia
+        text = tmpl
+        for k, v in format_kwargs.items():
+            text = text.replace(f"{{{k}}}", str(v))
+        text = " ".join(text.split()).strip()
         dataset.append((text, "OFFER_STOCK"))
 
     # 2. Generate HARVEST_PLAN / DEMAND_REQUEST (~250 sampel)

@@ -9,55 +9,67 @@ COMMODITY_SYNONYMS: Dict[str, Tuple[str, List[str]]] = {
     # key: canonical_name, value: (default_category, list_of_synonyms)
     "Cabai rawit": (
         "SPICE",
-        ["cabai rawit", "cabe rawit", "cabai", "cabe", "lombok rawit", "rawit", "cengek"]
+        ["cabai rawit", "cabe rawit", "cabai", "cabe", "lombok rawit", "rawit", "cengek", "cbe", "rwit", "cbe rwit", "cabe merah", "cabai merah"]
     ),
     "Bawang merah": (
         "SPICE",
-        ["bawang merah", "bawang", "brambang", "bawmer"]
+        ["bawang merah", "bawang", "brambang", "bawmer", "bwg merah", "bawang mrh", "bwang merah"]
     ),
     "Bayam": (
         "VEGETABLE",
-        ["bayam", "bayem", "bayam hijau", "bayam cabut"]
+        ["bayam", "bayem", "bayam hijau", "bayam cabut", "byam", "bayam merah"]
     ),
     "Kangkung": (
         "VEGETABLE",
-        ["kangkung", "kangkong", "kangkung darat", "kangkung air"]
+        ["kangkung", "kangkong", "kangkung darat", "kangkung air", "kngkung"]
     ),
     "Wortel": (
         "VEGETABLE",
-        ["wortel", "karot", "wortel lokal"]
+        ["wortel", "karot", "wortel lokal", "wrtel", "wortel manis"]
     ),
     "Tomat": (
         "VEGETABLE",
-        ["tomat", "tomat merah", "tomat buah", "tomat sayur"]
+        ["tomat", "tomt", "tomat merah", "tomat buah", "tomat sayur", "tmat", "tomaat"]
     ),
     "Ikan lele": (
         "FISH",
-        ["ikan lele", "lele", "lele sangkuriang", "lele dumbo"]
+        ["ikan lele", "lele", "lele sangkuriang", "lele dumbo", "ikn lele"]
     ),
     "Ikan nila": (
         "FISH",
-        ["ikan nila", "nila", "nilem", "nila merah", "nila hitam"]
+        ["ikan nila", "nila", "nilem", "nila merah", "nila hitam", "ikn nila"]
     ),
     "Telur ayam": (
         "POULTRY_EGG",
-        ["telur ayam", "telor ayam", "telur", "telor", "endog"]
+        ["telur ayam", "telor ayam", "telur", "telor", "endog", "tlur ayam", "tlur", "telor negeri"]
     ),
     "Ayam potong": (
         "POULTRY_EGG",
-        ["ayam potong", "ayam", "broiler", "ayam sayur", "daging ayam"]
+        ["ayam potong", "ayam", "broiler", "ayam sayur", "daging ayam", "aym potong", "aym"]
     ),
     "Tempe": (
         "PROTEIN_PROCESSED",
-        ["tempe", "tempeh", "tempe kedelai", "tempe daun"]
+        ["tempe", "tempeh", "tempe kedelai", "tempe daun", "tempe papan"]
+    ),
+    "Tahu": (
+        "PROTEIN_PROCESSED",
+        ["tahu", "tahu putih", "tahu kuning", "tahu sutra", "tofu"]
     ),
     "Beras": (
         "STAPLE",
-        ["beras", "beras putih", "beras pandan wangi", "beras setra ramos"]
+        ["beras", "beras putih", "beras pandan wangi", "beras setra ramos", "bras", "beras lokal"]
+    ),
+    "Kentang": (
+        "VEGETABLE",
+        ["kentang", "kntang", "kentang dieng", "potato"]
+    ),
+    "Jagung": (
+        "STAPLE",
+        ["jagung", "jgung", "jagung manis", "jagung pipil"]
     ),
     "Pisang": (
         "FRUIT",
-        ["pisang", "gedang", "pisang ambon", "pisang cavendish", "pisang raja"]
+        ["pisang", "gedang", "pisang ambon", "pisang cavendish", "pisang raja", "psang"]
     ),
 }
 
